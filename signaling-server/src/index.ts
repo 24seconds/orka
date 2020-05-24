@@ -1,14 +1,17 @@
 /* eslint-disable no-console */
-import express from 'express';
 import WebSocket from 'ws';
 import PORT from './config/constants';
+import { IncomingMessage } from 'http';
 
 
 const wss = new WebSocket.Server({
-  port: 4000,
+  port: PORT,
 });
 
-wss.on('connection', (ws: WebSocket) => {
+wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
+  console.log('connection, ws is ', ws);
+  // console.log('connection, request is ', request.headers.connection);
+
   ws.on('message', (message: WebSocket.Data) => {
     console.log('received: %s', message);
   });
@@ -16,14 +19,3 @@ wss.on('connection', (ws: WebSocket) => {
   ws.send('Hello Client!');
 });
 
-
-const app = express();
-app.use(express.json());
-
-app.listen(PORT, () => {
-  console.log(`server is listening on port ${PORT}`);
-});
-
-app.get('/', (req : express.Request, res : express.Response) => {
-  res.send('pong');
-});
