@@ -34,7 +34,7 @@ wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
   const ip  =  request.connection.remoteAddress;
   console.log('ip is ', ip);
 
-  ws.on('message', (message: WebSocket.Dat[a) => {
+  ws.on('message', (message: WebSocket.Data) => {
     // [15:12 Sun 07 Jun 2020] string only for now
     console.log('[Message from client] ', message as string);
 
