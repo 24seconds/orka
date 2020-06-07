@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "localdrop signaling server",
   "main": "index.js",
+  "engines": {
+    "node": ">=13.9.0",
+    "npm": ">=6.14.1"
+  },
   "scripts": {
     "compile": "npx tsc",
     "start": "npx nodemon dist/index.js",

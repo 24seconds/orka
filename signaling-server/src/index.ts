@@ -31,14 +31,14 @@ wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
 
   // fs.writeFileSync('./server.log', JSON.stringify(ws));
 
-  const ip  =  request.connection.remoteAddress;
+  const ip = request.connection.remoteAddress;
   console.log('ip is ', ip);
 
   ws.on('message', (message: WebSocket.Data) => {
     // [15:12 Sun 07 Jun 2020] string only for now
     console.log('[Message from client] ', message as string);
 
-    const parsedMessage = parseMessage(message);
+    const parsedMessage = parseMessage(message as string);
     handleMessage(parsedMessage, ws);
 
     console.log('parsedMessage is ', parsedMessage);
