@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "compile": "npx tsc",
+    "start": "npx nodemon dist/index.js",
     "start:dev": "npx nodemon dist/index.js",
     "build:dev": "npx tsc --watch --preserveWatchOutput",
     "dev": "concurrently \"npm:build:dev\" \"npm:start:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "check": "npx eslint --ext .ts src/"
+    "check": "npx eslint --ext .ts src/",
+    "build": "npx tsc",
+    "postinstall": "npm run compile"
   },
   "keywords": [],
   "author": "",
