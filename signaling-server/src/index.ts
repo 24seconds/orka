@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import PORT from './config/constants';
 import { IncomingMessage } from 'http';
 import { MessageType, createMessage, parseMessage, Message, SimpleDataSchema } from './utils/message';
-import fs from 'fs';
+import { getRemoteIpAddress } from './utils/network';
 
 function handleMessage(parsedMessage: Message, ws: WebSocket) {
   const { messageType, data } = parsedMessage;
@@ -44,6 +44,16 @@ wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
   console.log('headers is ', headers);
   console.log('rawHeaders is ', rawHeaders);
 
+  const { origin } = headers;
+  const userAgent = headers['User-Agent'];
+  const xForwardFor = headers['x-forwarded-for'];
+
+  console.log('origin is ', origin);
+  console.log('userAgent is', userAgent);
+  console.log('xForwardFor is ', xForwardFor);
+
+  const remoteIpAddress = getRemoteIpAddress(request);
+  console.log('remoteIpAddress is ', remoteIpAddress);
 
   ws.on('message', (message: WebSocket.Data) => {
     // [15:12 Sun 07 Jun 2020] string only for now
