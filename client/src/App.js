@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import websocket from './websocket';
+import network from './utils/network';
 
 class App extends Component {
   render() {
