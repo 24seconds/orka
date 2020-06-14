@@ -3,6 +3,6 @@ export default {
     "websocketUrl": "ws://localhost:4000"
   },
   "production": {
-    "websocketUrl": "wss://localdrop-signaling-server.herokuapp.com:4000"
+    "websocketUrl": "wss://blooming-ocean-81139.herokuapp.com/"
   }
 };
