@@ -22,7 +22,7 @@ function parseMessage(rawMessage) {
       return message;
     } catch(err) {
       return {
-        messageType: MESSAGE_TYPE['error'],
+        messageType: MESSAGE_TYPE.ERROR,
         data: {
           "message": err.message
         }
