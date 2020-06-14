@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import network from './utils/network';
+import './utils/localApi';
 
 class App extends Component {
   render() {
