@@ -1,6 +1,10 @@
 import WebSocket from 'ws';
 
 enum MessageType {
+  UUID = 'UUID',
+  PEERS = 'PEERS',
+  JOIN = 'JOIN',
+  LEAVE = 'LEAVE',
   OFFER = 'OFFER',
   ANSWER = 'ANSWER',
   PING = 'PING',
@@ -11,18 +15,42 @@ enum MessageType {
 export interface Message {
   messageType: MessageType;
   data: MessageDataSchema;
-};
+}
 
-export interface SimpleDataSchema {
+interface SimpleDataSchema {
   message: string;
 }
 
-export interface OfferDataSchema {
-  type: string;
-  sdp: string;
+interface OfferDataSchema {
+  fromUUID: string;
+  toUUID: string;
+  timeStamp?: string | null;
+  offer: {
+    type: string;
+    sdp: string;
+  }
 }
 
-type MessageDataSchema = SimpleDataSchema | OfferDataSchema;
+interface AnswerDataSchema {
+  fromUUID: string;
+  toUUID: string;
+  timeStamp?: string | null;
+  answer: {
+    type: string;
+    sdp: string;
+  }
+}
+
+interface UUIDDataSchema {
+  uuid: string;
+}
+
+interface PeersJoinLeaveDataSchema {
+  peers: Array<string>;
+}
+
+type MessageDataSchema =
+  SimpleDataSchema | OfferDataSchema | AnswerDataSchema | UUIDDataSchema | PeersJoinLeaveDataSchema;
 
 
 function createMessage(messageType: MessageType, data: MessageDataSchema): string {
