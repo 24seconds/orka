@@ -21,8 +21,15 @@ function sendMessageToServer(message) {
   websocketManager.dispatchEvent(event);
 }
 
+function closeWebSocket() {
+  const event = new LocalDropEvent(CLIENT_EVENT_TYPE.CLOSE);
+
+  websocketManager.dispatchEvent(event);
+}
+
 export {
   sendTextToPeer,
   sendMessageToServer,
   connectToPeer,
+  closeWebSocket,
 };

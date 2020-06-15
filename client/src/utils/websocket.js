@@ -133,6 +133,10 @@ function addCustomMessageTypeEventListener(webSocketManager) {
 
     webSocketManager.send(message);
   });
+
+  webSocketManager.addEventListener(CLIENT_EVENT_TYPE.CLOSE, event => {
+    webSocketManager.close();
+  })
 }
 
 function createWebSocketManager(url) {
@@ -163,6 +167,10 @@ function createWebSocketManager(url) {
 
   webSocketManager.send = (message) => {
     webSocketManager.socket.send(message);
+  }
+
+  webSocketManager.close = () => {
+    webSocketManager.socket.close();
   }
 
   return webSocketManager;

@@ -80,6 +80,7 @@ export const CLIENT_EVENT_TYPE = {
   'SEND_FILES': 'send_files',
   'RECONNECT': 'reconnect',
   'SEND_MESSAGE': 'send_message',
+  'CLOSE': 'close',
 };
 
 const peerConnectionMangerSchema = {
