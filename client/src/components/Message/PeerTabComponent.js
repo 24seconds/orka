@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 
 const PeerTab = styled.div`
@@ -39,6 +40,7 @@ class PeerTabComponent extends Component {
 
   render() {
     const { mockPeers } = this.state;
+    const { peers } = this.props;
 
     return (
       <Fragment>
@@ -55,6 +57,15 @@ class PeerTabComponent extends Component {
               )
             })
           }
+          {
+            peers && peers.map(peer => {
+              return (
+                <PeerTabButton>
+                  { `#${peer}` }
+                </PeerTabButton>
+              )
+            })
+          }
         </PeerTab>
         <ConnectivityState className='localdrop-connectivity-state'>
           Peer Connection State: Connected, <button> Retry </button>
@@ -64,4 +75,8 @@ class PeerTabComponent extends Component {
   }
 }
 
-export default PeerTabComponent;
+
+const mapStateToProps = state => ({
+  peers: state.localDropState.peers
+});
+export default connect(mapStateToProps)(PeerTabComponent);
