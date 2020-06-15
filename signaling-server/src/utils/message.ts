@@ -1,9 +1,11 @@
+import WebSocket from 'ws';
+
 enum MessageType {
-  OFFER = 'offer',
-  ANSWER = 'answer',
-  PING = 'ping',
-  PONG = 'pong',
-  ERROR = 'error',
+  OFFER = 'OFFER',
+  ANSWER = 'ANSWER',
+  PING = 'PING',
+  PONG = 'PONG',
+  ERROR = 'ERROR',
 };
 
 export interface Message {
@@ -51,8 +53,24 @@ function parseMessage(rawMessage: string): Message {
   }
 }
 
+function handleMessage(parsedMessage: Message, ws: WebSocket) {
+  const { messageType, data } = parsedMessage;
+
+  if (messageType === MessageType.PING) {
+    const message = createMessage(MessageType.PONG, { message: 'pong from server!' });
+    ws.send(message);
+
+    return;
+  }
+
+  if (messageType === MessageType.PONG) {
+    console.log('[Pong from client] ', (data as SimpleDataSchema).message);
+  }
+}
+
 export {
   MessageType,
   createMessage,
   parseMessage,
+  handleMessage,
 };

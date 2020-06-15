@@ -16,7 +16,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "npx eslint --ext .ts src/",
     "build": "npx tsc",
-    "postinstall": "npm run compile"
+    "postinstall": "npm run compile",
+    "deploy:heroku": "git subtree push --prefix signaling-server heroku master",
+    "deploy:heroku:dev": "git subtree push --prefix signaling-server heroku server-test"
   },
   "keywords": [],
   "author": "",
@@ -24,9 +26,11 @@
   "dependencies": {
     "@types/express": "^4.17.6",
     "@types/node": "^14.0.5",
+    "@types/uuid": "^8.0.0",
     "@types/ws": "^7.2.4",
     "express": "^4.17.1",
     "typescript": "^3.9.2",
+    "uuid": "^8.1.0",
     "ws": "^7.3.0"
   },
   "devDependencies": {
