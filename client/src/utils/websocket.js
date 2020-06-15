@@ -46,7 +46,7 @@ async function handleMessage(message, socket) {
   if (messageType === MESSAGE_TYPE.UUID) {
     const { uuid } = data;
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.UUID, { uuid });
+    const event = new LocalDropEvent(messageType, { uuid });
     peerConnectionManager.dispatchEvent(event);
 
     return;
@@ -55,7 +55,7 @@ async function handleMessage(message, socket) {
   if (messageType === MESSAGE_TYPE.PEERS) {
     const { peers } = data;
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.PEERS, { peers });
+    const event = new LocalDropEvent(messageType, { peers });
     peerConnectionManager.dispatchEvent(event);
 
     return;
@@ -64,7 +64,7 @@ async function handleMessage(message, socket) {
   if (messageType === MESSAGE_TYPE.JOIN) {
     const { peers } = data;
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.PEERS, { peers });
+    const event = new LocalDropEvent(messageType, { peers });
     peerConnectionManager.dispatchEvent(event);
 
     return;
@@ -73,7 +73,7 @@ async function handleMessage(message, socket) {
   if (messageType === MESSAGE_TYPE.LEAVE) {
     const { peers } = data;
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.PEERS, { peers });
+    const event = new LocalDropEvent(messageType, { peers });
     peerConnectionManager.dispatchEvent(event);
 
     return;
@@ -83,7 +83,7 @@ async function handleMessage(message, socket) {
   if (messageType === MESSAGE_TYPE.OFFER) {
     const { fromUUID, offer, timeStamp } = data;
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.OFFER, { uuid: fromUUID, offer, timeStamp });
+    const event = new LocalDropEvent(messageType, { uuid: fromUUID, offer, timeStamp });
     peerConnectionManager.dispatchEvent(event);
 
     return;
