@@ -12,6 +12,7 @@ const dataSchema = {
   },
   offerDataSchema: {
     "fromUUID": "string",
+    "toUUID": "string",
     "timeStamp": "time string, ISO format",
     "offer": {
       "type": "string",
@@ -20,6 +21,7 @@ const dataSchema = {
   },
   answerDataSchema: {
     "fromUUID": "string",
+    "toUUID": "string",
     "timeStamp": "time string, ISO format",
     "answer": {
       // TODO: CHECK answer schema!!!
