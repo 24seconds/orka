@@ -1,7 +1,11 @@
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
 import { createMessage } from './message';
 import { createPeerMessage, parsePeerMessage } from './peerMessage';
-import { sendMessageToServer } from './localApi';
+import {
+  sendMessageToServer,
+  addJoinedPeers,
+  deleteLeavedPeers,
+} from './localApi';
 
 function createPeerConnection(uuid) {
   const peerConnection = new RTCPeerConnection({
@@ -162,31 +166,42 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, event => {
     const { peers } = event;
-    const connectionArr = initializePeerConnections(peerConnectionManager, peers);
+    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
+
+    const connectionArr = initializePeerConnections(peerConnectionManager, filteredPeers);
 
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
       peerConnectionManager[uuid] = { peerConnection, dataChannel };
     }
+
+    // TODO: Inform this event to store
+    addJoinedPeers(filteredPeers);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, event => {
     const { peers } = event;
-    const connectionArr = initializePeerConnections(peerConnectionManager, peers);
+    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
+
+    const connectionArr = initializePeerConnections(peerConnectionManager, filteredPeers);
 
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
       peerConnectionManager[uuid] = { peerConnection, dataChannel };
     }
+
+    // TODO: Inform this event to store
+    addJoinedPeers(filteredPeers);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, event => {
     const { peers } = event;
+    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
 
     // tear down and delete
-    for (const peerUUID of peers) {
+    for (const peerUUID of filteredPeers) {
       if (!peerConnectionManager[peerUUID]) {
         continue;
       }
@@ -198,6 +213,8 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
       delete peerConnectionManager[peerUUID];
     }
+
+    deleteLeavedPeers(filteredPeers);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.OFFER, async (event) => {
