@@ -1,4 +1,5 @@
 import WebSocket from 'ws';
+import { WebSocketManager, isWebSocketOpen } from './webSocketManager';
 
 enum MessageType {
   UUID = 'UUID',
@@ -81,7 +82,9 @@ function parseMessage(rawMessage: string): Message {
   }
 }
 
-function handleMessage(parsedMessage: Message, ws: WebSocket) {
+function handleMessage(
+  parsedMessage: Message, ws: WebSocket, webSocketManager: WebSocketManager, ipAddress: string,
+) {
   const { messageType, data } = parsedMessage;
 
   if (messageType === MessageType.PING) {
@@ -93,6 +96,51 @@ function handleMessage(parsedMessage: Message, ws: WebSocket) {
 
   if (messageType === MessageType.PONG) {
     console.log('[Pong from client] ', (data as SimpleDataSchema).message);
+  }
+
+  if (messageType === MessageType.OFFER) {
+    const { fromUUID, toUUID, offer } = data as OfferDataSchema;
+    const timeStamp = (new Date()).toISOString();
+
+    const otherSocket = webSocketManager[ipAddress].webSockets[toUUID];
+
+    if (otherSocket && isWebSocketOpen(otherSocket)) {
+      const offerMessage = createMessage(MessageType.OFFER, {
+        fromUUID, toUUID, timeStamp, offer,
+      });
+
+      otherSocket.send(offerMessage);
+    } else {
+      const errorMessage = createMessage(MessageType.ERROR, { message: 'Peer does not exist!' });
+
+      ws.send(errorMessage);
+    }
+  }
+
+  if (messageType === MessageType.ANSWER) {
+    const { fromUUID, toUUID, answer } = data as AnswerDataSchema;
+
+    const timeStamp = (new Date()).toISOString();
+    const otherSocket = webSocketManager[ipAddress].webSockets[toUUID];
+
+    if (otherSocket && isWebSocketOpen(otherSocket)) {
+      const answerMessage = createMessage(MessageType.ANSWER, {
+        fromUUID, toUUID, timeStamp, answer,
+      });
+
+      otherSocket.send(answerMessage);
+    } else {
+      const errorMessage = createMessage(MessageType.ERROR, { message: 'Peer does not exist!' });
+
+      ws.send(errorMessage);
+    }
+  }
+
+  if (messageType === MessageType.PEERS) {
+    const peers = Object.keys(webSocketManager[ipAddress].webSockets);
+    const peersMessage = createMessage(MessageType.PEERS, { peers });
+
+    ws.send(peersMessage);
   }
 }
 
