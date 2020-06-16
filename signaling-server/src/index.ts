@@ -55,6 +55,13 @@ wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
   const message = createMessage(MessageType.UUID, { uuid: peerUUID });
   ws.send(message);
 
+  // send joined peers lists
+  {
+    const peers = Object.keys(webSocketManager[remoteIpAddress].webSockets);
+    const peersMessage = createMessage(MessageType.PEERS, { peers });
+    ws.send(peersMessage);
+  }
+
   // notify other peers that peer is joined
   Object.entries(webSocketManager[remoteIpAddress].webSockets).forEach(([uuid, otherWebSocket]) => {
     console.log('hahahah');
