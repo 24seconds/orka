@@ -6,7 +6,8 @@ import {
   addJoinedPeers,
   deleteLeavedPeers,
   updateUUID,
-  getPeerUUID,
+  getMyUUID,
+  addMessagePacket,
 } from './localApi';
 
 function createPeerConnection(uuid) {
@@ -62,10 +63,29 @@ function createPeerConnection(uuid) {
 
 function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
-  const { data } = event;
-
   // TODO: Implement later
-  const message = parsePeerMessage(data);
+  const message = parsePeerMessage(event.data);
+
+  const { messageType, data } = message;
+
+  if (messageType === PEER_MESSAGE_TYPE.TEXT) {
+    const { message: messageData } = data;
+    addMessagePacket(messageData);
+
+    return;
+  }
+
+  if (messageType === PEER_MESSAGE_TYPE.FILES) {
+    // TODO: Handle this later
+
+    return;
+  }
+
+  if (messageType === PEER_MESSAGE_TYPE.ERROR) {
+    // TODO: Handle this later
+
+    return;
+  }
 }
 
 function handleDataChannelStatusChange(event, uuid) {
@@ -132,6 +152,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[toUUID] || createPeerConnection(toUUID);
     peerConnectionManager.peerConnections[toUUID] = { peerConnection, dataChannel };
 
+    // check if peerConnection is done => if done, do nothing
+    if (peerConnection.connectionState === 'connected') {
+      return;
+    }
+
     const myUUID = peerConnectionManager.uuid;
     const offer = await createOffer(peerConnection);
     const message = createMessage(MESSAGE_TYPE.OFFER, {
@@ -143,17 +168,24 @@ function addClientEventTypeEventListener(peerConnectionManager) {
   });
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_TEXT, event =>{
-    const { uuid, text } = event;
-    const data = { message: text };
+    const { uuid, message } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
       return;
     }
 
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const message = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, { message });
 
-    dataChannel.send(message);
+
+    if (dataChannel.readyState !== 'open') {
+      console.log('dataChannel not opened!');
+      return;
+    }
+
+    // TODO: pass message later. For now, pass text
+    dataChannel.send(peerMessage);
+    addMessagePacket(message);
   });
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event =>{
