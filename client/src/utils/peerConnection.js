@@ -104,7 +104,7 @@ function initializePeerConnections(peerConnectionManager, peers) {
   const connectionArr = [];
 
   for (const peerUUID of peers) {
-    if (!peerConnectionManager[peerUUID]) {
+    if (!peerConnectionManager.peerConnections[peerUUID]) {
       // initialize peerConnection
       const { peerConnection, dataChannel } = createPeerConnection(peerUUID);
 
@@ -118,20 +118,22 @@ function initializePeerConnections(peerConnectionManager, peers) {
 
 function addClientEventTypeEventListener(peerConnectionManager) {
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.CONNECT, async (event) => {
-    const { uuid } = event;
+    const { uuid: toUUID } = event;
 
-    if (peerConnectionManager[uuid]) {
+    if (peerConnectionManager.peerConnections[toUUID]) {
       // already exist
       console.log(`[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already exist`);
-
-      return;
+      // return;
     }
 
-    const { peerConnection, dataChannel } = createPeerConnection(uuid);
-    peerConnectionManager[uuid] = { peerConnection, dataChannel };
+    const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[toUUID] || createPeerConnection(toUUID);
+    peerConnectionManager.peerConnections[toUUID] = { peerConnection, dataChannel };
 
+    const myUUID = peerConnectionManager.uuid;
     const offer = await createOffer(peerConnection);
-    const message = createMessage(MESSAGE_TYPE.OFFER, { offer, fromUUID: uuid });
+    const message = createMessage(MESSAGE_TYPE.OFFER, {
+      fromUUID: myUUID, toUUID, offer,
+    });
 
     // TODO: handle message
     sendMessageToServer(message);
@@ -141,12 +143,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { uuid, text } = event;
     const data = { message: text };
 
-    if (!peerConnectionManager[uuid]) {
+    if (!peerConnectionManager.peerConnections[uuid]) {
       return;
     }
 
-    
-    const { dataChannel } = peerConnectionManager[uuid];
+    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
     const message = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
 
     dataChannel.send(message);
@@ -183,7 +184,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
-      peerConnectionManager[uuid] = { peerConnection, dataChannel };
+      peerConnectionManager.peerConnections[uuid] = { peerConnection, dataChannel };
     }
 
     // TODO: Inform this event to store
@@ -199,7 +200,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
-      peerConnectionManager[uuid] = { peerConnection, dataChannel };
+      peerConnectionManager.peerConnections[uuid] = { peerConnection, dataChannel };
     }
 
     // TODO: Inform this event to store
