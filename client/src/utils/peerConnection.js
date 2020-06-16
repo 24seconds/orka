@@ -33,15 +33,15 @@ function createPeerConnection(uuid) {
   peerConnection.ondatachannel = (event) => {
     handleOnDataChannel(event, uuid);
   };
-  
-  peerConnection.addEventListener('onicecandidate', event => {
+
+  peerConnection.onicecandidate = event => {
     console.log(`[peer ${uuid}]: onicecandidate, event is `, event);
   
     if (event.candidate) {
       // Send the candidate to the remote peer
       const message = createMessage(MESSAGE_TYPE.ICE_CANDIDATE, {
-        fromUUID: peerConnection.uuid,
-        toUUID: getPeerUUID(),
+        fromUUID: getMyUUID(),
+        toUUID: uuid,
         ice: event.candidate,
       });
 
@@ -50,12 +50,12 @@ function createPeerConnection(uuid) {
     } else {
       // All ICE candidates have been sent
     }
-  });
+  };
 
-  peerConnection.addEventListener('onconnectionstatechange', event => {
+  peerConnection.onconnectionstatechange = event => {
     console.log(`[peer ${uuid}]: onconnectionstatechange, event is `, event);
     console.log(`[peer ${uuid}]: peerConnection.connectionState is `, peerConnection.connectionState);
-  });
+  };
 
   return { peerConnection, dataChannel };
 }
