@@ -31,10 +31,6 @@ function createPeerConnection(uuid) {
     handleDataChannelMessage(event, uuid);
   }
 
-  peerConnection.ondatachannel = (event) => {
-    handleOnDataChannel(event, uuid);
-  };
-
   peerConnection.onicecandidate = event => {
     console.log(`[peer ${uuid}]: onicecandidate, event is `, event);
   
@@ -90,10 +86,6 @@ function handleDataChannelMessage(event, uuid) {
 
 function handleDataChannelStatusChange(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelStatusChange, event is `, event);
-}
-
-function handleOnDataChannel(event, uuid) {
-  console.log(`[peer ${uuid}]: handleOnDataChannel, event is `, event);
 }
 
 async function createOffer(peerConnection) {
