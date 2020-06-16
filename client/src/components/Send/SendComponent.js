@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { connectToPeer } from '../../utils/localApi';
+import { connect } from 'react-redux';
+import { connectToPeer, sendTextToPeer } from '../../utils/localApi';
 
 const Send = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const Send = styled.div`
   }
 `;
 
-export default class SendComponent extends Component {
+class SendComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -33,11 +34,15 @@ export default class SendComponent extends Component {
 
   sendText() {
     console.log('sendText is called');
-
-    const uuid = 'sample-uuid-hahaha';
+    const { peerUUID } = this.props;
     const { text } = this.state;
 
-    connectToPeer(uuid);
+    if (peerUUID) {
+      sendTextToPeer(peerUUID, text);
+    // connectToPeer(uuid);
+    } else {
+      // TODO: handle null calse!
+    }
   }
 
   render() {
@@ -53,3 +58,9 @@ export default class SendComponent extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  myUUID: state.myUUID,
+  peerUUID: state.peerUUID,
+});
+export default connect(mapStateToProps)(SendComponent);
