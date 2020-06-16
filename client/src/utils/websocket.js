@@ -81,25 +81,21 @@ async function handleMessage(message, socket) {
 
 
   if (messageType === MESSAGE_TYPE.OFFER) {
-    const { fromUUID, offer, timeStamp } = data;
-
-    const event = new LocalDropEvent(messageType, { uuid: fromUUID, offer, timeStamp });
+    const event = new LocalDropEvent(messageType, data);
     peerConnectionManager.dispatchEvent(event);
 
     return;
   }
 
   if (messageType === MESSAGE_TYPE.ANSWER) {
-    const { fromUUID, answer, timeStamp } = data;
-
-    const event = new LocalDropEvent(MESSAGE_TYPE.ANSWER, { fromUUID, answer, timeStamp });
+    const event = new LocalDropEvent(messageType, data);
     peerConnectionManager.dispatchEvent(event);
 
     return;
   }
 
   if (messageType === MESSAGE_TYPE.PING) {
-    const message = createMessage(MESSAGE_TYPE.PONG, { message: "This is client pong!" });
+    const message = createMessage(messageType, { message: "This is client pong!" });
 
     socket.send(message);
 
@@ -118,13 +114,21 @@ async function handleMessage(message, socket) {
     // show error!
     const errorMessage = data['message'];
 
-    const event = new LocalDropEvent(MESSAGE_TYPE.ERROR, {
+    const event = new LocalDropEvent(messageType, {
       message: errorMessage
     });
     peerConnectionManager.dispatchEvent(event);
 
     return;
   }
+
+  if (messageType === MESSAGE_TYPE.ICE_CANDIDATE) {
+    const event = new LocalDropEvent(messageType, data);
+
+    peerConnectionManager.dispatchEvent(event);
+    return;
+  }
+
 }
 
 function addCustomMessageTypeEventListener(webSocketManager) {

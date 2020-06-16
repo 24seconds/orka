@@ -5,12 +5,12 @@ import {
   sendMessageToServer,
   addJoinedPeers,
   deleteLeavedPeers,
+  updateUUID,
+  getPeerUUID,
 } from './localApi';
 
 function createPeerConnection(uuid) {
-  const peerConnection = new RTCPeerConnection({
-    iceServers: []
-  });
+  const peerConnection = new RTCPeerConnection();
 
   const dataChannel = peerConnection.createDataChannel('localdropDataChannel');
 
@@ -23,6 +23,7 @@ function createPeerConnection(uuid) {
   };
 
   dataChannel.onmessage = (event) => {
+    console.log('[Message from DataChannel]: ', event);
     handleDataChannelMessage(event, uuid);
   }
 
@@ -35,6 +36,14 @@ function createPeerConnection(uuid) {
   
     if (event.candidate) {
       // Send the candidate to the remote peer
+      const message = createMessage(MESSAGE_TYPE.ICE_CANDIDATE, {
+        fromUUID: peerConnection.uuid,
+        toUUID: getPeerUUID(),
+        ice: event.candidate,
+      });
+
+      sendMessageToServer(message);
+
     } else {
       // All ICE candidates have been sent
     }
@@ -162,6 +171,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     const { uuid } = event;
 
     peerConnectionManager.uuid = uuid;
+    updateUUID(uuid);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, event => {
@@ -202,53 +212,75 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
     // tear down and delete
     for (const peerUUID of filteredPeers) {
-      if (!peerConnectionManager[peerUUID]) {
+      if (!peerConnectionManager.peerConnections[peerUUID]) {
         continue;
       }
 
-      const { peerConnection, dataChannel } = peerConnectionManager[peerUUID];
+      const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[peerUUID];
 
       peerConnection.close();
       dataChannel.close();
 
-      delete peerConnectionManager[peerUUID];
+      delete peerConnectionManager.peerConnections[peerUUID];
     }
 
     deleteLeavedPeers(filteredPeers);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.OFFER, async (event) => {
-    const { uuid, offer, timeStamp } = event;
+    const { fromUUID, toUUID, offer, timeStamp } = event;
+
+    console.log('peerConnectionManager.peerConnections[fromUUID] is', peerConnectionManager.peerConnections[fromUUID]);
 
     // TODO: Reject of Accept offer depend on timeStamp
     // Maybe.. need to use websocketManager to send message back
-    if (!peerConnectionManager[uuid]) {
+    if (!peerConnectionManager.peerConnections[fromUUID]) {
+      console.log('offer, peerConnectionManager.peerConnections[fromUUID] not exist', peerConnectionManager);
       return;
     }
 
-    const { peerConnection } = peerConnectionManager[uuid];
+    const { peerConnection } = peerConnectionManager.peerConnections[fromUUID];
     await setRemoteOffer(peerConnection, offer);
 
     const answer = await createAnswer(peerConnection);
-    const message = createMessage(MESSAGE_TYPE.ANSWER, answer);
+    const message = createMessage(MESSAGE_TYPE.ANSWER, {
+      fromUUID: toUUID,
+      toUUID: fromUUID,
+      answer,
+    });
 
     // TODO: Implement handling message
-
+    sendMessageToServer(message);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.ANSWER, async (event) => {
-    const { uuid, answer, timeStamp } = event;
+    const { fromUUID, toUUID, answer, timeStamp } = event;
 
-    if (!peerConnectionManager[uuid]) {
+    if (!peerConnectionManager.peerConnections[fromUUID]) {
+      console.log('answer, peerConnectionManager.peerConnections[fromUUID] not exist');
       return;
     }
 
-    const { peerConnection } = peerConnectionManager[uuid];
+    console.log('answer is ', answer);
+
+    const { peerConnection } = peerConnectionManager.peerConnections[fromUUID];
     await setRemoteAnswer(peerConnection, answer);
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.ERROR, event => {
     // handle error later
+  });
+
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.ICE_CANDIDATE, async (event) => {
+    const { fromUUID, toUUID, ice } = event;
+
+    if (!peerConnectionManager.peerConnections[fromUUID]) {
+      console.log('ICE CANDIDATE, peerConnection not exist');
+      return;
+    }
+
+    const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[fromUUID];
+    await peerConnection.addIceCandidate(ice);
   });
 }
 

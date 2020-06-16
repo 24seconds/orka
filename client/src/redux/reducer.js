@@ -3,6 +3,8 @@ import {
   ADD_PEER,
   DELETE_PEER,
   ADD_MESSAGE,
+  UPDATE_MY_UUID,
+  UPDATE_PEER_UUID,
 } from './actionType';
 
 const initialState = { peers: [], message: [] }
@@ -33,13 +35,35 @@ function localDropState(state = initialState, action) {
     newState.peers = newPeers;
 
     return newState;
-  } else if (action.type === ADD_MESSAGE) {
-    
-    const newState = { ...state };
-    const message = action.payload;
+  }
 
-    newState.message = newState.message || [];
-    newState.message.push(message);
+  return state;
+}
+
+function messagePackets(state = [], action) {
+  if (action.type === ADD_MESSAGE) {
+    const message = action.payload;
+    const newState = [ ...state, message ];
+
+    return newState;
+  }
+
+  return state;
+}
+
+function myUUID(state = null, action) {
+  if (action.type === UPDATE_MY_UUID) {
+    const newState = action.payload;
+
+    return newState;
+  }
+
+  return state;
+}
+
+function peerUUID(state = null, action) {
+  if (action.type === UPDATE_PEER_UUID) {
+    const newState = action.payload;
 
     return newState;
   }
@@ -49,5 +73,8 @@ function localDropState(state = initialState, action) {
 
 export default combineReducers({
   localDropState,
+  messagePackets,
+  myUUID,
+  peerUUID,
 });
 

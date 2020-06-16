@@ -2,6 +2,8 @@ import {
   ADD_PEER,
   DELETE_PEER,
   ADD_MESSAGE,
+  UPDATE_MY_UUID,
+  UPDATE_PEER_UUID,
 } from './actionType';
 
 export const addPeer = peerList => ({
@@ -19,5 +21,13 @@ export const addMessage = message => ({
   payload: message,
 });
 
+export const updateMyUUID = uuid => ({
+  type: UPDATE_MY_UUID,
+  payload: uuid,
+});
 
+export const updatePeerUUID = uuid => ({
+  type: UPDATE_PEER_UUID,
+  payload: uuid,
+})
 

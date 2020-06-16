@@ -54,6 +54,11 @@ const dataSchema = {
   connectDataSchema: {
     "uuid": "string"
   },
+  iceCandidateDataSchema: {
+    "fromUUID": "string",
+    "toUUID": "string",
+    "ice": "string",
+  }
 }
 
 export const MESSAGE_TYPE = {
@@ -66,6 +71,7 @@ export const MESSAGE_TYPE = {
   'PING': 'PING',
   'PONG': 'PONG',
   'ERROR': 'ERROR',
+  'ICE_CANDIDATE': 'ICE_CANDIDATE',
 };
 
 export const PEER_MESSAGE_TYPE = {
