@@ -12,7 +12,10 @@ import {
 function createPeerConnection(uuid) {
   const peerConnection = new RTCPeerConnection();
 
-  const dataChannel = peerConnection.createDataChannel('localdropDataChannel');
+  const dataChannel = peerConnection.createDataChannel('localdropDataChannel', {
+    negotiated: true,
+    id: 0,
+  });
 
   dataChannel.onopen = (event) => {
     handleDataChannelStatusChange(event, uuid);
