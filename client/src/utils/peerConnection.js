@@ -77,7 +77,7 @@ async function createOffer(peerConnection) {
   const offer = peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
 
-  return offer;
+  return peerConnection.localDescription;
 }
 
 async function setRemoteOffer(peerConnection, offer) {
@@ -93,7 +93,7 @@ async function createAnswer(peerConnection) {
 
   await peerConnection.setLocalDescription(answer);
 
-  return answer;
+  return peerConnection.localDescription;
 }
 
 async function setRemoteAnswer(peerConnection, answer) {
