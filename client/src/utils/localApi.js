@@ -54,6 +54,10 @@ function getPeerUUID() {
   return store.getState().peerUUID;
 }
 
+function getMyUUID() {
+  return store.getState().myUUID;
+}
+
 export {
   sendTextToPeer,
   sendMessageToServer,
@@ -64,4 +68,5 @@ export {
   addMessagePacket,
   updateUUID,
   getPeerUUID,
+  getMyUUID,
 };
