@@ -11,6 +11,7 @@ enum MessageType {
   PING = 'PING',
   PONG = 'PONG',
   ERROR = 'ERROR',
+  ICE_CANDIDATE = 'ICE_CANDIDATE',
 };
 
 export interface Message {
@@ -46,12 +47,23 @@ interface UUIDDataSchema {
   uuid: string;
 }
 
+interface IceCandidateDataSchema {
+  fromUUID: string;
+  toUUID: string;
+  ice: string;
+}
+
 interface PeersJoinLeaveDataSchema {
   peers: Array<string>;
 }
 
 type MessageDataSchema =
-  SimpleDataSchema | OfferDataSchema | AnswerDataSchema | UUIDDataSchema | PeersJoinLeaveDataSchema;
+  SimpleDataSchema
+  | OfferDataSchema
+  | AnswerDataSchema
+  | UUIDDataSchema
+  | PeersJoinLeaveDataSchema
+  | IceCandidateDataSchema;
 
 
 function createMessage(messageType: MessageType, data: MessageDataSchema): string {
@@ -141,6 +153,18 @@ function handleMessage(
     const peersMessage = createMessage(MessageType.PEERS, { peers });
 
     ws.send(peersMessage);
+  }
+
+  if (messageType === MessageType.ICE_CANDIDATE) {
+    const { toUUID } = data as IceCandidateDataSchema;
+
+    const otherWebSocket = webSocketManager[ipAddress].webSockets[toUUID];
+
+    if (otherWebSocket) {
+      const iceMessage = createMessage(MessageType.ICE_CANDIDATE, data);
+
+      otherWebSocket.send(iceMessage);
+    }
   }
 }
 
