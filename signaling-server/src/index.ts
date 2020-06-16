@@ -2,10 +2,12 @@
 import WebSocket from 'ws';
 import { v4 as uuidv4 } from 'uuid';
 import { IncomingMessage } from 'http';
+import * as crypto from 'crypto';
 import PORT from './config/constants';
 import { MessageType, createMessage, parseMessage, Message, handleMessage } from './utils/message';
 import { getRemoteIpAddress } from './utils/network';
 import webSocketManager from './utils/webSocketManager';
+
 
 const wss = new WebSocket.Server({
   port: PORT,
@@ -15,7 +17,9 @@ wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
   const remoteIpAddress: string = getRemoteIpAddress(request);
   console.log('remoteIpAddress is ', remoteIpAddress);
 
-  const peerUUID = uuidv4();
+  const peerUUID = crypto.randomBytes(4).toString('hex');
+  console.log('[peerUUID]: ', peerUUID);
+
   webSocketManager[remoteIpAddress] = webSocketManager[remoteIpAddress] || {};
   webSocketManager[remoteIpAddress].webSockets = webSocketManager[remoteIpAddress].webSockets || {};
   webSocketManager[remoteIpAddress].webSockets[peerUUID] = ws;
