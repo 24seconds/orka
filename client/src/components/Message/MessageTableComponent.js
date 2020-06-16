@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import MessageTableHeaderComponent from './MessageTableHeaderComponent';
 import MessageItemComponent from './MessageItemComponent';
 
@@ -27,6 +28,7 @@ class MessageTableComponent extends Component {
 
   render() {
     const { mockMessages } = this.state;
+    const { messagePackets } = this.props;
 
     return (
       <MessageTable>
@@ -38,10 +40,20 @@ class MessageTableComponent extends Component {
             )
           })
         }
+        {
+          messagePackets.map(packet => {
+            return (
+              <MessageItemComponent message={ `#${packet}` } />
+            )
+          })
+        }
       </MessageTable>
     );
   }
 }
 
 
-export default MessageTableComponent;
+const mapStateToProps = state => ({
+  messagePackets: state.messagePackets
+});
+export default connect(mapStateToProps)(MessageTableComponent);
