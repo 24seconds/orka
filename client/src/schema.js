@@ -75,9 +75,11 @@ export const MESSAGE_TYPE = {
 };
 
 export const PEER_MESSAGE_TYPE = {
-  'TEXT': 'text',
-  'FILES': 'files',
-  'ERROR': 'error',
+  'TEXT': 'TEXT',
+  'FILES': 'FILES',
+  'ERROR': 'ERROR',
+}
+
 }
 
 export const CLIENT_EVENT_TYPE = {
