@@ -3,7 +3,12 @@ import LocalDropEvent from './LocalDropEvent';
 import { CLIENT_EVENT_TYPE } from '../schema';
 import websocketManager from './websocket';
 import store from '../redux/store';
-import { addPeer, deletePeer, addMessage } from '../redux/action';
+import {
+  addPeer,
+  deletePeer,
+  addMessage,
+  updateMyUUID,
+} from '../redux/action';
 
 function sendTextToPeer(uuid, text) {
   const event = new LocalDropEvent(CLIENT_EVENT_TYPE.SEND_TEXT, { uuid, message: text });
@@ -41,6 +46,14 @@ function addMessagePacket(message) {
   store.dispatch(addMessage(message));
 }
 
+function updateUUID(uuid) {
+  store.dispatch(updateMyUUID(uuid));
+}
+
+function getPeerUUID() {
+  return store.getState().peerUUID;
+}
+
 export {
   sendTextToPeer,
   sendMessageToServer,
@@ -49,4 +62,6 @@ export {
   addJoinedPeers,
   deleteLeavedPeers,
   addMessagePacket,
+  updateUUID,
+  getPeerUUID,
 };
