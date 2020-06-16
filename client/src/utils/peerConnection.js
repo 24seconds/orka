@@ -97,7 +97,7 @@ function handleOnDataChannel(event, uuid) {
 }
 
 async function createOffer(peerConnection) {
-  const offer = peerConnection.createOffer();
+  const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
 
   return peerConnection.localDescription;
