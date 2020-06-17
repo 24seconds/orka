@@ -58,6 +58,12 @@ const dataSchema = {
     "fromUUID": "string",
     "toUUID": "string",
     "ice": "string",
+  },
+  peerTextDataSchema: {
+    'message': 'string',
+  },
+  peerFileDataSchema: {
+    // TODO: Implement it later
   }
 }
 
@@ -76,10 +82,19 @@ export const MESSAGE_TYPE = {
 
 export const PEER_MESSAGE_TYPE = {
   'TEXT': 'TEXT',
-  'FILES': 'FILES',
+  'FILE': 'FILE',
   'ERROR': 'ERROR',
 }
 
+const messagePacketSchema = {
+  'isSelected': 'boolean',
+  'source': 'uuid string',
+  'destination': 'uuid string',
+  'type': 'PEER_MESSAGE_TYPE string',
+  'content': 'string',
+  'size': 'int',
+  'time': 'date',
+  'progress': 'int',
 }
 
 export const CLIENT_EVENT_TYPE = {
