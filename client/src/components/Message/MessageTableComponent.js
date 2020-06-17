@@ -43,7 +43,7 @@ class MessageTableComponent extends Component {
         {
           messagePackets.map(packet => {
             return (
-              <MessageItemComponent message={ `#${packet}` } />
+              <MessageItemComponent messagePacket={ packet } />
             )
           })
         }
