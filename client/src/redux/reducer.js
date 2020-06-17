@@ -5,6 +5,7 @@ import {
   ADD_MESSAGE,
   UPDATE_MY_UUID,
   UPDATE_PEER_UUID,
+  ADD_FILES,
 } from './actionType';
 
 const initialState = { peers: [], message: [] }
@@ -71,10 +72,21 @@ function peerUUID(state = null, action) {
   return state;
 }
 
+function filesToTransfer(state = [], action) {
+  if (action.type === ADD_FILES) {
+    const files = action.payload;
+
+    return [...state, ...files];
+  }
+
+  return state;
+}
+
 export default combineReducers({
   localDropState,
   messagePackets,
   myUUID,
   peerUUID,
+  filesToTransfer
 });
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { connectToPeer, sendTextToPeer } from '../../utils/localApi';
+import { addFiles } from '../../redux/action';
 
 const Send = styled.div`
   display: flex;
@@ -16,16 +17,28 @@ const Send = styled.div`
   }
 `;
 
+const FileInput = styled.input`
+  display: none;
+`;
+
 class SendComponent extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      text: 'Hello, World!'
+      text: 'Hello, World!',
+      files: [],
     }
 
     this.handleText = this.handleText.bind(this);
     this.onSend = this.sendText.bind(this);
+    this.handleFiles = this.handleFiles.bind(this);
+    this.onClickFile = this.onClickFile.bind(this);
+    this.fileInputRef = null;
+  }
+
+  handleFiles(event) {
+    this.props.dispatch(addFiles(event.target.files));
   }
 
   handleText(event) {
@@ -33,9 +46,10 @@ class SendComponent extends Component {
   }
 
   sendText() {
-    console.log('sendText is called');
     const { peerUUID } = this.props;
     const { text } = this.state;
+
+    console.log('sendText is called, text is ', text);
 
     if (peerUUID) {
       sendTextToPeer(peerUUID, text);
@@ -45,12 +59,21 @@ class SendComponent extends Component {
     }
   }
 
+  onClickFile() {
+    this.fileInputRef && this.fileInputRef.click()
+  }
+
   render() {
     const { text } = this.state;
 
     return (
       <Send>
-        <button> + </button>
+        <FileInput
+          type='file'
+          ref={ (ref) => this.fileInputRef = ref }
+          multiple={ true }
+          onChange={ this.handleFiles }/>
+        <button onClick={ this.onClickFile }> + </button>
         <textarea value={ text } onChange={ this.handleText } />
         <button>paste</button>
         <button onClick={ this.onSend } >send</button>

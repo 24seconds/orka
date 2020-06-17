@@ -4,6 +4,8 @@ import {
   ADD_MESSAGE,
   UPDATE_MY_UUID,
   UPDATE_PEER_UUID,
+  ADD_FILES,
+  DELETE_FILES,
 } from './actionType';
 
 export const addPeer = peerList => ({
@@ -31,3 +33,12 @@ export const updatePeerUUID = uuid => ({
   payload: uuid,
 })
 
+export const addFiles = files => ({
+  type: ADD_FILES,
+  payload: files
+});
+
+export const deleteFiles = files => ({
+  type: DELETE_FILES,
+  payload: files
+});
