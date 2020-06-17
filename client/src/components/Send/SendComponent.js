@@ -51,6 +51,12 @@ class SendComponent extends Component {
 
     console.log('sendText is called, text is ', text);
 
+    if (text.length === 0) {
+      return;
+    }
+
+    // TODO: Clear textarea and request focus
+
     if (peerUUID) {
       sendTextToPeer(peerUUID, text);
     // connectToPeer(uuid);

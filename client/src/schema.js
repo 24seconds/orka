@@ -84,6 +84,7 @@ export const PEER_MESSAGE_TYPE = {
   'TEXT': 'TEXT',
   'FILE': 'FILE',
   'ERROR': 'ERROR',
+  'DOWNLOAD': 'DOWNLOAD',
 }
 
 const messagePacketSchema = {
@@ -95,6 +96,12 @@ const messagePacketSchema = {
   'size': 'int',
   'time': 'date',
   'progress': 'int',
+}
+
+const meesagePacketDownloadHeaderSchema = {
+  'fingerprint': '35 bytes',
+  'chunkNumber': '32 bytes',
+  'totalNumber': '32 bytes',
 }
 
 export const CLIENT_EVENT_TYPE = {
