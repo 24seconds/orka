@@ -1,6 +1,7 @@
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
 import { createMessage } from './message';
 import { createPeerMessage, parsePeerMessage } from './peerMessage';
+import { createMessagePacket } from './messagePacket';
 import {
   sendMessageToServer,
   addJoinedPeers,
@@ -60,19 +61,27 @@ function createPeerConnection(uuid) {
 
 function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
-  // TODO: Implement later
   const message = parsePeerMessage(event.data);
 
   const { messageType, data } = message;
 
   if (messageType === PEER_MESSAGE_TYPE.TEXT) {
-    const { message: messageData } = data;
-    addMessagePacket(messageData);
+    const { message } = data;
+
+    const messagePacket = createMessagePacket({
+      source: getMyUUID(),
+      destination: uuid,
+      content: message,
+      messageType: PEER_MESSAGE_TYPE.TEXT,
+    });
+
+    console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
+    addMessagePacket(messagePacket);
 
     return;
   }
 
-  if (messageType === PEER_MESSAGE_TYPE.FILES) {
+  if (messageType === PEER_MESSAGE_TYPE.FILE) {
     // TODO: Handle this later
 
     return;
@@ -170,19 +179,36 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
     const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, { message });
 
+    console.log('CLIENT_EVENT_TYPE.SEND_TEXT, message is ', peerMessage);
+
+    console.log('dataChannel is ', dataChannel);
+    console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
       console.log('dataChannel not opened!');
       return;
     }
 
-    // TODO: pass message later. For now, pass text
     dataChannel.send(peerMessage);
-    addMessagePacket(message);
+
+    const messagePacket = createMessagePacket({
+      source: getMyUUID(),
+      destination: uuid,
+      content: message,
+      messageType: PEER_MESSAGE_TYPE.TEXT,
+    });
+
+    addMessagePacket(messagePacket);
   });
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event =>{
     const { uuid, message } = event;
+
+
+    // // TODO: pass message later. For now, pass text
+    // dataChannel.send(peerMessage);
+    // // const arrayBuffer = new ArrayBuffer(10);
+    // // dataChannel.send(arrayBuffer);
 
     // TODO:: Do it later
   });
@@ -247,6 +273,8 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
       const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[peerUUID];
 
+      console.log('[LEAVE]: peerConnectionManager.peerConnections[peerUUID] is ', peerConnectionManager.peerConnections[peerUUID]);
+
       peerConnection.close();
       dataChannel.close();
 
@@ -302,6 +330,8 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.ICE_CANDIDATE, async (event) => {
     const { fromUUID, toUUID, ice } = event;
+
+    console.log('ICE_CANDIDATE, event is ', event);
 
     if (!peerConnectionManager.peerConnections[fromUUID]) {
       console.log('ICE CANDIDATE, peerConnection not exist');
