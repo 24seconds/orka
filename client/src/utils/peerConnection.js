@@ -18,6 +18,7 @@ function createPeerConnection(uuid) {
     id: 0,
   });
 
+  dataChannel.binaryType = 'arraybuffer';
   dataChannel.onopen = (event) => {
     handleDataChannelStatusChange(event, uuid);
   };
