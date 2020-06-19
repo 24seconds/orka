@@ -40,6 +40,7 @@ class PeerTabComponent extends Component {
     };
 
     this.onClick = this.onClick.bind(this);
+    this.onTestPostMessage = this.onTestPostMessage.bind(this);
   }
 
   onClick(uuid) {
@@ -47,6 +48,23 @@ class PeerTabComponent extends Component {
 
     this.props.dispatch(updatePeerUUID(uuid));
     connectToPeer(uuid);
+  }
+
+  async onTestPostMessage() {
+    console.log('navigator.serviceWorker is ', navigator.serviceWorker);
+
+    navigator.serviceWorker.controller.postMessage("this is message!");
+
+    const response = await fetch(`${ process.env.REACT_APP_PUBLIC_URL }/test`);
+    const result = await response.json();
+
+    console.log('result is ', result);
+
+
+
+    // const readable = new ReadableStream();
+    // console.log('readable is ', readable);
+
   }
 
   render() {
@@ -65,7 +83,7 @@ class PeerTabComponent extends Component {
           {
             mockPeers.map(peer => {
               return (
-                <PeerTabButton>
+                <PeerTabButton onClick={ this.onTestPostMessage }>
                   { `#${peer}` }
                 </PeerTabButton>
               )
