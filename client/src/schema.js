@@ -63,7 +63,9 @@ const dataSchema = {
     'message': 'string',
   },
   peerFileDataSchema: {
-    // TODO: Implement it later
+    'message': 'string',
+    'fingerprint': 'string',
+    'size': 'long',
   }
 }
 
@@ -88,11 +90,11 @@ export const PEER_MESSAGE_TYPE = {
 }
 
 const messagePacketSchema = {
-  'isSelected': 'boolean',
   'source': 'uuid string',
   'destination': 'uuid string',
   'type': 'PEER_MESSAGE_TYPE string',
-  'content': 'string',
+  'message': 'string',
+  'data': 'peerDataSchema',
   'size': 'int',
   'time': 'date',
   'progress': 'int',

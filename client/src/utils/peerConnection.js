@@ -63,15 +63,15 @@ function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
   const message = parsePeerMessage(event.data);
 
+  console.log(`[peer ${uuid}]: handleDataChannelMessage, message is `, message);
+
   const { messageType, data } = message;
 
   if (messageType === PEER_MESSAGE_TYPE.TEXT) {
-    const { message } = data;
-
     const messagePacket = createMessagePacket({
       source: getMyUUID(),
       destination: uuid,
-      content: message,
+      data,
       messageType: PEER_MESSAGE_TYPE.TEXT,
     });
 
@@ -82,7 +82,15 @@ function handleDataChannelMessage(event, uuid) {
   }
 
   if (messageType === PEER_MESSAGE_TYPE.FILE) {
-    // TODO: Handle this later
+    const messagePacket = createMessagePacket({
+      source: getMyUUID(),
+      destination: uuid,
+      data,
+      messageType: PEER_MESSAGE_TYPE.FILE,
+    });
+
+    console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
+    addMessagePacket(messagePacket);
 
     return;
   }
@@ -194,7 +202,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const messagePacket = createMessagePacket({
       source: getMyUUID(),
       destination: uuid,
-      content: message,
+      data: { message },
       messageType: PEER_MESSAGE_TYPE.TEXT,
     });
 
@@ -202,15 +210,38 @@ function addClientEventTypeEventListener(peerConnectionManager) {
   });
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event =>{
-    const { uuid, message } = event;
+    const { uuid, message, size, fingerprint } = event;
 
+    if (!peerConnectionManager.peerConnections[uuid]) {
+      return;
+    }
 
-    // // TODO: pass message later. For now, pass text
-    // dataChannel.send(peerMessage);
-    // // const arrayBuffer = new ArrayBuffer(10);
-    // // dataChannel.send(arrayBuffer);
+    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, {
+      fingerprint, message, size,
+    });
 
-    // TODO:: Do it later
+    console.log('CLIENT_EVENT_TYPE.SEND_FILES, message is ', peerMessage);
+
+    console.log('dataChannel is ', dataChannel);
+    console.log('dataChannel.readyState is ', dataChannel.readyState);
+
+    if (dataChannel.readyState !== 'open') {
+      console.log('dataChannel not opened!');
+      return;
+    }
+
+    dataChannel.send(peerMessage);
+
+    const messagePacket = createMessagePacket({
+      source: getMyUUID(),
+      destination: uuid,
+      size,
+      data: { message, fingerprint },
+      messageType: PEER_MESSAGE_TYPE.FILE,
+    });
+
+    addMessagePacket(messagePacket);
   });
 
 

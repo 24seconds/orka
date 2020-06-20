@@ -1,5 +1,11 @@
 import { peerConnectionManager } from './peerConnection';
 import LocalDropEvent from './LocalDropEvent';
+import {
+  EventSendTextData,
+  EventSendFilesData,
+  EventConnectData,
+  EventSendMessageData
+} from './dataSchema/LocalDropEventData';
 import { CLIENT_EVENT_TYPE } from '../schema';
 import websocketManager from './websocket';
 import store from '../redux/store';
@@ -10,20 +16,48 @@ import {
   updateMyUUID,
 } from '../redux/action';
 
+
 function sendTextToPeer(uuid, text) {
-  const event = new LocalDropEvent(CLIENT_EVENT_TYPE.SEND_TEXT, { uuid, message: text });
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.SEND_TEXT,
+    new EventSendTextData({ uuid, message: text }));
 
   peerConnectionManager.dispatchEvent(event);
 }
 
+function sendFileToPeer(uuid, fingerprintedFile) {
+  const { file, fingerprint } = fingerprintedFile
+
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.SEND_FILES,
+    new EventSendFilesData({
+      uuid,
+      message: file.name,
+      size: file.length,
+      fingerprint,
+    }));
+
+  peerConnectionManager.dispatchEvent(event);
+}
+
+function sendFilesToPeer(uuid, fingerprintedFiles) {
+  fingerprintedFiles.forEach((fingerprintedFile) => {
+    sendFileToPeer(uuid, fingerprintedFile);
+  });
+}
+
 function connectToPeer(uuid) {
-  const event = new LocalDropEvent(CLIENT_EVENT_TYPE.CONNECT, { uuid });
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.CONNECT,
+    new EventConnectData({ uuid }));
 
   peerConnectionManager.dispatchEvent(event);
 }
 
 function sendMessageToServer(message) {
-  const event = new LocalDropEvent(CLIENT_EVENT_TYPE.SEND_MESSAGE, { message });
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.SEND_MESSAGE,
+    new EventSendMessageData({ message }));
 
   websocketManager.dispatchEvent(event);
 }
@@ -60,6 +94,7 @@ function getMyUUID() {
 
 export {
   sendTextToPeer,
+  sendFilesToPeer,
   sendMessageToServer,
   connectToPeer,
   closeWebSocket,

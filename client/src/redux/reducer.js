@@ -72,6 +72,7 @@ function peerUUID(state = null, action) {
   return state;
 }
 
+// TODO: Change to key-value strcuture
 function filesToTransfer(state = [], action) {
   if (action.type === ADD_FILES) {
     const files = action.payload;

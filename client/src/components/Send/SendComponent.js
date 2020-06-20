@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { connectToPeer, sendTextToPeer } from '../../utils/localApi';
+import {
+  connectToPeer,
+  sendTextToPeer,
+  sendFilesToPeer,
+} from '../../utils/localApi';
 import { addFiles } from '../../redux/action';
+import { generateFingerPrint } from '../../utils/messagePacket';
+import FingerprintedFile from '../../utils/dataSchema/FingerprintedFile';
 
 const Send = styled.div`
   display: flex;
@@ -38,7 +44,34 @@ class SendComponent extends Component {
   }
 
   handleFiles(event) {
-    this.props.dispatch(addFiles(event.target.files));
+    const { peerUUID } = this.props;
+    // 그럼 여기서 packet을 보내야한다는 거네?
+
+    if (peerUUID) {
+      const files = event.target.files;
+
+      if (files.length === 0) {
+        console.log('no files are selected');
+        return;
+      }
+
+      const fingerprintedFiles = [];
+      for (let i = 0; i < files.length; i ++) {
+        fingerprintedFiles.push(
+          new FingerprintedFile({
+            file: files.item(i),
+            fingerprint: generateFingerPrint()
+          }));
+      }
+
+      console.log('files are ', files);
+
+      this.props.dispatch(addFiles(fingerprintedFiles));
+
+      sendFilesToPeer(peerUUID, fingerprintedFiles);
+    } else {
+      // TODO: handle null case!
+    }
   }
 
   handleText(event) {
@@ -61,7 +94,7 @@ class SendComponent extends Component {
       sendTextToPeer(peerUUID, text);
     // connectToPeer(uuid);
     } else {
-      // TODO: handle null calse!
+      // TODO: handle null case!
     }
   }
 

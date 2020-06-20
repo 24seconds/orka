@@ -10,31 +10,26 @@ function generateFingerPrint() {
 }
 
 function createMessagePacket({
-  source, destination, messageType, content,
+  source, destination, messageType, data, size,
 }) {
   if (messageType === PEER_MESSAGE_TYPE.TEXT) {
+    const { message } = data;
+
     return {
       source,
       destination,
       type: messageType,
-      data: {
-        message: content
-      },
-      size: content.length
+      data,
+      size: message.length
     }
   }
 
   if (messageType === PEER_MESSAGE_TYPE.FILE) {
-    const { name, size, type } = content;
-
     return {
       source,
       destination,
       type: messageType,
-      data: {
-        message: name,
-        fingerprint: generateFingerPrint(),
-      },
+      data,
       size,
     }
   }
@@ -44,9 +39,7 @@ function createMessagePacket({
       source,
       destination,
       type: messageType,
-      data: {
-        message: content
-      }
+      data,
     }
   }
 }
