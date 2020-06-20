@@ -53,4 +53,5 @@ function createMessagePacket({
 
 export {
   createMessagePacket,
+  generateFingerPrint,
 }

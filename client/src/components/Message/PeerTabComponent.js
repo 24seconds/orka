@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { connectToPeer } from '../../utils/localApi';
 import { updatePeerUUID } from '../../redux/action';
+import StreamSaver from 'streamsaver';
+import { generateFingerPrint } from '../../utils/messagePacket';
 
+StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
 
 const PeerTab = styled.div`
   background: blue;
@@ -51,19 +54,51 @@ class PeerTabComponent extends Component {
   }
 
   async onTestPostMessage() {
-    console.log('navigator.serviceWorker is ', navigator.serviceWorker);
+    const byte = new TextEncoder().encode("hahaha");
 
-    navigator.serviceWorker.controller.postMessage("this is message!");
+    const options = {
+      pathname: generateFingerPrint(),
+      size: 1024 * byte.length,
+    };
+    const fileStream = StreamSaver.createWriteStream('test_streamsaver2.txt', options);
+    window.fileStream = fileStream;
 
-    const response = await fetch(`${ process.env.REACT_APP_PUBLIC_URL }/test`);
-    const result = await response.json();
+    const writer = fileStream.getWriter();
+    window.writer = writer;
 
-    console.log('result is ', result);
+    window.onunload = () => window.writer.abort();
 
+    writer.write(byte)
+    let i = 1
+    const interval = setInterval(() => {
+      writer.write(byte)
+      i++
+      writer.write(byte)
+      i++
+      writer.write(byte)
+      i++
+      writer.write(byte)
+      i++
 
+      if (i >= 1024) {
+        writer.close()
+        clearInterval(interval)
 
-    // const readable = new ReadableStream();
-    // console.log('readable is ', readable);
+        const iframes = document.querySelectorAll('iframe');
+
+        console.log('iframes is ', iframes);
+
+        iframes.forEach(iframe => {
+          console.log('iframe is ', iframe);
+          console.log('iframe.src is ', iframe.src);
+
+          if (iframe.src.includes(options.pathname)) {
+            console.log('remove iframe: ', options.pathname);
+            iframe.remove();
+          }
+        })
+      }
+    }, 1);
 
   }
 
