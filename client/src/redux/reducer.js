@@ -73,11 +73,19 @@ function peerUUID(state = null, action) {
 }
 
 // TODO: Change to key-value strcuture
-function filesToTransfer(state = [], action) {
+function filesToTransfer(state = {}, action) {
   if (action.type === ADD_FILES) {
-    const files = action.payload;
+    const fingerprintedFiles = action.payload;
 
-    return [...state, ...files];
+    const newState = { ...state };
+
+    fingerprintedFiles.forEach((fingerprintedFile) => {
+      const { file, fingerprint } = fingerprintedFile;
+
+      newState[fingerprint] = file;
+    });
+
+    return newState;
   }
 
   return state;

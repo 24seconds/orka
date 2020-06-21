@@ -33,9 +33,9 @@ export const updatePeerUUID = uuid => ({
   payload: uuid,
 })
 
-export const addFiles = files => ({
+export const addFiles = fingerprintedFiles => ({
   type: ADD_FILES,
-  payload: files
+  payload: fingerprintedFiles
 });
 
 export const deleteFiles = files => ({
