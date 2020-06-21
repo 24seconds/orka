@@ -16,7 +16,6 @@ class MessageTableHeaderComponent extends Component {
   render() {
     return (
       <MessageTableHeader className='localdrop-message-table-header'>
-        <HeaderItem>CheckBox</HeaderItem>
         <HeaderItem>Source</HeaderItem>
         <HeaderItem>Destination</HeaderItem>
         <HeaderItem>NO.</HeaderItem>
