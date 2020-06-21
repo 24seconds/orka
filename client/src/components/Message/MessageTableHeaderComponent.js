@@ -18,7 +18,7 @@ class MessageTableHeaderComponent extends Component {
       <MessageTableHeader className='localdrop-message-table-header'>
         <HeaderItem>Source</HeaderItem>
         <HeaderItem>Destination</HeaderItem>
-        <HeaderItem>NO.</HeaderItem>
+        { false && <HeaderItem>NO.</HeaderItem> }
         <HeaderItem>TYPE</HeaderItem>
         <HeaderItem>Content</HeaderItem>
         <HeaderItem>SIZE</HeaderItem>
