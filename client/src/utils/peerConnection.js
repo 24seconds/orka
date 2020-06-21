@@ -1,4 +1,5 @@
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
+import { messageTextData, messageFileData } from './dataSchema/PeerMessageData';
 import { createMessage } from './message';
 import { createPeerMessage, parsePeerMessage } from './peerMessage';
 import { createMessagePacket } from './messagePacket';
@@ -72,7 +73,7 @@ function handleDataChannelMessage(event, uuid) {
       source: getMyUUID(),
       destination: uuid,
       data,
-      messageType: PEER_MESSAGE_TYPE.TEXT,
+      messageType,
     });
 
     console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
@@ -86,7 +87,7 @@ function handleDataChannelMessage(event, uuid) {
       source: getMyUUID(),
       destination: uuid,
       data,
-      messageType: PEER_MESSAGE_TYPE.FILE,
+      messageType,
     });
 
     console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
@@ -185,7 +186,9 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     }
 
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, { message });
+    const data = new messageTextData({ message });
+
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
 
     console.log('CLIENT_EVENT_TYPE.SEND_TEXT, message is ', peerMessage);
 
@@ -202,14 +205,14 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const messagePacket = createMessagePacket({
       source: getMyUUID(),
       destination: uuid,
-      data: { message },
+      data,
       messageType: PEER_MESSAGE_TYPE.TEXT,
     });
 
     addMessagePacket(messagePacket);
   });
 
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event =>{
+  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event => {
     const { uuid, message, size, fingerprint } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
@@ -217,9 +220,9 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     }
 
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, {
-      fingerprint, message, size,
-    });
+    const data = new messageFileData({ fingerprint, size, message });
+
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, data);
 
     console.log('CLIENT_EVENT_TYPE.SEND_FILES, message is ', peerMessage);
 
@@ -236,8 +239,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const messagePacket = createMessagePacket({
       source: getMyUUID(),
       destination: uuid,
-      size,
-      data: { message, fingerprint },
+      data,
       messageType: PEER_MESSAGE_TYPE.FILE,
     });
 
