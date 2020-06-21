@@ -11,35 +11,12 @@ const MessageTable = styled.div`
 
 
 class MessageTableComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      mockMessages: [
-        'message1',
-        'message2',
-        'message3',
-        'message4',
-        'message5',
-        'message6',
-      ]
-    };
-  }
-
   render() {
-    const { mockMessages } = this.state;
     const { messagePackets } = this.props;
 
     return (
       <MessageTable>
         <MessageTableHeaderComponent />
-        {
-          mockMessages.map(packet => {
-            return (
-              <MessageItemComponent message={ `#${packet}` } />
-            )
-          })
-        }
         {
           messagePackets.map(packet => {
             return (
