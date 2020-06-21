@@ -20,7 +20,9 @@ class MessageTableComponent extends Component {
         {
           messagePackets.map(packet => {
             return (
-              <MessageItemComponent messagePacket={ packet } />
+              <MessageItemComponent
+                key={ packet.fingerprint }
+                messagePacket={ packet } />
             )
           })
         }

@@ -93,6 +93,7 @@ async function handleDataChannelMessage(event, uuid) {
     } else {
       const options = {
         pathname: generateFingerPrint(),
+        // TODO: Change size to real length,
         size: 6150,
       };
 
@@ -264,7 +265,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     }
 
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const data = new messageTextData({ message, size: message.length });
+    const data = new messageTextData({
+      message,
+      size: message.length,
+      fingerprint: generateFingerPrint(),
+    });
 
     const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
 

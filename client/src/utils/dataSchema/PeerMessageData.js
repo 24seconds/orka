@@ -1,7 +1,8 @@
 class messageTextData {
-  constructor({ message, size }) {
+  constructor({ message, size, fingerprint }) {
     this.message = message;
     this.size = size;
+    this.fingerprint = fingerprint;
   }
 }
 
