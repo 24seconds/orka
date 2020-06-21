@@ -3,6 +3,7 @@ import LocalDropEvent from './LocalDropEvent';
 import {
   EventSendTextData,
   EventSendFilesData,
+  EventDownloadFileData,
   EventConnectData,
   EventSendMessageData
 } from './dataSchema/LocalDropEventData';
@@ -28,12 +29,14 @@ function sendTextToPeer(uuid, text) {
 function sendFileToPeer(uuid, fingerprintedFile) {
   const { file, fingerprint } = fingerprintedFile
 
+  console.log('sendFileToPeer, file is', file);
+
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.SEND_FILES,
     new EventSendFilesData({
       uuid,
       message: file.name,
-      size: file.length,
+      size: file.size,
       fingerprint,
     }));
 
@@ -44,6 +47,18 @@ function sendFilesToPeer(uuid, fingerprintedFiles) {
   fingerprintedFiles.forEach((fingerprintedFile) => {
     sendFileToPeer(uuid, fingerprintedFile);
   });
+}
+
+function requestDownloadFile(uuid, data) {
+  const { fingerprint } = data;
+
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.DOWNLOAD_FILE,
+    new EventDownloadFileData({
+      uuid, fingerprint
+    }));
+
+  peerConnectionManager.dispatchEvent(event);
 }
 
 function connectToPeer(uuid) {
@@ -95,6 +110,7 @@ function getMyUUID() {
 export {
   sendTextToPeer,
   sendFilesToPeer,
+  requestDownloadFile,
   sendMessageToServer,
   connectToPeer,
   closeWebSocket,

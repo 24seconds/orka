@@ -14,6 +14,13 @@ class EventSendFilesData {
   }
 }
 
+class EventDownloadFileData {
+  constructor({ uuid, fingerprint }) {
+    this.uuid = uuid;
+    this.fingerprint = fingerprint;
+  }
+}
+
 class EventConnectData {
   constructor({ uuid }) {
     this.uuid = uuid;
@@ -30,6 +37,7 @@ class EventSendMessageData {
 export {
   EventSendTextData,
   EventSendFilesData,
+  EventDownloadFileData,
   EventConnectData,
   EventSendMessageData
 }

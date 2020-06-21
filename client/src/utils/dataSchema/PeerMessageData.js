@@ -1,6 +1,7 @@
 class messageTextData {
-  constructor({ message }) {
+  constructor({ message, size }) {
     this.message = message;
+    this.size = size;
   }
 }
 

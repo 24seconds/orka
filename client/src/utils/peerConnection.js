@@ -186,7 +186,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     }
 
     const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const data = new messageTextData({ message });
+    const data = new messageTextData({ message, size: message.length });
 
     const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
 

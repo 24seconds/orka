@@ -82,6 +82,7 @@ export const CLIENT_EVENT_TYPE = {
   'CONNECT': 'connect',
   'SEND_TEXT': 'send_text',
   'SEND_FILES': 'send_files',
+  'DOWNLOAD_FILE': 'donwload_file',
   'RECONNECT': 'reconnect',
   // TODO Change name to SEND_MESSAGE_TO_SIGNAL
   'SEND_MESSAGE': 'send_message',
