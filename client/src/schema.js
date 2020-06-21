@@ -126,7 +126,6 @@ const messagePacketSchema = {
   'destination': 'uuid string',
   'type': 'PEER_MESSAGE_TYPE string',
   'data': 'peerDataSchema',
-  'size': 'int',
   'time': 'date',
   'progress': 'int',
 }
