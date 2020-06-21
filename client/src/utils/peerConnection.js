@@ -68,16 +68,28 @@ function createPeerConnection(uuid) {
 }
 
 let downloadWriter = null;
+const chunkArr = [];
 
-function handleDataChannelMessage(event, uuid) {
+async function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
 
   if (typeof event.data !== 'string') {
-    console.log('typeof event.data is ', typeof event.data);
-    const buffer = new Uint8Array(event.data);
+    const arrayBuffer = event.data;
+
+    chunkArr.push(arrayBuffer);
 
     if (downloadWriter) {
-      downloadWriter.write(buffer);
+      if (chunkArr.length >= 625) {
+        const arrayBuffers = [...chunkArr];
+        chunkArr.splice(0, chunkArr.length);
+
+        const blob = new Blob(arrayBuffers);
+        const arrayBuffer = await blob.arrayBuffer();
+
+        const buffer = new Uint8Array(arrayBuffer);
+
+        downloadWriter.write(buffer);
+      }
     } else {
       const options = {
         pathname: generateFingerPrint(),
@@ -94,7 +106,6 @@ function handleDataChannelMessage(event, uuid) {
       window.onunload = () => window.writer.abort();
 
       downloadWriter = writer;
-      downloadWriter.write(buffer);
     }
 
     return;
@@ -102,6 +113,18 @@ function handleDataChannelMessage(event, uuid) {
 
   if (event.data === 'done') {
     console.log('done streaming');
+
+    if (chunkArr.length > 0) {
+      const arrayBuffers = [...chunkArr];
+      chunkArr.splice(0, chunkArr.length);
+
+      const blob = new Blob(arrayBuffers);
+      const arrayBuffer = await blob.arrayBuffer();
+
+      const buffer = new Uint8Array(arrayBuffer);
+
+      downloadWriter.write(buffer);
+    }
 
     downloadWriter.close();
     downloadWriter = null;
