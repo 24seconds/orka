@@ -47,6 +47,8 @@ class SendComponent extends Component {
     const { peerUUID } = this.props;
     // 그럼 여기서 packet을 보내야한다는 거네?
 
+    console.log('handleFiles called, peerUUID is ', peerUUID);
+
     if (peerUUID) {
       const files = event.target.files;
 
@@ -64,7 +66,7 @@ class SendComponent extends Component {
           }));
       }
 
-      console.log('files are ', files);
+      console.log('handleFiles, files are ', files);
 
       this.props.dispatch(addFiles(fingerprintedFiles));
 
@@ -111,6 +113,7 @@ class SendComponent extends Component {
           type='file'
           ref={ (ref) => this.fileInputRef = ref }
           multiple={ true }
+          onClick={ () => { this.fileInputRef.value = null } }
           onChange={ this.handleFiles }/>
         <button onClick={ this.onClickFile }> + </button>
         <textarea value={ text } onChange={ this.handleText } />
