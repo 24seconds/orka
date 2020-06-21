@@ -18,11 +18,13 @@ class MessageTableComponent extends Component {
       <MessageTable>
         <MessageTableHeaderComponent />
         {
-          messagePackets.map(packet => {
+          messagePackets.map(messagePacket => {
+            const { data } = messagePacket;
+
             return (
               <MessageItemComponent
-                key={ packet.fingerprint }
-                messagePacket={ packet } />
+                key={ data.fingerprint }
+                messagePacket={ messagePacket } />
             )
           })
         }
