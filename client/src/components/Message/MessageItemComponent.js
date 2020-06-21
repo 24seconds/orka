@@ -95,13 +95,17 @@ class MessageItemComponent extends Component {
         { this.renderContent(type, data) }
         <MessageButtonCell onClick={ this.onDownloadOrCopy }>
           {
-            type === PEER_MESSAGE_TYPE.DOWNLOAD
+            type === PEER_MESSAGE_TYPE.FILE
             ? 'Download'
             : 'Copy'
           }
         </MessageButtonCell>
-        <MessageButtonCell>+</MessageButtonCell>
-        <MessageButtonCell>Delete</MessageButtonCell>
+        {
+          false && <MessageButtonCell>+</MessageButtonCell>
+        }
+        {
+          false && <MessageButtonCell>Delete</MessageButtonCell>
+        }
       </Fragment>
     );
   }
