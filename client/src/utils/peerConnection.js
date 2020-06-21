@@ -1,8 +1,12 @@
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
-import { messageTextData, messageFileData } from './dataSchema/PeerMessageData';
+import {
+  messageTextData,
+  messageFileData,
+  messageDownloadData,
+} from './dataSchema/PeerMessageData';
 import { createMessage } from './message';
 import { createPeerMessage, parsePeerMessage } from './peerMessage';
-import { createMessagePacket } from './messagePacket';
+import { createMessagePacket, generateFingerPrint } from './messagePacket';
 import {
   sendMessageToServer,
   addJoinedPeers,
@@ -10,7 +14,10 @@ import {
   updateUUID,
   getMyUUID,
   addMessagePacket,
+  transferFile,
 } from './localApi';
+import StreamSaver from 'streamsaver';
+StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
 
 function createPeerConnection(uuid) {
   const peerConnection = new RTCPeerConnection();
@@ -60,8 +67,47 @@ function createPeerConnection(uuid) {
   return { peerConnection, dataChannel };
 }
 
+let downloadWriter = null;
+
 function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
+
+  if (typeof event.data !== 'string') {
+    console.log('typeof event.data is ', typeof event.data);
+    const buffer = new Uint8Array(event.data);
+
+    if (downloadWriter) {
+      downloadWriter.write(buffer);
+    } else {
+      const options = {
+        pathname: generateFingerPrint(),
+        size: 6150,
+      };
+
+      const fileStream = StreamSaver.createWriteStream('test_stream_datachannel.txt', options);
+      // const fileStream = StreamSaver.createWriteStream('test_stream_datachannel.txt');
+      window.fileStream = fileStream;
+
+      const writer = fileStream.getWriter();
+      window.writer = writer;
+
+      window.onunload = () => window.writer.abort();
+
+      downloadWriter = writer;
+      downloadWriter.write(buffer);
+    }
+
+    return;
+  }
+
+  if (event.data === 'done') {
+    console.log('done streaming');
+
+    downloadWriter.close();
+    downloadWriter = null;
+    return;
+  }
+
   const message = parsePeerMessage(event.data);
 
   console.log(`[peer ${uuid}]: handleDataChannelMessage, message is `, message);
@@ -93,6 +139,15 @@ function handleDataChannelMessage(event, uuid) {
     console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
     addMessagePacket(messagePacket);
 
+    return;
+  }
+
+  if (messageType === PEER_MESSAGE_TYPE.DOWNLOAD) {
+    // TODO: Handle this later
+    const { fingerprint } = data;
+    // transfer file
+
+    transferFile(fingerprint, uuid);
     return;
   }
 
@@ -244,6 +299,32 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     });
 
     addMessagePacket(messagePacket);
+  });
+
+  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.DOWNLOAD_FILE, event => {
+    const { uuid, fingerprint } = event;
+
+    if (!peerConnectionManager.peerConnections[uuid]) {
+      return;
+    }
+
+    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+    const data = new messageDownloadData({ fingerprint });
+
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.DOWNLOAD, data);
+
+    console.log('CLIENT_EVENT_TYPE.DOWNLOAD_FILE, message is ', peerMessage);
+
+    console.log('dataChannel is ', dataChannel);
+    console.log('dataChannel.readyState is ', dataChannel.readyState);
+
+    if (dataChannel.readyState !== 'open') {
+      console.log('dataChannel not opened!');
+      return;
+    }
+
+    dataChannel.send(peerMessage);
+    // TODO: should I notify that peerMessage has been sent well?
   });
 
 

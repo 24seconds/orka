@@ -107,6 +107,60 @@ function getMyUUID() {
   return store.getState().myUUID;
 }
 
+function getFileToTransfer(fingerprint) {
+  const filesToTransfer = store.getState().filesToTransfer;
+
+  return filesToTransfer[fingerprint];
+}
+
+function transferFile(fingerprint, uuid) {
+  // TODO: if duplicate download request comes, ignore or handle it
+
+  const file = getFileToTransfer(fingerprint);
+
+  if (!file) {
+    // TODO: send error message to peer
+    // TODO: handle later. Notify user that file link has expired!
+  }
+
+  if (!peerConnectionManager.peerConnections[uuid]) {
+    // TODO: send error message to peer
+
+    return;
+  }
+
+  const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+
+  const readFile = (file, offset, chunkSize, reader) => {
+    if (offset > file.size) {
+      dataChannel.send('done');
+      return;
+    }
+
+    const chunk = file.slice(offset, offset + chunkSize);
+    reader.readAsArrayBuffer(chunk);
+  }
+
+  const reader = new FileReader();
+  const chunkSize = 16000;
+  let offset = 0;
+
+  readFile(file, offset, chunkSize, reader);
+
+  reader.addEventListener('load', (event) => {
+    console.log('event.target.result is ', event.target.result);
+    console.log('typeof event.target.result is ', typeof event.target.result);
+
+    offset += chunkSize;
+
+    // send chunk via data channel
+    dataChannel.send(event.target.result);
+
+    // read next chunk
+    readFile(file, offset, chunkSize, reader);
+  });
+}
+
 export {
   sendTextToPeer,
   sendFilesToPeer,
@@ -120,4 +174,6 @@ export {
   updateUUID,
   getPeerUUID,
   getMyUUID,
+  getFileToTransfer,
+  transferFile
 };

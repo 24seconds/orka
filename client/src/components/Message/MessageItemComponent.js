@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { PEER_MESSAGE_TYPE } from '../../schema';
+import { requestDownloadFile } from '../../utils/localApi';
 
 
 const MessageItem = styled.div`
@@ -51,7 +52,8 @@ class MessageItemComponent extends Component {
     }
 
     if (type === PEER_MESSAGE_TYPE.FILE) {
-
+      // request download
+      requestDownloadFile(destination, data);
       return;
     }
 
