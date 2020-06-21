@@ -117,7 +117,8 @@ const peerMessageDataSchema = {
   fileDataSchema: {
     message: 'string',
     fingerprint: 'string',
-  }
+  },
+  downloadData: { fingerprint: 'string' }
 }
 
 const messagePacketSchema = {

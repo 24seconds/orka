@@ -13,8 +13,15 @@ class messageFileData {
   }
 }
 
+class messageDownloadData {
+  constructor({ fingerprint }) {
+    this.fingerprint = fingerprint;
+  }
+}
+
 
 export {
   messageTextData,
   messageFileData,
+  messageDownloadData,
 }
