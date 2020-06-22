@@ -6,6 +6,7 @@ import {
   UPDATE_MY_UUID,
   UPDATE_PEER_UUID,
   ADD_FILES,
+  UPDATE_PROGRESS,
 } from './actionType';
 
 const initialState = { peers: [], message: [] }
@@ -52,6 +53,21 @@ function messagePackets(state = [], action) {
   return state;
 }
 
+function messageProgresses(state = {}, action) {
+  if (action.type === UPDATE_PROGRESS) {
+    const newState = { ...state };
+    const { fingerprint, progress } = action.payload;
+
+    if (newState[fingerprint]) {
+      newState[fingerprint] = progress;
+    }
+
+    return newState;
+  }
+
+  return state;
+}
+
 function myUUID(state = null, action) {
   if (action.type === UPDATE_MY_UUID) {
     const newState = action.payload;
@@ -72,7 +88,6 @@ function peerUUID(state = null, action) {
   return state;
 }
 
-// TODO: Change to key-value strcuture
 function filesToTransfer(state = {}, action) {
   if (action.type === ADD_FILES) {
     const fingerprintedFiles = action.payload;
@@ -96,6 +111,7 @@ export default combineReducers({
   messagePackets,
   myUUID,
   peerUUID,
-  filesToTransfer
+  filesToTransfer,
+  messageProgresses
 });
 

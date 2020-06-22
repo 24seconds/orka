@@ -6,6 +6,7 @@ import {
   UPDATE_PEER_UUID,
   ADD_FILES,
   DELETE_FILES,
+  UPDATE_PROGRESS,
 } from './actionType';
 
 export const addPeer = peerList => ({
@@ -41,4 +42,9 @@ export const addFiles = fingerprintedFiles => ({
 export const deleteFiles = files => ({
   type: DELETE_FILES,
   payload: files
+});
+
+export const updateProgress = (fingerprint, progress) => ({
+  type: UPDATE_PROGRESS,
+  payload: { fingerprint, progress }
 });
