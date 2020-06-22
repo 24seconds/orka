@@ -29,6 +29,16 @@ const PeerTabButton = styled.button`
   }
 `;
 
+const Peers = styled.div`
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  background: #ffffffba;
+  padding: 2px;
+`;
+
 
 class PeerTabComponent extends Component {
   constructor(props) {
@@ -53,9 +63,13 @@ class PeerTabComponent extends Component {
     return (
       <Fragment>
         <PeerTab className='localdrop-peer-tab'>
-          <PeerTabButton key='ALL'>
-            ALL
-          </PeerTabButton>
+          <Peers>PEERS:</Peers>
+          {
+            false &&
+            <PeerTabButton key='ALL' disabled={ false }>
+              ALL
+            </PeerTabButton>
+          }
           {
             peers && peers.map(peer => {
               return (
@@ -68,9 +82,12 @@ class PeerTabComponent extends Component {
             })
           }
         </PeerTab>
-        <ConnectivityState className='localdrop-connectivity-state'>
-          Peer Connection State: Connected, <button> Retry </button>
-        </ConnectivityState>
+        {
+          false &&
+          <ConnectivityState className='localdrop-connectivity-state'>
+            Peer Connection State: Connected, <button> Retry </button>
+          </ConnectivityState>
+        }
       </Fragment>
     )
   }
