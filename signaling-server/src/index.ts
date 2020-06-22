@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import WebSocket from 'ws';
-import { v4 as uuidv4 } from 'uuid';
 import { IncomingMessage } from 'http';
 import * as crypto from 'crypto';
 import PORT from './config/constants';
