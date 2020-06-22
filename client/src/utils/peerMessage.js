@@ -89,6 +89,7 @@ function parseChunkAndHeader(chunkWithHeader) {
   console.log('receiver: fingerprint is ', fingerprint);
   console.log('receiver: totalNumber is ', totalNumber);
   console.log('receiver: chunkNumber is ', chunkNumber);
+  console.log('receiver: chunk size is ', chunk.byteLength);
 
   return {
     fingerprint,

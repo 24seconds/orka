@@ -88,8 +88,8 @@ async function handleDataChannelMessage(event, uuid) {
 
   if (messageType === PEER_MESSAGE_TYPE.TEXT) {
     const messagePacket = createMessagePacket({
-      source: getMyUUID(),
-      destination: uuid,
+      source: uuid,
+      destination: getMyUUID(),
       data,
       messageType,
     });
@@ -102,8 +102,8 @@ async function handleDataChannelMessage(event, uuid) {
 
   if (messageType === PEER_MESSAGE_TYPE.FILE) {
     const messagePacket = createMessagePacket({
-      source: getMyUUID(),
-      destination: uuid,
+      source: uuid,
+      destination: getMyUUID(),
       data,
       messageType,
     });

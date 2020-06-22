@@ -36,7 +36,7 @@ class MessageItemComponent extends Component {
 
   onDownloadOrCopy() {
     const { messagePacket } = this.props;
-    const { source, destination, type, data } = messagePacket;
+    const { source, type, data } = messagePacket;
 
     if (type === PEER_MESSAGE_TYPE.TEXT) {
       const { message } = data;
@@ -53,7 +53,7 @@ class MessageItemComponent extends Component {
 
     if (type === PEER_MESSAGE_TYPE.FILE) {
       // request download
-      requestDownloadFile(destination, data);
+      requestDownloadFile(source, data);
       return;
     }
 
