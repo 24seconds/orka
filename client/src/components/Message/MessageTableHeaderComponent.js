@@ -23,7 +23,7 @@ class MessageTableHeaderComponent extends Component {
         <HeaderItem>Content</HeaderItem>
         <HeaderItem>SIZE</HeaderItem>
         <HeaderItem>Time</HeaderItem>
-        <HeaderItem>Progress</HeaderItem>
+        { false && <HeaderItem>Progress</HeaderItem> }
       </MessageTableHeader>
     );
   }
