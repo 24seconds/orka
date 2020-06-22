@@ -11,6 +11,15 @@ const MessageTableHeader = styled.div`
   display: flex;
   justify-content: flex-start;
   border: solid 1px grey;
+
+  /* overflow-x: hidden; */
+  overflow-x: scroll;
+  scrollbar-width: none; /* Firefox */
+
+  ::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+  }
 `;
 
 const HeaderItem = styled.div`

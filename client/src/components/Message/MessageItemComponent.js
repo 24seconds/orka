@@ -17,6 +17,7 @@ const MessageItem = styled.div`
   font-size: 18px;
   border: solid 1px grey;
   border-style: none solid solid solid;
+  width: max-content;
 `;
 
 const MessageCell = styled.div`

@@ -12,4 +12,6 @@ export const messageCell = css`
   height: 30px;
   font-size: 16px;
   width: ${props => props.width || TabDefaultWidth }px;
+  min-width: ${props => props.width || TabDefaultWidth }px;
+  max-width: ${props => props.width || TabDefaultWidth }px;
 `
