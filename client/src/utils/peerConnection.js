@@ -70,8 +70,6 @@ function createPeerConnection(uuid) {
 }
 
 async function handleDataChannelMessage(event, uuid) {
-  console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
-
   if (typeof event.data !== 'string') {
     const arrayBuffer = event.data;
 

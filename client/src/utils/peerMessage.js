@@ -55,9 +55,6 @@ function parseChunkAndHeader(chunkWithHeader) {
   const chunk =
     uInt8Array.slice(HEADER_SIZE_IN_BYTES, uInt8Array.byteLength).buffer;
 
-  console.log('receiver: fingerprint is ', fingerprint);
-  console.log('receiver: chunk size is ', chunk.byteLength);
-
   return {
     fingerprint,
     chunk
