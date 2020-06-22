@@ -65,13 +65,19 @@ class MessageItemComponent extends Component {
   renderContent(messageType, data) {
     if (messageType === PEER_MESSAGE_TYPE.TEXT) {
       return (
-        <MessageCell>{ `${ data.message }` }</MessageCell>
+        <Fragment>
+          <MessageCell>{ `${ data.message }` }</MessageCell>
+          <MessageCell>{ `${ data.size }` }</MessageCell>
+        </Fragment>
       );
     }
 
     if (messageType === PEER_MESSAGE_TYPE.FILE) {
       return (
-        <MessageCell>{ `${ data.message }` }</MessageCell>
+        <Fragment>
+          <MessageCell>{ `${ data.message }` }</MessageCell>
+          <MessageCell>{ `${ data.size }` }</MessageCell>
+        </Fragment>
       );
     }
 
@@ -85,7 +91,14 @@ class MessageItemComponent extends Component {
       return;
     }
 
-    const { source, destination, type, data } = messagePacket;
+    const {
+      source,
+      destination,
+      type,
+      data,
+      time,
+      progress,
+    } = messagePacket;
 
     return (
       <Fragment>
@@ -93,6 +106,8 @@ class MessageItemComponent extends Component {
         <MessageCell>{ `${ destination }` }</MessageCell>
         <MessageCell>{ `${ type }` }</MessageCell>
         { this.renderContent(type, data) }
+        <MessageCell>{ `${ time }` }</MessageCell>
+        <MessageCell>{ `${ progress }` }</MessageCell>
         <MessageButtonCell onClick={ this.onDownloadOrCopy }>
           {
             type === PEER_MESSAGE_TYPE.FILE
