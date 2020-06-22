@@ -19,6 +19,20 @@ function getCurrentTime() {
   return `${ hours }:${ minutes }:${ seconds }`;
 }
 
+function getSizeString(size) {
+  if (size >= 1000 && size < 1000 * 1000) {
+    return `${ (size / 1000).toFixed(1) } KB`;
+  }
+
+  if (size >= 1000 * 1000 && size < 1000 * 1000 * 1000) {
+    return `${ (size / (1000 * 1000)).toFixed(1) } MB`;
+  }
+
+  if (size >= 1000 * 1000 * 1000) {
+    return `${ (size / (1000 * 1000 * 1000)).toFixed(1) } GB`;
+  }
+}
+
 function createMessagePacket({
   source, destination, messageType, data,
 }) {
@@ -60,4 +74,5 @@ function createMessagePacket({
 export {
   createMessagePacket,
   generateFingerPrint,
+  getSizeString,
 }

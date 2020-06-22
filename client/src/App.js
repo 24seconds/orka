@@ -9,7 +9,7 @@ import FooterComponent from './components/FooterComponent';
 import SendComponent from './components/Send/SendComponent';
 
 const Container = styled.div`
-  margin: 200px;
+  margin: 100px;
   border: solid 2px black;
   background: #ffff0030;
 `;

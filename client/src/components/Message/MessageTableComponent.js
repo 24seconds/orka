@@ -12,6 +12,8 @@ const MessageTable = styled.div`
 const MessageItemContainer = styled.div`
   min-height: 100px;
   background: greenyellow;
+  overflow-y: scroll;
+  height: 300px;
 `;
 
 

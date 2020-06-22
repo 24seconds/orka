@@ -2,24 +2,60 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { PEER_MESSAGE_TYPE } from '../../schema';
 import { requestDownloadFile } from '../../utils/localApi';
-
+import { messageCell } from '../SharedStyle';
+import {
+  TabContentWidth,
+  TabSmallWidth,
+  TabSmall2Width,
+} from '../../constants/styleConstants';
+import { getMyUUID } from '../../utils/localApi';
+import { getSizeString } from '../../utils/messagePacket';
 
 const MessageItem = styled.div`
   display: flex;
-  height: 30px;
+  height: 40px;
   font-size: 18px;
   border: solid 1px grey;
+  border-style: none solid solid solid;
 `;
 
 const MessageCell = styled.div`
-  border: solid 1px black;
-  margin: 0 10px;
+  ${ messageCell }
+  /* border: solid 1px black; */
+  height: auto;
+  border-style: none solid none none;
+  font-size: 14px;
+`;
+
+const MessageContentCellContainer = styled.div`
+  ${ messageCell }
+  justify-content: flex-start;
+  border-style: none solid none none;
+  height: auto;
+`;
+
+const MessageContentCell = styled.span`
+  display: block;
+  height: auto;
+  border-style: none;
+  text-align: left;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const MessageButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 `;
 
 const MessageButtonCell = styled.button`
   border: solid 1px black;
-  margin: 0 10px;
   outline: none;
+  font-size: 14px;
+  height: 30px;
 
   &:hover {
     cursor: pointer;
@@ -32,6 +68,7 @@ class MessageItemComponent extends Component {
     super(props);
 
     this.onDownloadOrCopy = this.onDownloadOrCopy.bind(this);
+    this.isMyMessagePacket = this.isMyMessagePacket.bind(this);
   }
 
   onDownloadOrCopy() {
@@ -62,23 +99,56 @@ class MessageItemComponent extends Component {
     }
   }
 
+  isMyMessagePacket(source) {
+    console.log('isMyMessagePacket, source is ', source);
+    console.log('isMyMessagePacket, getMyUUID() is ', getMyUUID());
+
+    return source === getMyUUID();
+  }
+
   renderContent(messageType, data) {
     if (messageType === PEER_MESSAGE_TYPE.TEXT) {
       return (
         <Fragment>
-          <MessageCell>{ `${ data.message }` }</MessageCell>
-          <MessageCell>{ `${ data.size }` }</MessageCell>
+          <MessageContentCellContainer width={ TabContentWidth }>
+            <MessageContentCell>{ `${ data.message }` }</MessageContentCell>
+          </MessageContentCellContainer>
+          <MessageCell padding={ '0' }>{ `${ data.size }` }</MessageCell>
         </Fragment>
       );
     }
 
     if (messageType === PEER_MESSAGE_TYPE.FILE) {
+      const sizeString =  getSizeString(data.size);
+
       return (
         <Fragment>
-          <MessageCell>{ `${ data.message }` }</MessageCell>
-          <MessageCell>{ `${ data.size }` }</MessageCell>
+          <MessageContentCellContainer width={ TabContentWidth }>
+            <MessageContentCell>{ `${ data.message }` }</MessageContentCell>
+          </MessageContentCellContainer>
+          <MessageCell padding={ '0' }>{ sizeString }</MessageCell>
         </Fragment>
       );
+    }
+
+    return;
+  }
+
+  renderButton(messageType, source) {
+    if (messageType === PEER_MESSAGE_TYPE.TEXT) {
+      return (
+        <MessageButtonCell onClick={ this.onDownloadOrCopy }>
+          Copy
+        </MessageButtonCell>
+      )
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.FILE && !this.isMyMessagePacket(source)) {
+      return (
+        <MessageButtonCell onClick={ this.onDownloadOrCopy }>
+          Download
+        </MessageButtonCell>
+      )
     }
 
     return;
@@ -102,25 +172,20 @@ class MessageItemComponent extends Component {
 
     return (
       <Fragment>
-        <MessageCell>{ `${ source }` }</MessageCell>
-        <MessageCell>{ `${ destination }` }</MessageCell>
-        <MessageCell>{ `${ type }` }</MessageCell>
+        <MessageCell width={ TabSmall2Width } padding={ '0' }>
+          { `${ this.isMyMessagePacket(source) ? '⇇' : '⇉' }` }
+        </MessageCell>
+        <MessageCell padding={ '0' }>{ `${ source }` }</MessageCell>
+        <MessageCell padding={ '0' }>{ `${ destination }` }</MessageCell>
+        <MessageCell width={ TabSmallWidth }>{ `${ type }` }</MessageCell>
         { this.renderContent(type, data) }
-        <MessageCell>{ `${ time }` }</MessageCell>
-        <MessageCell>{ `${ progress }` }</MessageCell>
-        <MessageButtonCell onClick={ this.onDownloadOrCopy }>
-          {
-            type === PEER_MESSAGE_TYPE.FILE
-            ? 'Download'
-            : 'Copy'
-          }
-        </MessageButtonCell>
-        {
-          false && <MessageButtonCell>+</MessageButtonCell>
-        }
-        {
-          false && <MessageButtonCell>Delete</MessageButtonCell>
-        }
+        <MessageCell width={ TabSmallWidth }>{ `${ time }` }</MessageCell>
+        { false && <MessageCell>{ `${ progress }` }</MessageCell> }
+        <MessageButtonContainer>
+          { this.renderButton(type, source) }
+        </MessageButtonContainer>
+        { false && <MessageButtonCell>+</MessageButtonCell> }
+        { false && <MessageButtonCell>Delete</MessageButtonCell> }
       </Fragment>
     );
   }

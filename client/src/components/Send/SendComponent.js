@@ -27,12 +27,36 @@ const FileInput = styled.input`
   display: none;
 `;
 
+const SelectFileButton = styled.button`
+  width: 50px;
+  border: 1px solid #9e9e9e;
+  background-color: white;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+`;
+
+const SendPasteButton = styled.button`
+  width: 50px;
+  outline: none;
+  background-color: white;
+  border: 1px solid #9e9e9e;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+`;
+
 class SendComponent extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      text: 'Hello, World!',
+      text: 'Hello, World! Localdrop is made by 24seconds.',
       files: [],
     }
 
@@ -115,10 +139,10 @@ class SendComponent extends Component {
           multiple={ true }
           onClick={ () => { this.fileInputRef.value = null } }
           onChange={ this.handleFiles }/>
-        <button onClick={ this.onClickFile }> + </button>
+        <SelectFileButton onClick={ this.onClickFile }> + </SelectFileButton>
         <textarea value={ text } onChange={ this.handleText } />
-        <button>paste</button>
-        <button onClick={ this.onSend } >send</button>
+        <SendPasteButton>paste</SendPasteButton>
+        <SendPasteButton onClick={ this.onSend } >send</SendPasteButton>
       </Send>
     )
   }

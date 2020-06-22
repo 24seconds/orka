@@ -30,13 +30,13 @@ const PeerTabButton = styled.button`
 `;
 
 const Peers = styled.div`
-  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100px;
+  height: 50px;
+  font-size: 18px;
   background: #ffffffba;
-  padding: 2px;
 `;
 
 
