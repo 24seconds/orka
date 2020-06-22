@@ -5,7 +5,10 @@ import {
   messageDownloadData,
 } from './dataSchema/PeerMessageData';
 import { createMessage } from './message';
-import { createPeerMessage, parsePeerMessage } from './peerMessage';
+import {
+  createPeerMessage,
+  parsePeerMessage,
+} from './peerMessage';
 import { createMessagePacket, generateFingerPrint } from './messagePacket';
 import {
   sendMessageToServer,
@@ -14,10 +17,9 @@ import {
   updateUUID,
   getMyUUID,
   addMessagePacket,
-  transferFile,
+  transferFileToPeer,
+  writePeerChunk,
 } from './localApi';
-import StreamSaver from 'streamsaver';
-StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
 
 function createPeerConnection(uuid) {
   const peerConnection = new RTCPeerConnection();
@@ -67,68 +69,14 @@ function createPeerConnection(uuid) {
   return { peerConnection, dataChannel };
 }
 
-let downloadWriter = null;
-const chunkArr = [];
-
 async function handleDataChannelMessage(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelMessage, event is `, event);
 
   if (typeof event.data !== 'string') {
     const arrayBuffer = event.data;
 
-    chunkArr.push(arrayBuffer);
+    await writePeerChunk(arrayBuffer);
 
-    if (downloadWriter) {
-      if (chunkArr.length >= 625) {
-        const arrayBuffers = [...chunkArr];
-        chunkArr.splice(0, chunkArr.length);
-
-        const blob = new Blob(arrayBuffers);
-        const arrayBuffer = await blob.arrayBuffer();
-
-        const buffer = new Uint8Array(arrayBuffer);
-
-        downloadWriter.write(buffer);
-      }
-    } else {
-      const options = {
-        pathname: generateFingerPrint(),
-        // TODO: Change size to real length,
-        size: 6150,
-      };
-
-      const fileStream = StreamSaver.createWriteStream('test_stream_datachannel.txt', options);
-      // const fileStream = StreamSaver.createWriteStream('test_stream_datachannel.txt');
-      window.fileStream = fileStream;
-
-      const writer = fileStream.getWriter();
-      window.writer = writer;
-
-      window.onunload = () => window.writer.abort();
-
-      downloadWriter = writer;
-    }
-
-    return;
-  }
-
-  if (event.data === 'done') {
-    console.log('done streaming');
-
-    if (chunkArr.length > 0) {
-      const arrayBuffers = [...chunkArr];
-      chunkArr.splice(0, chunkArr.length);
-
-      const blob = new Blob(arrayBuffers);
-      const arrayBuffer = await blob.arrayBuffer();
-
-      const buffer = new Uint8Array(arrayBuffer);
-
-      downloadWriter.write(buffer);
-    }
-
-    downloadWriter.close();
-    downloadWriter = null;
     return;
   }
 
@@ -171,7 +119,7 @@ async function handleDataChannelMessage(event, uuid) {
     const { fingerprint } = data;
     // transfer file
 
-    transferFile(fingerprint, uuid);
+    transferFileToPeer(fingerprint, uuid);
     return;
   }
 

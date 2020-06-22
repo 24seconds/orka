@@ -16,7 +16,8 @@ import {
   addMessage,
   updateMyUUID,
 } from '../redux/action';
-
+import { parseChunkAndHeader } from './peerMessage';
+import { accumulateChunk, transferFile } from './downloadManager';
 
 function sendTextToPeer(uuid, text) {
   const event = new LocalDropEvent(
@@ -113,7 +114,7 @@ function getFileToTransfer(fingerprint) {
   return filesToTransfer[fingerprint];
 }
 
-function transferFile(fingerprint, uuid) {
+function transferFileToPeer(fingerprint, uuid) {
   // TODO: if duplicate download request comes, ignore or handle it
 
   const file = getFileToTransfer(fingerprint);
@@ -131,34 +132,27 @@ function transferFile(fingerprint, uuid) {
 
   const { dataChannel } = peerConnectionManager.peerConnections[uuid];
 
-  const readFile = (file, offset, chunkSize, reader) => {
-    if (offset > file.size) {
-      dataChannel.send('done');
-      return;
-    }
+  transferFile(fingerprint, file, dataChannel);
+}
 
-    const chunk = file.slice(offset, offset + chunkSize);
-    reader.readAsArrayBuffer(chunk);
-  }
+function getMessagePacket(fingerprint) {
+  // TODO: Make O(1)
 
-  const reader = new FileReader();
-  const chunkSize = 16000;
-  let offset = 0;
+  const messagePacket = store.getState().messagePackets.find((messagePacket) => {
+    const { data } = messagePacket;
 
-  readFile(file, offset, chunkSize, reader);
-
-  reader.addEventListener('load', (event) => {
-    console.log('event.target.result is ', event.target.result);
-    console.log('typeof event.target.result is ', typeof event.target.result);
-
-    offset += chunkSize;
-
-    // send chunk via data channel
-    dataChannel.send(event.target.result);
-
-    // read next chunk
-    readFile(file, offset, chunkSize, reader);
+    return data.fingerprint === fingerprint;
   });
+
+  return messagePacket;
+}
+
+function parsePeerChunk(chunkWithHeader) {
+  return parseChunkAndHeader(chunkWithHeader);
+}
+
+async function writePeerChunk(chunkWithHeader) {
+  await accumulateChunk(chunkWithHeader);
 }
 
 export {
@@ -175,5 +169,8 @@ export {
   getPeerUUID,
   getMyUUID,
   getFileToTransfer,
-  transferFile
+  transferFileToPeer,
+  getMessagePacket,
+  parsePeerChunk,
+  writePeerChunk
 };
