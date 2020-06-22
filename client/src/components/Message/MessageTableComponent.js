@@ -9,6 +9,11 @@ const MessageTable = styled.div`
   border: solid 1px blue;
 `;
 
+const MessageItemContainer = styled.div`
+  min-height: 100px;
+  background: greenyellow;
+`;
+
 
 class MessageTableComponent extends Component {
   render() {
@@ -17,17 +22,19 @@ class MessageTableComponent extends Component {
     return (
       <MessageTable>
         <MessageTableHeaderComponent />
-        {
-          messagePackets.map(messagePacket => {
-            const { data } = messagePacket;
+        <MessageItemContainer>
+          {
+            messagePackets.map(messagePacket => {
+              const { data } = messagePacket;
 
-            return (
-              <MessageItemComponent
-                key={ data.fingerprint }
-                messagePacket={ messagePacket } />
-            )
-          })
-        }
+              return (
+                <MessageItemComponent
+                  key={ data.fingerprint }
+                  messagePacket={ messagePacket } />
+              )
+            })
+          }
+        </MessageItemContainer>
       </MessageTable>
     );
   }
