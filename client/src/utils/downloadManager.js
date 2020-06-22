@@ -11,6 +11,8 @@ const transferStore = { };
 const defaultStructure = {
   accArr: [],
   downloadWriter: null,
+  offset: 0,
+  size: 0,
 };
 
 async function writeChunk(chunkArr, downloadWriter) {
@@ -18,6 +20,7 @@ async function writeChunk(chunkArr, downloadWriter) {
 
   const arrayBuffer = await (new Blob(arrayBuffers)).arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
+  const byteLength = buffer.byteLength;
 
   downloadWriter.write(buffer);
 }
@@ -27,47 +30,64 @@ async function accumulateChunk(chunkWithHeader) {
     fingerprint, chunkNumber, totalNumber, chunk
   } = parsePeerChunk(chunkWithHeader);
 
-  chunkStore[fingerprint] = chunkStore[fingerprint] || { ...defaultStructure };
+  chunkStore[fingerprint] = chunkStore[fingerprint] || {
+    accArr: [],
+    downloadWriter: null,
+    offset: 0,
+    size: 0,
+    available: true,
+  };
 
   if (!chunkStore[fingerprint].downloadWriter) {
-    const options = { pathname: fingerprint }
-
     const messagePacket = getMessagePacket(fingerprint);
 
     const filename = (messagePacket && messagePacket.data.message) || 'localdrop_download_file';
+    const fileSize = (messagePacket && messagePacket.data.size) || 0;
+    const options = { pathname: fingerprint, size: fileSize };
+
+    chunkStore[fingerprint].size = fileSize;
     const fileStream = StreamSaver.createWriteStream(filename, options);
 
-    // TODO: should I do this?
-    // window.fileStream = fileStream;
-
     const writer = fileStream.getWriter();
-    // window.writer = writer;
 
-    window.onunload = () => window.writer.abort();
     window.addEventListener('unload', (_) => {
       writer.abort();
-    })
-    // window.onunload = () => window.writer.abort();
+    });
 
     chunkStore[fingerprint].downloadWriter = writer;
+    const chunkArr = chunkStore[fingerprint].accArr;
+
+    chunkStore[fingerprint].offset += chunk.byteLength;
+    chunkArr.push(chunk);
   } else {
     const chunkArr = chunkStore[fingerprint].accArr;
     const downloadWriter = chunkStore[fingerprint].downloadWriter;
+
+    chunkStore[fingerprint].offset += chunk.byteLength;
     chunkArr.push(chunk);
 
-    if (chunkArr.length >= MAXIMUM_ACC_SIZE) {
-      await writeChunk(chunkArr, downloadWriter);
-      chunkArr.splice(0, chunkArr.length);
+    if (chunkArr.length >= MAXIMUM_ACC_SIZE && chunkStore[fingerprint].available) {
+      chunkStore[fingerprint].available = false;
+
+      if (chunkArr.length !== MAXIMUM_ACC_SIZE) {
+        throw new Error(`length are different, ${MAXIMUM_ACC_SIZE}/${chunkArr.length}`);
+      }
+
+      const arrayBuffers = [...chunkArr];
+      chunkStore[fingerprint].accArr.splice(0, MAXIMUM_ACC_SIZE);
+
+      await writeChunk(arrayBuffers, downloadWriter);
+      chunkStore[fingerprint].available = true;
     }
   }
 
-  if (chunkNumber >= totalNumber) {
+  // no need to lock, only occurred once
+  if (chunkStore[fingerprint].offset >= chunkStore[fingerprint].size) {
     const chunkArr = chunkStore[fingerprint].accArr;
     const downloadWriter = chunkStore[fingerprint].downloadWriter;
-    chunkArr.push(chunk);
 
-    await writeChunk(chunkArr, downloadWriter);
-    chunkArr.splice(0, chunkArr.length);
+    await writeChunk([...chunkArr], downloadWriter);
+    chunkStore[fingerprint].accArr = [];
 
     downloadWriter.close();
 
@@ -75,11 +95,16 @@ async function accumulateChunk(chunkWithHeader) {
   }
 }
 
-function readFile(file, offset, chunkSize, reader, fingerprint) {
+function readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber) {
   if (offset > file.size) {
     if (transferStore[fingerprint]) {
       transferStore[fingerprint] = false;
     }
+
+    console.log('offset is ', offset);
+    console.log('file.size is ', file.size);
+    console.log('chunkNumber is ', chunkNumber);
+    console.log('totalNumber is ', totalNumber);
 
     return;
   }
@@ -98,11 +123,15 @@ function transferFile(fingerprint, file, dataChannel) {
 
   const reader = new FileReader();
   const chunkSize = 16000 - HEADER_SIZE_IN_BYTES;
-  const totalNumber= Math.ceil(file.size / chunkSize);
+  const totalNumber= Math.ceil(file.size / 16000);
   let chunkNumber = 1;
   let offset = 0;
 
-  readFile(file, offset, chunkSize, reader, fingerprint);
+  console.log('totalNumber is ', totalNumber);
+  console.log('chunkSize is ', chunkSize);
+  console.log('file.size is ', file.size)
+
+  readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber);
 
   reader.addEventListener('load', async (event) => {
     console.log('event.target.result is ', event.target.result);
@@ -113,14 +142,16 @@ function transferFile(fingerprint, file, dataChannel) {
 
     const chunkWithHeader = await concatHeaderAndChunk(chunkNumber, totalNumber, fingerprint, chunk);
     console.log('chunkWithHeader is ', chunkWithHeader);
+    console.log('chunkWithHeader.byteLength is ', chunkWithHeader.byteLength);
 
+    // return;
     dataChannel.send(chunkWithHeader);
 
     offset += chunkSize;
     chunkNumber += 1;
 
     // read next chunk
-    readFile(file, offset, chunkSize, reader, fingerprint);
+    readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber);
   });
 }
 
