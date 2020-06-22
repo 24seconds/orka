@@ -20,14 +20,13 @@ async function writeChunk(chunkArr, downloadWriter) {
 
   const arrayBuffer = await (new Blob(arrayBuffers)).arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
-  const byteLength = buffer.byteLength;
 
   downloadWriter.write(buffer);
 }
 
 async function accumulateChunk(chunkWithHeader) {
   const {
-    fingerprint, chunkNumber, totalNumber, chunk
+    fingerprint, chunk
   } = parsePeerChunk(chunkWithHeader);
 
   chunkStore[fingerprint] = chunkStore[fingerprint] || {
@@ -95,7 +94,7 @@ async function accumulateChunk(chunkWithHeader) {
   }
 }
 
-function readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber) {
+function readFile(file, offset, chunkSize, reader, fingerprint) {
   if (offset > file.size) {
     if (transferStore[fingerprint]) {
       transferStore[fingerprint] = false;
@@ -103,8 +102,6 @@ function readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, tot
 
     console.log('offset is ', offset);
     console.log('file.size is ', file.size);
-    console.log('chunkNumber is ', chunkNumber);
-    console.log('totalNumber is ', totalNumber);
 
     return;
   }
@@ -123,15 +120,12 @@ function transferFile(fingerprint, file, dataChannel) {
 
   const reader = new FileReader();
   const chunkSize = 16000 - HEADER_SIZE_IN_BYTES;
-  const totalNumber= Math.ceil(file.size / 16000);
-  let chunkNumber = 1;
   let offset = 0;
 
-  console.log('totalNumber is ', totalNumber);
   console.log('chunkSize is ', chunkSize);
   console.log('file.size is ', file.size)
 
-  readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber);
+  readFile(file, offset, chunkSize, reader, fingerprint);
 
   reader.addEventListener('load', async (event) => {
     console.log('event.target.result is ', event.target.result);
@@ -140,7 +134,7 @@ function transferFile(fingerprint, file, dataChannel) {
     const chunk = event.target.result;
     console.log('chunk is ', chunk);
 
-    const chunkWithHeader = await concatHeaderAndChunk(chunkNumber, totalNumber, fingerprint, chunk);
+    const chunkWithHeader = await concatHeaderAndChunk(fingerprint, chunk);
     console.log('chunkWithHeader is ', chunkWithHeader);
     console.log('chunkWithHeader.byteLength is ', chunkWithHeader.byteLength);
 
@@ -148,10 +142,9 @@ function transferFile(fingerprint, file, dataChannel) {
     dataChannel.send(chunkWithHeader);
 
     offset += chunkSize;
-    chunkNumber += 1;
 
     // read next chunk
-    readFile(file, offset, chunkSize, reader, fingerprint, chunkNumber, totalNumber);
+    readFile(file, offset, chunkSize, reader, fingerprint);
   });
 }
 

@@ -132,8 +132,6 @@ const messagePacketSchema = {
 
 const meesagePacketDownloadHeaderSchema = {
   'fingerprint': '35 bytes',
-  'chunkNumber': '32 bytes',
-  'totalNumber': '32 bytes',
 }
 
 
