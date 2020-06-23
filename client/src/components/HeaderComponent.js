@@ -29,6 +29,7 @@ const Header = styled.div`
     align-items: center;
     margin-right: 20px;
     color: ${ MaterialThemeOceanic.StringsColor };
+    cursor: pointer;
 
     svg {
       width: 24px;
