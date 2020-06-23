@@ -56,7 +56,7 @@ class SendComponent extends Component {
     super(props);
 
     this.state = {
-      text: 'Hello, World! Localdrop is made by 24seconds.',
+      text: '',
       files: [],
     }
 
@@ -65,6 +65,17 @@ class SendComponent extends Component {
     this.handleFiles = this.handleFiles.bind(this);
     this.onClickFile = this.onClickFile.bind(this);
     this.fileInputRef = null;
+    this.textareaRef = null;
+  }
+
+  getPlaceholder() {
+    const { peerUUID } = this.props;
+
+    if (peerUUID) {
+      return `Send Message to #${peerUUID}...`;
+    } else {
+      return `Select peer to send Message!`;
+    }
   }
 
   handleFiles(event) {
@@ -114,11 +125,13 @@ class SendComponent extends Component {
       return;
     }
 
-    // TODO: Clear textarea and request focus
-
     if (peerUUID) {
       sendTextToPeer(peerUUID, text);
-    // connectToPeer(uuid);
+      // connectToPeer(uuid);
+      this.setState({ text: '' });
+      if (this.textareaRef) {
+        this.textareaRef.focus();
+      }
     } else {
       // TODO: handle null case!
     }
@@ -140,7 +153,10 @@ class SendComponent extends Component {
           onClick={ () => { this.fileInputRef.value = null } }
           onChange={ this.handleFiles }/>
         <SelectFileButton onClick={ this.onClickFile }> + </SelectFileButton>
-        <textarea value={ text } onChange={ this.handleText } />
+        <textarea
+          ref={ (ref) => this.textareaRef = ref }
+          value={ text } onChange={ this.handleText }
+          placeholder={ this.getPlaceholder() } />
         <SendPasteButton>paste</SendPasteButton>
         <SendPasteButton onClick={ this.onSend } >send</SendPasteButton>
       </Send>
