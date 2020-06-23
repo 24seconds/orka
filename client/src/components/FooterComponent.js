@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { IMAGE_URL } from '../constants/constant';
+import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
 
 
 const Footer = styled.div`
@@ -14,13 +14,14 @@ const Footer = styled.div`
     text-align: left;
     color: $color-text;
     font-size: 14px;
-    margin: 2px 20px 2px 0;
+    margin: 2px 20px 2px 20px;
     cursor: pointer;
 
-    img.github-mark {
+    svg {
       width: 20px;
       height: 20px;
-      margin-right: 5px;
+      margin-right: 6px;
+      fill: white;
     }
   }
 `;
@@ -46,11 +47,11 @@ export default class FooterComponent extends Component {
     return (
       <Footer className='localdrop-footer'>
         <div onClick={ this.onClickId }>
-          <img className='github-mark' src={ `${IMAGE_URL}/icon_github_mark.png` } alt="github icon" />
-            24seconds
+          <GithubLogo/>
+          24seconds
         </div>
         <div onClick={ this.onClickRepo }>
-          <img className='github-mark' src={ `${IMAGE_URL}/icon_github_mark.png` } alt="github icon" />
+          <GithubLogo/>
           repo : localdrop
         </div>
       </Footer>

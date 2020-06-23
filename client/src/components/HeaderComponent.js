@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { IMAGE_URL } from '../constants/constant';
 import { mobileWidth } from '../constants/styleConstants';
+import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
 
 const Header = styled.div`
+  display: flex;
   text-align: center;
   border: solid 1px black;
   font-size: 26px;
@@ -17,7 +19,18 @@ const Header = styled.div`
   }
 
   .localdrop-header-github {
-    display: none;
+    display: flex;
+    font-size: 18px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      fill: white;
+    }
   }
 
   @media (max-width: ${ mobileWidth }) {
@@ -26,21 +39,15 @@ const Header = styled.div`
     text-align: left;
 
     .localdrop-header-title {
-      flex-grow: 1;
-      text-align: left;
-
       margin-left: 10px;
       font-size: 18px;
     }
 
     .localdrop-header-github {
-      display: flex;
       font-size: 14px;
-      justify-content: center;
-      align-items: center;
       margin-right: 10px;
 
-      img {
+      svg {
         width: 16px;
         height: 16px;
         margin-right: 6px;
@@ -68,7 +75,7 @@ class HeaderComponent extends Component {
           Local Drop!
         </div>
         <div className='localdrop-header-github' onClick={ this.onClickRepo }>
-          <img className='github-mark' src={ `${IMAGE_URL}/icon_github_mark.png` } alt="github icon" />
+          <GithubLogo/>
           localdrop
         </div>
       </Header>
