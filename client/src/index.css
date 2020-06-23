@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html, body {
+  width: 100vw;
+  background: #32424A; /* Material Oceanic, Color SecondBackground */
+}

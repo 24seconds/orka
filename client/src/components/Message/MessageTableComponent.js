@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import MessageTableHeaderComponent from './MessageTableHeaderComponent';
 import MessageItemComponent from './MessageItemComponent';
-import { mobileWidth } from '../../constants/styleConstants';
+import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const MessageTable = styled.div`
   width: 100%;
-  border: solid 1px blue;
 `;
 
 const MessageItemContainer = styled.div`
   min-height: 100px;
-  background: greenyellow;
+  background: ${ MaterialThemeOceanic.SecondBackground };
   overflow-y: scroll;
+
+  /* hide scrollbar */
+  scrollbar-width: none; /* Firefox */
+  ::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+  }
+
   height: 50vh;
 
   @media (max-width: ${ mobileWidth }) {

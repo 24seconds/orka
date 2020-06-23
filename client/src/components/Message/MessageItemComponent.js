@@ -7,25 +7,37 @@ import {
   TabContentWidth,
   TabSmallWidth,
   TabSmall2Width,
+  MaterialThemeOceanic,
+  mobileWidth,
 } from '../../constants/styleConstants';
 import { getMyUUID } from '../../utils/localApi';
 import { getSizeString } from '../../utils/messagePacket';
 
 const MessageItem = styled.div`
   display: flex;
+  width: 100%;
   height: 40px;
   font-size: 18px;
-  border: solid 1px grey;
-  border-style: none solid solid solid;
-  width: max-content;
+  border: solid 1px ${ MaterialThemeOceanic.Contrast };
+  border-style: solid none solid none;
+  box-sizing: border-box;
+  color: ${ MaterialThemeOceanic.StringsColor };
+
+  @media (max-width: ${ mobileWidth }) {
+    border: none;
+  }
+
 `;
 
 const MessageCell = styled.div`
   ${ messageCell }
-  /* border: solid 1px black; */
   height: auto;
   border-style: none solid none none;
   font-size: 14px;
+
+  @media (max-width: ${ mobileWidth }) {
+    border-style: none solid solid none;
+  }
 `;
 
 const MessageContentCellContainer = styled.div`
@@ -33,6 +45,14 @@ const MessageContentCellContainer = styled.div`
   justify-content: flex-start;
   border-style: none solid none none;
   height: auto;
+  width: auto;
+  max-width: none;
+  flex-grow: 1;
+
+  @media (max-width: ${ mobileWidth }) {
+    border: solid 1px ${ MaterialThemeOceanic.Border };
+    border-style: none solid solid none;
+  }
 `;
 
 const MessageContentCell = styled.span`
@@ -48,15 +68,30 @@ const MessageContentCell = styled.span`
 
 const MessageButtonContainer = styled.div`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
+  width: 100px;
+  min-width: 100px;
   padding: 0 10px;
+
+  @media (max-width: ${ mobileWidth }) {
+    border: solid 1px ${ MaterialThemeOceanic.Border };
+    border-style: none solid solid none;
+  }
 `;
 
 const MessageButtonCell = styled.button`
-  border: solid 1px black;
+  width: 80px;
+  height: 30px;
+  margin: 0 3px;
+  padding: 0;
   outline: none;
   font-size: 14px;
-  height: 30px;
+
+  background-color: ${ MaterialThemeOceanic.Active };
+  color: ${ MaterialThemeOceanic.AttributesColor };
+  border: 2px solid ${ MaterialThemeOceanic.Border };
+  border-radius: 4px;
 
   &:hover {
     cursor: pointer;

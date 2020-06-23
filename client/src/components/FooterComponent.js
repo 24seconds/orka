@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
+import { mobileWidth, MaterialThemeOceanic } from '../constants/styleConstants';
 
 
 const Footer = styled.div`
   display: flex;
-  margin: 10px 0 0 0;
-  padding-left: 5px;
+  height: 40px;
+  color: ${ MaterialThemeOceanic.StringsColor };
+  background: ${ MaterialThemeOceanic.Background };
 
   div {
     display: flex;
@@ -23,6 +25,10 @@ const Footer = styled.div`
       margin-right: 6px;
       fill: white;
     }
+  }
+
+  @media (max-width: ${ mobileWidth }) {
+    display: none;
   }
 `;
 

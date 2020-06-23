@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { IMAGE_URL } from '../constants/constant';
-import { mobileWidth } from '../constants/styleConstants';
+import { mobileWidth, MaterialThemeOceanic } from '../constants/styleConstants';
 import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
 
 const Header = styled.div`
@@ -10,12 +9,17 @@ const Header = styled.div`
   border: solid 1px black;
   font-size: 26px;
   height: 60px;
+  background: ${ MaterialThemeOceanic.Background };
 
   .localdrop-header-title {
     display: flex;
     height: 100%;
     align-items: center;
     margin-left: 20px;
+    flex-grow: 1;
+    text-align: left;
+    color: ${ MaterialThemeOceanic.StringsColor };
+    font-weight: bold;
   }
 
   .localdrop-header-github {
@@ -24,6 +28,7 @@ const Header = styled.div`
     justify-content: center;
     align-items: center;
     margin-right: 20px;
+    color: ${ MaterialThemeOceanic.StringsColor };
 
     svg {
       width: 24px;

@@ -9,18 +9,27 @@ import {
 import { addFiles } from '../../redux/action';
 import { generateFingerPrint } from '../../utils/messagePacket';
 import FingerprintedFile from '../../utils/dataSchema/FingerprintedFile';
+import { MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const Send = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   max-height: 180px;
+  height: 80px;
+  background-color: ${ MaterialThemeOceanic.SecondBackground };
 
   textarea {
+    background-color: ${ MaterialThemeOceanic.SecondBackground };
+    color: White;
     resize: none;
     flex-grow: 1;
     padding: 10px 5px;
     min-height: 40px;
     max-height: 120px;
     outline: none;
+    border: 2px solid ${ MaterialThemeOceanic.Border };
+    border-radius: 4px;
   }
 `;
 
@@ -30,9 +39,16 @@ const FileInput = styled.input`
 
 const SelectFileButton = styled.button`
   width: 50px;
-  border: 1px solid #9e9e9e;
-  background-color: white;
+  height: 50px;
+  border: 1px solid ${ MaterialThemeOceanic.Border };
+  border-radius: 4px;
+  margin: 0 5px;
+  background-color: ${ MaterialThemeOceanic.Buttons };
   outline: none;
+
+  color: ${ MaterialThemeOceanic.ParametersColor };
+  font-size: 16px;
+  font-weight: 800;
 
   &:hover {
     cursor: pointer;
@@ -43,8 +59,13 @@ const SelectFileButton = styled.button`
 const SendPasteButton = styled.button`
   width: 50px;
   outline: none;
-  background-color: white;
-  border: 1px solid #9e9e9e;
+  background-color: ${ MaterialThemeOceanic.Active };
+  color: ${ MaterialThemeOceanic.AttributesColor };
+  border: 2px solid ${ MaterialThemeOceanic.Border };
+  border-radius: 4px;
+  padding: 0;
+  margin: 0 3px;
+  height: 50px;
 
   &:hover {
     cursor: pointer;
@@ -165,6 +186,9 @@ class SendComponent extends Component {
           onChange={ this.handleFiles }/>
         <SelectFileButton onClick={ this.onClickFile }> + </SelectFileButton>
         <textarea
+          autoCorrect={ 'off' }
+          autoCapitalize={ 'off' }
+          spellCheck={ false }
           ref={ (ref) => this.textareaRef = ref }
           value={ text } onChange={ this.handleText }
           placeholder={ this.getPlaceholder() } />

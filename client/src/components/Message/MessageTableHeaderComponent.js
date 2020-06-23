@@ -2,20 +2,23 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { messageCell } from '../SharedStyle';
 import {
-  TabContentWidth,
   TabSmallWidth,
   TabSmall2Width,
+  MaterialThemeOceanic,
 } from '../../constants/styleConstants';
 
 const MessageTableHeader = styled.div`
   display: flex;
   justify-content: flex-start;
-  border: solid 1px grey;
+  border: solid 2px ${ MaterialThemeOceanic.Border };
+  border-style: solid none;
+  background: ${ MaterialThemeOceanic.Highlight };
+  color: ${ MaterialThemeOceanic.AttributesColor };
 
-  /* overflow-x: hidden; */
   overflow-x: scroll;
-  scrollbar-width: none; /* Firefox */
 
+  /* hide scrollbar */
+  scrollbar-width: none; /* Firefox */
   ::-webkit-scrollbar { /* WebKit */
     width: 0;
     height: 0;
@@ -24,7 +27,21 @@ const MessageTableHeader = styled.div`
 
 const HeaderItem = styled.div`
   ${ messageCell }
-  border-left: none;
+  border-style: none solid none none;
+`;
+
+const HeaderContentItem = styled.div`
+  ${ messageCell }
+  border-style: none solid none none;
+  width: auto;
+  max-width: none;
+  flex-grow: 1;
+`;
+
+const HeaderDownloadSpace = styled.div`
+  min-width: 100px;
+  width: 100px;
+  padding: 0 10px;
 `;
 
 class MessageTableHeaderComponent extends Component {
@@ -40,9 +57,10 @@ class MessageTableHeaderComponent extends Component {
         <HeaderItem padding={ '0' }>Destination</HeaderItem>
         { false && <HeaderItem>NO.</HeaderItem> }
         <HeaderItem width={ TabSmallWidth }>TYPE</HeaderItem>
-        <HeaderItem width={ TabContentWidth }>Content</HeaderItem>
+        <HeaderContentItem>Content</HeaderContentItem>
         <HeaderItem padding={ '0' }>SIZE</HeaderItem>
         <HeaderItem width={ TabSmallWidth }>Time</HeaderItem>
+        <HeaderDownloadSpace/>
         { false && <HeaderItem>Progress</HeaderItem> }
       </MessageTableHeader>
     );
