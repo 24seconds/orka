@@ -85,6 +85,14 @@ function peerUUID(state = null, action) {
     return newState;
   }
 
+  if (action.type === DELETE_PEER) {
+    const peers = action.payload;
+
+    if (peers.indexOf(state) !== -1) {
+      return null;
+    }
+  }
+
   return state;
 }
 
