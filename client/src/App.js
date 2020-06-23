@@ -5,23 +5,39 @@ import './utils/localApi';
 import HeaderComponent from './components/HeaderComponent';
 import PeerTabComponent from './components/Message/PeerTabComponent';
 import MessageTableComponent from './components/Message/MessageTableComponent';
+import MessageTableHeaderComponent from './components/Message/MessageTableHeaderComponent';
 import FooterComponent from './components/FooterComponent';
 import SendComponent from './components/Send/SendComponent';
+import { mobileWidth } from './constants/styleConstants';
 
 const Container = styled.div`
-  margin: 100px;
+  margin: 50px 100px;
   border: solid 2px black;
   background: #ffff0030;
+
+  @media (max-width: ${ mobileWidth }) {
+    margin: 0;
+  }
 `;
+
+const MobileSticky = styled.div`
+  @media (max-width: ${ mobileWidth }) {
+    position: sticky;
+    top: 0;
+  }
+`
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Container>
-          <HeaderComponent />
-          <SendComponent />
-          <PeerTabComponent />
+          <MobileSticky>
+            <HeaderComponent />
+            <SendComponent />
+            <PeerTabComponent />
+            <MessageTableHeaderComponent />
+          </MobileSticky>
           <MessageTableComponent />
           <FooterComponent />
         </Container>

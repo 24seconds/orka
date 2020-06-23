@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import MessageTableHeaderComponent from './MessageTableHeaderComponent';
 import MessageItemComponent from './MessageItemComponent';
+import { mobileWidth } from '../../constants/styleConstants';
 
 const MessageTable = styled.div`
   width: 100%;
@@ -13,7 +14,12 @@ const MessageItemContainer = styled.div`
   min-height: 100px;
   background: greenyellow;
   overflow-y: scroll;
-  height: 300px;
+  height: 50vh;
+
+  @media (max-width: ${ mobileWidth }) {
+    height: auto;
+    min-height: 300px;
+  }
 `;
 
 
@@ -23,7 +29,6 @@ class MessageTableComponent extends Component {
 
     return (
       <MessageTable>
-        <MessageTableHeaderComponent />
         <MessageItemContainer>
           {
             messagePackets.map(messagePacket => {

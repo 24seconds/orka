@@ -8,6 +8,14 @@ const PeerTab = styled.div`
   background: blue;
   display: flex;
   justify-content: flex-start;
+
+  overflow-x: scroll;
+  scrollbar-width: none; /* Firefox */
+
+  ::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+  }
 `;
 
 const ConnectivityState = styled.div`
