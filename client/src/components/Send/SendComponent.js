@@ -20,6 +20,7 @@ const Send = styled.div`
     padding: 10px 5px;
     min-height: 40px;
     max-height: 120px;
+    outline: none;
   }
 `;
 
@@ -64,6 +65,8 @@ class SendComponent extends Component {
     this.onSend = this.sendText.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
     this.onClickFile = this.onClickFile.bind(this);
+    this.onPasteText = this.onPasteText.bind(this);
+
     this.fileInputRef = null;
     this.textareaRef = null;
   }
@@ -141,6 +144,14 @@ class SendComponent extends Component {
     this.fileInputRef && this.fileInputRef.click()
   }
 
+  async onPasteText() {
+    const text = await navigator.clipboard.readText();
+
+    this.setState({
+      text
+    });
+  }
+
   render() {
     const { text } = this.state;
 
@@ -157,8 +168,12 @@ class SendComponent extends Component {
           ref={ (ref) => this.textareaRef = ref }
           value={ text } onChange={ this.handleText }
           placeholder={ this.getPlaceholder() } />
-        <SendPasteButton>paste</SendPasteButton>
-        <SendPasteButton onClick={ this.onSend } >send</SendPasteButton>
+        <SendPasteButton onClick={ this.onPasteText }>
+          paste
+        </SendPasteButton>
+        <SendPasteButton onClick={ this.onSend } >
+          send
+        </SendPasteButton>
       </Send>
     )
   }
