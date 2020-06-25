@@ -76,6 +76,9 @@ function createPeerConnection(uuid) {
     console.log(`[peer ${uuid}]: peerConnection.connectionState is `, peerConnection.connectionState);
 
     switch(peerConnection.connectionState) {
+      case 'connecting':
+        // do nothing
+        break;
       case 'connected':
         // do nothing
         break;
