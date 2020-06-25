@@ -20,6 +20,7 @@ import {
   addMessagePacket,
   transferFileToPeer,
   writePeerChunk,
+  writeSystemMessage,
 } from './localApi';
 
 function createPeerConnection(uuid) {
@@ -44,6 +45,14 @@ function createPeerConnection(uuid) {
     handleDataChannelMessage(event, uuid);
   }
 
+  dataChannel.onerror = (event) => {
+    const { message, filename, lineno, colno } = event;
+    const payload = JSON.stringify({ message, filename, lineno, colno }, undefined, 2);
+
+    const systemMessage = `[peer ${uuid}]: dataChannel error: ` + payload;
+    writeSystemMessage(systemMessage);
+  }
+
   peerConnection.onicecandidate = event => {
     console.log(`[peer ${uuid}]: onicecandidate, event is `, event);
   
@@ -65,6 +74,22 @@ function createPeerConnection(uuid) {
   peerConnection.onconnectionstatechange = event => {
     console.log(`[peer ${uuid}]: onconnectionstatechange, event is `, event);
     console.log(`[peer ${uuid}]: peerConnection.connectionState is `, peerConnection.connectionState);
+
+    switch(peerConnection.connectionState) {
+      case 'connected':
+        // do nothing
+        break;
+      case 'disconnected':
+      case 'failed':
+        writeSystemMessage('onconnectionstatechange, peerConnection failed');
+        break;
+      case 'closed':
+        writeSystemMessage('onconnectionstatechange, peerConnection closed');
+        break;
+      default:
+        writeSystemMessage('onconnectionstatechange, peerConnection.connectionState: ' + peerConnection.connectionState);
+    }
+
   };
 
   return { peerConnection, dataChannel };
@@ -131,6 +156,12 @@ async function handleDataChannelMessage(event, uuid) {
 
 function handleDataChannelStatusChange(event, uuid) {
   console.log(`[peer ${uuid}]: handleDataChannelStatusChange, event is `, event);
+  const { type: eventType } = event;
+
+  if (eventType === 'close') {
+    const systemMessage = `[peer #${uuid}]: dataChannel closed `;
+    writeSystemMessage(systemMessage);
+  }
 }
 
 async function createOffer(peerConnection) {
@@ -194,14 +225,17 @@ function addClientEventTypeEventListener(peerConnectionManager) {
       return;
     }
 
-    const myUUID = peerConnectionManager.uuid;
-    const offer = await createOffer(peerConnection);
-    const message = createMessage(MESSAGE_TYPE.OFFER, {
-      fromUUID: myUUID, toUUID, offer,
-    });
+    try {
+      const myUUID = peerConnectionManager.uuid;
+      const offer = await createOffer(peerConnection);
+      const message = createMessage(MESSAGE_TYPE.OFFER, {
+        fromUUID: myUUID, toUUID, offer,
+      });
 
-    // TODO: handle message
-    sendMessageToServer(message);
+      sendMessageToServer(message);
+    } catch(error) {
+      writeSystemMessage(JSON.stringify(error, undefined, 2));
+    }
   });
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_TEXT, event =>{
@@ -226,6 +260,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
+      writeSystemMessage('dataChannel not opened!');
       console.log('dataChannel not opened!');
       return;
     }
@@ -260,6 +295,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
+      writeSystemMessage('dataChannel not opened!');
       console.log('dataChannel not opened!');
       return;
     }
@@ -294,6 +330,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
+      writeSystemMessage('dataChannel not opened!');
       console.log('dataChannel not opened!');
       return;
     }
@@ -386,17 +423,21 @@ function addMessageTypeEventListener(peerConnectionManager) {
     }
 
     const { peerConnection } = peerConnectionManager.peerConnections[fromUUID];
-    await setRemoteOffer(peerConnection, offer);
 
-    const answer = await createAnswer(peerConnection);
-    const message = createMessage(MESSAGE_TYPE.ANSWER, {
-      fromUUID: toUUID,
-      toUUID: fromUUID,
-      answer,
-    });
+    try {
+      await setRemoteOffer(peerConnection, offer);
 
-    // TODO: Implement handling message
-    sendMessageToServer(message);
+      const answer = await createAnswer(peerConnection);
+      const message = createMessage(MESSAGE_TYPE.ANSWER, {
+        fromUUID: toUUID,
+        toUUID: fromUUID,
+        answer,
+      });
+
+      sendMessageToServer(message);
+    } catch(err) {
+      writeSystemMessage(JSON.stringify(err, undefined, 2));
+    }
   });
 
   peerConnectionManager.addEventListener(MESSAGE_TYPE.ANSWER, async (event) => {
