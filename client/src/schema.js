@@ -134,9 +134,6 @@ const meesagePacketDownloadHeaderSchema = {
   'fingerprint': '35 bytes',
 }
 
-
-
-
 const peerConnectionMangerSchema = {
   'uuid': 'string',
   'peerConnections': {
@@ -146,4 +143,10 @@ const peerConnectionMangerSchema = {
     }
   }
 }
+
+const systemMessageSchema = {
+  message: 'string',
+  fingerprint: 'string',
+  createdAt: 'time string'
+};
 

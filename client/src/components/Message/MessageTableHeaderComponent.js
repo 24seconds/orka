@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { messageCell } from '../SharedStyle';
 import {
   TabSmallWidth,
@@ -46,25 +47,37 @@ const HeaderDownloadSpace = styled.div`
 
 class MessageTableHeaderComponent extends Component {
   render() {
+    const { systemMessageMetaData } = this.props;
+
     return (
-      <MessageTableHeader className='localdrop-message-table-header'>
-        <HeaderItem
-          width={ TabSmall2Width }
-          padding={ '0' }>
-            ⇄
-        </HeaderItem>
-        <HeaderItem padding={ '0' }>Source</HeaderItem>
-        <HeaderItem padding={ '0' }>Destination</HeaderItem>
-        { false && <HeaderItem>NO.</HeaderItem> }
-        <HeaderItem width={ TabSmallWidth }>TYPE</HeaderItem>
-        <HeaderContentItem>Content</HeaderContentItem>
-        <HeaderItem padding={ '0' }>SIZE</HeaderItem>
-        <HeaderItem width={ TabSmallWidth }>Time</HeaderItem>
-        <HeaderDownloadSpace/>
-        { false && <HeaderItem>Progress</HeaderItem> }
-      </MessageTableHeader>
+      <Fragment>
+        {
+          !systemMessageMetaData.isSelected &&
+          <MessageTableHeader className='localdrop-message-table-header'>
+            <HeaderItem
+              width={ TabSmall2Width }
+              padding={ '0' }>
+                ⇄
+            </HeaderItem>
+            <HeaderItem padding={ '0' }>Source</HeaderItem>
+            <HeaderItem padding={ '0' }>Destination</HeaderItem>
+            { false && <HeaderItem>NO.</HeaderItem> }
+            <HeaderItem width={ TabSmallWidth }>TYPE</HeaderItem>
+            <HeaderContentItem>Content</HeaderContentItem>
+            <HeaderItem padding={ '0' }>SIZE</HeaderItem>
+            <HeaderItem width={ TabSmallWidth }>Time</HeaderItem>
+            <HeaderDownloadSpace/>
+            { false && <HeaderItem>Progress</HeaderItem> }
+          </MessageTableHeader>
+        }
+      </Fragment>
     );
   }
 }
 
-export default MessageTableHeaderComponent;
+
+const mapStateToProps = state => ({
+  systemMessageMetaData: state.systemMessageMetaData,
+});
+
+export default connect(mapStateToProps)(MessageTableHeaderComponent);
