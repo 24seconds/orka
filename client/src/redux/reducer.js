@@ -142,7 +142,7 @@ function systemMessageMetaData(
 function systemMessages(state = [], action) {
   if (action.type === ADD_SYSTEM_MESSAGE) {
     const systemMessage = action.payload;
-    const newState = [ ...state, systemMessage ];
+    const newState = [ systemMessage, ...state ];
 
     return newState;
   }
