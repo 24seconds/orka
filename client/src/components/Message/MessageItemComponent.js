@@ -64,6 +64,10 @@ const MessageContentCell = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  a {
+    color: ${ MaterialThemeOceanic.LinksColor };
+  }
 `;
 
 const MessageButtonContainer = styled.div`
@@ -142,12 +146,24 @@ class MessageItemComponent extends Component {
     return source === getMyUUID();
   }
 
+  isStartWithHttp(message) {
+    return message.startsWith('http');
+  }
+
   renderContent(messageType, data) {
     if (messageType === PEER_MESSAGE_TYPE.TEXT) {
       return (
         <Fragment>
           <MessageContentCellContainer width={ TabContentWidth }>
-            <MessageContentCell>{ `${ data.message }` }</MessageContentCell>
+            {
+              this.isStartWithHttp(data.message)
+              ? <MessageContentCell>
+                  <a href={ data.message } target='_blank' rel='noopener noreferrer'>
+                    { `${ data.message }` }
+                  </a>
+                </MessageContentCell>
+              : <MessageContentCell>{ `${ data.message }` }</MessageContentCell>
+            }
           </MessageContentCellContainer>
           <MessageCell padding={ '0' }>{ `${ data.size }` }</MessageCell>
         </Fragment>
