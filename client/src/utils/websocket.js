@@ -1,15 +1,10 @@
 import config from '../config';
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE } from '../schema';
+import { SOCKET_STATE, WEBSOCKET_CLOSE_EVENT_CODE } from './dataSchema/WebSocketData';
 import { createMessage, parseMessage } from './message';
 import { peerConnectionManager } from './peerConnection';
 import LocalDropEvent from './LocalDropEvent';
-
-const SOCKET_STATE = {
-  INITIAL: 1,
-  CONNECTED: 2,
-  CLOSED: 3,
-  ERROR: 4,
-};
+import { writeSystemMessage } from './localApi';
 
 
 function createWebSocketConnection(url) {
@@ -30,9 +25,36 @@ function createWebSocketConnection(url) {
     handleMessage(message, socket);
   });
 
-  socket.addEventListener('onclose', function () {
-    // TODO: handle onclsoe case and try reconnect depend on network state
+  socket.addEventListener('close', (event) => {
+    // TODO: try reconnect depend on network state and close event code
+    const { code, reason, wasClean } = event;
+    const payload = {
+      eventType: 'CLOSE',
+      code,
+      reason,
+      wasClean,
+    };
+
+    if (WEBSOCKET_CLOSE_EVENT_CODE[code]) {
+      const { name, description } = WEBSOCKET_CLOSE_EVENT_CODE[code];
+      payload.name = name;
+      payload.description = description;
+    }
+
+    const systemMessage = 'Websocket connection closed, ' + JSON.stringify(payload, undefined, 2);
+    writeSystemMessage(systemMessage);
   });
+
+  socket.addEventListener('error', (event) => {
+    console.log('websocket error, event is ', event);
+
+    const payload = {
+      eventType: 'ERROR',
+      event,
+    };
+
+    writeSystemMessage(JSON.stringify(payload, undefined, 2));
+  })
 
   return socket;
 }

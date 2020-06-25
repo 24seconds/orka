@@ -10,7 +10,7 @@ const SystemMessageItem = styled.div`
   color: white;
 
   span {
-    min-width: 120px;
+    min-width: 125px;
     color: ${ MaterialThemeOceanic.TagsColor };
     margin: 0 10px 0 10px;
     font-size: 14px;
