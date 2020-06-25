@@ -7,6 +7,8 @@ import {
   ADD_FILES,
   DELETE_FILES,
   UPDATE_PROGRESS,
+  UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
+  ADD_SYSTEM_MESSAGE,
 } from './actionType';
 
 export const addPeer = peerList => ({
@@ -47,4 +49,13 @@ export const deleteFiles = files => ({
 export const updateProgress = (fingerprint, progress) => ({
   type: UPDATE_PROGRESS,
   payload: { fingerprint, progress }
+});
+
+export const updateIsSystemMessageTabSelected = () => ({
+  type: UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
+});
+
+export const addSystemMessage = (systemMessage) => ({
+  type: ADD_SYSTEM_MESSAGE,
+  payload: systemMessage,
 });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import MessageItemComponent from './MessageItemComponent';
+import SystemMessageItemComponent from './SystemMessageItemComponent';
 import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const MessageTable = styled.div`
@@ -31,30 +32,53 @@ const MessageItemContainer = styled.div`
 
 class MessageTableComponent extends Component {
   render() {
-    const { messagePackets } = this.props;
+    const {
+      messagePackets,
+      systemMessages,
+      systemMessageMetaData,
+    } = this.props;
 
     return (
       <MessageTable>
-        <MessageItemContainer>
-          {
-            messagePackets.map(messagePacket => {
-              const { data } = messagePacket;
+        {
+          !systemMessageMetaData.isSelected &&
+          <MessageItemContainer>
+            {
+              messagePackets.map(messagePacket => {
+                const { data } = messagePacket;
+
+                return (
+                  <MessageItemComponent
+                    key={ data.fingerprint }
+                    messagePacket={ messagePacket } />
+                )
+              })
+            }
+          </MessageItemContainer>
+        }
+        {
+          systemMessageMetaData.isSelected &&
+          <MessageItemContainer>
+            {
+              systemMessages.map(systemMessage => {
 
               return (
-                <MessageItemComponent
-                  key={ data.fingerprint }
-                  messagePacket={ messagePacket } />
-              )
-            })
-          }
-        </MessageItemContainer>
+                <SystemMessageItemComponent
+                  key={ systemMessage.fingerprint }
+                  systemMessage={ systemMessage } />
+                )
+              })
+            }
+          </MessageItemContainer>
+        }
       </MessageTable>
     );
   }
 }
 
-
 const mapStateToProps = state => ({
-  messagePackets: state.messagePackets
+  messagePackets: state.messagePackets,
+  systemMessages: state.systemMessages,
+  systemMessageMetaData: state.systemMessageMetaData,
 });
 export default connect(mapStateToProps)(MessageTableComponent);

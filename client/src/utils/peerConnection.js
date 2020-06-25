@@ -9,7 +9,8 @@ import {
   createPeerMessage,
   parsePeerMessage,
 } from './peerMessage';
-import { createMessagePacket, generateFingerPrint } from './messagePacket';
+import { createMessagePacket } from './messagePacket';
+import { generateFingerPrint } from './commonUtil';
 import {
   sendMessageToServer,
   addJoinedPeers,

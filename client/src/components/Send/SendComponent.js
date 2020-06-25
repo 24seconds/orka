@@ -7,7 +7,7 @@ import {
   sendFilesToPeer,
 } from '../../utils/localApi';
 import { addFiles } from '../../redux/action';
-import { generateFingerPrint } from '../../utils/messagePacket';
+import { generateFingerPrint } from '../../utils/commonUtil';
 import FingerprintedFile from '../../utils/dataSchema/FingerprintedFile';
 import { MaterialThemeOceanic } from '../../constants/styleConstants';
 

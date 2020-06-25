@@ -15,8 +15,10 @@ import {
   deletePeer,
   addMessage,
   updateMyUUID,
+  addSystemMessage,
 } from '../redux/action';
 import { parseChunkAndHeader } from './peerMessage';
+import { getCurrentTime, generateFingerPrint } from './commonUtil';
 import { accumulateChunk, transferFile } from './downloadManager';
 
 function sendTextToPeer(uuid, text) {
@@ -155,6 +157,16 @@ async function writePeerChunk(chunkWithHeader) {
   await accumulateChunk(chunkWithHeader);
 }
 
+function writeSystemMessage(message) {
+  const systemMessage = {
+    message,
+    fingerprint: generateFingerPrint(),
+    createdAt: getCurrentTime(),
+  };
+
+  store.dispatch(addSystemMessage(systemMessage));
+}
+
 export {
   sendTextToPeer,
   sendFilesToPeer,
@@ -172,5 +184,6 @@ export {
   transferFileToPeer,
   getMessagePacket,
   parsePeerChunk,
-  writePeerChunk
+  writePeerChunk,
+  writeSystemMessage,
 };

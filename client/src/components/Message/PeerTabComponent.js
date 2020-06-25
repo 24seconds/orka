@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { connectToPeer, getPeerUUID } from '../../utils/localApi';
-import { updatePeerUUID } from '../../redux/action';
+import { connectToPeer } from '../../utils/localApi';
+import { updatePeerUUID, updateIsSystemMessageTabSelected } from '../../redux/action';
 import { MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const PeerTab = styled.div`
@@ -12,6 +12,12 @@ const PeerTab = styled.div`
   align-items: center;
   height: 50px;
 
+`;
+
+const PeerList = styled.div`
+  display: flex;
+  flex-grow: 1;
+
   overflow-x: scroll;
   scrollbar-width: none; /* Firefox */
 
@@ -19,6 +25,25 @@ const PeerTab = styled.div`
     width: 0;
     height: 0;
   }
+`;
+
+const SystemMessageTab = styled.div`
+  position:relative;
+
+  .localdrop-system-message-read-dot {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    visibility: ${ props => props.isRead ? 'hidden': 'visible' };
+  }
+`;
+
+const SystemMessageReadDot = styled.div`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: ${ MaterialThemeOceanic.KeywordsColor };
 `;
 
 const ConnectivityState = styled.div`
@@ -55,7 +80,7 @@ const Peers = styled.div`
   justify-content: center;
   width: 100px;
   height: 40px;
-  font-size: 18px;
+  font-size: 16px;
   background: ${ MaterialThemeOceanic.Foreground };
   margin: 0 0 0 5px;
   border: solid 2px ${ MaterialThemeOceanic.Border };
@@ -68,6 +93,7 @@ class PeerTabComponent extends Component {
     super(props);
 
     this.onClick = this.onClick.bind(this);
+    this.onClickSystemMessageTab = this.onClickSystemMessageTab.bind(this);
   }
 
   onClick(uuid) {
@@ -77,8 +103,16 @@ class PeerTabComponent extends Component {
     connectToPeer(uuid);
   }
 
+  onClickSystemMessageTab() {
+    this.props.dispatch(updateIsSystemMessageTabSelected());
+  }
+
   render() {
-    const { peers, peerUUID: selectedPeerUUID } = this.props;
+    const {
+      peers,
+      peerUUID: selectedPeerUUID,
+      systemMessageMetaData,
+    } = this.props;
 
     console.log('this.props is ', this.props);
     console.log('peers is ', peers);
@@ -94,17 +128,31 @@ class PeerTabComponent extends Component {
             </PeerTabButton>
           }
           {
-            peers && peers.map(peer => {
-              return (
-                <PeerTabButton
-                  key={ peer }
-                  isSelected={ peer === selectedPeerUUID }
-                  onClick={ this.onClick.bind(this, peer) }>
-                  { `#${peer}` }
-                </PeerTabButton>
-              )
-            })
+            <PeerList>
+              {
+                peers && peers.map(peer => {
+                  return (
+                    <PeerTabButton
+                      key={ peer }
+                      isSelected={ peer === selectedPeerUUID }
+                      onClick={ this.onClick.bind(this, peer) }>
+                      { `#${peer}` }
+                    </PeerTabButton>
+                  )
+                })
+              }
+            </PeerList>
           }
+          <SystemMessageTab isRead={ systemMessageMetaData.isRead }>
+            <PeerTabButton
+              key='System-Message'
+              isSelected={ systemMessageMetaData.isSelected }
+              onClick={ this.onClickSystemMessageTab }>
+              System Message
+            </PeerTabButton>
+            <SystemMessageReadDot
+              className='localdrop-system-message-read-dot'/>
+          </SystemMessageTab>
         </PeerTab>
         {
           false &&
@@ -121,5 +169,6 @@ class PeerTabComponent extends Component {
 const mapStateToProps = state => ({
   peers: state.localDropState.peers,
   peerUUID: state.peerUUID,
+  systemMessageMetaData: state.systemMessageMetaData,
 });
 export default connect(mapStateToProps)(PeerTabComponent);

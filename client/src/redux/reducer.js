@@ -7,6 +7,8 @@ import {
   UPDATE_PEER_UUID,
   ADD_FILES,
   UPDATE_PROGRESS,
+  UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
+  ADD_SYSTEM_MESSAGE,
 } from './actionType';
 
 const initialState = { peers: [], message: [] }
@@ -114,12 +116,49 @@ function filesToTransfer(state = {}, action) {
   return state;
 }
 
+function systemMessageMetaData(
+  state = { isSelected: false, isRead: true }, action) {
+
+  if (action.type === UPDATE_IS_SYSTEM_MESSAGE_SELECTED) {
+    const newState = { ...state };
+
+    newState.isSelected = !newState.isSelected;
+    newState.isRead = newState.isSelected ? true : newState.isRead;
+
+    return newState;
+  }
+
+  if (action.type === ADD_SYSTEM_MESSAGE) {
+    const newState = { ...state };
+    newState.isRead = newState.isSelected ? true : false;
+
+    return newState;
+  }
+
+  return state;
+
+}
+
+function systemMessages(state = [], action) {
+  if (action.type === ADD_SYSTEM_MESSAGE) {
+    const systemMessage = action.payload;
+    const newState = [ ...state, systemMessage ];
+
+    return newState;
+  }
+
+  return state;
+}
+
+
 export default combineReducers({
   localDropState,
   messagePackets,
   myUUID,
   peerUUID,
   filesToTransfer,
-  messageProgresses
+  messageProgresses,
+  systemMessageMetaData,
+  systemMessages,
 });
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import './App.css';
 import './utils/localApi';
+import './utils/window';
 import HeaderComponent from './components/HeaderComponent';
 import PeerTabComponent from './components/Message/PeerTabComponent';
 import MessageTableComponent from './components/Message/MessageTableComponent';

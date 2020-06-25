@@ -11,7 +11,7 @@ import {
   mobileWidth,
 } from '../../constants/styleConstants';
 import { getMyUUID } from '../../utils/localApi';
-import { getSizeString } from '../../utils/messagePacket';
+import { getSizeString } from '../../utils/commonUtil';
 
 const MessageItem = styled.div`
   display: flex;
