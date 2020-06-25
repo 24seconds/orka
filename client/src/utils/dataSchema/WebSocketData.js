@@ -1,9 +1,16 @@
 const SOCKET_STATE = {
-  INITIAL: 1,
-  CONNECTED: 2,
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
   CLOSED: 3,
-  ERROR: 4,
 };
+
+const SOCKET_STATE_CODE = {
+  0: 'CONNECTING',
+  1: 'OPEN',
+  2: 'CLOSING',
+  3: 'CLOSED',
+}
 
 
 // 2020-06-25 13:34:55: Copied from https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
@@ -77,4 +84,5 @@ const WEBSOCKET_CLOSE_EVENT_CODE = {
 export {
   SOCKET_STATE,
   WEBSOCKET_CLOSE_EVENT_CODE,
+  SOCKET_STATE_CODE,
 }

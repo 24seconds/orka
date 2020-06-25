@@ -1,6 +1,10 @@
 import config from '../config';
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE } from '../schema';
-import { SOCKET_STATE, WEBSOCKET_CLOSE_EVENT_CODE } from './dataSchema/WebSocketData';
+import {
+  SOCKET_STATE,
+  SOCKET_STATE_CODE,
+  WEBSOCKET_CLOSE_EVENT_CODE,
+} from './dataSchema/WebSocketData';
 import { createMessage, parseMessage } from './message';
 import { peerConnectionManager } from './peerConnection';
 import LocalDropEvent from './LocalDropEvent';
@@ -53,7 +57,7 @@ function createWebSocketConnection(url) {
       event,
     };
 
-    writeSystemMessage(JSON.stringify(payload, undefined, 2));
+    writeSystemMessage('websocket error: ' + JSON.stringify(payload, undefined, 2));
   })
 
   return socket;
@@ -192,6 +196,16 @@ function createWebSocketManager(url) {
   }
 
   webSocketManager.send = (message) => {
+    const socket = webSocketManager.socket;
+
+    if (socket.readyState !== SOCKET_STATE.OPEN) {
+      // TODO: Notify to user
+      const message
+        =`websocket it not opened! state: ` + SOCKET_STATE_CODE[socket.readyState];
+      writeSystemMessage(message);
+    }
+
+
     webSocketManager.socket.send(message);
   }
 
