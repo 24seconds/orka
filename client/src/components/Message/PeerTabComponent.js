@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { connectToPeer } from '../../utils/localApi';
 import { updatePeerUUID, updateIsSystemMessageTabSelected } from '../../redux/action';
 import { MaterialThemeOceanic } from '../../constants/styleConstants';
+import ToggleSwitch from '../ToggleSwitch';
 
 const PeerTab = styled.div`
   background: ${ MaterialThemeOceanic.SelectionBackground };
@@ -29,21 +30,11 @@ const PeerList = styled.div`
 
 const SystemMessageTab = styled.div`
   position:relative;
-
-  .localdrop-system-message-read-dot {
-    position: absolute;
-    top: 8px;
-    right: 15px;
-    visibility: ${ props => props.isRead ? 'hidden': 'visible' };
-  }
-`;
-
-const SystemMessageReadDot = styled.div`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-  background-color: ${ MaterialThemeOceanic.KeywordsColor };
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  height: 40px;
+  margin-right: 5px;
 `;
 
 const ConnectivityState = styled.div`
@@ -144,14 +135,11 @@ class PeerTabComponent extends Component {
             </PeerList>
           }
           <SystemMessageTab isRead={ systemMessageMetaData.isRead }>
-            <PeerTabButton
-              key='System-Message'
-              isSelected={ systemMessageMetaData.isSelected }
-              onClick={ this.onClickSystemMessageTab }>
-              System Message
-            </PeerTabButton>
-            <SystemMessageReadDot
-              className='localdrop-system-message-read-dot'/>
+            <ToggleSwitch
+              key='System-Message-toggle'
+              isSwitchOn={ systemMessageMetaData.isSelected }
+              isRead={ systemMessageMetaData.isRead }
+              onClick={ this.onClickSystemMessageTab } />
           </SystemMessageTab>
         </PeerTab>
         {

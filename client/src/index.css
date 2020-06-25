@@ -13,6 +13,8 @@ code {
 }
 
 html, body {
-  width: 100vw;
-  background: #32424A; /* Material Oceanic, Color SecondBackground */
+  width: 100%;
+
+  /* Material Oceanic, Color SecondBackground */
+  background: #32424A;
 }

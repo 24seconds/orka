@@ -18,7 +18,7 @@ const Container = styled.div`
 
   @media (max-width: ${ mobileWidth }) {
     margin: 0;
-    border-bottom: none;
+    border: none;
   }
 `;
 
