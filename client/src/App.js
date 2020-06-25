@@ -5,6 +5,7 @@ import './utils/localApi';
 import './utils/window';
 import HeaderComponent from './components/HeaderComponent';
 import PeerTabComponent from './components/Message/PeerTabComponent';
+import MetaDataComponent from './components/MetaData/MetaDataComponent';
 import MessageTableComponent from './components/Message/MessageTableComponent';
 import MessageTableHeaderComponent from './components/Message/MessageTableHeaderComponent';
 import FooterComponent from './components/FooterComponent';
@@ -37,6 +38,7 @@ class App extends Component {
           <MobileSticky>
             <HeaderComponent />
             <SendComponent />
+            <MetaDataComponent />
             <PeerTabComponent />
             <MessageTableHeaderComponent />
           </MobileSticky>
