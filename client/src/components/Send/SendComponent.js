@@ -5,6 +5,7 @@ import {
   connectToPeer,
   sendTextToPeer,
   sendFilesToPeer,
+  writeSystemMessage,
 } from '../../utils/localApi';
 import { addFiles } from '../../redux/action';
 import { generateFingerPrint } from '../../utils/commonUtil';
@@ -131,7 +132,7 @@ class SendComponent extends Component {
 
       sendFilesToPeer(peerUUID, fingerprintedFiles);
     } else {
-      // TODO: handle null case!
+      writeSystemMessage('peerUUID is null! Select peer to transfer files!');
     }
   }
 
@@ -152,12 +153,12 @@ class SendComponent extends Component {
     if (peerUUID) {
       sendTextToPeer(peerUUID, text);
       // connectToPeer(uuid);
-      this.setState({ text: '' });
+      // this.setState({ text: '' });
       if (this.textareaRef) {
         this.textareaRef.focus();
       }
     } else {
-      // TODO: handle null case!
+      writeSystemMessage('peerUUID is null! Select peer to send text!');
     }
   }
 
