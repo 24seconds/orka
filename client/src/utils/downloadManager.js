@@ -1,4 +1,9 @@
-import { parsePeerChunk, getMessagePacket } from './localApi';
+import {
+  parsePeerChunk,
+  getMessagePacket, 
+  sendErrorToPeer,
+  getMyUUID,
+} from './localApi';
 import { HEADER_SIZE_IN_BYTES } from '../constants/constant';
 import { concatHeaderAndChunk } from './peerMessage';
 import StreamSaver from 'streamsaver';
@@ -110,12 +115,11 @@ function readFile(file, offset, chunkSize, reader, fingerprint) {
   reader.readAsArrayBuffer(chunk);
 }
 
-function transferFile(fingerprint, file, dataChannel) {
-  if (transferStore[fingerprint]) {
-    // TODO: Notify that download is in progress
-    return;
-  }
+function isDownloadInProgress(fingerprint) {
+  return transferStore[fingerprint] || false;
+}
 
+function transferFile(fingerprint, file, dataChannel) {
   transferStore[fingerprint] = true;
 
   const reader = new FileReader();
@@ -152,4 +156,5 @@ function transferFile(fingerprint, file, dataChannel) {
 export {
   accumulateChunk,
   transferFile,
+  isDownloadInProgress,
 }

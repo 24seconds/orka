@@ -20,9 +20,16 @@ class messageDownloadData {
   }
 }
 
+class messageErrorData {
+  constructor({ message }) {
+    this.message = message;
+  }
+}
+
 
 export {
   messageTextData,
   messageFileData,
   messageDownloadData,
+  messageErrorData,
 }

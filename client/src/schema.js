@@ -3,6 +3,7 @@ import {
   EventSendFilesData,
   EventConnectData,
   EventSendMessageData,
+  EventErrorData,
 } from './utils/dataSchema/LocalDropEventData';
 
 export const MESSAGE_TYPE = {
@@ -87,6 +88,7 @@ export const CLIENT_EVENT_TYPE = {
   // TODO Change name to SEND_MESSAGE_TO_SIGNAL
   'SEND_MESSAGE': 'send_message',
   'CLOSE': 'close',
+  'ERROR': 'error',
 };
 
 const clientEventDataSchema = {
@@ -94,7 +96,7 @@ const clientEventDataSchema = {
   sendFileDataSchema: EventSendFilesData,
   connectDataSchema: EventConnectData,
   sendMessageDataSchema: EventSendMessageData,
-  connectDataSchema: EventConnectData,
+  errorDataSchema: EventErrorData,
 }
 
 
@@ -118,7 +120,8 @@ const peerMessageDataSchema = {
     message: 'string',
     fingerprint: 'string',
   },
-  downloadData: { fingerprint: 'string' }
+  downloadDataSchema: { fingerprint: 'string' },
+  erroDataSchema: { message: 'string' },
 }
 
 const messagePacketSchema = {

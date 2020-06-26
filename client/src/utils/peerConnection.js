@@ -3,6 +3,7 @@ import {
   messageTextData,
   messageFileData,
   messageDownloadData,
+  messageErrorData,
 } from './dataSchema/PeerMessageData';
 import { createMessage } from './message';
 import {
@@ -41,7 +42,7 @@ function createPeerConnection(uuid) {
   };
 
   dataChannel.onmessage = (event) => {
-    console.log('[Message from DataChannel]: ', event);
+    // console.log('[Message from DataChannel]: ', event);
     handleDataChannelMessage(event, uuid);
   }
 
@@ -151,8 +152,9 @@ async function handleDataChannelMessage(event, uuid) {
   }
 
   if (messageType === PEER_MESSAGE_TYPE.ERROR) {
-    // TODO: Handle this later
+    const { message } = data;
 
+    writeSystemMessage(message);
     return;
   }
 }
@@ -340,6 +342,32 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 
     dataChannel.send(peerMessage);
     // TODO: should I notify that peerMessage has been sent well?
+  });
+
+  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.ERROR, event =>{
+    const { uuid, message } = event;
+
+    if (!peerConnectionManager.peerConnections[uuid]) {
+      return;
+    }
+
+    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+    const data = new messageErrorData({ message });
+
+    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.ERROR, data);
+
+    console.log('CLIENT_EVENT_TYPE.ERROR, message is ', peerMessage);
+
+    console.log('dataChannel is ', dataChannel);
+    console.log('dataChannel.readyState is ', dataChannel.readyState);
+
+    if (dataChannel.readyState !== 'open') {
+      writeSystemMessage('dataChannel not opened!');
+      console.log('dataChannel not opened!');
+      return;
+    }
+
+    dataChannel.send(peerMessage);
   });
 
 

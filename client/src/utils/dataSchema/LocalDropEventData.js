@@ -33,11 +33,19 @@ class EventSendMessageData {
   }
 }
 
+class EventErrorData {
+  constructor({ uuid, message }) {
+    this.uuid = uuid;
+    this.message = message;
+  }
+}
+
 
 export {
   EventSendTextData,
   EventSendFilesData,
   EventDownloadFileData,
   EventConnectData,
-  EventSendMessageData
+  EventSendMessageData,
+  EventErrorData
 }

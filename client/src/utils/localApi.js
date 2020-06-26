@@ -5,9 +5,10 @@ import {
   EventSendFilesData,
   EventDownloadFileData,
   EventConnectData,
-  EventSendMessageData
+  EventSendMessageData,
+  EventErrorData
 } from './dataSchema/LocalDropEventData';
-import { CLIENT_EVENT_TYPE } from '../schema';
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
 import websocketManager from './websocket';
 import store from '../redux/store';
 import {
@@ -19,7 +20,7 @@ import {
 } from '../redux/action';
 import { parseChunkAndHeader } from './peerMessage';
 import { getCurrentTime, generateFingerPrint } from './commonUtil';
-import { accumulateChunk, transferFile } from './downloadManager';
+import { accumulateChunk, transferFile, isDownloadInProgress } from './downloadManager';
 
 function sendTextToPeer(uuid, text) {
   const event = new LocalDropEvent(
@@ -42,6 +43,14 @@ function sendFileToPeer(uuid, fingerprintedFile) {
       size: file.size,
       fingerprint,
     }));
+
+  peerConnectionManager.dispatchEvent(event);
+}
+
+function sendErrorToPeer(uuid, message) {
+  const event = new LocalDropEvent(
+    CLIENT_EVENT_TYPE.ERROR,
+    new EventErrorData({ uuid, message }));
 
   peerConnectionManager.dispatchEvent(event);
 }
@@ -117,24 +126,37 @@ function getFileToTransfer(fingerprint) {
 }
 
 function transferFileToPeer(fingerprint, uuid) {
-  // TODO: if duplicate download request comes, ignore or handle it
-
   const file = getFileToTransfer(fingerprint);
 
   if (!file) {
-    // TODO: send error message to peer
     // TODO: handle later. Notify user that file link has expired!
+    const message = `[From #${ getMyUUID() }]: ${ fingerprint } file link has expired`;
+    sendErrorToPeer(uuid, message);
+    return;
   }
 
   if (!peerConnectionManager.peerConnections[uuid]) {
-    // TODO: send error message to peer
-
+    // There is nothing to do in this case..
+    const systemMessage =
+      `#${ uuid } requested download but uuid not found : ` + JSON.stringify({ fingerprint, file }, undefined, 2);
+    writeSystemMessage(systemMessage);
     return;
   }
 
   const { dataChannel } = peerConnectionManager.peerConnections[uuid];
 
-  transferFile(fingerprint, file, dataChannel);
+  if (isDownloadInProgress(fingerprint)) {
+    const { name, size, type } = file;
+    const payload = {
+      fingerprint,
+      file: { name, size, type },
+    }
+    const message = `[From #${ getMyUUID() }]: download is in progress ` + JSON.stringify(payload, undefined, 2);
+    sendErrorToPeer(uuid, message);
+    return;
+  } else {
+    transferFile(fingerprint, file, dataChannel);
+  }
 }
 
 function getMessagePacket(fingerprint) {
@@ -170,6 +192,7 @@ function writeSystemMessage(message) {
 export {
   sendTextToPeer,
   sendFilesToPeer,
+  sendErrorToPeer,
   requestDownloadFile,
   sendMessageToServer,
   connectToPeer,
