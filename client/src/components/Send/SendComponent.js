@@ -11,6 +11,7 @@ import { addFiles } from '../../redux/action';
 import { generateFingerPrint } from '../../utils/commonUtil';
 import FingerprintedFile from '../../utils/dataSchema/FingerprintedFile';
 import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
+import { rippleEffect } from '../SharedStyle';
 
 const Send = styled.div`
   display: flex;
@@ -51,16 +52,16 @@ const SelectFileButton = styled.button`
   font-size: 16px;
   font-weight: 800;
 
-  &:hover {
-    cursor: pointer;
-    opacity: 0.8;
+  @media (max-width: ${ mobileWidth }) {
+    width: 40px;
+    height: 40px;
   }
 `;
 
 const SendPasteButton = styled.button`
   width: 50px;
   outline: none;
-  background-color: ${ MaterialThemeOceanic.Active };
+  background-color: ${ MaterialThemeOceanic.Buttons };
   color: ${ MaterialThemeOceanic.AttributesColor };
   border: 2px solid ${ MaterialThemeOceanic.Border };
   border-radius: 4px;
@@ -68,10 +69,7 @@ const SendPasteButton = styled.button`
   margin: 0 3px;
   height: 50px;
 
-  &:hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
+  ${ rippleEffect };
 `;
 
 const SendButton = styled(SendPasteButton)`

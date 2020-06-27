@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { PEER_MESSAGE_TYPE } from '../../schema';
 import { requestDownloadFile } from '../../utils/localApi';
-import { messageCell } from '../SharedStyle';
+import { messageCell, rippleEffect } from '../SharedStyle';
 import {
   TabContentWidth,
   TabSmallWidth,
@@ -105,23 +105,7 @@ const MessageButtonCell = styled.button`
   border: 2px solid ${ MaterialThemeOceanic.Border };
   border-radius: 4px;
 
-  background-position: center;
-  transition: background 0.8s;
-
-  &:hover {
-    cursor: pointer;
-    opacity: 0.8;
-
-    background: ${ MaterialThemeOceanic.Buttons }
-      radial-gradient(circle, transparent 1%, ${ MaterialThemeOceanic.Active } 1%)
-      center/15000%;
-  }
-
-  &:active {
-    background-color: ${ MaterialThemeOceanic.Contrast };
-    background-size: 100%;
-    transition: background 0s;
-  }
+  ${ rippleEffect };
 `;
 
 class MessageItemComponent extends Component {

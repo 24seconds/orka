@@ -14,3 +14,21 @@ export const messageCell = css`
   min-width: ${props => props.width || TabDefaultWidth }px;
   max-width: ${props => props.width || TabDefaultWidth }px;
 `
+export const rippleEffect = css`
+  background-position: center;
+  transition: background 0.3s;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    background: ${ MaterialThemeOceanic.Buttons }
+        radial-gradient(circle, transparent 1%, ${ MaterialThemeOceanic.Active } 1%)
+        center/15000%;
+  }
+
+  &:active {
+    background-color: ${ MaterialThemeOceanic.Contrast };
+    background-size: 100%;
+    transition: background 0s;
+}
+`;
