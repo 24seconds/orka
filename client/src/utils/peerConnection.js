@@ -266,8 +266,8 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!');
-      console.log('dataChannel not opened!');
+      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!');
+      console.log('dataChannel not opened!, click the peer again!');
       return;
     }
 
@@ -302,8 +302,8 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!');
-      console.log('dataChannel not opened!');
+      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!');
+      console.log('dataChannel not opened!, click the peer again!');
       return;
     }
 
@@ -338,7 +338,9 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!');
+      writeSystemMessage(
+        `CLIENT_EVENT ${ CLIENT_EVENT_TYPE.DOWNLOAD_FILE }: dataChannel not opened!`
+        + `dataChannel.readyState: ${ dataChannel.readyState }`);
       console.log('dataChannel not opened!');
       return;
     }
@@ -366,14 +368,14 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!');
+      writeSystemMessage(
+        `CLIENT_EVENT ${ CLIENT_EVENT_TYPE.ERROR }: dataChannel not opened!`);
       console.log('dataChannel not opened!');
       return;
     }
 
     dataChannel.send(peerMessage);
   });
-
 
 
   peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.RECONNECT, event =>{
