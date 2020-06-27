@@ -6,7 +6,6 @@ import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
 const Header = styled.div`
   display: flex;
   text-align: center;
-  border: solid 1px black;
   font-size: 26px;
   height: 60px;
   background: ${ MaterialThemeOceanic.Background };

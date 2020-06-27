@@ -7,7 +7,7 @@ import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstant
 
 const MessageTable = styled.div`
   width: 100%;
-  height: calc(100% - 300px);
+  height: calc(100% - 296px);
 `;
 
 const MessageItemContainer = styled.div`

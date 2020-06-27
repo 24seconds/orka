@@ -39,6 +39,7 @@ const SystemMessageTab = styled.div`
 
 const ConnectivityState = styled.div`
   margin: 10px 0;
+  // TODO: Change color to Material color
   border: solid 1px green;
 
   button {

@@ -24,6 +24,7 @@ const CheckBox = styled.div`
     width: 11px;
     height: 5px;
     transform: rotateZ(135deg);
+    // TODO: Change color to Material color
     border: solid 2px red;
     border-bottom: none;
     border-left: none;

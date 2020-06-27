@@ -6,7 +6,7 @@ const SystemMessageItem = styled.div`
   display:flex;
   align-items: center;
   min-height: 30px;
-  border-bottom: solid 1px black;
+  border-bottom: solid 1px ${ MaterialThemeOceanic.Contrast };
   color: white;
 
   span {

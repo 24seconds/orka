@@ -42,7 +42,7 @@ class App extends Component {
   render() {
     return (
       <LocalDropApp className="App">
-        <Container clasName='localdrop-app-container'>
+        <Container className='localdrop-app-container'>
           <MobileSticky>
             <HeaderComponent />
             <SendComponent />
