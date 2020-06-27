@@ -80,15 +80,15 @@ const dataSchema = {
 }
 
 export const CLIENT_EVENT_TYPE = {
-  'CONNECT': 'connect',
-  'SEND_TEXT': 'send_text',
-  'SEND_FILES': 'send_files',
-  'DOWNLOAD_FILE': 'donwload_file',
-  'RECONNECT': 'reconnect',
+  'CONNECT': 'CONNECT',
+  'SEND_TEXT': 'SEND_TEXT',
+  'SEND_FILES': 'SEND_FILES',
+  'DOWNLOAD_FILE': 'DOWNLOAD_FILE',
+  'RECONNECT': 'RECONNECT',
   // TODO Change name to SEND_MESSAGE_TO_SIGNAL
-  'SEND_MESSAGE': 'send_message',
-  'CLOSE': 'close',
-  'ERROR': 'error',
+  'SEND_MESSAGE': 'SEND_MESSAGE',
+  'CLOSE': 'CLOSE',
+  'ERROR': 'ERROR',
 };
 
 const clientEventDataSchema = {
