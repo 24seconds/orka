@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { MaterialThemeOceanic } from '../../constants/styleConstants';
+import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
 
 
 const MyUUID = styled.div`
@@ -16,6 +16,10 @@ const MyUUID = styled.div`
     margin-right: 8px;
     margin: 0 8px 0 10px;
     color: ${ MaterialThemeOceanic.ParametersColor };
+  }
+
+  @media (max-width: ${ mobileWidth }) {
+    height: 25px;
   }
 `;
 

@@ -33,6 +33,10 @@ const Send = styled.div`
     border: 2px solid ${ MaterialThemeOceanic.Border };
     border-radius: 4px;
   }
+
+  @media (max-width: ${ mobileWidth }) {
+    height: 75px;
+  }
 `;
 
 const FileInput = styled.input`

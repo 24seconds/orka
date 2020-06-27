@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { connectToPeer } from '../../utils/localApi';
 import { updatePeerUUID, updateIsSystemMessageTabSelected } from '../../redux/action';
-import { MaterialThemeOceanic } from '../../constants/styleConstants';
+import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
 import ToggleSwitch from '../ToggleSwitch';
 
 const PeerTab = styled.div`
@@ -64,6 +64,12 @@ const PeerTabButton = styled.button`
     cursor: pointer;
     opacity: 0.7;
   }
+
+  @media (max-width: ${ mobileWidth }) {
+    width: 80px;
+    height: 30px;
+    font-size: 12px;
+  }
 `;
 
 const Peers = styled.div`
@@ -77,6 +83,12 @@ const Peers = styled.div`
   margin: 0 0 0 5px;
   border: solid 2px ${ MaterialThemeOceanic.Border };
   border-radius: 4px;
+
+  @media (max-width: ${ mobileWidth }) {
+    width: 50px;
+    height: 30px;
+    font-size: 12px;
+  }
 `;
 
 
@@ -112,7 +124,7 @@ class PeerTabComponent extends Component {
     return (
       <Fragment>
         <PeerTab className='localdrop-peer-tab'>
-          <Peers>PEERS:</Peers>
+          <Peers>PEERS :</Peers>
           {
             false &&
             <PeerTabButton key='ALL' disabled={ false }>
