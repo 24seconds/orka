@@ -247,6 +247,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { uuid, message } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
+      writeSystemMessage(`can not find peer: #${ uuid }`);
       return;
     }
 
@@ -286,6 +287,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { uuid, message, size, fingerprint } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
+      writeSystemMessage(`can not find peer: #${ uuid }`);
       return;
     }
 
@@ -321,6 +323,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { uuid, fingerprint } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
+      writeSystemMessage(`can not find peer: #${ uuid }`);
       return;
     }
 
@@ -348,6 +351,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     const { uuid, message } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
+      writeSystemMessage(`can not find peer: #${ uuid }`);
       return;
     }
 
