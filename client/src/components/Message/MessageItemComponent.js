@@ -40,6 +40,14 @@ const MessageCell = styled.div`
   }
 `;
 
+const MessageInOutCell = styled(MessageCell)`
+  color: ${ props =>
+    props.isMyMessagePacket
+    ? MaterialThemeOceanic.ParametersColor
+    : MaterialThemeOceanic.OperatorsColor };
+`;
+
+
 const MessageContentCellContainer = styled.div`
   ${ messageCell }
   justify-content: flex-start;
@@ -222,11 +230,15 @@ class MessageItemComponent extends Component {
       progress,
     } = messagePacket;
 
+    const isMyMessagePacket = this.isMyMessagePacket(source);
+
     return (
       <Fragment>
-        <MessageCell width={ TabSmall2Width } padding={ '0' }>
-          { `${ this.isMyMessagePacket(source) ? '⇇' : '⇉' }` }
-        </MessageCell>
+        <MessageInOutCell
+          width={ TabSmall2Width } padding={ '0' }
+          isMyMessagePacket={ isMyMessagePacket }>
+          { `${ isMyMessagePacket ? '⇇' : '⇉' }` }
+        </MessageInOutCell>
         <MessageCell padding={ '0' }>{ `${ source }` }</MessageCell>
         <MessageCell padding={ '0' }>{ `${ destination }` }</MessageCell>
         <MessageCell width={ TabSmallWidth }>{ `${ type }` }</MessageCell>

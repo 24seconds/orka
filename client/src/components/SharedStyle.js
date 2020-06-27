@@ -6,7 +6,6 @@ export const messageCell = css`
   justify-content: center;
   align-items: center;
   border: solid 1px ${ MaterialThemeOceanic.Border };
-  /* border-bottom: solid 1px black; */
   border-top: none;
   padding: ${props => props.padding || '0 10px' };
   height: 30px;
