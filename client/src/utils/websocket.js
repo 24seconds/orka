@@ -1,4 +1,3 @@
-import config from '../config';
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE } from '../schema';
 import {
   SOCKET_STATE,
@@ -216,8 +215,7 @@ function createWebSocketManager(url) {
   return webSocketManager;
 }
 
-const url = config.dev.websocketUrl;
-// const url = config.production.websocketUrl;
+const url = process.env.REACT_APP_WEB_SOCKET_URL || 'ws://localhost:4000';
 const websocketManager = createWebSocketManager(url);
 addCustomMessageTypeEventListener(websocketManager);
 
