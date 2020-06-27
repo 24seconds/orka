@@ -1,5 +1,9 @@
 import { css } from 'styled-components';
-import { TabDefaultWidth, MaterialThemeOceanic } from '../constants/styleConstants';
+import {
+  mobileWidth,
+  TabDefaultWidth,
+  MaterialThemeOceanic,
+} from '../constants/styleConstants';
 
 export const messageCell = css`
   display: flex;
@@ -30,5 +34,14 @@ export const rippleEffect = css`
     background-color: ${ MaterialThemeOceanic.Contrast };
     background-size: 100%;
     transition: background 0s;
-}
+  }
+
+  @media (max-width: ${ mobileWidth }) {
+    &:focus {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+  }
+  }
 `;

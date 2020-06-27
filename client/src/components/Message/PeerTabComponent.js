@@ -52,7 +52,7 @@ const PeerTabButton = styled.button`
   height: 40px;
   font-size: 14px;
   margin: 0 5px;
-  background: ${
+  background-color: ${
     props => props.isSelected
     ? MaterialThemeOceanic.SelectionForeground
     : MaterialThemeOceanic.Disabled };
