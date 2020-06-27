@@ -236,8 +236,8 @@ class MessageItemComponent extends Component {
           isMyMessagePacket={ isMyMessagePacket }>
           { `${ isMyMessagePacket ? '⇇' : '⇉' }` }
         </MessageInOutCell>
-        <MessageCell padding={ '0' }>{ `${ source }` }</MessageCell>
-        <MessageCell padding={ '0' }>{ `${ destination }` }</MessageCell>
+        <MessageCell padding={ '0' }>{ `#${ source }` }</MessageCell>
+        <MessageCell padding={ '0' }>{ `#${ destination }` }</MessageCell>
         <MessageCell width={ TabSmallWidth }>{ `${ type }` }</MessageCell>
         { this.renderContent(type, data) }
         <MessageCell width={ TabSmallWidth }>{ `${ time }` }</MessageCell>
