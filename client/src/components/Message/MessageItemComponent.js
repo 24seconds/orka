@@ -100,14 +100,27 @@ const MessageButtonCell = styled.button`
   outline: none;
   font-size: 14px;
 
-  background-color: ${ MaterialThemeOceanic.Active };
+  background-color: ${ MaterialThemeOceanic.Buttons };
   color: ${ MaterialThemeOceanic.AttributesColor };
   border: 2px solid ${ MaterialThemeOceanic.Border };
   border-radius: 4px;
 
+  background-position: center;
+  transition: background 0.8s;
+
   &:hover {
     cursor: pointer;
     opacity: 0.8;
+
+    background: ${ MaterialThemeOceanic.Buttons }
+      radial-gradient(circle, transparent 1%, ${ MaterialThemeOceanic.Active } 1%)
+      center/15000%;
+  }
+
+  &:active {
+    background-color: ${ MaterialThemeOceanic.Contrast };
+    background-size: 100%;
+    transition: background 0s;
   }
 `;
 
