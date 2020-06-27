@@ -6,8 +6,8 @@ import { MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const MyUUID = styled.div`
   display: flex;
-  height: 20px;
-  margin: 0 0 10px 10px;
+  height: 30px;
+  margin: 0 0 0 10px;
   align-items: center;
   font-size: 14px;
   color: ${ MaterialThemeOceanic.StringsColor };
