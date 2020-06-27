@@ -7,10 +7,12 @@ import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstant
 
 const MessageTable = styled.div`
   width: 100%;
+  height: calc(100% - 300px);
 `;
 
 const MessageItemContainer = styled.div`
   min-height: 100px;
+  height: 100%;
   background: ${ MaterialThemeOceanic.SecondBackground };
   overflow-y: scroll;
 
@@ -20,8 +22,6 @@ const MessageItemContainer = styled.div`
     width: 0;
     height: 0;
   }
-
-  height: 50vh;
 
   @media (max-width: ${ mobileWidth }) {
     height: auto;
@@ -39,10 +39,11 @@ class MessageTableComponent extends Component {
     } = this.props;
 
     return (
-      <MessageTable>
+      <MessageTable className='localdrop-message-table'>
         {
           !systemMessageMetaData.isSelected &&
-          <MessageItemContainer>
+          <MessageItemContainer
+            className='localdrop-message-item-container'>
             {
               messagePackets.map(messagePacket => {
                 const { data } = messagePacket;

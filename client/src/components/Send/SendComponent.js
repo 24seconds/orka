@@ -10,7 +10,7 @@ import {
 import { addFiles } from '../../redux/action';
 import { generateFingerPrint } from '../../utils/commonUtil';
 import FingerprintedFile from '../../utils/dataSchema/FingerprintedFile';
-import { MaterialThemeOceanic } from '../../constants/styleConstants';
+import { mobileWidth, MaterialThemeOceanic } from '../../constants/styleConstants';
 
 const Send = styled.div`
   display: flex;
@@ -71,6 +71,14 @@ const SendPasteButton = styled.button`
   &:hover {
     cursor: pointer;
     opacity: 0.8;
+  }
+`;
+
+const SendButton = styled(SendPasteButton)`
+  margin: 0 5px 0 3px;
+
+  @media (max-width: ${ mobileWidth }) {
+    margin: 0 5px 0 0;
   }
 `;
 
@@ -196,9 +204,9 @@ class SendComponent extends Component {
         <SendPasteButton onClick={ this.onPasteText }>
           paste
         </SendPasteButton>
-        <SendPasteButton onClick={ this.onSend } >
+        <SendButton onClick={ this.onSend } >
           send
-        </SendPasteButton>
+        </SendButton>
       </Send>
     )
   }

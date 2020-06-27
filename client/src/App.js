@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import './App.css';
 import './utils/localApi';
 import './utils/window';
 import HeaderComponent from './components/HeaderComponent';
@@ -12,10 +11,19 @@ import FooterComponent from './components/FooterComponent';
 import SendComponent from './components/Send/SendComponent';
 import { mobileWidth, MaterialThemeOceanic } from './constants/styleConstants';
 
+const LocalDropApp = styled.div`
+  height: calc(100% - 110px);
+  padding: 50px 100px;
+
+  @media (max-width: ${ mobileWidth }) {
+    padding: 0;
+  }
+`;
+
 const Container = styled.div`
-  margin: 50px 100px;
   border: solid 2px ${ MaterialThemeOceanic.Contrast };
   border-radius: 5px;
+  height: 100%;
 
   @media (max-width: ${ mobileWidth }) {
     margin: 0;
@@ -33,8 +41,8 @@ const MobileSticky = styled.div`
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Container>
+      <LocalDropApp className="App">
+        <Container clasName='localdrop-app-container'>
           <MobileSticky>
             <HeaderComponent />
             <SendComponent />
@@ -45,7 +53,7 @@ class App extends Component {
           <MessageTableComponent />
           <FooterComponent />
         </Container>
-      </div>
+      </LocalDropApp>
     );
   }
 }

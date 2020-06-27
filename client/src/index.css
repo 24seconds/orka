@@ -14,7 +14,12 @@ code {
 
 html, body {
   width: 100%;
+  height: 100%;
 
   /* Material Oceanic, Color SecondBackground */
   background: #32424A;
+}
+
+#root {
+  height: 100%;
 }
