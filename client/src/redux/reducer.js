@@ -10,6 +10,7 @@ import {
   UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
   ADD_SYSTEM_MESSAGE,
 } from './actionType';
+import { generateFingerPrint, getCurrentTime } from '../utils/commonUtil';
 
 const initialState = { peers: [], message: [] }
 
@@ -139,7 +140,13 @@ function systemMessageMetaData(
 
 }
 
-function systemMessages(state = [], action) {
+const defaultSystemMessage = {
+  message: 'Hi, This is ths first system message!',
+  fingerprint: generateFingerPrint(),
+  createdAt: getCurrentTime(),
+};
+
+function systemMessages(state = [defaultSystemMessage], action) {
   if (action.type === ADD_SYSTEM_MESSAGE) {
     const systemMessage = action.payload;
     const newState = [ systemMessage, ...state ];
