@@ -120,7 +120,7 @@ async function handleMessage(message, socket) {
   }
 
   if (messageType === MESSAGE_TYPE.PING) {
-    const message = createMessage(messageType, { message: "This is client pong!" });
+    const message = createMessage(MESSAGE_TYPE.PONG, { message: "This is client pong!" });
 
     socket.send(message);
 
