@@ -1,0 +1,10 @@
+{
+  "short_name": "LocalDrop",
+  "name": "LocalDrop",
+  "start_url": ".",
+  "display": "standalone",
+  "categories": ["utilities", ""],
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+
+}
