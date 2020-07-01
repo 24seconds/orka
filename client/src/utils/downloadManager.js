@@ -5,7 +5,11 @@ import {
   getMyUUID,
   writeSystemMessage,
 } from './localApi';
-import { HEADER_SIZE_IN_BYTES } from '../constants/constant';
+import {
+  HEADER_SIZE_IN_BYTES,
+  DATACHANNEL_MAX_BUFFERED_AMOUNT,
+  DATACHANNEL_BUFFER_THRESHOLD,
+} from '../constants/constant';
 import { concatHeaderAndChunk } from './peerMessage';
 import StreamSaver from 'streamsaver';
 StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
@@ -171,6 +175,8 @@ function transferFile(fingerprint, file, dataChannel, uuid) {
   const reader = new FileReader();
   const chunkSize = 16000 - HEADER_SIZE_IN_BYTES;
   let offset = 0;
+  const MAX_BUFFERED_AMOUNT = DATACHANNEL_MAX_BUFFERED_AMOUNT;
+  const BUFFER_THRESHOLD = DATACHANNEL_BUFFER_THRESHOLD;
 
   console.log('chunkSize is ', chunkSize);
   console.log('file.size is ', file.size);
@@ -195,8 +201,24 @@ function transferFile(fingerprint, file, dataChannel, uuid) {
     dataChannel.send(chunkWithHeader);
     offset += chunkSize;
 
-    // read next chunk
-    readFile(file, offset, chunkSize, reader, fingerprint, uuid);
+    if (dataChannel.bufferedAmount >= MAX_BUFFERED_AMOUNT) {
+      // read later
+      dataChannel.bufferedAmountLowThreshold = BUFFER_THRESHOLD;
+
+      if (!dataChannel.onbufferedamountlow) {
+        dataChannel.onbufferedamountlow = () => {
+          console.log(`#${ uuid }, onbufferedamountlow is called`);
+
+          dataChannel.onbufferedamountlow = null;
+
+          // read next chunk
+          readFile(file, offset, chunkSize, reader, fingerprint, uuid);
+        };
+      }
+    } else {
+      // read next chunk
+      readFile(file, offset, chunkSize, reader, fingerprint, uuid);
+    }
   });
 }
 
