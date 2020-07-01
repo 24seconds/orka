@@ -11,7 +11,7 @@ import StreamSaver from 'streamsaver';
 StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
 
 const FIRST_ACC_SIZE = 66;
-const DEFAULT_ACC_SIZE = 625;
+const DEFAULT_ACC_SIZE = 125;
 
 let MAXIMUM_ACC_SIZE = FIRST_ACC_SIZE;
 

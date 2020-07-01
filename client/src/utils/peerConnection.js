@@ -40,6 +40,7 @@ function createPeerConnection(uuid) {
   };
 
   dataChannel.onclose = (event) => {
+    writeSystemMessage('dataChannel closed');
     handleDataChannelStatusChange(event, uuid);
 
     abortDownloadFile(uuid);
@@ -274,7 +275,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!');
+      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: ' + dataChannel.readyState);
       console.log('dataChannel not opened!, click the peer again!');
       return;
     }
@@ -310,7 +311,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     console.log('dataChannel.readyState is ', dataChannel.readyState);
 
     if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!');
+      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: ' + dataChannel.readyState);
       console.log('dataChannel not opened!, click the peer again!');
       return;
     }
