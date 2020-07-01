@@ -29,7 +29,9 @@ export class WebSocketManager {
   webSocketContainer: WebSocketContainer = {};
 
   addPeer(ipAddress: string, uuid: string, ws: WebSocket) {
-    const { webSocketContainer } = this;
+    const {
+      webSocketContainer
+    } = this;
 
     webSocketContainer[ipAddress] = webSocketContainer[ipAddress] || {};
     webSocketContainer[ipAddress].webSockets = webSocketContainer[ipAddress].webSockets || {};
@@ -49,14 +51,18 @@ export class WebSocketManager {
         return;
       }
 
-      const pingMessage = createMessage(MessageType.PING, { message: 'Ping from server!' });
+      const pingMessage = createMessage(MessageType.PING, {
+        message: 'Ping from server!'
+      });
       ws.send(pingMessage);
     }, 1000 * 30);
   }
 
   addEventListenerToWebSocket(ipAddress: string, peerUUID: string, ws: WebSocket) {
     // Add event listeners
-    const { webSocketContainer } = this;
+    const {
+      webSocketContainer
+    } = this;
 
     ws.on('message', (message: WebSocket.Data) => {
       console.log('[Message from client] ', message as string);
@@ -78,7 +84,9 @@ export class WebSocketManager {
 
       this.deletePeer(ipAddress, peerUUID);
 
-      const leaveMessage = createMessage(MessageType.LEAVE, { peers: [peerUUID] });
+      const leaveMessage = createMessage(MessageType.LEAVE, {
+        peers: [peerUUID]
+      });
       this.notifyEvent(ipAddress, peerUUID, leaveMessage);
     });
 
@@ -86,12 +94,14 @@ export class WebSocketManager {
       console.log(`[WS_EVENT]-[${peerUUID}]: close, code  is `, code, ', reason is ', reason);
       this.deletePeer(ipAddress, peerUUID);
 
-      const leaveMessage = createMessage(MessageType.LEAVE, { peers: [peerUUID] });
+      const leaveMessage = createMessage(MessageType.LEAVE, {
+        peers: [peerUUID]
+      });
       this.notifyEvent(ipAddress, peerUUID, leaveMessage);
     });
   }
 
-  getPeers(ipAddress: string): Array<string> {
+  getPeers(ipAddress: string): Array < string > {
     if (!this.webSocketContainer[ipAddress]) {
       return [];
     }
@@ -108,12 +118,12 @@ export class WebSocketManager {
       delete this.webSocketContainer[ipAddress].webSockets[peerUUID];
     }
 
-    if (this.webSocketContainer[ipAddress].webSockets
-      && Object.keys(this.webSocketContainer[ipAddress].webSockets).length === 0) {
+    if (this.webSocketContainer[ipAddress].webSockets &&
+      Object.keys(this.webSocketContainer[ipAddress].webSockets).length === 0) {
       delete this.webSocketContainer[ipAddress];
     }
 
-    console.log('deletePeer, webSocketContainer: ', this.webSocketContainer);
+    console.log(`deletePeer: #${peerUUID}, webSocketContainer: `, this.webSocketContainer);
   }
 
   sendMessageToPeer(ipAddress: string, peerUUID: string, message: string) {
@@ -130,7 +140,9 @@ export class WebSocketManager {
       return;
     }
 
-    const { webSockets } = this.webSocketContainer[ipAddress];
+    const {
+      webSockets
+    } = this.webSocketContainer[ipAddress];
     Object.values(webSockets).forEach((otherWebSocket) => {
       otherWebSocket.send(message);
     });
@@ -141,14 +153,18 @@ export class WebSocketManager {
       return;
     }
 
-    const { webSocketContainer } = this;
+    const {
+      webSocketContainer
+    } = this;
 
     Object.entries(webSocketContainer[ipAddress].webSockets).forEach(([uuid, otherWebSocket]) => {
-      const peerJoinMessage = createMessage(MessageType.JOIN, { peers: [peerUUID] });
+      const peerJoinMessage = createMessage(MessageType.JOIN, {
+        peers: [peerUUID]
+      });
       console.log(`[${uuid}]: readyState is `, otherWebSocket.readyState);
 
-      if (otherWebSocket.readyState === WebSocket.CLOSED
-        || otherWebSocket.readyState === WebSocket.CLOSING) {
+      if (otherWebSocket.readyState === WebSocket.CLOSED ||
+        otherWebSocket.readyState === WebSocket.CLOSING) {
         this.deletePeer(ipAddress, uuid);
 
         return;
@@ -158,29 +174,32 @@ export class WebSocketManager {
     });
   }
 
+  // TODO: Check Who closed. But I think target peer is closed
   handleCloseErrorCallback(ipAddress: string, targetUUID: string) {
-    return (err?: Error) => {
-      // TODO: Check Who closed. But I think target peer is closed
+    return (err ? : Error) => {
       if (err && err.message.includes('CLOSED')) {
         this.deletePeer(ipAddress, targetUUID);
-
         const leaveMessage = createMessage(MessageType.LEAVE, { peers: [targetUUID] });
         this.notifyEvent(ipAddress, targetUUID, leaveMessage);
       }
-
       console.log(`[${targetUUID}]: target peer closed `, err);
     };
   }
 
   handleMessageResult(event: HandleMessageEvent) {
-    const { eventType, data } = event;
+    const {
+      eventType,
+      data
+    } = event;
 
     if (eventType === HandleMessageEventType.DELETE_PEER) {
-      const { ipAddress, peerUUID } = data as HandleMessageDeleteDataSchema;
+      const {
+        ipAddress,
+        peerUUID
+      } = data as HandleMessageDeleteDataSchema;
 
       this.deletePeer(ipAddress, peerUUID);
     }
-
   }
 }
 
