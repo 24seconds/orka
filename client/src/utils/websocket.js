@@ -7,7 +7,7 @@ import {
 import { createMessage, parseMessage } from './message';
 import { peerConnectionManager } from './peerConnection';
 import LocalDropEvent from './LocalDropEvent';
-import { writeSystemMessage } from './localApi';
+import { writeSystemMessage, getMyUUID } from './localApi';
 
 
 function createWebSocketConnection(url) {
@@ -120,7 +120,8 @@ async function handleMessage(message, socket) {
   }
 
   if (messageType === MESSAGE_TYPE.PING) {
-    const message = createMessage(MESSAGE_TYPE.PONG, { message: "This is client pong!" });
+    const myUUID = getMyUUID();
+    const message = createMessage(MESSAGE_TYPE.PONG, { message: `[Client]: Pong!, uuid: #${ myUUID }` });
 
     socket.send(message);
 
