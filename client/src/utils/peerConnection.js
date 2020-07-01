@@ -52,10 +52,13 @@ function createPeerConnection(uuid) {
   }
 
   dataChannel.onerror = (event) => {
-    const { message, filename, lineno, colno } = event;
-    const payload = JSON.stringify({ message, filename, lineno, colno }, undefined, 2);
+    const { code, message, name, } = (event && event.error) || {};
+    const payload = JSON.stringify({ message, code, name }, undefined, 2);
 
     const systemMessage = `[peer ${uuid}]: dataChannel error: ` + payload;
+    console.log('dataChannel error, dataChannel is ', dataChannel);
+    console.log('dataChannel error, event is ', event);
+    console.log('datachannel error, systemMessage is ', systemMessage);
     writeSystemMessage(systemMessage);
   }
 
