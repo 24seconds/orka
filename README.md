@@ -106,16 +106,16 @@ $ npm run dev
 #### Change url as you want!
 Many urls are from `.env.development` file. Customize yourself
 
-───────┬─────────────────────────────────────────────
-       │ File: .env.development
-───────┼─────────────────────────────────────────────
-   1   │ REACT_APP_NODE_ENV=development
-   2   │ REACT_APP_PUBLIC_URL=http://localhost:3000
-   3   │ REACT_APP_MITM_URL=http://localhost:8080
-   4   │ REACT_APP_WEB_SOCKET_URL=ws://localhost:4000
-   5   │ REACT_APP_VERSION_NUMBER=v0.1.0
-   6   │ BROWSER=none
-───────┴─────────────────────────────────────────────
+───────┬─────────────────────────────────────────────  
+       │ File: .env.development  
+───────┼─────────────────────────────────────────────  
+   1   │ REACT_APP_NODE_ENV=development  
+   2   │ REACT_APP_PUBLIC_URL=http://localhost:3000  
+   3   │ REACT_APP_MITM_URL=http://localhost:8080  
+   4   │ REACT_APP_WEB_SOCKET_URL=ws://localhost:4000  
+   5   │ REACT_APP_VERSION_NUMBER=v0.1.0  
+   6   │ BROWSER=none  
+───────┴─────────────────────────────────────────────  
 
 -------
 
