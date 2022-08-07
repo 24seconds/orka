@@ -1,18 +1,18 @@
 import {
   parsePeerChunk,
-  getMessagePacket, 
+  getMessagePacket,
   sendErrorToPeer,
   getMyUUID,
   writeSystemMessage,
-} from './localApi';
+} from "./localApi";
 import {
   HEADER_SIZE_IN_BYTES,
   DATACHANNEL_MAX_BUFFERED_AMOUNT,
   DATACHANNEL_BUFFER_THRESHOLD,
-} from '../constants/constant';
-import { concatHeaderAndChunk } from './peerMessage';
-import StreamSaver from 'streamsaver';
-StreamSaver.mitm = `${ process.env.REACT_APP_MITM_URL }/mitm.html?version=2.0.0`;
+} from "../constants/constant";
+import { concatHeaderAndChunk } from "./peerMessage";
+import StreamSaver from "streamsaver";
+StreamSaver.mitm = `${process.env.REACT_APP_MITM_URL}/mitm.html?version=2.0.0`;
 
 const FIRST_ACC_SIZE = 66;
 const DEFAULT_ACC_SIZE = 125;
@@ -34,26 +34,21 @@ const currentDownloadJob = {
   // [peerUUID]: { writer, fingerprint }
 };
 
-
 // For transfer side store
-const transferStore = { };
-
+const transferStore = {};
 
 async function writeChunk(chunkArr, downloadWriter) {
   const arrayBuffers = [...chunkArr];
 
-  const arrayBuffer = await (new Blob(arrayBuffers)).arrayBuffer();
+  const arrayBuffer = await new Blob(arrayBuffers).arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
 
   downloadWriter.write(buffer);
 }
 
-
 // TODO: Handle the case when user cancel downloads manually
 async function accumulateChunk(chunkWithHeader, uuid) {
-  const {
-    fingerprint, chunk
-  } = parsePeerChunk(chunkWithHeader);
+  const { fingerprint, chunk } = parsePeerChunk(chunkWithHeader);
 
   chunkStore[fingerprint] = chunkStore[fingerprint] || {
     accArr: [],
@@ -66,7 +61,9 @@ async function accumulateChunk(chunkWithHeader, uuid) {
   if (!chunkStore[fingerprint].downloadWriter) {
     const messagePacket = getMessagePacket(fingerprint);
 
-    const filename = (messagePacket && messagePacket.data.message) || 'localdrop_download_file';
+    const filename =
+      (messagePacket && messagePacket.data.message) ||
+      "localdrop_download_file";
     const fileSize = (messagePacket && messagePacket.data.size) || 0;
     const options = { pathname: fingerprint, size: fileSize };
 
@@ -75,14 +72,16 @@ async function accumulateChunk(chunkWithHeader, uuid) {
 
     const writer = fileStream.getWriter();
 
-    window.addEventListener('unload', (_) => {
+    window.addEventListener("unload", (_) => {
       writer.abort();
     });
 
     // add writer to download job
     currentDownloadJob[uuid] = currentDownloadJob[uuid] || [];
-    currentDownloadJob[uuid] = [{ writer, fingerprint }, ...currentDownloadJob[uuid]];
-
+    currentDownloadJob[uuid] = [
+      { writer, fingerprint },
+      ...currentDownloadJob[uuid],
+    ];
 
     chunkStore[fingerprint].downloadWriter = writer;
     const chunkArr = chunkStore[fingerprint].accArr;
@@ -96,7 +95,10 @@ async function accumulateChunk(chunkWithHeader, uuid) {
     chunkStore[fingerprint].offset += chunk.byteLength;
     chunkArr.push(chunk);
 
-    if (chunkArr.length >= MAXIMUM_ACC_SIZE && chunkStore[fingerprint].available) {
+    if (
+      chunkArr.length >= MAXIMUM_ACC_SIZE &&
+      chunkStore[fingerprint].available
+    ) {
       chunkStore[fingerprint].available = false;
 
       // if (chunkArr.length !== MAXIMUM_ACC_SIZE) {
@@ -139,7 +141,7 @@ async function accumulateChunk(chunkWithHeader, uuid) {
         delete currentDownloadJob[uuid];
       }
 
-      console.log('currentDownloadJob is ', currentDownloadJob);
+      console.log("currentDownloadJob is ", currentDownloadJob);
     }
 
     delete chunkStore[fingerprint];
@@ -152,10 +154,10 @@ function readFile(file, offset, chunkSize, reader, fingerprint, uuid) {
       transferStore[fingerprint] = false;
     }
 
-    console.log('offset is ', offset);
-    console.log('file.size is ', file.size);
+    console.log("offset is ", offset);
+    console.log("file.size is ", file.size);
 
-    const message = `Transfer file to #${ uuid } done.\nFile: ${ file.name }`
+    const message = `Transfer file to #${uuid} done.\nFile: ${file.name}`;
     writeSystemMessage(message);
 
     return;
@@ -178,23 +180,26 @@ function transferFile(fingerprint, file, dataChannel, uuid) {
   const MAX_BUFFERED_AMOUNT = DATACHANNEL_MAX_BUFFERED_AMOUNT;
   const BUFFER_THRESHOLD = DATACHANNEL_BUFFER_THRESHOLD;
 
-  console.log('chunkSize is ', chunkSize);
-  console.log('file.size is ', file.size);
+  console.log("chunkSize is ", chunkSize);
+  console.log("file.size is ", file.size);
 
   readFile(file, offset, chunkSize, reader, fingerprint, uuid);
 
-  reader.addEventListener('load', async (event) => {
-    console.log('event.target.result is ', event.target.result);
-    console.log('typeof event.target.result is ', typeof event.target.result);
+  reader.addEventListener("load", async (event) => {
+    console.log("event.target.result is ", event.target.result);
+    console.log("typeof event.target.result is ", typeof event.target.result);
 
     const chunk = event.target.result;
-    console.log('chunk is ', chunk);
+    console.log("chunk is ", chunk);
 
     const chunkWithHeader = await concatHeaderAndChunk(fingerprint, chunk);
-    console.log('chunkWithHeader is ', chunkWithHeader);
-    console.log('chunkWithHeader.byteLength is ', chunkWithHeader.byteLength);
+    console.log("chunkWithHeader is ", chunkWithHeader);
+    console.log("chunkWithHeader.byteLength is ", chunkWithHeader.byteLength);
 
-    if (dataChannel.readyState === 'closing' || dataChannel.readyState === 'closed') {
+    if (
+      dataChannel.readyState === "closing" ||
+      dataChannel.readyState === "closed"
+    ) {
       return;
     }
 
@@ -207,7 +212,7 @@ function transferFile(fingerprint, file, dataChannel, uuid) {
 
       if (!dataChannel.onbufferedamountlow) {
         dataChannel.onbufferedamountlow = () => {
-          console.log(`#${ uuid }, onbufferedamountlow is called`);
+          console.log(`#${uuid}, onbufferedamountlow is called`);
 
           dataChannel.onbufferedamountlow = null;
 
@@ -227,17 +232,16 @@ function handleDataChannelClose(otherUUID) {
     currentDownloadJob[otherUUID].forEach(({ writer }) => {
       writer.abort();
       // TODO: Record File name also
-      writeSystemMessage(`Download from #${ otherUUID } Aborted`);
+      writeSystemMessage(`Download from #${otherUUID} Aborted`);
     });
 
     delete currentDownloadJob[otherUUID];
   }
 }
 
-
 export {
   accumulateChunk,
   transferFile,
   isDownloadInProgress,
   handleDataChannelClose,
-}
+};

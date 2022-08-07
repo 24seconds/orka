@@ -25,14 +25,20 @@
     "eject": "react-scripts eject",
     "serve-service-worker": "./run_serve.sh",
     "dev": "concurrently \"npm start\" \"npm run serve-service-worker\"",
+    "fmt": "prettier --write .",
+    "check": "prettier --check .",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "plugin:react-hooks/recommended"
-    ]
+      "plugin:react-hooks/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "indent": "error"
+    }
   },
   "browserslist": {
     "production": [
@@ -47,8 +53,10 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "gh-pages": "^4.0.0",
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "prettier": "2.7.1"
   }
 }

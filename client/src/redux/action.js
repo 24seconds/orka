@@ -9,46 +9,46 @@ import {
   UPDATE_PROGRESS,
   UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
   ADD_SYSTEM_MESSAGE,
-} from './actionType';
+} from "./actionType";
 
-export const addPeer = peerList => ({
+export const addPeer = (peerList) => ({
   type: ADD_PEER,
   payload: peerList,
 });
 
-export const deletePeer = peerList => ({
+export const deletePeer = (peerList) => ({
   type: DELETE_PEER,
   payload: peerList,
 });
 
-export const addMessage = message => ({
+export const addMessage = (message) => ({
   type: ADD_MESSAGE,
   payload: message,
 });
 
-export const updateMyUUID = uuid => ({
+export const updateMyUUID = (uuid) => ({
   type: UPDATE_MY_UUID,
   payload: uuid,
 });
 
-export const updatePeerUUID = uuid => ({
+export const updatePeerUUID = (uuid) => ({
   type: UPDATE_PEER_UUID,
   payload: uuid,
-})
-
-export const addFiles = fingerprintedFiles => ({
-  type: ADD_FILES,
-  payload: fingerprintedFiles
 });
 
-export const deleteFiles = files => ({
+export const addFiles = (fingerprintedFiles) => ({
+  type: ADD_FILES,
+  payload: fingerprintedFiles,
+});
+
+export const deleteFiles = (files) => ({
   type: DELETE_FILES,
-  payload: files
+  payload: files,
 });
 
 export const updateProgress = (fingerprint, progress) => ({
   type: UPDATE_PROGRESS,
-  payload: { fingerprint, progress }
+  payload: { fingerprint, progress },
 });
 
 export const updateIsSystemMessageTabSelected = () => ({

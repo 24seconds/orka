@@ -1,44 +1,45 @@
-import { peerConnectionManager } from './peerConnection';
-import LocalDropEvent from './LocalDropEvent';
+import { peerConnectionManager } from "./peerConnection";
+import LocalDropEvent from "./LocalDropEvent";
 import {
   EventSendTextData,
   EventSendFilesData,
   EventDownloadFileData,
   EventConnectData,
   EventSendMessageData,
-  EventErrorData
-} from './dataSchema/LocalDropEventData';
-import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
-import websocketManager from './websocket';
-import store from '../redux/store';
+  EventErrorData,
+} from "./dataSchema/LocalDropEventData";
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
+import websocketManager from "./websocket";
+import store from "../redux/store";
 import {
   addPeer,
   deletePeer,
   addMessage,
   updateMyUUID,
   addSystemMessage,
-} from '../redux/action';
-import { parseChunkAndHeader } from './peerMessage';
-import { getCurrentTime, generateFingerPrint } from './commonUtil';
+} from "../redux/action";
+import { parseChunkAndHeader } from "./peerMessage";
+import { getCurrentTime, generateFingerPrint } from "./commonUtil";
 import {
   accumulateChunk,
   transferFile,
   isDownloadInProgress,
-  handleDataChannelClose
-} from './downloadManager';
+  handleDataChannelClose,
+} from "./downloadManager";
 
 function sendTextToPeer(uuid, text) {
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.SEND_TEXT,
-    new EventSendTextData({ uuid, message: text }));
+    new EventSendTextData({ uuid, message: text })
+  );
 
   peerConnectionManager.dispatchEvent(event);
 }
 
 function sendFileToPeer(uuid, fingerprintedFile) {
-  const { file, fingerprint } = fingerprintedFile
+  const { file, fingerprint } = fingerprintedFile;
 
-  console.log('sendFileToPeer, file is', file);
+  console.log("sendFileToPeer, file is", file);
 
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.SEND_FILES,
@@ -47,7 +48,8 @@ function sendFileToPeer(uuid, fingerprintedFile) {
       message: file.name,
       size: file.size,
       fingerprint,
-    }));
+    })
+  );
 
   peerConnectionManager.dispatchEvent(event);
 }
@@ -55,7 +57,8 @@ function sendFileToPeer(uuid, fingerprintedFile) {
 function sendErrorToPeer(uuid, message) {
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.ERROR,
-    new EventErrorData({ uuid, message }));
+    new EventErrorData({ uuid, message })
+  );
 
   peerConnectionManager.dispatchEvent(event);
 }
@@ -72,8 +75,10 @@ function requestDownloadFile(uuid, data) {
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.DOWNLOAD_FILE,
     new EventDownloadFileData({
-      uuid, fingerprint
-    }));
+      uuid,
+      fingerprint,
+    })
+  );
 
   peerConnectionManager.dispatchEvent(event);
 }
@@ -85,7 +90,8 @@ function abortDownloadFile(otherUUID) {
 function connectToPeer(uuid) {
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.CONNECT,
-    new EventConnectData({ uuid }));
+    new EventConnectData({ uuid })
+  );
 
   peerConnectionManager.dispatchEvent(event);
 }
@@ -93,7 +99,8 @@ function connectToPeer(uuid) {
 function sendMessageToServer(message) {
   const event = new LocalDropEvent(
     CLIENT_EVENT_TYPE.SEND_MESSAGE,
-    new EventSendMessageData({ message }));
+    new EventSendMessageData({ message })
+  );
 
   websocketManager.dispatchEvent(event);
 }
@@ -138,7 +145,7 @@ function transferFileToPeer(fingerprint, uuid) {
   const file = getFileToTransfer(fingerprint);
 
   if (!file) {
-    const message = `[From #${ getMyUUID() }]: ${ fingerprint } file link has expired`;
+    const message = `[From #${getMyUUID()}]: ${fingerprint} file link has expired`;
     sendErrorToPeer(uuid, message);
     return;
   }
@@ -146,7 +153,8 @@ function transferFileToPeer(fingerprint, uuid) {
   if (!peerConnectionManager.peerConnections[uuid]) {
     // There is nothing to do in this case..
     const systemMessage =
-      `#${ uuid } requested download but uuid not found : ` + JSON.stringify({ fingerprint, file }, undefined, 2);
+      `#${uuid} requested download but uuid not found : ` +
+      JSON.stringify({ fingerprint, file }, undefined, 2);
     writeSystemMessage(systemMessage);
     return;
   }
@@ -158,8 +166,10 @@ function transferFileToPeer(fingerprint, uuid) {
     const payload = {
       fingerprint,
       file: { name, size, type },
-    }
-    const message = `[From #${ getMyUUID() }]: download is in progress ` + JSON.stringify(payload, undefined, 2);
+    };
+    const message =
+      `[From #${getMyUUID()}]: download is in progress ` +
+      JSON.stringify(payload, undefined, 2);
     sendErrorToPeer(uuid, message);
     return;
   } else {
@@ -170,11 +180,13 @@ function transferFileToPeer(fingerprint, uuid) {
 function getMessagePacket(fingerprint) {
   // TODO: Make O(1)
 
-  const messagePacket = store.getState().messagePackets.find((messagePacket) => {
-    const { data } = messagePacket;
+  const messagePacket = store
+    .getState()
+    .messagePackets.find((messagePacket) => {
+      const { data } = messagePacket;
 
-    return data.fingerprint === fingerprint;
-  });
+      return data.fingerprint === fingerprint;
+    });
 
   return messagePacket;
 }

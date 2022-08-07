@@ -1,6 +1,6 @@
-import { closeWebSocket } from './localApi';
+import { closeWebSocket } from "./localApi";
 
-window.addEventListener('beforeunload', (event) => {
-  console.log('beforeunload');
+window.addEventListener("beforeunload", (event) => {
+  console.log("beforeunload");
   closeWebSocket();
 });

@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { ReactComponent as GithubLogo } from '../assets/github-logo.svg';
-import { mobileWidth } from '../constants/styleConstants';
-import { LOCALDROP_APP_VERSION } from '../constants/constant';
-
+import React, { Component } from "react";
+import styled from "styled-components";
+import { ReactComponent as GithubLogo } from "../assets/github-logo.svg";
+import { mobileWidth } from "../constants/styleConstants";
+import { LOCALDROP_APP_VERSION } from "../constants/constant";
 
 const Footer = styled.div`
   display: flex;
   height: 40px;
-  color: ${ props => props.theme.StringsColor };
-  background: ${ props => props.theme.Background };
+  color: ${(props) => props.theme.StringsColor};
+  background: ${(props) => props.theme.Background};
 
   div {
     display: flex;
@@ -23,7 +22,7 @@ const Footer = styled.div`
       width: 20px;
       height: 20px;
       margin-right: 6px;
-      fill: ${ props => props.theme.SecondText };
+      fill: ${(props) => props.theme.SecondText};
     }
   }
 
@@ -31,11 +30,10 @@ const Footer = styled.div`
     margin-left: auto;
   }
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     display: none;
   }
 `;
-
 
 export default class FooterComponent extends Component {
   constructor(props) {
@@ -46,26 +44,26 @@ export default class FooterComponent extends Component {
   }
 
   onClickId() {
-    window.open('https://github.com/24seconds/', '_blank');
+    window.open("https://github.com/24seconds/", "_blank");
   }
 
   onClickRepo() {
-    window.open('https://github.com/24seconds/localdrop', '_blank');
+    window.open("https://github.com/24seconds/localdrop", "_blank");
   }
 
   render() {
     return (
-      <Footer className='localdrop-footer'>
-        <div onClick={ this.onClickId }>
-          <GithubLogo/>
+      <Footer className="localdrop-footer">
+        <div onClick={this.onClickId}>
+          <GithubLogo />
           24seconds
         </div>
-        <div onClick={ this.onClickRepo }>
-          <GithubLogo/>
+        <div onClick={this.onClickRepo}>
+          <GithubLogo />
           repo : localdrop
         </div>
-        <div className='localdrop-app-version'>
-          { `version: ${ LOCALDROP_APP_VERSION }` }
+        <div className="localdrop-app-version">
+          {`version: ${LOCALDROP_APP_VERSION}`}
         </div>
       </Footer>
     );

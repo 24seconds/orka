@@ -26,10 +26,9 @@ class messageErrorData {
   }
 }
 
-
 export {
   messageTextData,
   messageFileData,
   messageDownloadData,
   messageErrorData,
-}
+};

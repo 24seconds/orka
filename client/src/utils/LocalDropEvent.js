@@ -8,7 +8,6 @@ class LocalDropEvent {
       }
     }
   }
-
 }
 
 export default LocalDropEvent;
