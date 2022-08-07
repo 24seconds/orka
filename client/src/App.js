@@ -1,19 +1,19 @@
-import React, { Component, Fragment } from 'react';
-import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
-import './utils/localApi';
-import './utils/window';
-import HeaderComponent from './components/HeaderComponent';
-import PeerTabComponent from './components/Message/PeerTabComponent';
-import MetaDataComponent from './components/MetaData/MetaDataComponent';
-import MessageTableComponent from './components/Message/MessageTableComponent';
-import MessageTableHeaderComponent from './components/Message/MessageTableHeaderComponent';
-import FooterComponent from './components/FooterComponent';
-import SendComponent from './components/Send/SendComponent';
-import { mobileWidth, ColorThemes } from './constants/styleConstants';
+import React, { Component, Fragment } from "react";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import "./utils/localApi";
+import "./utils/window";
+import HeaderComponent from "./components/HeaderComponent";
+import PeerTabComponent from "./components/Message/PeerTabComponent";
+import MetaDataComponent from "./components/MetaData/MetaDataComponent";
+import MessageTableComponent from "./components/Message/MessageTableComponent";
+import MessageTableHeaderComponent from "./components/Message/MessageTableHeaderComponent";
+import FooterComponent from "./components/FooterComponent";
+import SendComponent from "./components/Send/SendComponent";
+import { mobileWidth, ColorThemes } from "./constants/styleConstants";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    background-color: ${ props => props.theme.SecondBackground };
+    background-color: ${(props) => props.theme.SecondBackground};
   }
 `;
 
@@ -21,41 +21,42 @@ const LocalDropApp = styled.div`
   height: calc(100% - 110px);
   padding: 50px 100px;
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     padding: 0;
   }
 `;
 
 const Container = styled.div`
-  border: solid 2px ${ props => props.theme.Contrast };
+  border: solid 2px ${(props) => props.theme.Contrast};
   border-radius: 5px;
   height: 100%;
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     margin: 0;
     border: none;
   }
 `;
 
 const MobileSticky = styled.div`
-  background-color: ${ props => props.theme.SecondBackground };
+  background-color: ${(props) => props.theme.SecondBackground};
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     position: sticky;
     top: 0;
   }
-`
+`;
 
 class App extends Component {
-  STORAGE_COLOR_THEME_KEY = 'STORAGE_COLOR_THEME_KEY';
+  STORAGE_COLOR_THEME_KEY = "STORAGE_COLOR_THEME_KEY";
   themeIndex = 0;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      colorTheme: ColorThemes[this.getStorageColorTheme() || 'MaterialThemeOceanic'],
-    }
+      colorTheme:
+        ColorThemes[this.getStorageColorTheme() || "MaterialThemeOceanic"],
+    };
 
     this.onChangeTheme = this.onChangeTheme.bind(this);
   }
@@ -80,13 +81,13 @@ class App extends Component {
   }
 
   onChangeTheme() {
-    console.log('onChangeTheme called');
+    console.log("onChangeTheme called");
 
     const keys = Object.keys(ColorThemes);
     const nextKey = this.getNextKey(keys);
     this.setStorageColorTheme(nextKey);
 
-    console.log('randomKey is ', nextKey);
+    console.log("randomKey is ", nextKey);
 
     this.setState({
       colorTheme: ColorThemes[nextKey],
@@ -96,17 +97,17 @@ class App extends Component {
   render() {
     const { colorTheme } = this.state;
 
-    console.log('colorTheme is ', colorTheme);
+    console.log("colorTheme is ", colorTheme);
 
     return (
-      <ThemeProvider theme={ colorTheme }>
+      <ThemeProvider theme={colorTheme}>
         <GlobalStyle />
         <LocalDropApp className="App">
-          <Container className='localdrop-app-container'>
+          <Container className="localdrop-app-container">
             <MobileSticky>
               <HeaderComponent />
               <SendComponent />
-              <MetaDataComponent onChangeTheme={ this.onChangeTheme } />
+              <MetaDataComponent onChangeTheme={this.onChangeTheme} />
               <PeerTabComponent />
               <MessageTableHeaderComponent />
             </MobileSticky>

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 import {
   ADD_PEER,
   DELETE_PEER,
@@ -9,24 +9,24 @@ import {
   UPDATE_PROGRESS,
   UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
   ADD_SYSTEM_MESSAGE,
-} from './actionType';
-import { generateFingerPrint, getCurrentTime } from '../utils/commonUtil';
-import { LOCALDROP_APP_VERSION } from '../constants/constant';
+} from "./actionType";
+import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
+import { LOCALDROP_APP_VERSION } from "../constants/constant";
 
-const initialState = { peers: [], message: [] }
+const initialState = { peers: [], message: [] };
 
 function localDropState(state = initialState, action) {
-  console.log('localDropReducer is called ', state);
-  console.log('action is ', action);
+  console.log("localDropReducer is called ", state);
+  console.log("action is ", action);
 
   if (action.type === ADD_PEER) {
     // naive implementation
     const newState = { ...state };
     const peers = action.payload;
 
-    console.log('ADD_PEER!!!');
-    newState.peers = [...newState.peers, ...peers ];
-    console.log('ADD_PEER!!!, ', newState);
+    console.log("ADD_PEER!!!");
+    newState.peers = [...newState.peers, ...peers];
+    console.log("ADD_PEER!!!, ", newState);
 
     return newState;
   } else if (action.type === DELETE_PEER) {
@@ -34,10 +34,10 @@ function localDropState(state = initialState, action) {
     const newState = { ...state };
     const peerSet = new Set(action.payload);
 
-    console.log('peerSet is ', peerSet);
+    console.log("peerSet is ", peerSet);
 
-    const newPeers = newState.peers.filter(peer => !peerSet.has(peer));
-    console.log('newPeers is ', newPeers);
+    const newPeers = newState.peers.filter((peer) => !peerSet.has(peer));
+    console.log("newPeers is ", newPeers);
     newState.peers = newPeers;
 
     return newState;
@@ -49,7 +49,7 @@ function localDropState(state = initialState, action) {
 function messagePackets(state = [], action) {
   if (action.type === ADD_MESSAGE) {
     const message = action.payload;
-    const newState = [ ...state, message ];
+    const newState = [...state, message];
 
     return newState;
   }
@@ -119,8 +119,9 @@ function filesToTransfer(state = {}, action) {
 }
 
 function systemMessageMetaData(
-  state = { isSelected: false, isRead: true }, action) {
-
+  state = { isSelected: false, isRead: true },
+  action
+) {
   if (action.type === UPDATE_IS_SYSTEM_MESSAGE_SELECTED) {
     const newState = { ...state };
 
@@ -138,11 +139,10 @@ function systemMessageMetaData(
   }
 
   return state;
-
 }
 
 const defaultSystemMessage = {
-  message: `App version: ${ LOCALDROP_APP_VERSION }\n\nHi, This is the first system message!`,
+  message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
   fingerprint: generateFingerPrint(),
   createdAt: getCurrentTime(),
 };
@@ -150,14 +150,13 @@ const defaultSystemMessage = {
 function systemMessages(state = [defaultSystemMessage], action) {
   if (action.type === ADD_SYSTEM_MESSAGE) {
     const systemMessage = action.payload;
-    const newState = [ systemMessage, ...state ];
+    const newState = [systemMessage, ...state];
 
     return newState;
   }
 
   return state;
 }
-
 
 export default combineReducers({
   localDropState,
@@ -169,4 +168,3 @@ export default combineReducers({
   systemMessageMetaData,
   systemMessages,
 });
-

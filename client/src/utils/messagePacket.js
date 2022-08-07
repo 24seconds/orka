@@ -1,19 +1,16 @@
-import { PEER_MESSAGE_TYPE } from '../schema';
-import { getCurrentTime } from './commonUtil';
+import { PEER_MESSAGE_TYPE } from "../schema";
+import { getCurrentTime } from "./commonUtil";
 
-function createMessagePacket({
-  source, destination, messageType, data,
-}) {
+function createMessagePacket({ source, destination, messageType, data }) {
   if (messageType === PEER_MESSAGE_TYPE.TEXT) {
-
     return {
       source,
       destination,
       type: messageType,
       data,
       time: getCurrentTime(),
-      progress: 100
-    }
+      progress: 100,
+    };
   }
 
   if (messageType === PEER_MESSAGE_TYPE.FILE) {
@@ -23,8 +20,8 @@ function createMessagePacket({
       type: messageType,
       data,
       time: getCurrentTime(),
-      progress: 0
-    }
+      progress: 0,
+    };
   }
 
   if (messageType === PEER_MESSAGE_TYPE.ERROR) {
@@ -34,11 +31,9 @@ function createMessagePacket({
       type: messageType,
       data,
       time: getCurrentTime(),
-      progress: 100
-    }
+      progress: 100,
+    };
   }
 }
 
-export {
-  createMessagePacket,
-}
+export { createMessagePacket };

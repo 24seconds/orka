@@ -1,18 +1,20 @@
-import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { connectToPeer } from '../../utils/localApi';
-import { updatePeerUUID, updateIsSystemMessageTabSelected } from '../../redux/action';
-import { mobileWidth } from '../../constants/styleConstants';
-import ToggleSwitch from '../ToggleSwitch';
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import { connectToPeer } from "../../utils/localApi";
+import {
+  updatePeerUUID,
+  updateIsSystemMessageTabSelected,
+} from "../../redux/action";
+import { mobileWidth } from "../../constants/styleConstants";
+import ToggleSwitch from "../ToggleSwitch";
 
 const PeerTab = styled.div`
-  background: ${ props => props.theme.SelectionBackground };
+  background: ${(props) => props.theme.SelectionBackground};
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 50px;
-
 `;
 
 const PeerList = styled.div`
@@ -22,14 +24,15 @@ const PeerList = styled.div`
   overflow-x: scroll;
   scrollbar-width: none; /* Firefox */
 
-  ::-webkit-scrollbar { /* WebKit */
+  ::-webkit-scrollbar {
+    /* WebKit */
     width: 0;
     height: 0;
   }
 `;
 
 const SystemMessageTab = styled.div`
-  position:relative;
+  position: relative;
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -52,21 +55,21 @@ const PeerTabButton = styled.button`
   height: 40px;
   font-size: 14px;
   margin: 0 5px;
-  background-color: ${
-    props => props.isSelected
-    ? props => props.theme.SelectionForeground
-    : props => props.theme.Disabled };
-  border: solid 2px ${ props => props.theme.Border };
+  background-color: ${(props) =>
+    props.isSelected
+      ? (props) => props.theme.SelectionForeground
+      : (props) => props.theme.Disabled};
+  border: solid 2px ${(props) => props.theme.Border};
   border-radius: 4px;
   outline: none;
-  color: ${ props => props.theme.Contrast };
+  color: ${(props) => props.theme.Contrast};
 
   &:hover {
     cursor: pointer;
     opacity: 0.7;
   }
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     width: 80px;
     height: 30px;
     font-size: 12px;
@@ -80,19 +83,18 @@ const Peers = styled.div`
   width: 80px;
   height: 40px;
   font-size: 16px;
-  background: ${ props => props.theme.SecondBackground };
+  background: ${(props) => props.theme.SecondBackground};
   margin: 0 0 0 5px;
-  border: solid 2px ${ props => props.theme.Border };
+  border: solid 2px ${(props) => props.theme.Border};
   border-radius: 4px;
-  color: ${ props => props.theme.FunctionsColor };
+  color: ${(props) => props.theme.FunctionsColor};
 
-  @media (max-width: ${ mobileWidth }) {
+  @media (max-width: ${mobileWidth}) {
     width: 50px;
     height: 30px;
     font-size: 12px;
   }
 `;
-
 
 class PeerTabComponent extends Component {
   constructor(props) {
@@ -103,7 +105,7 @@ class PeerTabComponent extends Component {
   }
 
   onClickPeer(uuid) {
-    console.log('uuid is ', uuid);
+    console.log("uuid is ", uuid);
 
     this.props.dispatch(updatePeerUUID(uuid));
     connectToPeer(uuid);
@@ -120,56 +122,54 @@ class PeerTabComponent extends Component {
       systemMessageMetaData,
     } = this.props;
 
-    console.log('this.props is ', this.props);
-    console.log('peers is ', peers);
+    console.log("this.props is ", this.props);
+    console.log("peers is ", peers);
 
     return (
       <Fragment>
-        <PeerTab className='localdrop-peer-tab'>
+        <PeerTab className="localdrop-peer-tab">
           <Peers>PEERS :</Peers>
-          {
-            false &&
-            <PeerTabButton key='ALL' disabled={ false }>
+          {false && (
+            <PeerTabButton key="ALL" disabled={false}>
               ALL
             </PeerTabButton>
-          }
+          )}
           {
             <PeerList>
-              {
-                peers && peers.map(peer => {
+              {peers &&
+                peers.map((peer) => {
                   return (
                     <PeerTabButton
-                      key={ peer }
-                      isSelected={ peer === selectedPeerUUID }
-                      onClick={ this.onClickPeer.bind(this, peer) }>
-                      { `#${peer}` }
+                      key={peer}
+                      isSelected={peer === selectedPeerUUID}
+                      onClick={this.onClickPeer.bind(this, peer)}
+                    >
+                      {`#${peer}`}
                     </PeerTabButton>
-                  )
-                })
-              }
+                  );
+                })}
             </PeerList>
           }
-          <SystemMessageTab isRead={ systemMessageMetaData.isRead }>
+          <SystemMessageTab isRead={systemMessageMetaData.isRead}>
             <ToggleSwitch
-              key='System-Message-toggle'
-              isSwitchOn={ systemMessageMetaData.isSelected }
-              isRead={ systemMessageMetaData.isRead }
-              onClick={ this.onClickSystemMessageTab } />
+              key="System-Message-toggle"
+              isSwitchOn={systemMessageMetaData.isSelected}
+              isRead={systemMessageMetaData.isRead}
+              onClick={this.onClickSystemMessageTab}
+            />
           </SystemMessageTab>
         </PeerTab>
-        {
-          false &&
-          <ConnectivityState className='localdrop-connectivity-state'>
+        {false && (
+          <ConnectivityState className="localdrop-connectivity-state">
             Peer Connection State: Connected, <button> Retry </button>
           </ConnectivityState>
-        }
+        )}
       </Fragment>
-    )
+    );
   }
 }
 
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   peers: state.localDropState.peers,
   peerUUID: state.peerUUID,
   systemMessageMetaData: state.systemMessageMetaData,

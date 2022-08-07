@@ -1,17 +1,14 @@
-import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
+import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import {
   messageTextData,
   messageFileData,
   messageDownloadData,
   messageErrorData,
-} from './dataSchema/PeerMessageData';
-import { createMessage } from './message';
-import {
-  createPeerMessage,
-  parsePeerMessage,
-} from './peerMessage';
-import { createMessagePacket } from './messagePacket';
-import { generateFingerPrint } from './commonUtil';
+} from "./dataSchema/PeerMessageData";
+import { createMessage } from "./message";
+import { createPeerMessage, parsePeerMessage } from "./peerMessage";
+import { createMessagePacket } from "./messagePacket";
+import { generateFingerPrint } from "./commonUtil";
 import {
   sendMessageToServer,
   addJoinedPeers,
@@ -23,24 +20,24 @@ import {
   writePeerChunk,
   writeSystemMessage,
   abortDownloadFile,
-} from './localApi';
+} from "./localApi";
 
 function createPeerConnection(uuid) {
   const peerConnection = new RTCPeerConnection();
 
   // TODO: Handle createDataChannel error later
-  const dataChannel = peerConnection.createDataChannel('localdropDataChannel', {
+  const dataChannel = peerConnection.createDataChannel("localdropDataChannel", {
     negotiated: true,
     id: 0,
   });
 
-  dataChannel.binaryType = 'arraybuffer';
+  dataChannel.binaryType = "arraybuffer";
   dataChannel.onopen = (event) => {
     handleDataChannelStatusChange(event, uuid);
   };
 
   dataChannel.onclose = (event) => {
-    writeSystemMessage('dataChannel closed');
+    writeSystemMessage("dataChannel closed");
     handleDataChannelStatusChange(event, uuid);
 
     abortDownloadFile(uuid);
@@ -49,22 +46,22 @@ function createPeerConnection(uuid) {
   dataChannel.onmessage = (event) => {
     // console.log('[Message from DataChannel]: ', event);
     handleDataChannelMessage(event, uuid);
-  }
+  };
 
   dataChannel.onerror = (event) => {
-    const { code, message, name, } = (event && event.error) || {};
+    const { code, message, name } = (event && event.error) || {};
     const payload = JSON.stringify({ message, code, name }, undefined, 2);
 
     const systemMessage = `[peer ${uuid}]: dataChannel error: ` + payload;
-    console.log('dataChannel error, dataChannel is ', dataChannel);
-    console.log('dataChannel error, event is ', event);
-    console.log('datachannel error, systemMessage is ', systemMessage);
+    console.log("dataChannel error, dataChannel is ", dataChannel);
+    console.log("dataChannel error, event is ", event);
+    console.log("datachannel error, systemMessage is ", systemMessage);
     writeSystemMessage(systemMessage);
-  }
+  };
 
-  peerConnection.onicecandidate = event => {
+  peerConnection.onicecandidate = (event) => {
     console.log(`[peer ${uuid}]: onicecandidate, event is `, event);
-  
+
     if (event.candidate) {
       // Send the candidate to the remote peer
       const message = createMessage(MESSAGE_TYPE.ICE_CANDIDATE, {
@@ -74,43 +71,47 @@ function createPeerConnection(uuid) {
       });
 
       sendMessageToServer(message);
-
     } else {
       // All ICE candidates have been sent
     }
   };
 
-  peerConnection.onconnectionstatechange = event => {
+  peerConnection.onconnectionstatechange = (event) => {
     console.log(`[peer ${uuid}]: onconnectionstatechange, event is `, event);
-    console.log(`[peer ${uuid}]: peerConnection.connectionState is `, peerConnection.connectionState);
+    console.log(
+      `[peer ${uuid}]: peerConnection.connectionState is `,
+      peerConnection.connectionState
+    );
 
-    switch(peerConnection.connectionState) {
-      case 'connecting':
+    switch (peerConnection.connectionState) {
+      case "connecting":
         // do nothing
         break;
-      case 'connected':
+      case "connected":
         // do nothing
         break;
-      case 'disconnected':
+      case "disconnected":
         break;
-      case 'failed':
-        writeSystemMessage('onconnectionstatechange, peerConnection failed');
+      case "failed":
+        writeSystemMessage("onconnectionstatechange, peerConnection failed");
         break;
-      case 'closed':
+      case "closed":
         // TODO: Recreate PeerConnectionManager
-        writeSystemMessage('onconnectionstatechange, peerConnection closed');
+        writeSystemMessage("onconnectionstatechange, peerConnection closed");
         break;
       default:
-        writeSystemMessage('onconnectionstatechange, peerConnection.connectionState: ' + peerConnection.connectionState);
+        writeSystemMessage(
+          "onconnectionstatechange, peerConnection.connectionState: " +
+            peerConnection.connectionState
+        );
     }
-
   };
 
   return { peerConnection, dataChannel };
 }
 
 async function handleDataChannelMessage(event, uuid) {
-  if (typeof event.data !== 'string') {
+  if (typeof event.data !== "string") {
     const arrayBuffer = event.data;
 
     await writePeerChunk(arrayBuffer, uuid);
@@ -132,7 +133,7 @@ async function handleDataChannelMessage(event, uuid) {
       messageType,
     });
 
-    console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
+    console.log("[handleDataChannelMessage]: messagePacket is ", messagePacket);
     addMessagePacket(messagePacket);
 
     return;
@@ -146,7 +147,7 @@ async function handleDataChannelMessage(event, uuid) {
       messageType,
     });
 
-    console.log('[handleDataChannelMessage]: messagePacket is ', messagePacket);
+    console.log("[handleDataChannelMessage]: messagePacket is ", messagePacket);
     addMessagePacket(messagePacket);
 
     return;
@@ -168,11 +169,14 @@ async function handleDataChannelMessage(event, uuid) {
 }
 
 function handleDataChannelStatusChange(event, uuid) {
-  console.log(`[peer ${uuid}]: handleDataChannelStatusChange, event is `, event);
+  console.log(
+    `[peer ${uuid}]: handleDataChannelStatusChange, event is `,
+    event
+  );
   const { type: eventType } = event;
 
   // TODO: Delete dataChannel in peerConnectionManager
-  if (eventType === 'close') {
+  if (eventType === "close") {
     const systemMessage = `[peer #${uuid}]: dataChannel closed `;
     writeSystemMessage(systemMessage);
   }
@@ -187,7 +191,7 @@ async function createOffer(peerConnection) {
 }
 
 async function setRemoteOffer(peerConnection, offer) {
-  console.log('setOffer called');
+  console.log("setOffer called");
   await peerConnection.setRemoteDescription(offer);
 
   console.log(peerConnection);
@@ -196,7 +200,7 @@ async function setRemoteOffer(peerConnection, offer) {
 // TODO: Handle error later
 async function createAnswer(peerConnection) {
   const answer = await peerConnection.createAnswer();
-  console.log('createAnswer, answer is ', answer);
+  console.log("createAnswer, answer is ", answer);
 
   await peerConnection.setLocalDescription(answer);
 
@@ -222,150 +226,179 @@ function initializePeerConnections(peerConnectionManager, peers) {
   return connectionArr;
 }
 
-
 function addClientEventTypeEventListener(peerConnectionManager) {
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.CONNECT, async (event) => {
-    const { uuid: toUUID } = event;
+  peerConnectionManager.addEventListener(
+    CLIENT_EVENT_TYPE.CONNECT,
+    async (event) => {
+      const { uuid: toUUID } = event;
 
-    if (peerConnectionManager.peerConnections[toUUID]) {
-      // already exist
-      console.log(`[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already exist`);
-      // return;
+      if (peerConnectionManager.peerConnections[toUUID]) {
+        // already exist
+        console.log(
+          `[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already exist`
+        );
+        // return;
+      }
+
+      const { peerConnection, dataChannel } =
+        peerConnectionManager.peerConnections[toUUID] ||
+        createPeerConnection(toUUID);
+      peerConnectionManager.peerConnections[toUUID] = {
+        peerConnection,
+        dataChannel,
+      };
+
+      // check if peerConnection is done => if done, do nothing
+      if (peerConnection.connectionState === "connected") {
+        console.log(
+          `[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already connected`
+        );
+        return;
+      }
+
+      try {
+        const myUUID = peerConnectionManager.uuid;
+        const offer = await createOffer(peerConnection);
+        const message = createMessage(MESSAGE_TYPE.OFFER, {
+          fromUUID: myUUID,
+          toUUID,
+          offer,
+        });
+
+        sendMessageToServer(message);
+      } catch (error) {
+        writeSystemMessage(JSON.stringify(error, undefined, 2));
+      }
     }
+  );
 
-    const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[toUUID] || createPeerConnection(toUUID);
-    peerConnectionManager.peerConnections[toUUID] = { peerConnection, dataChannel };
+  peerConnectionManager.addEventListener(
+    CLIENT_EVENT_TYPE.SEND_TEXT,
+    (event) => {
+      const { uuid, message } = event;
 
-    // check if peerConnection is done => if done, do nothing
-    if (peerConnection.connectionState === 'connected') {
-      console.log(`[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already connected`);
-      return;
-    }
+      if (!peerConnectionManager.peerConnections[uuid]) {
+        writeSystemMessage(`can not find peer: #${uuid}`);
+        return;
+      }
 
-    try {
-      const myUUID = peerConnectionManager.uuid;
-      const offer = await createOffer(peerConnection);
-      const message = createMessage(MESSAGE_TYPE.OFFER, {
-        fromUUID: myUUID, toUUID, offer,
+      const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+      const data = new messageTextData({
+        message,
+        size: message.length,
+        fingerprint: generateFingerPrint(),
       });
 
-      sendMessageToServer(message);
-    } catch(error) {
-      writeSystemMessage(JSON.stringify(error, undefined, 2));
-    }
-  });
+      const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
 
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_TEXT, event =>{
+      console.log("CLIENT_EVENT_TYPE.SEND_TEXT, message is ", peerMessage);
+
+      console.log("dataChannel is ", dataChannel);
+      console.log("dataChannel.readyState is ", dataChannel.readyState);
+
+      if (dataChannel.readyState !== "open") {
+        writeSystemMessage(
+          "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
+            dataChannel.readyState
+        );
+        console.log("dataChannel not opened!, click the peer again!");
+        return;
+      }
+
+      dataChannel.send(peerMessage);
+
+      const messagePacket = createMessagePacket({
+        source: getMyUUID(),
+        destination: uuid,
+        data,
+        messageType: PEER_MESSAGE_TYPE.TEXT,
+      });
+
+      addMessagePacket(messagePacket);
+    }
+  );
+
+  peerConnectionManager.addEventListener(
+    CLIENT_EVENT_TYPE.SEND_FILES,
+    (event) => {
+      const { uuid, message, size, fingerprint } = event;
+
+      if (!peerConnectionManager.peerConnections[uuid]) {
+        writeSystemMessage(`can not find peer: #${uuid}`);
+        return;
+      }
+
+      const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+      const data = new messageFileData({ fingerprint, size, message });
+
+      const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, data);
+
+      console.log("CLIENT_EVENT_TYPE.SEND_FILES, message is ", peerMessage);
+
+      console.log("dataChannel is ", dataChannel);
+      console.log("dataChannel.readyState is ", dataChannel.readyState);
+
+      if (dataChannel.readyState !== "open") {
+        writeSystemMessage(
+          "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
+            dataChannel.readyState
+        );
+        console.log("dataChannel not opened!, click the peer again!");
+        return;
+      }
+
+      dataChannel.send(peerMessage);
+
+      const messagePacket = createMessagePacket({
+        source: getMyUUID(),
+        destination: uuid,
+        data,
+        messageType: PEER_MESSAGE_TYPE.FILE,
+      });
+
+      addMessagePacket(messagePacket);
+    }
+  );
+
+  peerConnectionManager.addEventListener(
+    CLIENT_EVENT_TYPE.DOWNLOAD_FILE,
+    (event) => {
+      const { uuid, fingerprint } = event;
+
+      if (!peerConnectionManager.peerConnections[uuid]) {
+        writeSystemMessage(`can not find peer: #${uuid}`);
+        return;
+      }
+
+      const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+      const data = new messageDownloadData({ fingerprint });
+
+      const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.DOWNLOAD, data);
+
+      console.log("CLIENT_EVENT_TYPE.DOWNLOAD_FILE, message is ", peerMessage);
+
+      console.log("dataChannel is ", dataChannel);
+      console.log("dataChannel.readyState is ", dataChannel.readyState);
+
+      if (dataChannel.readyState !== "open") {
+        writeSystemMessage(
+          `CLIENT_EVENT ${CLIENT_EVENT_TYPE.DOWNLOAD_FILE}: dataChannel not opened!` +
+            `dataChannel.readyState: ${dataChannel.readyState}`
+        );
+        console.log("dataChannel not opened!");
+        return;
+      }
+
+      dataChannel.send(peerMessage);
+      // TODO: should I notify that peerMessage has been sent well?
+    }
+  );
+
+  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.ERROR, (event) => {
     const { uuid, message } = event;
 
     if (!peerConnectionManager.peerConnections[uuid]) {
-      writeSystemMessage(`can not find peer: #${ uuid }`);
-      return;
-    }
-
-    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const data = new messageTextData({
-      message,
-      size: message.length,
-      fingerprint: generateFingerPrint(),
-    });
-
-    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
-
-    console.log('CLIENT_EVENT_TYPE.SEND_TEXT, message is ', peerMessage);
-
-    console.log('dataChannel is ', dataChannel);
-    console.log('dataChannel.readyState is ', dataChannel.readyState);
-
-    if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: ' + dataChannel.readyState);
-      console.log('dataChannel not opened!, click the peer again!');
-      return;
-    }
-
-    dataChannel.send(peerMessage);
-
-    const messagePacket = createMessagePacket({
-      source: getMyUUID(),
-      destination: uuid,
-      data,
-      messageType: PEER_MESSAGE_TYPE.TEXT,
-    });
-
-    addMessagePacket(messagePacket);
-  });
-
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.SEND_FILES, event => {
-    const { uuid, message, size, fingerprint } = event;
-
-    if (!peerConnectionManager.peerConnections[uuid]) {
-      writeSystemMessage(`can not find peer: #${ uuid }`);
-      return;
-    }
-
-    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const data = new messageFileData({ fingerprint, size, message });
-
-    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, data);
-
-    console.log('CLIENT_EVENT_TYPE.SEND_FILES, message is ', peerMessage);
-
-    console.log('dataChannel is ', dataChannel);
-    console.log('dataChannel.readyState is ', dataChannel.readyState);
-
-    if (dataChannel.readyState !== 'open') {
-      writeSystemMessage('dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: ' + dataChannel.readyState);
-      console.log('dataChannel not opened!, click the peer again!');
-      return;
-    }
-
-    dataChannel.send(peerMessage);
-
-    const messagePacket = createMessagePacket({
-      source: getMyUUID(),
-      destination: uuid,
-      data,
-      messageType: PEER_MESSAGE_TYPE.FILE,
-    });
-
-    addMessagePacket(messagePacket);
-  });
-
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.DOWNLOAD_FILE, event => {
-    const { uuid, fingerprint } = event;
-
-    if (!peerConnectionManager.peerConnections[uuid]) {
-      writeSystemMessage(`can not find peer: #${ uuid }`);
-      return;
-    }
-
-    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-    const data = new messageDownloadData({ fingerprint });
-
-    const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.DOWNLOAD, data);
-
-    console.log('CLIENT_EVENT_TYPE.DOWNLOAD_FILE, message is ', peerMessage);
-
-    console.log('dataChannel is ', dataChannel);
-    console.log('dataChannel.readyState is ', dataChannel.readyState);
-
-    if (dataChannel.readyState !== 'open') {
-      writeSystemMessage(
-        `CLIENT_EVENT ${ CLIENT_EVENT_TYPE.DOWNLOAD_FILE }: dataChannel not opened!`
-        + `dataChannel.readyState: ${ dataChannel.readyState }`);
-      console.log('dataChannel not opened!');
-      return;
-    }
-
-    dataChannel.send(peerMessage);
-    // TODO: should I notify that peerMessage has been sent well?
-  });
-
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.ERROR, event =>{
-    const { uuid, message } = event;
-
-    if (!peerConnectionManager.peerConnections[uuid]) {
-      writeSystemMessage(`can not find peer: #${ uuid }`);
+      writeSystemMessage(`can not find peer: #${uuid}`);
       return;
     }
 
@@ -374,71 +407,92 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 
     const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.ERROR, data);
 
-    console.log('CLIENT_EVENT_TYPE.ERROR, message is ', peerMessage);
+    console.log("CLIENT_EVENT_TYPE.ERROR, message is ", peerMessage);
 
-    console.log('dataChannel is ', dataChannel);
-    console.log('dataChannel.readyState is ', dataChannel.readyState);
+    console.log("dataChannel is ", dataChannel);
+    console.log("dataChannel.readyState is ", dataChannel.readyState);
 
-    if (dataChannel.readyState !== 'open') {
+    if (dataChannel.readyState !== "open") {
       writeSystemMessage(
-        `CLIENT_EVENT ${ CLIENT_EVENT_TYPE.ERROR }: dataChannel not opened!`);
-      console.log('dataChannel not opened!');
+        `CLIENT_EVENT ${CLIENT_EVENT_TYPE.ERROR}: dataChannel not opened!`
+      );
+      console.log("dataChannel not opened!");
       return;
     }
 
     dataChannel.send(peerMessage);
   });
 
-
-  peerConnectionManager.addEventListener(CLIENT_EVENT_TYPE.RECONNECT, event =>{
-    const { uuid } = event;
-    // TODO: DO it later
-  });
+  peerConnectionManager.addEventListener(
+    CLIENT_EVENT_TYPE.RECONNECT,
+    (event) => {
+      const { uuid } = event;
+      // TODO: DO it later
+    }
+  );
 }
 
 function addMessageTypeEventListener(peerConnectionManager) {
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.UUID, event => {
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.UUID, (event) => {
     const { uuid } = event;
 
     peerConnectionManager.uuid = uuid;
     updateUUID(uuid);
   });
 
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, event => {
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, (event) => {
     const { peers } = event;
-    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
+    const filteredPeers = peers.filter(
+      (peerUUID) => peerUUID !== peerConnectionManager.uuid
+    );
 
-    const connectionArr = initializePeerConnections(peerConnectionManager, filteredPeers);
+    const connectionArr = initializePeerConnections(
+      peerConnectionManager,
+      filteredPeers
+    );
 
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
-      peerConnectionManager.peerConnections[uuid] = { peerConnection, dataChannel };
+      peerConnectionManager.peerConnections[uuid] = {
+        peerConnection,
+        dataChannel,
+      };
     }
 
     // TODO: Inform this event to store
     addJoinedPeers(filteredPeers);
   });
 
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, event => {
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, (event) => {
     const { peers } = event;
-    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
+    const filteredPeers = peers.filter(
+      (peerUUID) => peerUUID !== peerConnectionManager.uuid
+    );
 
-    const connectionArr = initializePeerConnections(peerConnectionManager, filteredPeers);
+    const connectionArr = initializePeerConnections(
+      peerConnectionManager,
+      filteredPeers
+    );
 
     for (const connection of connectionArr) {
       const { uuid, peerConnection, dataChannel } = connection;
 
-      peerConnectionManager.peerConnections[uuid] = { peerConnection, dataChannel };
+      peerConnectionManager.peerConnections[uuid] = {
+        peerConnection,
+        dataChannel,
+      };
     }
 
     // TODO: Inform this event to store
     addJoinedPeers(filteredPeers);
   });
 
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, event => {
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, (event) => {
     const { peers } = event;
-    const filteredPeers = peers.filter(peerUUID => peerUUID !== peerConnectionManager.uuid);
+    const filteredPeers = peers.filter(
+      (peerUUID) => peerUUID !== peerConnectionManager.uuid
+    );
 
     // tear down and delete
     for (const peerUUID of filteredPeers) {
@@ -446,9 +500,13 @@ function addMessageTypeEventListener(peerConnectionManager) {
         continue;
       }
 
-      const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[peerUUID];
+      const { peerConnection, dataChannel } =
+        peerConnectionManager.peerConnections[peerUUID];
 
-      console.log('[LEAVE]: peerConnectionManager.peerConnections[peerUUID] is ', peerConnectionManager.peerConnections[peerUUID]);
+      console.log(
+        "[LEAVE]: peerConnectionManager.peerConnections[peerUUID] is ",
+        peerConnectionManager.peerConnections[peerUUID]
+      );
 
       peerConnection.close();
       dataChannel.close();
@@ -462,12 +520,18 @@ function addMessageTypeEventListener(peerConnectionManager) {
   peerConnectionManager.addEventListener(MESSAGE_TYPE.OFFER, async (event) => {
     const { fromUUID, toUUID, offer, timeStamp } = event;
 
-    console.log('peerConnectionManager.peerConnections[fromUUID] is', peerConnectionManager.peerConnections[fromUUID]);
+    console.log(
+      "peerConnectionManager.peerConnections[fromUUID] is",
+      peerConnectionManager.peerConnections[fromUUID]
+    );
 
     // TODO: Reject of Accept offer depend on timeStamp
     // Maybe.. need to use websocketManager to send message back
     if (!peerConnectionManager.peerConnections[fromUUID]) {
-      console.log('offer, peerConnectionManager.peerConnections[fromUUID] not exist', peerConnectionManager);
+      console.log(
+        "offer, peerConnectionManager.peerConnections[fromUUID] not exist",
+        peerConnectionManager
+      );
       return;
     }
 
@@ -484,7 +548,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
       });
 
       sendMessageToServer(message);
-    } catch(err) {
+    } catch (err) {
       writeSystemMessage(JSON.stringify(err, undefined, 2));
     }
   });
@@ -493,66 +557,72 @@ function addMessageTypeEventListener(peerConnectionManager) {
     const { fromUUID, toUUID, answer, timeStamp } = event;
 
     if (!peerConnectionManager.peerConnections[fromUUID]) {
-      console.log('answer, peerConnectionManager.peerConnections[fromUUID] not exist');
+      console.log(
+        "answer, peerConnectionManager.peerConnections[fromUUID] not exist"
+      );
       return;
     }
 
-    console.log('answer is ', answer);
+    console.log("answer is ", answer);
 
     const { peerConnection } = peerConnectionManager.peerConnections[fromUUID];
     await setRemoteAnswer(peerConnection, answer);
   });
 
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.ERROR, event => {
+  peerConnectionManager.addEventListener(MESSAGE_TYPE.ERROR, (event) => {
     // handle error later
 
     const { message } = event;
     writeSystemMessage(message);
-
   });
 
-  peerConnectionManager.addEventListener(MESSAGE_TYPE.ICE_CANDIDATE, async (event) => {
-    const { fromUUID, toUUID, ice } = event;
+  peerConnectionManager.addEventListener(
+    MESSAGE_TYPE.ICE_CANDIDATE,
+    async (event) => {
+      const { fromUUID, toUUID, ice } = event;
 
-    console.log('ICE_CANDIDATE, event is ', event);
+      console.log("ICE_CANDIDATE, event is ", event);
 
-    if (!peerConnectionManager.peerConnections[fromUUID]) {
-      console.log('ICE CANDIDATE, peerConnection not exist');
-      return;
+      if (!peerConnectionManager.peerConnections[fromUUID]) {
+        console.log("ICE CANDIDATE, peerConnection not exist");
+        return;
+      }
+
+      const { peerConnection, dataChannel } =
+        peerConnectionManager.peerConnections[fromUUID];
+      await peerConnection.addIceCandidate(ice);
     }
-
-    const { peerConnection, dataChannel } = peerConnectionManager.peerConnections[fromUUID];
-    await peerConnection.addIceCandidate(ice);
-  });
+  );
 }
 
 function createPeerConnectionManager() {
   const peerConnectionManager = {
     uuid: null,
-    peerConnections: { },
-    events: { },
+    peerConnections: {},
+    events: {},
   };
 
   peerConnectionManager.addEventListener = (eventType, callback) => {
     // extract event type and do something here
-  
-    peerConnectionManager.events[eventType] = peerConnectionManager.events[eventType] || []
+
+    peerConnectionManager.events[eventType] =
+      peerConnectionManager.events[eventType] || [];
     peerConnectionManager.events[eventType].push(callback);
-  }
-  
+  };
+
   peerConnectionManager.dispatchEvent = (event) => {
     const eventType = event.type;
     const eventCallbacks = peerConnectionManager.events[eventType];
-  
+
     if (!eventCallbacks) {
-      console.log(`peerConnectionManager does not handle event: ${ eventType }`);
+      console.log(`peerConnectionManager does not handle event: ${eventType}`);
       return;
     }
-  
+
     for (const callback of eventCallbacks) {
       callback(event);
     }
-  }
+  };
 
   addMessageTypeEventListener(peerConnectionManager);
   addClientEventTypeEventListener(peerConnectionManager);
@@ -561,7 +631,4 @@ function createPeerConnectionManager() {
 }
 
 const peerConnectionManager = createPeerConnectionManager();
-export {
-  peerConnectionManager,
-  createPeerConnectionManager,
-};
+export { peerConnectionManager, createPeerConnectionManager };

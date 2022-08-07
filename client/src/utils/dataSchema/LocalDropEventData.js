@@ -40,12 +40,11 @@ class EventErrorData {
   }
 }
 
-
 export {
   EventSendTextData,
   EventSendFilesData,
   EventDownloadFileData,
   EventConnectData,
   EventSendMessageData,
-  EventErrorData
-}
+  EventErrorData,
+};

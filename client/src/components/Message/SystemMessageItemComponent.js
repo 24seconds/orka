@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from "react";
+import styled from "styled-components";
 
 const SystemMessageItem = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
   min-height: 30px;
-  border-bottom: solid 1px ${ props => props.theme.Contrast };
+  border-bottom: solid 1px ${(props) => props.theme.Contrast};
   color: white;
 
   span {
     min-width: 125px;
-    color: ${ props => props.theme.TagsColor };
+    color: ${(props) => props.theme.TagsColor};
     margin: 0 10px 0 10px;
     font-size: 14px;
   }
@@ -18,9 +18,8 @@ const SystemMessageItem = styled.div`
   pre {
     white-space: pre-wrap;
     margin-right: 5px;
-    color: ${ props => props.theme.StringsColor };
+    color: ${(props) => props.theme.StringsColor};
   }
-
 `;
 
 export default class SystemMessageItemComponent extends Component {
@@ -29,11 +28,9 @@ export default class SystemMessageItemComponent extends Component {
 
     return (
       <SystemMessageItem>
-        <span>[System] { `${ systemMessage.createdAt }:` }</span>
-        <pre>
-          { systemMessage.message }
-        </pre>
+        <span>[System] {`${systemMessage.createdAt}:`}</span>
+        <pre>{systemMessage.message}</pre>
       </SystemMessageItem>
-    )
+    );
   }
 }

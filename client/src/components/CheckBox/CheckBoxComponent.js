@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { colorCheckBoxBorder } from '../../constants/styleConstants';
+import React, { Component } from "react";
+import styled from "styled-components";
+import { colorCheckBoxBorder } from "../../constants/styleConstants";
 
 const CheckBox = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ const CheckBox = styled.div`
   position: relative;
   width: 20px;
   height: 20px;
-  border: solid 2px ${ props =>  props.borderColor };
+  border: solid 2px ${(props) => props.borderColor};
   border-radius: 2px;
 
   &:hover {
@@ -31,7 +31,6 @@ const CheckBox = styled.div`
   }
 `;
 
-
 export default class CheckBoxComponent extends Component {
   constructor(props) {
     super(props);
@@ -47,16 +46,16 @@ export default class CheckBoxComponent extends Component {
     }
   }
 
-
   render() {
     const { isChecked } = this.props;
 
     return (
       <CheckBox
-        className='localdrop-checkbox-component'
-        onClick={ this.onClick }
-        borderColor={ colorCheckBoxBorder }>
-        <div className={ isChecked ? 'check-mark' : null }/>
+        className="localdrop-checkbox-component"
+        onClick={this.onClick}
+        borderColor={colorCheckBoxBorder}
+      >
+        <div className={isChecked ? "check-mark" : null} />
       </CheckBox>
     );
   }
