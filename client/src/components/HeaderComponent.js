@@ -61,28 +61,21 @@ const Header = styled.div`
   }
 `;
 
-class HeaderComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onClickRepo = this.onClickRepo.bind(this);
-  }
-
-  onClickRepo() {
+function HeaderComponent(props) {
+  function onClickRepo() {
+    console.log("called");
     window.open("https://github.com/24seconds/localdrop", "_blank");
   }
 
-  render() {
-    return (
-      <Header className="localdrop-header">
-        <div className="localdrop-header-title">Local Drop!</div>
-        <div className="localdrop-header-github" onClick={this.onClickRepo}>
-          <GithubLogo />
-          localdrop
-        </div>
-      </Header>
-    );
-  }
+  return (
+    <Header className="localdrop-header">
+      <div className="localdrop-header-title">Local Drop!</div>
+      <div className="localdrop-header-github" onClick={onClickRepo}>
+        <GithubLogo />
+        localdrop
+      </div>
+    </Header>
+  );
 }
 
 export default HeaderComponent;
