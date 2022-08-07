@@ -52,35 +52,29 @@ const Switch = styled.div`
   }
 `;
 
-export default class ToggleSwitch extends Component {
-  constructor(props) {
-    super(props);
+function ToggleSwitch(props) {
+  const { isSwitchOn, isRead } = props;
 
-    this.onAnimationToggle = this.onAnimationToggle.bind(this);
-  }
-
-  onAnimationToggle() {
-    const { onClick } = this.props;
+  function onAnimationToggle() {
+    const { onClick } = props;
 
     onClick();
   }
 
-  render() {
-    const { isSwitchOn, isRead } = this.props;
-
-    return (
-      <Switch>
-        <div
-          className={`localdrop-animation-switch ${isSwitchOn ? "on" : "off"}`}
-          onClick={this.onAnimationToggle}
-        >
-          <div className="slider-container">
-            <div className={`slider ${isSwitchOn ? "on" : "off"}`}>
-              {isRead ? "" : "!"}
-            </div>
+  return (
+    <Switch>
+      <div
+        className={`localdrop-animation-switch ${isSwitchOn ? "on" : "off"}`}
+        onClick={onAnimationToggle}
+      >
+        <div className="slider-container">
+          <div className={`slider ${isSwitchOn ? "on" : "off"}`}>
+            {isRead ? "" : "!"}
           </div>
         </div>
-      </Switch>
-    );
-  }
+      </div>
+    </Switch>
+  );
 }
+
+export default ToggleSwitch;
