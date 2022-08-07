@@ -17,7 +17,7 @@
     "check": "npx eslint --ext .ts src/",
     "build": "npx tsc",
     "postinstall": "npm run compile",
-    "deploy:heroku": "git subtree push --prefix signaling-server heroku master",
+    "deploy:heroku": "git subtree push --prefix signaling-server heroku main",
     "deploy:heroku:dev": "git subtree push --prefix signaling-server heroku server-test"
   },
   "keywords": [],
