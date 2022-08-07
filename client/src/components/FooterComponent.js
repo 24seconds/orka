@@ -35,37 +35,30 @@ const Footer = styled.div`
   }
 `;
 
-export default class FooterComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onClickId = this.onClickId.bind(this);
-    this.onClickRepo = this.onClickRepo.bind(this);
-  }
-
-  onClickId() {
+function FooterComponent() {
+  function onClickId() {
     window.open("https://github.com/24seconds/", "_blank");
   }
 
-  onClickRepo() {
+  function onClickRepo() {
     window.open("https://github.com/24seconds/localdrop", "_blank");
   }
 
-  render() {
-    return (
-      <Footer className="localdrop-footer">
-        <div onClick={this.onClickId}>
-          <GithubLogo />
-          24seconds
-        </div>
-        <div onClick={this.onClickRepo}>
-          <GithubLogo />
-          repo : localdrop
-        </div>
-        <div className="localdrop-app-version">
-          {`version: ${LOCALDROP_APP_VERSION}`}
-        </div>
-      </Footer>
-    );
-  }
+  return (
+    <Footer className="localdrop-footer">
+      <div onClick={onClickId}>
+        <GithubLogo />
+        24seconds
+      </div>
+      <div onClick={onClickRepo}>
+        <GithubLogo />
+        repo : localdrop
+      </div>
+      <div className="localdrop-app-version">
+        {`version: ${LOCALDROP_APP_VERSION}`}
+      </div>
+    </Footer>
+  );
 }
+
+export default FooterComponent;
