@@ -1,62 +1,74 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "resolutions": {
-    "styled-components": "^5"
-  },
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.4.2",
-    "concurrently": "^7.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^8.0.2",
-    "react-scripts": "^2.1.3",
-    "redux": "^4.0.5",
-    "streamsaver": "^2.0.4",
-    "styled-components": "^5.1.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "serve-service-worker": "./run_serve.sh",
-    "dev": "concurrently \"npm start\" \"npm run serve-service-worker\"",
-    "fmt": "prettier --write .",
-    "check": "prettier --check .",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "plugin:react-hooks/recommended",
-      "prettier"
-    ],
-    "rules": {
-      "indent": "error"
+    "name": "client",
+    "version": "0.1.0",
+    "private": true,
+    "resolutions": {
+        "styled-components": "^5"
+    },
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^13.3.0",
+        "@testing-library/user-event": "^14.4.2",
+        "concurrently": "^7.3.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-redux": "^8.0.2",
+        "react-scripts": "^2.1.3",
+        "redux": "^4.0.5",
+        "streamsaver": "^2.0.4",
+        "styled-components": "^5.1.1"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "serve-service-worker": "./run_serve.sh",
+        "dev": "concurrently \"npm start\" \"npm run serve-service-worker\"",
+        "fmt": "prettier --write .",
+        "check": "prettier --check .",
+        "predeploy": "yarn build",
+        "deploy": "gh-pages -d build",
+        "storybook": "start-storybook -p 6006",
+        "build-storybook": "build-storybook"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "plugin:react-hooks/recommended",
+            "prettier"
+        ],
+        "rules": {
+            "indent": "error"
+        }
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/core": "^7.18.10",
+        "@storybook/addon-actions": "^6.5.10",
+        "@storybook/addon-essentials": "^6.5.10",
+        "@storybook/addon-interactions": "^6.5.10",
+        "@storybook/addon-links": "^6.5.10",
+        "@storybook/builder-webpack4": "^6.5.10",
+        "@storybook/manager-webpack4": "^6.5.10",
+        "@storybook/react": "^6.5.10",
+        "@storybook/testing-library": "^0.0.13",
+        "babel-loader": "^8.2.5",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "gh-pages": "^4.0.0",
+        "http-server": "^14.1.1",
+        "prettier": "2.7.1"
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "gh-pages": "^4.0.0",
-    "http-server": "^14.1.1",
-    "prettier": "2.7.1"
-  }
 }
