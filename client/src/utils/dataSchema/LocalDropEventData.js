@@ -1,50 +1,50 @@
 class EventSendTextData {
-  constructor({ uuid, message }) {
-    this.uuid = uuid;
-    this.message = message;
-  }
+    constructor({ uuid, message }) {
+        this.uuid = uuid;
+        this.message = message;
+    }
 }
 
 class EventSendFilesData {
-  constructor({ uuid, message, size, fingerprint }) {
-    this.uuid = uuid;
-    this.message = message;
-    this.size = size;
-    this.fingerprint = fingerprint;
-  }
+    constructor({ uuid, message, size, fingerprint }) {
+        this.uuid = uuid;
+        this.message = message;
+        this.size = size;
+        this.fingerprint = fingerprint;
+    }
 }
 
 class EventDownloadFileData {
-  constructor({ uuid, fingerprint }) {
-    this.uuid = uuid;
-    this.fingerprint = fingerprint;
-  }
+    constructor({ uuid, fingerprint }) {
+        this.uuid = uuid;
+        this.fingerprint = fingerprint;
+    }
 }
 
 class EventConnectData {
-  constructor({ uuid }) {
-    this.uuid = uuid;
-  }
+    constructor({ uuid }) {
+        this.uuid = uuid;
+    }
 }
 
 class EventSendMessageData {
-  constructor({ message }) {
-    this.message = message;
-  }
+    constructor({ message }) {
+        this.message = message;
+    }
 }
 
 class EventErrorData {
-  constructor({ uuid, message }) {
-    this.uuid = uuid;
-    this.message = message;
-  }
+    constructor({ uuid, message }) {
+        this.uuid = uuid;
+        this.message = message;
+    }
 }
 
 export {
-  EventSendTextData,
-  EventSendFilesData,
-  EventDownloadFileData,
-  EventConnectData,
-  EventSendMessageData,
-  EventErrorData,
+    EventSendTextData,
+    EventSendFilesData,
+    EventDownloadFileData,
+    EventConnectData,
+    EventSendMessageData,
+    EventErrorData,
 };

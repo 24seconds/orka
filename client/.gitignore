@@ -25,3 +25,7 @@ yarn-error.log*
 #verify
 /verify/temp*
 /verify/test*
+
+#storybook
+storybook-static
+build-storybook.log*
