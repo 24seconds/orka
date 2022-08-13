@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
 import GithubLogo from "../assets/GithubLogo";
 import { mobileWidth } from "../constants/styleConstants";
@@ -9,7 +9,6 @@ const Footer = styled.div`
     height: 40px;
     color: ${(props) => props.theme.StringsColor};
     background: ${(props) => props.theme.Background};
-    font-family: ${(props) => props.theme.FontFamily};
 
     div {
         display: flex;
