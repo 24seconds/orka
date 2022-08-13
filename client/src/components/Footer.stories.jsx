@@ -1,10 +1,9 @@
 import React from "react";
-import { within, userEvent } from "@storybook/testing-library";
 
 import FooterComponent from "./FooterComponent";
 
 export default {
-    title: "Example/Footer",
+    title: "Orka/Footer",
     component: FooterComponent,
 };
 
