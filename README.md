@@ -1,4 +1,8 @@
-# 🕸🔥 LocalDrop!
+# 🕸🔥 Orka!
+
+## NOTE 
+README is not correct. WIP
+Orka is renewal version of Localdrop!
 
 [`LocalDrop`](https://localdrop.me) is peer to peer LAN(Local Area Network) data sharing service.  
 
