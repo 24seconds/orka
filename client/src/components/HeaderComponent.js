@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { mobileWidth } from "../constants/styleConstants";
-import { ReactComponent as GithubLogo } from "../assets/github-logo.svg";
+import GithubLogo from "../assets/GithubLogo";
 
 const Header = styled.div`
     display: flex;

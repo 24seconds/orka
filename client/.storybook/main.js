@@ -7,6 +7,11 @@ module.exports = {
         "@storybook/addon-links",
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
+        "storybook-addon-styled-component-theme/dist/preset",
     ],
     framework: "@storybook/react",
+    babel: async (options) => {
+        options.plugins.push("babel-plugin-inline-react-svg");
+        return options;
+    },
 };

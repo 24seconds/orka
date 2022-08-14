@@ -9,7 +9,8 @@ import MessageTableComponent from "./components/Message/MessageTableComponent";
 import MessageTableHeaderComponent from "./components/Message/MessageTableHeaderComponent";
 import FooterComponent from "./components/FooterComponent";
 import SendComponent from "./components/Send/SendComponent";
-import { mobileWidth, ColorThemes } from "./constants/styleConstants";
+import { mobileWidth } from "./constants/styleConstants";
+import { ColorThemes } from "./constants/styleTheme";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
