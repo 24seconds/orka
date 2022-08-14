@@ -1,5 +1,21 @@
 import { FontFamily } from "./styleConstants";
 
+export const ThemeOrkaDark = {
+    name: "OrkaDark",
+
+    White: "#FFFFFF",
+
+    Grayscale01: "#656C78",
+    Grayscale02: "#31353B",
+    Grayscale03: "#202326",
+    Grayscale04: "#131415",
+    Graysacle05: "#101010",
+
+    PrimaryColor: "#04AF61",
+    PrimaryColor02: "#105233",
+    PrimaryColor03: "#01321B",
+};
+
 export const MaterialThemeOceanic = {
     name: "MaterialThemeOceanic",
     FontFamily,
@@ -505,6 +521,7 @@ export const ThemeLightOwl = {
 };
 
 export const ColorThemes = {
+    ThemeOrkaDark,
     MaterialThemeOceanic,
     MaterialThemePalenight,
     MaterialThemeDarker,
