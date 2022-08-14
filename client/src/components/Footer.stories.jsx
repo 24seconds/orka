@@ -3,7 +3,7 @@ import React from "react";
 import FooterComponent from "./FooterComponent";
 
 export default {
-    title: "Orka/Footer",
+    title: "Localdrop/Footer",
     component: FooterComponent,
 };
 

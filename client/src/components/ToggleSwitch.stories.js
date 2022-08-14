@@ -3,7 +3,7 @@ import ToggleSwitch from "./ToggleSwitch";
 import { useArgs } from "@storybook/client-api";
 
 export default {
-    title: "Orka/ToggleSwitch",
+    title: "Localdrop/ToggleSwitch",
     component: ToggleSwitch,
     argTypes: {
         onClick: { action: "clicked" },
