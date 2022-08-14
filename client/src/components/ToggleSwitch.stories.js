@@ -6,7 +6,7 @@ export default {
     title: "Orka/ToggleSwitch",
     component: ToggleSwitch,
     argTypes: {
-        onClick: { action: 'clicked' },
+        onClick: { action: "clicked" },
         backgroundColor: { control: "color" },
         "props.theme.Disabled": { control: "color" },
         "props.theme.SecondText": { control: "color" },
