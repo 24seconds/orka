@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled, { withTheme } from "styled-components";
 
 const Switch = styled.div`
