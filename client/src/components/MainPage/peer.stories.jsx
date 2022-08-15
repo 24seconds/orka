@@ -8,8 +8,8 @@ export default {
 
 const Template = (args) => <PeerComponent {...args} />;
 
-export const Primary = Template.bind();
-Primary.args = {
+export const Peer = Template.bind();
+Peer.args = {
     orders: ["0", "1"],
     dataTypes: ["PNG", "TXT"],
 };

@@ -9,4 +9,4 @@ export default {
 
 const Template = () => <UploadButtonComponent />;
 
-export const Primary = Template.bind();
+export const UploadButton = Template.bind();
