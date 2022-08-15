@@ -13,13 +13,22 @@ export const HomeTab = Template.bind();
 HomeTab.args = {
     Icon: "Home",
 };
+HomeTab.parameters = {
+    backgrounds: { default: "facebook" },
+};
 
 export const ProfileTab = Template.bind();
 ProfileTab.args = {
     Icon: "Profile",
 };
+ProfileTab.parameters = {
+    backgrounds: { default: "facebook" },
+};
 
 export const NotificationTab = Template.bind();
 NotificationTab.args = {
     Icon: "Notification",
+};
+NotificationTab.parameters = {
+    backgrounds: { default: "facebook" },
 };
