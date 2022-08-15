@@ -6,6 +6,8 @@ export const ThemeOrkaDark = {
     White: "#FFFFFF",
     Gray: "#959CA8",
     Blackscale01: "#171819",
+    PlaceholderBackgroundscale01: "#31353C",
+    PlaceholderTextscale01: "#FEFEFE",
 
     Grayscale01: "#656C78",
     Grayscale02: "#31353B",
