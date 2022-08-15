@@ -31,6 +31,10 @@ export const parameters = {
                 value: "#000000",
             },
             {
+                name: "Grayscale03",
+                value: "#202326",
+            },
+            {
                 name: "twitter",
                 value: "#00aced",
             },
