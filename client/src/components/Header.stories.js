@@ -2,7 +2,7 @@ import React from "react";
 import HeaderComponent from "./HeaderComponent";
 
 export default {
-    title: "Orka/Header",
+    title: "Localdrop/Header",
     component: HeaderComponent,
 };
 
