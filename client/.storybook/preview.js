@@ -8,6 +8,11 @@ addDecorator(withThemesProvider(themes), ThemeProvider);
 
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
+    options: {
+        storySort: {
+            order: ["Orka"],
+        },
+    },
     controls: {
         matchers: {
             color: /(background|color)$/i,
