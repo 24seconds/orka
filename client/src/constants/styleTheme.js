@@ -4,6 +4,7 @@ export const ThemeOrkaDark = {
     name: "OrkaDark",
 
     White: "#FFFFFF",
+    Gray: "#959CA8",
 
     Grayscale01: "#656C78",
     Grayscale02: "#31353B",

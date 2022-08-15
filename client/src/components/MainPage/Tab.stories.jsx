@@ -1,7 +1,6 @@
 import React from "react";
 import TabComponent from "./TabComponent";
-import { userEvent } from '@storybook/testing-library';
-
+import { userEvent } from "@storybook/testing-library";
 
 export default {
     title: "Orka/Main/Tabs",
