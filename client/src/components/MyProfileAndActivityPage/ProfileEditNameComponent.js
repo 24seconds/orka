@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import ProfileEditNameClearIcon from "../../assets/ProfileEditNameClearIcon";
 
 const ProfileEditName = styled.div`
@@ -68,12 +69,14 @@ const NameEditor = styled.div`
     }
 `;
 
-function ProfileEditNameComponent() {
+function ProfileEditNameComponent(props) {
+    const { name } = props;
+
     return (
         <ProfileEditName>
             <MiniProfile className="orka-mini-profile" />
             <NameEditor>
-                <div className="orka-input-placeholder">Person</div>
+                <div className="orka-input-placeholder">{ name }</div>
                 <div className="orka-icon-container">
                     <ProfileEditNameClearIcon />
                 </div>
@@ -82,5 +85,13 @@ function ProfileEditNameComponent() {
         </ProfileEditName>
     );
 }
+
+ProfileEditNameComponent.propTypes = {
+    name: PropTypes.string,
+};
+
+ProfileEditNameComponent.defaultProps = {
+    name: "Person",
+};
 
 export default ProfileEditNameComponent;
