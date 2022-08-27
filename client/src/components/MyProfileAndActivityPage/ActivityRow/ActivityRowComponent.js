@@ -1,30 +1,39 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import CommentButtonComponent from "./CommentButtonComponent";
-import HandsUpButtonComponent from "./HandsUpButtonComponent";
+import DataUsageStatusComponent from "./DataUsageStatusComponent";
+import FileCommentExpandComponent from "./FileCommentExpandComponent";
+import ActionButtonComponent from "./ActionButtonComponent";
+import TextCopyComponent from "./TextCopyComponent";
 
 const ActivityRow = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    height: 130px;
-    margin: 0 32px;
+    height: 128px;
+    /* margin: 0 32px; */
+    /* background: red; */
+
+    .orka-data-type-holder {
+        margin-left: 32px;
+    }
 
     .orka-metadata-container {
-        margin-left: 24px;
+        flex-grow: 1;
+        height: 93px;
+        margin-left: 14px;
     }
 
     .orka-file-metadata-container {
-        width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 10px;
     }
 
-    .orka-button-container {
+    .orka-action-container {
         display: flex;
         flex-direction: row;
-        column-gap: 11px;
-        width: 100%;
+        column-gap: 18px;
+        margin-left: 16px;
+        margin-right: 34px;
     }
 `;
 
@@ -34,16 +43,16 @@ const DataTypeHolder = styled.div`
     justify-content: center;
     align-items: center;
 
-    width: 80px;
-    height: 100%;
-    background: ${(props) => props.theme.White};
+    width: 84px;
+    height: 100px;
+    background: ${(props) => props.theme.Grayscale02};
     border-radius: 11px;
     word-break: break-all;
 
     font-weight: 600;
-    font-size: 16px;
+    font-size: 20px;
     color: ${(props) => props.theme.Gray};
-    line-height: 20px;
+    line-height: 23px;
 
     left: ${(props) => props.order};
     top: ${(props) => props.order};
@@ -51,45 +60,61 @@ const DataTypeHolder = styled.div`
 `;
 
 const FileMetaData = styled.div`
-    font-weight: 600;
-    font-size: 26px;
-    line-height: 31px;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
     letter-spacing: -0.04em;
 
     color: ${(props) => props.theme.White};
 
     .orka-file-name {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
 
     .orka-size-and-timestamp {
         font-weight: 400;
-        font-size: 15px;
-        line-height: 18px;
+        font-size: 14px;
+        line-height: 17px;
         letter-spacing: -0.04em;
         color: ${(props) => props.theme.Grayscale01};
     }
 `;
 
+// TODO(young): refactor this later. dataType is used in several ways.
 function ActivityRowComponent(props) {
-    const { dataType, hasNewComment, isActive } = props;
+    const { dataType, displayName } = props;
 
     return (
         <ActivityRow>
-            <DataTypeHolder>{dataType}</DataTypeHolder>
+            <DataTypeHolder className="orka-data-type-holder">
+                {/* TODO(young): refactor this part. 
+                    if the dataType is FILE then extract extensions. FILE type's default is 'FILE'  */}
+                {dataType}
+            </DataTypeHolder>
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
                     <FileMetaData>
-                        <div className="orka-file-name">filename.png</div>
+                        <div className="orka-file-name">{displayName}</div>
                         <div className="orka-size-and-timestamp">
-                            51KB | 20H ago
+                            {dataType === "TXT"
+                                ? "URL description blah blah blah | 20H ago"
+                                : "51KB | 20H ago"}
                         </div>
                     </FileMetaData>
                 </div>
-                <div className="orka-button-container">
-                    <CommentButtonComponent hasNewComment={hasNewComment} />
-                    <HandsUpButtonComponent isActive={isActive} />
-                </div>
+                <DataUsageStatusComponent
+                    text={dataType === "TXT" ? "0 views" : "0 downloaded"}
+                />
+            </div>
+            <div className="orka-action-container">
+                {dataType === "TXT" ? (
+                    <TextCopyComponent text="https://github.com/24seconds/orka" />
+                ) : (
+                    <FileCommentExpandComponent count={10} />
+                )}
+                <ActionButtonComponent
+                    type={dataType === "TXT" ? "TEXT" : "FILE"}
+                />
             </div>
         </ActivityRow>
     );
@@ -97,14 +122,11 @@ function ActivityRowComponent(props) {
 
 ActivityRowComponent.propTypes = {
     dataType: PropTypes.string.isRequired,
-    hasNewComment: PropTypes.bool.isRequired,
-    isActive: PropTypes.bool.isRequired,
+    displayName: PropTypes.string.isRequired,
 };
 
 ActivityRowComponent.defaultProps = {
     dataType: "PNG",
-    hasNewComment: true,
-    isActive: false,
 };
 
 export default ActivityRowComponent;

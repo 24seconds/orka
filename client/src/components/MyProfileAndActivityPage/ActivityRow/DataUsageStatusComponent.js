@@ -3,12 +3,12 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const DataUsageStatus = styled.div`
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 
-    width: 116px;
     height: 26px;
+    padding: 0 15px;
     background: ${(props) => props.theme.ActivityRowBackgroundscale01};
     border-radius: 9px;
 

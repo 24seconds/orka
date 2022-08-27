@@ -33,6 +33,7 @@ const HandsUpButton = styled(StyledButton)`
     }
 `;
 
+// TODO(young): seems unused. remove it later (2022-08-27)
 function HandsUpButtonComponent(props) {
     const { isActive } = props;
 

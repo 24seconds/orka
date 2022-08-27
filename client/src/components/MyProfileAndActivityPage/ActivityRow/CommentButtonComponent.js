@@ -38,6 +38,7 @@ const CommentButton = styled(StyledButton)`
     }
 `;
 
+// TODO(young): seems unused. remove it later (2022-08-27)
 function CommentButtonComponent(props) {
     const { count, hasNewComment } = props;
 
