@@ -6,23 +6,26 @@ const UploadFiles = styled.div`
     flex-direction: column;
     align-items: center;
     width: 520px;
-    height: 245px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
+
+    .orka-or {
+        margin: 18px 0;
+    }
 `;
 
 const BrowsFiles = styled.button`
     width: 220px;
     height: 62px;
     cursor: pointer;
-    border: 1.5px solid ${(props) => props.theme.PrimaryColor};
+    border: 1.5px solid ${(props) => props.theme.ActivityRowBackgroundscale02};
     border-radius: 18px;
     background: transparent;
-    margin-top: 20px;
+    margin-bottom: 32px;
 
     font-weight: 500;
     font-size: 24px;
-    color: ${(props) => props.theme.PrimaryColor};
+    color: ${(props) => props.theme.ActivityRowBackgroundscale02};
     letter-spacing: -0.04em;
     line-height: 29px;
 `;
@@ -45,7 +48,7 @@ function UploadFilesComponent() {
                 <div>
                     Drag your documents, photos or videos here to uploading.
                 </div>
-                <div>or</div>
+                <div className="orka-or">or</div>
             </Description>
             <BrowsFiles>Browse files</BrowsFiles>
         </UploadFiles>
