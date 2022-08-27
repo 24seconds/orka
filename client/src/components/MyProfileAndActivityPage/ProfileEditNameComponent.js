@@ -76,7 +76,7 @@ function ProfileEditNameComponent(props) {
         <ProfileEditName>
             <MiniProfile className="orka-mini-profile" />
             <NameEditor>
-                <div className="orka-input-placeholder">{ name }</div>
+                <div className="orka-input-placeholder">{name}</div>
                 <div className="orka-icon-container">
                     <ProfileEditNameClearIcon />
                 </div>
