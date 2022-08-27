@@ -18,7 +18,7 @@ export const ThemeOrkaDark = {
     Grayscale02: "#31353B",
     Grayscale03: "#202326",
     Grayscale04: "#131415",
-    Graysacle05: "#101010",
+    Grayscale05: "#101010",
 
     PrimaryColor: "#04AF61",
     PrimaryColor02: "#105233",

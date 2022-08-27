@@ -14,7 +14,7 @@ HomeTab.args = {
     iconType: "Home",
 };
 HomeTab.parameters = {
-    backgrounds: { default: "facebook" },
+    backgrounds: { default: "Grayscale05" },
 };
 
 export const ProfileTab = Template.bind();
@@ -22,7 +22,7 @@ ProfileTab.args = {
     iconType: "Profile",
 };
 ProfileTab.parameters = {
-    backgrounds: { default: "facebook" },
+    backgrounds: { default: "Grayscale05" },
 };
 
 export const NotificationTab = Template.bind();
@@ -30,5 +30,5 @@ NotificationTab.args = {
     iconType: "Notification",
 };
 NotificationTab.parameters = {
-    backgrounds: { default: "facebook" },
+    backgrounds: { default: "Grayscale05" },
 };
