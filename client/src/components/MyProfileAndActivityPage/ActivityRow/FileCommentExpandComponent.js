@@ -10,13 +10,11 @@ const FileCommentExpand = styled.div`
 
     width: 50px;
     height: 50px;
-    border-radius: 27px;
+    border-radius: 50%;
 
     background: ${(props) => props.theme.Grayscale04};
 
     position: relative;
-    .orka-counter {
-    }
 `;
 
 const CommentCounter = styled.div`
@@ -48,11 +46,7 @@ function FileCommentExpandComponent(props) {
     return (
         <FileCommentExpand>
             <FileCommentIcon />
-            {count !== 0 && (
-                <CommentCounter className="orka-counter">
-                    {count}
-                </CommentCounter>
-            )}
+            {count !== 0 && <CommentCounter>{count}</CommentCounter>}
         </FileCommentExpand>
     );
 }
