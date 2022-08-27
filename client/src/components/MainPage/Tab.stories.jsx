@@ -11,7 +11,7 @@ const Template = (args) => <TabComponent {...args} />;
 
 export const HomeTab = Template.bind();
 HomeTab.args = {
-    Icon: "Home",
+    iconType: "Home",
 };
 HomeTab.parameters = {
     backgrounds: { default: "facebook" },
@@ -19,7 +19,7 @@ HomeTab.parameters = {
 
 export const ProfileTab = Template.bind();
 ProfileTab.args = {
-    Icon: "Profile",
+    iconType: "Profile",
 };
 ProfileTab.parameters = {
     backgrounds: { default: "facebook" },
@@ -27,7 +27,7 @@ ProfileTab.parameters = {
 
 export const NotificationTab = Template.bind();
 NotificationTab.args = {
-    Icon: "Notification",
+    iconType: "Notification",
 };
 NotificationTab.parameters = {
     backgrounds: { default: "facebook" },

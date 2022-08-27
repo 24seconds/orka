@@ -22,8 +22,7 @@ const FilterTab = styled.div`
 
     cursor: pointer;
 
-    background: ${(props) =>
-        props.isSelected ? props.theme.White : "none"};
+    background: ${(props) => (props.isSelected ? props.theme.White : "none")};
 
     .is-selected {
         color: ${(props) => props.theme.Graysacle05};
