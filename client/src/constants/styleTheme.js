@@ -12,6 +12,7 @@ export const ThemeOrkaDark = {
     ActivityRowButtonTextscale02: "#61656D",
     ActivityRowBackgroundscale01: "#191A1C",
     ActivityRowBackgroundscale02: "#0066FF",
+    ActivityRowBackgroundscale03: "#FF5151",
 
     Grayscale01: "#656C78",
     Grayscale02: "#31353B",
