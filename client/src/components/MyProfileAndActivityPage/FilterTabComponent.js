@@ -7,10 +7,10 @@ const FilterTab = styled.div`
     justify-content: center;
     align-items: center;
 
-    min-width: 72px;
+    min-width: 90px;
     height: 40px;
 
-    border: 1px solid ${(props) => props.theme.PrimaryColor};
+    border: 1px solid ${(props) => props.theme.Grayscale01};
     border-radius: 27px;
 
     font-weight: 600;
@@ -18,12 +18,12 @@ const FilterTab = styled.div`
     line-height: 27px;
     letter-spacing: -0.04em;
     color: ${(props) =>
-        props.isSelected ? props.theme.Graysacle05 : props.theme.PrimaryColor};
+        props.isSelected ? props.theme.Grayscale03 : props.theme.White};
 
     cursor: pointer;
 
     background: ${(props) =>
-        props.isSelected ? props.theme.PrimaryColor : "none"};
+        props.isSelected ? props.theme.White : "none"};
 
     .is-selected {
         color: ${(props) => props.theme.Graysacle05};

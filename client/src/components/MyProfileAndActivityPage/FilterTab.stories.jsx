@@ -36,5 +36,5 @@ FilterTab.args = {
 };
 
 FilterTab.parameters = {
-    backgrounds: { default: "black" },
+    backgrounds: { default: "Grayscale03" },
 };
