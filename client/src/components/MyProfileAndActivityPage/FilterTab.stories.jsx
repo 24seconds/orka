@@ -32,7 +32,7 @@ const Template = (args) => {
 
 export const FilterTab = Template.bind({});
 FilterTab.args = {
-    names: ["ALL", "Files", "URL"],
+    names: ["ALL", "Files", "Link"],
 };
 
 FilterTab.parameters = {
