@@ -1,16 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const NotificationRow = styled.div`
     display: flex;
     align-items: center;
-    height: 75px;
-    margin-left: 32px;
-    margin-bottom: 32px;
+    height: 106px;
+    padding-left: 32px;
 
     .orka-peer-profile {
         margin-right: 14px;
     }
+
+    background: ${props => props.isActive && props.theme.Grayscale04};
 `;
 
 const PeerProfile = styled.div`
@@ -21,7 +23,12 @@ const PeerProfile = styled.div`
 `;
 
 const InfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     height: 100%;
+
     .orka-text {
         color: ${(props) => props.theme.White};
         font-weight: 400;
@@ -44,9 +51,11 @@ const TextHighlighter = styled.span`
     font-weight: 600;
 `;
 
-function NotificationRowComponent() {
+function NotificationRowComponent(props) {
+    const { isActive } = props;
+
     return (
-        <NotificationRow>
+        <NotificationRow isActive={isActive}>
             <PeerProfile className="orka-peer-profile"></PeerProfile>
             <InfoContainer className="orka-info-container">
                 <div className="orka-text">
@@ -59,5 +68,13 @@ function NotificationRowComponent() {
         </NotificationRow>
     );
 }
+
+NotificationRowComponent.propTypes = {
+    isActive: PropTypes.bool.isRequired,
+};
+
+NotificationRowComponent.defaultProps = {
+    isActive: false,
+};
 
 export default NotificationRowComponent;

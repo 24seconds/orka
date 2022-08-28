@@ -8,7 +8,7 @@ export default {
 const Template = (args) => (
     <Fragment>
         <NotificationRowComponent key="1" {...args} />
-        <NotificationRowComponent key="2" />
+        <NotificationRowComponent key="2" isActive={true} />
     </Fragment>
 );
 
