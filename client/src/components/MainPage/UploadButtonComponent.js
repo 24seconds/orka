@@ -42,7 +42,7 @@ const UploadButton = styled.div`
 
 function UploadButtonComponent() {
     return (
-        <UploadButton className="orka-upload-buton">
+        <UploadButton className="orka-upload-button">
             <div className="orka-upload-button-title">Upload</div>
             <div className="orka-icon-container">
                 <UploadPlusIcon />
