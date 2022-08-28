@@ -18,7 +18,7 @@ const RecentData = styled.div`
 
     width: 80px;
     height: 100px;
-    background: ${(props) => props.theme.White};
+    background: ${(props) => props.theme.Grayscale02};
     border-radius: 11px;
     filter: drop-shadow(0px 2.6px 2.6px rgba(0, 0, 0, 0.25));
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
 
@@ -40,14 +40,43 @@ const PlaceHolder = styled.div`
 
         margin: 0 13px;
         cursor: pointer;
+
+        circle {
+            fill: ${(props) =>
+                props.isActive && props.theme.ActivityRowBackgroundscale02};
+        }
+    }
+
+    input {
+        background: ${(props) => props.theme.Blackscale01};
+        border: none;
+        outline: none;
+        height: 100%;
+
+        font-weight: 300;
+        font-size: 18px;
+        line-height: 120%;
+        letter-spacing: -0.04em;
+
+        color: ${(props) => props.theme.White};
     }
 `;
 
 function UploadURLComponent() {
+    const [text, setText] = useState("");
+
+    function onChange(event) {
+        setText(event.target.value);
+    }
+
     return (
         <UploadURL>
-            <PlaceHolder>
-                <div className="desc">Type the URL link here!</div>
+            <PlaceHolder isActive={text.length > 0}>
+                <input
+                    className="desc"
+                    placeholder="Type the URL link here!"
+                    onChange={onChange}
+                />
                 <div className="icon-container">
                     <UploadLinkIcon />
                 </div>

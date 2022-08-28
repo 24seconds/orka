@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import HomeIconLight from "../../assets/HomeIconLight";
 import NotificationIconLight from "../../assets/NotificationIconLight";
 import ProfileIconIconLight from "../../assets/ProfileIconIconLight";
@@ -12,17 +13,14 @@ const Tab = styled.button`
     height: 100px;
     cursor: pointer;
     border-radius: 30px;
-    background: ${(props) =>
-        props.isSelected ? props.theme.White : props.theme.Grayscale03};
+    background: ${(props) => props.theme.Grayscale03};
     border: none;
 
     > svg {
         > path,
         circle {
             stroke: ${(props) =>
-                props.isSelected
-                    ? props.theme.PrimaryColor
-                    : props.theme.White};
+                props.isSelected ? props.theme.White : props.theme.Grayscale01};
         }
     }
 
@@ -36,11 +34,11 @@ const Tab = styled.button`
 `;
 
 function TabComponent(props) {
+    const { iconType } = props;
     const [isSelected, setisSelected] = useState(false);
-    console.log("TabComponent, props:", props);
 
     const renderIcon = useCallback(() => {
-        switch (props.Icon) {
+        switch (iconType) {
             case "Home":
                 return <HomeIconLight />;
             case "Profile":
@@ -53,7 +51,6 @@ function TabComponent(props) {
     }, [props.Icon]);
 
     function onClick() {
-        console.log("onClick called");
         setisSelected(!isSelected);
     }
 
@@ -63,5 +60,9 @@ function TabComponent(props) {
         </Tab>
     );
 }
+
+TabComponent.propTypes = {
+    iconType: PropTypes.oneOf(["Home", "Profile", "Notification"]).isRequired,
+};
 
 export default TabComponent;

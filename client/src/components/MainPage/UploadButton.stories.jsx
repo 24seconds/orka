@@ -10,3 +10,7 @@ export default {
 const Template = () => <UploadButtonComponent />;
 
 export const UploadButton = Template.bind();
+
+UploadButton.parameters = {
+    backgrounds: { default: "Grayscale05" },
+};
