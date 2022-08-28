@@ -6,7 +6,6 @@ export default {
     component: NotificationContainerComponent,
 };
 
-// TODO(young): remove args if not used
-const Template = (args) => <NotificationContainerComponent {...args} />;
+const Template = () => <NotificationContainerComponent />;
 
 export const Container = Template.bind();
