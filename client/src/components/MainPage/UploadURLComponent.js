@@ -59,14 +59,24 @@ const PlaceHolder = styled.div`
         letter-spacing: -0.04em;
 
         color: ${(props) => props.theme.White};
+
+        ::placeholder {
+            color: ${(props) => props.theme.Grayscale01};
+            opacity: 1;
+        }
+
+        ::-ms-input-placeholder {
+            color: ${(props) => props.theme.Grayscale01};
+        }
     }
 `;
 
+// TODO(young): There are many comment logics between CommentInputComponent.
 function UploadURLComponent() {
     const [text, setText] = useState("");
 
     function onChange(event) {
-        setText(event.target.value);
+        setText(event?.target?.value || "");
     }
 
     return (

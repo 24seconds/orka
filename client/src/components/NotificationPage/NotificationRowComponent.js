@@ -12,7 +12,7 @@ const NotificationRow = styled.div`
         margin-right: 14px;
     }
 
-    background: ${props => props.isActive && props.theme.Grayscale04};
+    background: ${(props) => props.isActive && props.theme.Grayscale04};
 `;
 
 const PeerProfile = styled.div`
