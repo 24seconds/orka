@@ -15,16 +15,47 @@ export const ThemeOrkaDark = {
     ActivityRowBackgroundscale02: "#0066FF",
     ActivityRowBackgroundscale03: "#FF5151",
 
+    PrimaryColor: "#0066FF",
+    PrimaryColor02: "#061728",
+
     Grayscale01: "#656C78",
     Grayscale02: "#31353B",
     Grayscale03: "#202326",
+    Grayscale03p5: "#17191C",
     Grayscale04: "#131415",
     Grayscale05: "#101010",
-    Grayscale06: "#727987",
 
-    PrimaryColor: "#04AF61",
-    PrimaryColor02: "#105233",
-    PrimaryColor03: "#01321B",
+    // TODO(young): Adhoc color - decide naming later
+    Grayscale06: "#727987",
+};
+
+export const ThemeOrkaLight = {
+    name: "OrkaLight",
+
+    White: "#FFFFFF",
+    Gray: "#959CA8",
+    Black: "#000000",
+    Blackscale01: "#171819",
+    PlaceholderBackgroundscale01: "#31353C",
+    PlaceholderTextscale01: "#FEFEFE",
+    ActivityRowButtonTextscale01: "#E0E3E8",
+    ActivityRowButtonTextscale02: "#61656D",
+    ActivityRowBackgroundscale01: "#191A1C",
+    ActivityRowBackgroundscale02: "#0066FF",
+    ActivityRowBackgroundscale03: "#FF5151",
+
+    PrimaryColor: "#1B76FF",
+    PrimaryColor02: "#489DF1",
+
+    Grayscale01: "#6E7685",
+    Grayscale02: "#929FB1",
+    Grayscale03: "#E6ECF8",
+    Grayscale03p5: "#CCD7EC",
+    Grayscale04: "#F6F9FF",
+    Grayscale05: "#FBFCFF",
+
+    // TODO(young): Adhoc color - decide naming later
+    Grayscale06: "#727987",
 };
 
 export const MaterialThemeOceanic = {

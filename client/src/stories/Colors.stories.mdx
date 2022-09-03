@@ -1,33 +1,68 @@
 import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs";
+import { ThemeOrkaDark, ThemeOrkaLight } from "../constants/styleTheme.js";
 
 <Meta title="Color Palette" />
 
+# Dark theme
+
 <ColorPalette>
     <ColorItem
-        title="theme.white"
-        subtitle="White color"
+        title="Primary"
+        subtitle="primary colors"
         colors={{
-            White: "#FFFFFF",
+            PrimaryColor: ThemeOrkaDark.PrimaryColor,
+            PrimaryColor02: ThemeOrkaDark.PrimaryColor02,
         }}
     />
     <ColorItem
-        title="theme.grayscale"
-        subtitle="Grayscale colors"
+        title="Gray scale"
+        subtitle="grayscale colors"
         colors={{
-            Grayscale01: "#656C78",
-            Grayscale02: "#31353B",
-            Grayscale03: "#202326",
-            Grayscale04: "#131415",
-            Grayscale05: "#101010",
+            Grayscale05: ThemeOrkaDark.Grayscale05,
+            Grayscale04: ThemeOrkaDark.Grayscale04,
+            "Grayscale03.5": ThemeOrkaDark.Grayscale03p5,
+            Grayscale03: ThemeOrkaDark.Grayscale03,
+            Grayscale02: ThemeOrkaDark.Grayscale02,
+            Grayscale01: ThemeOrkaDark.Grayscale01,
         }}
     />
     <ColorItem
-        title="theme.primary"
-        subtitle="Primary colors"
+        title="White"
+        subtitle="white color"
         colors={{
-            PrimaryColor: "#04AF61",
-            PrimaryColor02: "#105233",
-            PrimaryColor03: "#01321B",
+            White: ThemeOrkaDark.White,
+        }}
+    />
+</ColorPalette>
+
+# Light theme
+
+<ColorPalette>
+    <ColorItem
+        title="Primary"
+        subtitle="primary light colors"
+        colors={{
+            PrimaryColor: ThemeOrkaLight.PrimaryColor,
+            PrimaryColor02: ThemeOrkaLight.PrimaryColor02,
+        }}
+    />
+    <ColorItem
+        title="Grayscale light"
+        subtitle="grayscale light colors"
+        colors={{
+            Grayscale05: ThemeOrkaLight.Grayscale05,
+            Grayscale04: ThemeOrkaLight.Grayscale04,
+            "Grayscale03.5": ThemeOrkaLight.Grayscale03p5,
+            Grayscale03: ThemeOrkaLight.Grayscale03,
+            Grayscale02: ThemeOrkaLight.Grayscale02,
+            Grayscale01: ThemeOrkaLight.Grayscale01,
+        }}
+    />
+    <ColorItem
+        title="White"
+        subtitle="white color"
+        colors={{
+            White: ThemeOrkaDark.White,
         }}
     />
 </ColorPalette>
