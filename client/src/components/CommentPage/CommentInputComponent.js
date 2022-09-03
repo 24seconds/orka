@@ -12,7 +12,7 @@ const placeHolderTextStyle = css`
 `;
 
 const InputStyle = styled.input`
-    flex-grow: 1;
+    width: 100%;
     margin-left: 24px;
 
     background: ${(props) => props.theme.Blackscale01};
