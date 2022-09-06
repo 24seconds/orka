@@ -12,7 +12,11 @@ function PeerListLayoutComponent() {
     const [activePeer, setActivePeer] = useState(null);
 
     function onClick(uuid) {
-        setActivePeer(uuid);
+        if (uuid === activePeer) {
+            setActivePeer(null);
+        } else {
+            setActivePeer(uuid);
+        }
     }
 
     const peerList = ["uuid-1", "uuid-2", "uuid-3", "uuid-4"];
