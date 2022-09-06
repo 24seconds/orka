@@ -11,10 +11,11 @@ import FooterComponent from "./components/FooterComponent";
 import SendComponent from "./components/Send/SendComponent";
 import { mobileWidth } from "./constants/styleConstants";
 import { ColorThemes } from "./constants/styleTheme";
+import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    background-color: ${(props) => props.theme.SecondBackground};
+    background-color: ${(props) => props.theme.PrimaryColor};
   }
 `;
 
@@ -56,9 +57,7 @@ class App extends Component {
 
         this.state = {
             colorTheme:
-                ColorThemes[
-                    this.getStorageColorTheme() || "MaterialThemeOceanic"
-                ],
+                ColorThemes[this.getStorageColorTheme() || "ThemeOrkaDark"],
         };
 
         this.onChangeTheme = this.onChangeTheme.bind(this);
@@ -106,9 +105,9 @@ class App extends Component {
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
                 <LocalDropApp className="App">
-                    <Container className="localdrop-app-container">
-                        <MobileSticky>
-                            <HeaderComponent />
+                    <MainLayoutComponent />
+                    {/* <Container className="localdrop-app-container">
+                        <MobileSticky>                            
                             <SendComponent />
                             <MetaDataComponent
                                 onChangeTheme={this.onChangeTheme}
@@ -118,7 +117,7 @@ class App extends Component {
                         </MobileSticky>
                         <MessageTableComponent />
                         <FooterComponent />
-                    </Container>
+                    </Container> */}
                 </LocalDropApp>
             </ThemeProvider>
         );
