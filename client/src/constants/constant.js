@@ -6,3 +6,9 @@ export const LOCALDROP_APP_VERSION =
 // https://chromium.googlesource.com/external/webrtc/+/master/pc/data_channel.cc, half of kMaxQueuedSendDataBytes
 export const DATACHANNEL_MAX_BUFFERED_AMOUNT = 8 * 1024 * 1024;
 export const DATACHANNEL_BUFFER_THRESHOLD = 65535;
+
+export const Tabs = Object.freeze({
+    Home: "Home",
+    Profile: "Profile",
+    Notification: "Notification",
+});
