@@ -7,7 +7,7 @@ export default {
     component: UploadButtonComponent,
 };
 
-const Template = () => <UploadButtonComponent />;
+const Template = (args) => <UploadButtonComponent {...args} />;
 
 export const UploadButton = Template.bind();
 

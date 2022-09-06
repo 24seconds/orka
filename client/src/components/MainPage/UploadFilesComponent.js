@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
+import { useDropzone } from "react-dropzone";
+import { Fragment } from "react";
 
 const UploadFiles = styled.div`
     display: flex;
@@ -8,9 +10,14 @@ const UploadFiles = styled.div`
     width: 520px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
+    cursor: pointer;
 
     .orka-or {
         margin: 18px 0;
+    }
+
+    .orka-release-desc {
+        margin-bottom: 18px;
     }
 `;
 
@@ -41,14 +48,36 @@ const Description = styled.div`
     letter-spacing: -0.04em;
 `;
 
-function UploadFilesComponent() {
+function UploadFilesComponent(props) {
+    const { className } = props;
+
+    const onDrop = useCallback((acceptedFiles) => {
+        // TODO(young): handle files later
+        // store File object in somehwere; store file related data to db;
+        // display upload process - 0.3~0.5sec animation is okay
+        console.log("acceptedFiles:", acceptedFiles);
+    }, []);
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+    });
+
     return (
-        <UploadFiles>
+        <UploadFiles className={className} {...getRootProps()}>
             <Description>
-                <div>
-                    Drag your documents, photos or videos here to uploading.
-                </div>
-                <div className="orka-or">or</div>
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                    <div className="orka-release-desc">
+                        Release to drop the files here
+                    </div>
+                ) : (
+                    <Fragment>
+                        <div>
+                            Drag your documents, photos or videos here to
+                            uploading.
+                        </div>
+                        <div className="orka-or">or</div>
+                    </Fragment>
+                )}
             </Description>
             <BrowsFiles>Browse files</BrowsFiles>
         </UploadFiles>

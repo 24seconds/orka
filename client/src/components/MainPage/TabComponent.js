@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import HomeIconLight from "../../assets/HomeIconLight";
 import NotificationIconLight from "../../assets/NotificationIconLight";
 import ProfileIconIconLight from "../../assets/ProfileIconIconLight";
+import { Tabs } from "../../constants/constant";
 
 const Tab = styled.button`
     display: flex;
@@ -34,24 +35,23 @@ const Tab = styled.button`
 `;
 
 function TabComponent(props) {
-    const { iconType } = props;
-    const [isSelected, setisSelected] = useState(false);
+    const { iconType, isSelected } = props;
 
     const renderIcon = useCallback(() => {
         switch (iconType) {
-            case "Home":
+            case Tabs.Home:
                 return <HomeIconLight />;
-            case "Profile":
+            case Tabs.Profile:
                 return <ProfileIconIconLight />;
-            case "Notification":
+            case Tabs.Notification:
                 return <NotificationIconLight />;
             default:
                 return null;
         }
-    }, [props.Icon]);
+    }, [props.iconType]);
 
     function onClick() {
-        setisSelected(!isSelected);
+        props.onClick?.(iconType);
     }
 
     return (
@@ -62,7 +62,8 @@ function TabComponent(props) {
 }
 
 TabComponent.propTypes = {
-    iconType: PropTypes.oneOf(["Home", "Profile", "Notification"]).isRequired,
+    iconType: PropTypes.oneOf(Object.values(Tabs).map((x) => x)).isRequired,
+    isSelected: PropTypes.bool,
 };
 
 export default TabComponent;

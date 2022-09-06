@@ -63,7 +63,7 @@ const CommentInput = styled.div`
     }
 `;
 
-// TODO(young): There are many comment logics between UploadURLComponent.
+// TODO(young): There are many comment logics between UploadLinkComponent.
 // Refactor this later.
 function CommentInputComponent() {
     const [text, setText] = useState("");

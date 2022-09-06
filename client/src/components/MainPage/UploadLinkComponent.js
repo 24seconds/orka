@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
 
-const UploadURL = styled.div`
+const UploadLink = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -72,27 +72,36 @@ const PlaceHolder = styled.div`
 `;
 
 // TODO(young): There are many comment logics between CommentInputComponent.
-function UploadURLComponent() {
+function UploadLinkComponent(props) {
+    const { className } = props;
+
     const [text, setText] = useState("");
 
     function onChange(event) {
         setText(event?.target?.value || "");
     }
 
+    function onKeyDown(event) {
+        if (event?.key === "Enter") {
+            console.log("enter pressed");
+        }
+    }
+
     return (
-        <UploadURL>
+        <UploadLink className={className}>
             <PlaceHolder isActive={text.length > 0}>
                 <input
                     className="desc"
                     placeholder="Type the URL link here!"
                     onChange={onChange}
+                    onKeyDown={onKeyDown}
                 />
                 <div className="icon-container">
                     <UploadLinkIcon />
                 </div>
             </PlaceHolder>
-        </UploadURL>
+        </UploadLink>
     );
 }
 
-export default UploadURLComponent;
+export default UploadLinkComponent;
