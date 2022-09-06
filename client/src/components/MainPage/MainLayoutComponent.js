@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
 import TabComponent from "./TabComponent";
 import UploadButtonComponent from "./UploadButtonComponent";
 import UploadFilesComponent from "./UploadFilesComponent";
+import UploadLinkComponent from "./UploadLinkComponent";
 
 const TitleStyle = styled.div`
     color: ${(props) => props.theme.White};
@@ -29,6 +30,10 @@ const StyledUploadButtonComponent = styled(UploadButtonComponent)`
 `;
 
 const StyledUploadFilesComponent = styled(UploadFilesComponent)`
+    margin-bottom: 20px;
+`;
+
+const StyledUploadLinkComponent = styled(UploadLinkComponent)`
     margin-bottom: 20px;
 `;
 
@@ -67,7 +72,13 @@ function MainLayoutComponent() {
                 onClick={onClickUplaodButton}
                 isActive={uploadActivated}
             />
-            {uploadActivated && <StyledUploadFilesComponent />}
+            {uploadActivated && (
+                <Fragment>
+                    <StyledUploadFilesComponent />
+                    <StyledUploadLinkComponent />
+                </Fragment>
+            )}
+
             <PeerListLayoutComponent />
         </MainLayout>
     );
