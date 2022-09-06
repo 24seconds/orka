@@ -15,7 +15,7 @@ import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    background-color: ${(props) => props.theme.PrimaryColor};
+    background-color: ${(props) => props.theme.Black};
   }
 `;
 

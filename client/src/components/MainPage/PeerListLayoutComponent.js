@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import PeerComponent from "./Peer/PeerComponent";
 
@@ -9,12 +9,24 @@ const PeerListLayout = styled.div`
 `;
 
 function PeerListLayoutComponent() {
+    const [activePeer, setActivePeer] = useState(null);
+
+    function onClick(uuid) {
+        setActivePeer(uuid);
+    }
+
+    const peerList = ["uuid-1", "uuid-2", "uuid-3", "uuid-4"];
+
     return (
         <PeerListLayout>
-            <PeerComponent />
-            <PeerComponent />
-            <PeerComponent />
-            <PeerComponent />
+            {peerList.map((uuid) => (
+                <PeerComponent
+                    key={uuid}
+                    uuid={uuid}
+                    isSelected={activePeer === uuid}
+                    onClick={onClick}
+                />
+            ))}
         </PeerListLayout>
     );
 }
