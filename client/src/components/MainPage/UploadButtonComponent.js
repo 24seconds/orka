@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import UploadPlusIcon from "../../assets/UploadPlusIcon";
 
 const UploadButton = styled.div`
@@ -32,17 +33,19 @@ const UploadButton = styled.div`
         cursor: pointer;
         transition: 0.2s linear;
 
-        // Todo(young): execute animation when the button is clicked.
-        &:hover {
-            background: "#000000";
-            transform: rotate(45deg);
-        }
+        ${(props) => props.isActive && `transform: rotate(45deg)`};
     }
 `;
 
-function UploadButtonComponent() {
+function UploadButtonComponent(props) {
+    const { className, isActive } = props;
+
     return (
-        <UploadButton className="orka-upload-button">
+        <UploadButton
+            className={className || "orka-upload-button"}
+            onClick={props.onClick}
+            isActive={isActive}
+        >
             <div className="orka-upload-button-title">Upload</div>
             <div className="orka-icon-container">
                 <UploadPlusIcon />
@@ -50,5 +53,9 @@ function UploadButtonComponent() {
         </UploadButton>
     );
 }
+
+UploadButtonComponent.propTypes = {
+    isActive: PropTypes.bool,
+};
 
 export default UploadButtonComponent;

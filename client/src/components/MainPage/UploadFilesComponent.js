@@ -41,9 +41,11 @@ const Description = styled.div`
     letter-spacing: -0.04em;
 `;
 
-function UploadFilesComponent() {
+function UploadFilesComponent(props) {
+    const { className } = props;
+
     return (
-        <UploadFiles>
+        <UploadFiles className={className}>
             <Description>
                 <div>
                     Drag your documents, photos or videos here to uploading.
