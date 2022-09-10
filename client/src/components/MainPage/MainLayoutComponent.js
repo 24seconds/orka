@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
+import NotificationLayoutComponent from "../NotificationPage/NotificationLayoutComponent";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
 import TabComponent from "./TabComponent";
 import UploadButtonComponent from "./UploadButtonComponent";
@@ -68,7 +69,13 @@ function MainLayoutComponent() {
                 </Fragment>
             )}
 
-            <PeerListLayoutComponent />
+            {
+                {
+                    [Tabs.Home]: <PeerListLayoutComponent />,
+                    [Tabs.Profile]: <PeerListLayoutComponent />,
+                    [Tabs.Notification]: <NotificationLayoutComponent />,
+                }[selectedTab]
+            }
         </MainLayout>
     );
 }
