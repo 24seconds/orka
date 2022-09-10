@@ -1,11 +1,27 @@
 import React from "react";
 import styled from "styled-components";
+import NotificationRowComponent from "./NotificationRowComponent";
+
+const StyledNotificationRowComponent = styled(NotificationRowComponent)`
+    :last-child {
+        margin-bottom: 20px;
+    }
+`;
 
 const NotificationContainer = styled.div`
     width: 520px;
-    min-height: 500px;
+    height: 506px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
+
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 const NotificationContainerTitle = styled.div`
@@ -27,6 +43,14 @@ function NotificationContainerComponent() {
             <NotificationContainerTitle>
                 Notification
             </NotificationContainerTitle>
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
+            <StyledNotificationRowComponent />
         </NotificationContainer>
     );
 }

@@ -52,10 +52,10 @@ const TextHighlighter = styled.span`
 `;
 
 function NotificationRowComponent(props) {
-    const { isActive } = props;
+    const { className, isActive } = props;
 
     return (
-        <NotificationRow isActive={isActive}>
+        <NotificationRow className={className} isActive={isActive}>
             <PeerProfile className="orka-peer-profile"></PeerProfile>
             <InfoContainer className="orka-info-container">
                 <div className="orka-text">
