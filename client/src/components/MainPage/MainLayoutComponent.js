@@ -7,16 +7,6 @@ import UploadButtonComponent from "./UploadButtonComponent";
 import UploadFilesComponent from "./UploadFilesComponent";
 import UploadLinkComponent from "./UploadLinkComponent";
 
-const TitleStyle = styled.div`
-    color: ${(props) => props.theme.White};
-    font-weight: 600;
-    font-size: 56px;
-    line-height: 68px;
-    letter-spacing: -0.04em;
-
-    margin-bottom: 20px;
-`;
-
 const TabContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -57,7 +47,6 @@ function MainLayoutComponent() {
 
     return (
         <MainLayout>
-            <TitleStyle>orka</TitleStyle>
             <TabContainer>
                 {Object.values(Tabs).map((tab) => (
                     <TabComponent

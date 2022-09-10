@@ -12,6 +12,7 @@ import SendComponent from "./components/Send/SendComponent";
 import { mobileWidth } from "./constants/styleConstants";
 import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
+import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -19,13 +20,29 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const LocalDropApp = styled.div`
-    height: calc(100% - 110px);
+const OrkaApp = styled.div`
+    // TODO(young): Remove this height if it is not necessary
+    // height: calc(100% - 110px);
     padding: 50px 100px;
 
     @media (max-width: ${mobileWidth}) {
         padding: 0;
     }
+`;
+
+const OrkaContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
+const OrkaTitle = styled.div`
+    color: ${(props) => props.theme.White};
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 68px;
+    letter-spacing: -0.04em;
+
+    margin-bottom: 20px;
 `;
 
 const Container = styled.div`
@@ -104,9 +121,12 @@ class App extends Component {
         return (
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
-                <LocalDropApp className="App">
-                    <MainLayoutComponent />
-                    {/* <Container className="localdrop-app-container">
+                <OrkaApp className="App">
+                    <OrkaTitle>orka</OrkaTitle>
+                    <OrkaContainer>
+                        <MainLayoutComponent />
+                        <PeerActivityLayout />
+                        {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                             <SendComponent />
                             <MetaDataComponent
@@ -118,7 +138,8 @@ class App extends Component {
                         <MessageTableComponent />
                         <FooterComponent />
                     </Container> */}
-                </LocalDropApp>
+                    </OrkaContainer>
+                </OrkaApp>
             </ThemeProvider>
         );
     }
