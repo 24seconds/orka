@@ -12,6 +12,7 @@ import SendComponent from "./components/Send/SendComponent";
 import { mobileWidth } from "./constants/styleConstants";
 import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
+import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -19,13 +20,18 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const LocalDropApp = styled.div`
+const OrkaApp = styled.div`
     height: calc(100% - 110px);
     padding: 50px 100px;
 
     @media (max-width: ${mobileWidth}) {
         padding: 0;
     }
+`;
+
+const OrkaContainer = styled.div`
+    display: flex;
+    flex-direction: row;
 `;
 
 const Container = styled.div`
@@ -104,9 +110,11 @@ class App extends Component {
         return (
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
-                <LocalDropApp className="App">
-                    <MainLayoutComponent />
-                    {/* <Container className="localdrop-app-container">
+                <OrkaApp className="App">
+                    <OrkaContainer>
+                        <MainLayoutComponent />
+                        <PeerActivityLayout />
+                        {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                             <SendComponent />
                             <MetaDataComponent
@@ -118,7 +126,8 @@ class App extends Component {
                         <MessageTableComponent />
                         <FooterComponent />
                     </Container> */}
-                </LocalDropApp>
+                    </OrkaContainer>
+                </OrkaApp>
             </ThemeProvider>
         );
     }
