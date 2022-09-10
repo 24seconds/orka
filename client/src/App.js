@@ -34,6 +34,16 @@ const OrkaContainer = styled.div`
     flex-direction: row;
 `;
 
+const OrkaTitle = styled.div`
+    color: ${(props) => props.theme.White};
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 68px;
+    letter-spacing: -0.04em;
+
+    margin-bottom: 20px;
+`;
+
 const Container = styled.div`
     border: solid 2px ${(props) => props.theme.Contrast};
     border-radius: 5px;
@@ -111,6 +121,7 @@ class App extends Component {
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
                 <OrkaApp className="App">
+                    <OrkaTitle>orka</OrkaTitle>
                     <OrkaContainer>
                         <MainLayoutComponent />
                         <PeerActivityLayout />
