@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
+import HandsUpSectionComponent from "./HandsUpSectionComponent";
 
 const MiniProfile = styled.div`
     display: inline-block;
@@ -10,6 +11,10 @@ const MiniProfile = styled.div`
     height: 36px;
     border-radius: 50%;
     background: #000000;
+`;
+
+const StyledHandsUpSection = styled(HandsUpSectionComponent)`
+    margin-bottom: 28px;
 `;
 
 const ActivityContainer = styled.div`
@@ -99,6 +104,7 @@ function ActivityContainerComponent() {
                     <CloseIcon />
                 </IconContainer>
             </ActivityTitleContainer>
+            <StyledHandsUpSection></StyledHandsUpSection>
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     <FilterTabComponent name="ALL" />

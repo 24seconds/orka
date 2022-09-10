@@ -21,7 +21,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const OrkaApp = styled.div`
-    height: calc(100% - 110px);
+    // TODO(young): Remove this height if it is not necessary
+    // height: calc(100% - 110px);
     padding: 50px 100px;
 
     @media (max-width: ${mobileWidth}) {
