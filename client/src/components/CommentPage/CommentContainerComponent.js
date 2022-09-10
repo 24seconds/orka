@@ -36,7 +36,7 @@ const CommentContainer = styled.div`
     display: grid;
     grid-template-rows: 95px auto 126px;
     width: 366px;
-    height: 900px;
+    height: 746px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
 `;

@@ -21,6 +21,7 @@ const ActivityContainer = styled.div`
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
     min-width: 606px;
+    height: 746px;
 `;
 
 const IconContainer = styled.div`
@@ -88,7 +89,17 @@ const ActivityFilterAndSortContainer = styled.div`
     }
 `;
 
-const ActivityRowContainer = styled.div``;
+const ActivityRowContainer = styled.div`
+    // TODO(young: it is a common style. Move this to common style for reusability.
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+`;
 
 function ActivityContainerComponent() {
     return (
