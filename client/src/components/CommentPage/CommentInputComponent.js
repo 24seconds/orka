@@ -65,7 +65,8 @@ const CommentInput = styled.div`
 
 // TODO(young): There are many comment logics between UploadLinkComponent.
 // Refactor this later.
-function CommentInputComponent() {
+function CommentInputComponent(props) {
+    const { className } = props;
     const [text, setText] = useState("");
 
     function onChange(event) {
@@ -73,7 +74,7 @@ function CommentInputComponent() {
     }
 
     return (
-        <CommentInput isActive={(text?.length || 0) > 0}>
+        <CommentInput className={className} isActive={(text?.length || 0) > 0}>
             <InputStyle
                 className="desc"
                 placeholder="Type a comment"

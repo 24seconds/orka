@@ -13,6 +13,7 @@ import { mobileWidth } from "./constants/styleConstants";
 import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
+import CommentLayoutComponent from "./components/CommentPage/CommentLayoutComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -126,6 +127,7 @@ class App extends Component {
                     <OrkaContainer>
                         <MainLayoutComponent />
                         <PeerActivityLayout />
+                        <CommentLayoutComponent />
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                             <SendComponent />
