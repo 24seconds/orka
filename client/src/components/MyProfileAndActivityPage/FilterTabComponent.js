@@ -24,9 +24,8 @@ const FilterTab = styled.div`
 
     background: ${(props) => (props.isSelected ? props.theme.White : "none")};
 
-    .is-selected {
-        color: ${(props) => props.theme.Grayscale05};
-    }
+    // TODO(young): Consider using outline instead of border if it is annoying
+    ${(props) => props.isSelected && `border-color: transparent;`}
 `;
 
 function FilterTabComponent(props) {
@@ -45,10 +44,10 @@ function FilterTabComponent(props) {
 }
 
 FilterTabComponent.propTypes = {
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
 };
 
-FilterTabComponent.propTypes = {
+FilterTabComponent.defaultProps = {
     name: "ALL",
 };
 
