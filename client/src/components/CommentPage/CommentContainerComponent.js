@@ -1,10 +1,42 @@
 import React from "react";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
+import CommentRowComponent from "./CommentRowComponent";
+import CommentInputComponent from "./CommentInputComponent";
+
+const StyledCommentRowComponent = styled(CommentRowComponent)`
+    margin: 0 32px 28px 32px;
+
+    :last-child {
+        margin-bottom: 0px;
+    }
+`;
+
+const StyledCommentInputComponent = styled(CommentInputComponent)`
+    margin: 36px 32px;
+`;
+
+const CommentRowContainer = styled.div`
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+`;
+
+const CommentInputContainer = styled.div`
+    display: flex;
+    justify-content: center;
+`;
 
 const CommentContainer = styled.div`
-    width: 520px;
-    min-height: 500px;
+    display: grid;
+    grid-template-rows: 95px auto 126px;
+    width: 366px;
+    height: 900px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
 `;
@@ -42,6 +74,23 @@ function CommentContainerComponent() {
                 <CommentTitle className="orka-title">Comments</CommentTitle>
                 <CloseIcon />
             </CommentTitleContainer>
+            <CommentRowContainer className="hoho">
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+                <StyledCommentRowComponent />
+            </CommentRowContainer>
+            <CommentInputContainer>
+                <StyledCommentInputComponent />
+            </CommentInputContainer>
         </CommentContainer>
     );
 }

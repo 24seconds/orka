@@ -59,7 +59,7 @@ const TextContentStyle = styled.p`
     color: ${(props) => props.theme.White};
 `;
 
-const ComponentRow = styled.div`
+const CommentRow = styled.div`
     display: flex;
     flex-direction: column;
 
@@ -68,9 +68,11 @@ const ComponentRow = styled.div`
     }
 `;
 
-function ComponentRowComponent() {
+function CommentRowComponent(props) {
+    const { className } = props;
+
     return (
-        <ComponentRow>
+        <CommentRow className={className}>
             <TitleContentStyle>
                 <MiniProfile></MiniProfile>
                 <span className="orka-profile-name">Person 2</span>
@@ -81,8 +83,8 @@ function ComponentRowComponent() {
                 i want to download but i
                 can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa
             </TextContentStyle>
-        </ComponentRow>
+        </CommentRow>
     );
 }
 
-export default ComponentRowComponent;
+export default CommentRowComponent;
