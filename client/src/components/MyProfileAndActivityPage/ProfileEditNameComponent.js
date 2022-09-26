@@ -9,7 +9,7 @@ const ProfileEditName = styled.div`
     height: 96px;
 
     .orka-mini-profile {
-        margin-right: 12px;
+        margin-right: 16px;
     }
 
     .orka-edit-button {
@@ -19,7 +19,6 @@ const ProfileEditName = styled.div`
         height: 100%;
         cursor: pointer;
         margin-left: auto;
-        margin-right: 30px;
 
         color: ${(props) => props.theme.PrimaryColor};
         font-weight: 300;
@@ -70,10 +69,10 @@ const NameEditor = styled.div`
 `;
 
 function ProfileEditNameComponent(props) {
-    const { name } = props;
+    const { className, name } = props;
 
     return (
-        <ProfileEditName>
+        <ProfileEditName className={className}>
             <MiniProfile className="orka-mini-profile" />
             <NameEditor>
                 <div className="orka-input-placeholder">{name}</div>
