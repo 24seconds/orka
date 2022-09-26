@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
+import MyProfileAndActivityPageComponent from "../MyProfileAndActivityPage/MyProfileAndActivityLayoutComponent";
 import NotificationLayoutComponent from "../NotificationPage/NotificationLayoutComponent";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
 import TabComponent from "./TabComponent";
@@ -72,7 +73,7 @@ function MainLayoutComponent() {
             {
                 {
                     [Tabs.Home]: <PeerListLayoutComponent />,
-                    [Tabs.Profile]: <PeerListLayoutComponent />,
+                    [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
                     [Tabs.Notification]: <NotificationLayoutComponent />,
                 }[selectedTab]
             }
