@@ -1,10 +1,14 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import DataUsageStatusComponent from "./DataUsageStatusComponent";
 import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
+
+const selectedStyle = css`
+    background: ${(props) => props.theme.Grayscale04};
+`;
 
 const ActivityRow = styled.div`
     display: flex;
@@ -13,6 +17,9 @@ const ActivityRow = styled.div`
     height: 128px;
     /* margin: 0 32px; */
     /* background: red; */
+    cursor: pointer;
+
+    ${(props) => props.isSelected && selectedStyle}
 
     .orka-data-type-holder {
         margin-left: 32px;
@@ -82,10 +89,15 @@ const FileMetaData = styled.div`
 
 // TODO(young): refactor this later. dataType is used in several ways.
 function ActivityRowComponent(props) {
-    const { dataType, displayName } = props;
+    const { dataType, displayName, isSelected, onClick, rowID } = props;
 
     return (
-        <ActivityRow>
+        <ActivityRow
+            isSelected={isSelected}
+            onClick={() => {
+                onClick(rowID);
+            }}
+        >
             <DataTypeHolder className="orka-data-type-holder">
                 {/* TODO(young): refactor this part. 
                     if the dataType is FILE then extract extensions. FILE type's default is 'FILE'  */}

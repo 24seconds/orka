@@ -32,7 +32,7 @@ const HandsUpSection = styled.div`
 `;
 
 function HandsUpSectionComponent(props) {
-    const { className } = props;
+    const { className, activeRow, onClick } = props;
 
     return (
         <HandsUpSection className={className}>
@@ -40,8 +40,16 @@ function HandsUpSectionComponent(props) {
                 <HandsUpIcon />
                 <span> Hands Up!</span>
             </HandsUpTitle>
-            <ActivityRowComponent />
-            <ActivityRowComponent />
+            <ActivityRowComponent
+                rowID={"row-id-handsup-1"}
+                isSelected={activeRow === "row-id-handsup-1"}
+                onClick={onClick}
+            />
+            <ActivityRowComponent
+                rowID={"row-id-handsup-2"}
+                isSelected={activeRow === "row-id-handsup-2"}
+                onClick={onClick}
+            />
             <SectionDivider />
         </HandsUpSection>
     );

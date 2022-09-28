@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
+import { updateSelectedRowID } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -90,6 +91,8 @@ const ActivityFilterAndSortContainer = styled.div`
 `;
 
 const ActivityRowContainer = styled.div`
+    height: 200px;
+
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
 
@@ -101,7 +104,23 @@ const ActivityRowContainer = styled.div`
     }
 `;
 
-function ActivityContainerComponent() {
+function ActivityContainerComponent(props) {
+    const [activeRow, setActiveRow] = useState(null);
+
+    function onClick(rowID) {
+        console.log("onClick called, rowID:", rowID);
+        if (rowID === activeRow) {
+            setActiveRow(null);
+            // dispatch function?
+            updateSelectedRowID(null);
+        } else {
+            setActiveRow(rowID);
+            updateSelectedRowID(rowID);
+        }
+    }
+
+    const naiveActivityRowIds = ["row-id-1", "row-id-2", "row-id-3"];
+
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
@@ -115,7 +134,7 @@ function ActivityContainerComponent() {
                     <CloseIcon />
                 </IconContainer>
             </ActivityTitleContainer>
-            <StyledHandsUpSection></StyledHandsUpSection>
+            <StyledHandsUpSection activeRow={activeRow} onClick={onClick} />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     <FilterTabComponent name="ALL" />
@@ -125,9 +144,14 @@ function ActivityContainerComponent() {
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                <ActivityRowComponent />
-                <ActivityRowComponent />
-                <ActivityRowComponent />
+                {naiveActivityRowIds.map((rowID) => (
+                    <ActivityRowComponent
+                        key={rowID}
+                        rowID={rowID}
+                        isSelected={activeRow === rowID}
+                        onClick={onClick}
+                    />
+                ))}
             </ActivityRowContainer>
         </ActivityContainer>
     );
