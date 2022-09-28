@@ -9,6 +9,7 @@ import {
     UPDATE_PROGRESS,
     UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
     ADD_SYSTEM_MESSAGE,
+    UPDATE_SELECTED_PEER,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -58,4 +59,9 @@ export const updateIsSystemMessageTabSelected = () => ({
 export const addSystemMessage = (systemMessage) => ({
     type: ADD_SYSTEM_MESSAGE,
     payload: systemMessage,
+});
+
+export const updateSelectedPeer = (peerUUID) => ({
+    type: UPDATE_SELECTED_PEER,
+    payload: peerUUID,
 });

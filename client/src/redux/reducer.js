@@ -9,6 +9,7 @@ import {
     UPDATE_PROGRESS,
     UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
     ADD_SYSTEM_MESSAGE,
+    UPDATE_SELECTED_PEER,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -141,6 +142,16 @@ function systemMessageMetaData(
     return state;
 }
 
+function selectedPeer(state = null, action) {
+    if (action.type === UPDATE_SELECTED_PEER) {
+        const newState = action.payload;
+
+        return newState;
+    }
+
+    return state;
+}
+
 const defaultSystemMessage = {
     message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
     fingerprint: generateFingerPrint(),
@@ -167,4 +178,5 @@ export default combineReducers({
     messageProgresses,
     systemMessageMetaData,
     systemMessages,
+    selectedPeer,
 });
