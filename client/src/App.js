@@ -15,11 +15,20 @@ import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 import CommentLayoutComponent from "./components/CommentPage/CommentLayoutComponent";
+import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    background-color: ${(props) => props.theme.Black};
+    background-color: ${(props) => props.theme.Grayscale05};
   }
+`;
+
+const OrkaLightAndDarkContainerComponent = styled(
+    LightAndDarkContainerComponent
+)`
+    position: fixed;
+    top: 36px;
+    right: 40px;
 `;
 
 const OrkaApp = styled.div`
@@ -127,6 +136,10 @@ class App extends Component {
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
                 <OrkaApp className="App">
+                    <OrkaLightAndDarkContainerComponent
+                        onChangeTheme={this.onChangeTheme}
+                        theme={colorTheme}
+                    />
                     <OrkaTitle>orka</OrkaTitle>
                     <OrkaContainer>
                         <MainLayoutComponent />
