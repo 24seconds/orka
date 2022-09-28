@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { updateSelectedPeerUUID } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
 
 const PeerListLayout = styled.div`
@@ -14,8 +15,12 @@ function PeerListLayoutComponent() {
     function onClick(uuid) {
         if (uuid === activePeer) {
             setActivePeer(null);
+            // TODO(young): This might be a bad practice. Refactor this later.
+            updateSelectedPeerUUID(null);
         } else {
             setActivePeer(uuid);
+            // TODO(young): This might be a bad practice. Refactor this later.
+            updateSelectedPeerUUID(uuid);
         }
     }
 

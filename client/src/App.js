@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { connect } from "react-redux";
 import "./utils/localApi";
 import "./utils/window";
 import HeaderComponent from "./components/HeaderComponent";
@@ -115,9 +116,11 @@ class App extends Component {
     }
 
     render() {
+        const { selectedPeer } = this.props;
         const { colorTheme } = this.state;
 
         console.log("colorTheme is ", colorTheme);
+        console.log("selectedPeer:", selectedPeer);
 
         return (
             <ThemeProvider theme={colorTheme}>
@@ -126,7 +129,7 @@ class App extends Component {
                     <OrkaTitle>orka</OrkaTitle>
                     <OrkaContainer>
                         <MainLayoutComponent />
-                        <PeerActivityLayout />
+                        {selectedPeer !== null && <PeerActivityLayout />}
                         <CommentLayoutComponent />
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
@@ -147,4 +150,8 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+    selectedPeer: state.selectedPeer,
+});
+
+export default connect(mapStateToProps)(App);
