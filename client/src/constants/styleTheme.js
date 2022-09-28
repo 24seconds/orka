@@ -564,6 +564,7 @@ export const ThemeLightOwl = {
 
 export const ColorThemes = {
     ThemeOrkaDark,
+    ThemeOrkaLight,
     MaterialThemeOceanic,
     MaterialThemePalenight,
     MaterialThemeDarker,
