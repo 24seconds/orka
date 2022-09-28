@@ -10,6 +10,7 @@ import {
     UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
     ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
+    UPDATE_SELECTED_ROW,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -64,4 +65,9 @@ export const addSystemMessage = (systemMessage) => ({
 export const updateSelectedPeer = (peerUUID) => ({
     type: UPDATE_SELECTED_PEER,
     payload: peerUUID,
+});
+
+export const updateSelectedRow = (rowID) => ({
+    type: UPDATE_SELECTED_ROW,
+    payload: rowID,
 });

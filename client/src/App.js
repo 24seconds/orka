@@ -116,11 +116,12 @@ class App extends Component {
     }
 
     render() {
-        const { selectedPeer } = this.props;
+        const { selectedPeer, selectedRow } = this.props;
         const { colorTheme } = this.state;
 
         console.log("colorTheme is ", colorTheme);
         console.log("selectedPeer:", selectedPeer);
+        console.log("selectedRow:", selectedRow);
 
         return (
             <ThemeProvider theme={colorTheme}>
@@ -130,7 +131,7 @@ class App extends Component {
                     <OrkaContainer>
                         <MainLayoutComponent />
                         {selectedPeer !== null && <PeerActivityLayout />}
-                        <CommentLayoutComponent />
+                        {selectedRow != null && <CommentLayoutComponent />}
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                             <SendComponent />
@@ -152,6 +153,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     selectedPeer: state.selectedPeer,
+    selectedRow: state.selectedRow,
 });
 
 export default connect(mapStateToProps)(App);

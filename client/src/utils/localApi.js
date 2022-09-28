@@ -18,6 +18,7 @@ import {
     updateMyUUID,
     addSystemMessage,
     updateSelectedPeer,
+    updateSelectedRow,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { getCurrentTime, generateFingerPrint } from "./commonUtil";
@@ -214,6 +215,10 @@ function updateSelectedPeerUUID(uuid) {
     store.dispatch(updateSelectedPeer(uuid));
 }
 
+function updateSelectedRowID(id) {
+    store.dispatch(updateSelectedRow(id));
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -236,4 +241,5 @@ export {
     writeSystemMessage,
     abortDownloadFile,
     updateSelectedPeerUUID,
+    updateSelectedRowID,
 };
