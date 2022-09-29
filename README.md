@@ -7,7 +7,7 @@ https://dev.orka.run/
 README is not correct. WIP
 Orka is renewal version of Localdrop!
 
-[`LocalDrop`](https://localdrop.me) is peer to peer LAN(Local Area Network) data sharing service.  
+[`Orka`](https://orka.run) is peer to peer LAN(Local Area Network) data sharing service.  
 
 
 ## [Table of Contents](#table-of-Contents)
