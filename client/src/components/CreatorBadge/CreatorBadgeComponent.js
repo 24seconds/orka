@@ -13,6 +13,7 @@ const CreatorBadge = styled.div`
 const Container = styled.div`
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     font-weight: 300;
     font-size: 18px;
@@ -39,15 +40,24 @@ const Container = styled.div`
 function CreatorBadgeComponent(props) {
     const { className } = props;
 
+    function onClickGithub() {
+        window.open("https://github.com/24seconds/orka", "_blank");
+    }
+
+    function onClickBehance() {
+        window.open("https://www.behance.net/goodman089e31", "_blank");
+
+    }
+
     return (
         <CreatorBadge className={className}>
-            <Container>
+            <Container onClick={onClickGithub}>
                 <div className="orka-github-logo">
                     <GithubLogo />
                 </div>
                 <span>24seconds</span>
             </Container>
-            <Container>
+            <Container onClick={onClickBehance}>
                 <BehanceLogo />
                 <span>Sunghwan Kim</span>
             </Container>
