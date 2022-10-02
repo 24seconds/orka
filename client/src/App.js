@@ -16,6 +16,7 @@ import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 import CommentLayoutComponent from "./components/CommentPage/CommentLayoutComponent";
 import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
+import CreatorBadgeComponent from "./components/CreatorBadge/CreatorBadgeComponent";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -29,6 +30,12 @@ const OrkaLightAndDarkContainerComponent = styled(
     position: fixed;
     top: 36px;
     right: 40px;
+`;
+
+const OrkaCreatorBadgeComponent = styled(CreatorBadgeComponent)`
+    position: fixed;
+    top: 38px;
+    left: 40px;
 `;
 
 const OrkaApp = styled.div`
@@ -136,6 +143,7 @@ class App extends Component {
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
                 <OrkaApp className="App">
+                    <OrkaCreatorBadgeComponent />
                     <OrkaLightAndDarkContainerComponent
                         onChangeTheme={this.onChangeTheme}
                         theme={colorTheme}

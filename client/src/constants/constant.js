@@ -7,6 +7,8 @@ export const LOCALDROP_APP_VERSION =
 export const DATACHANNEL_MAX_BUFFERED_AMOUNT = 8 * 1024 * 1024;
 export const DATACHANNEL_BUFFER_THRESHOLD = 65535;
 
+export const THEME_ORKA_DARK = "OrkaDark";
+
 export const Tabs = Object.freeze({
     Home: "Home",
     Profile: "Profile",

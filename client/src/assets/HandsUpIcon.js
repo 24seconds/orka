@@ -11,10 +11,10 @@ function Icon() {
       fill="none"
       viewBox="0 0 26 26"
     >
-      <path fill="url(#pattern0)" d="M0 0H26V26H0z"></path>
+      <path fill="url(#patternHandsUp)" d="M0 0H26V26H0z"></path>
       <defs>
         <pattern
-          id="pattern0"
+          id="patternHandsUp"
           width="1"
           height="1"
           patternContentUnits="objectBoundingBox"
