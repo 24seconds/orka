@@ -1,7 +1,8 @@
+import { THEME_ORKA_DARK } from "./constant";
 import { FontFamily } from "./styleConstants";
 
 export const ThemeOrkaDark = {
-    name: "OrkaDark",
+    name: THEME_ORKA_DARK,
 
     White: "#FFFFFF",
     Gray: "#959CA8",
