@@ -7649,6 +7649,11 @@ globby@^9.2.0:
     pify "^4.0.1"
     slash "^2.0.0"
 
+gluesql@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/gluesql/-/gluesql-0.12.0.tgz#e41d42e0a728c2948226abbd9db4d2059dfedda1"
+  integrity sha512-Py7taOVE+vpqkD+GTuIiwjUnIQQsKsak4nEWyDHNuUV0jjfaWE/kxH7R5pZO1TbOcBTZMApGvuzYy9F4Wbw4fQ==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.6, graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
