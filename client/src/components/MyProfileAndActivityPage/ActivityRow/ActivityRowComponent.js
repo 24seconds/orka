@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import DataUsageStatusComponent from "./DataUsageStatusComponent";
@@ -87,9 +87,40 @@ const FileMetaData = styled.div`
     }
 `;
 
+function convertByteToHumanReadable(size) {
+    if (!size) {
+        return `Unknown`;
+    }
+
+    let s = size;
+    for (const dimension of ["B", "KB", "MB", "GB"]) {
+        if (s < 1024) {
+            return `${Math.round(s)} ${dimension}`;
+        }
+        s = size / 1024;
+    }
+
+    return `Too large`;
+}
+
 // TODO(young): refactor this later. dataType is used in several ways.
 function ActivityRowComponent(props) {
-    const { dataType, displayName, isSelected, onClick, rowID } = props;
+    const {
+        dataType,
+        displayName,
+        isSelected,
+        onClick,
+        // rowID is data ID
+        rowID,
+        usageCount,
+        size,
+        commentCount,
+    } = props;
+
+    const sizeHumanReadable = useMemo(
+        () => convertByteToHumanReadable(size),
+        [size]
+    );
 
     return (
         <ActivityRow
@@ -110,19 +141,23 @@ function ActivityRowComponent(props) {
                         <div className="orka-size-and-timestamp">
                             {dataType === "TXT"
                                 ? "URL description blah blah blah | 20H ago"
-                                : "51KB | 20H ago"}
+                                : `${sizeHumanReadable} | 20H ago`}
                         </div>
                     </FileMetaData>
                 </div>
                 <DataUsageStatusComponent
-                    text={dataType === "TXT" ? "0 views" : "0 downloaded"}
+                    text={
+                        dataType === "TXT"
+                            ? `${usageCount} views`
+                            : `${usageCount} downloaded`
+                    }
                 />
             </div>
             <div className="orka-action-container">
                 {dataType === "TXT" ? (
                     <TextCopyComponent text="https://github.com/24seconds/orka" />
                 ) : (
-                    <FileCommentExpandComponent count={10} />
+                    <FileCommentExpandComponent count={commentCount} />
                 )}
                 <ActionButtonComponent
                     type={dataType === "TXT" ? "TEXT" : "FILE"}
@@ -135,11 +170,15 @@ function ActivityRowComponent(props) {
 ActivityRowComponent.propTypes = {
     dataType: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
+    usageCount: PropTypes.number.isRequired,
+    commentCount: PropTypes.number.isRequired,
 };
 
 ActivityRowComponent.defaultProps = {
     dataType: "PNG",
     displayName: "",
+    usageCount: 0,
+    commentCount: 0,
 };
 
 export default ActivityRowComponent;

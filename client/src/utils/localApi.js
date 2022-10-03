@@ -30,7 +30,12 @@ import {
     handleDataChannelClose,
 } from "./downloadManager";
 import { run } from "./database/database";
-import { TABLE_FILES, TABLE_LINKS, TABLE_USERS } from "./database/schema";
+import {
+    TABLE_COMMENTS,
+    TABLE_FILES,
+    TABLE_LINKS,
+    TABLE_USERS,
+} from "./database/schema";
 
 function sendTextToPeer(uuid, text) {
     const event = new LocalDropEvent(
@@ -228,28 +233,57 @@ function updateTableUsers() {
 
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
+    console.log("query:", query);
 
     // need to use try catch?
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
 
 async function selectTableFiles() {
     const query = `SELECT * FROM ${TABLE_FILES.name}`;
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
 
 async function selectTableLinks() {
     const query = `SELECT * FROM ${TABLE_LINKS.name}`;
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableFilesWithCommentCount() {
+    const query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_FILES.fields.id};`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableLinksWithCommentCount() {
+    const query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY l.${TABLE_LINKS.fields.id};`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -282,4 +316,6 @@ export {
     selectTableUsers,
     selectTableFiles,
     selectTableLinks,
+    selectTableFilesWithCommentCount,
+    selectTableLinksWithCommentCount,
 };

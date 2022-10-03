@@ -14,6 +14,7 @@ import {
     UPDATE_TABLE_USERS,
     UPDATE_TABLE_FILES,
     UPDATE_TABLE_LINKS,
+    UPDATE_TABLE_COMMENTS,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -87,5 +88,10 @@ export const updateTableFiles = () => ({
 
 export const updateTableLinks = () => ({
     type: UPDATE_TABLE_LINKS,
+    payload: 0,
+});
+
+export const updateTableComments = () => ({
+    type: UPDATE_TABLE_COMMENTS,
     payload: 0,
 });

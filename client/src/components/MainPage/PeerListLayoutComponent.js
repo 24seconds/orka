@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { isCompositeComponent } from "react-dom/test-utils";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
-import { selectTableUsers, updateSelectedPeerUUID, updateTableUsers } from "../../utils/localApi";
+import {
+    selectTableUsers,
+    updateSelectedPeerUUID,
+    updateTableUsers,
+} from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
 
 const PeerListLayout = styled.div`
@@ -21,13 +25,13 @@ function PeerListLayoutComponent() {
     useEffect(() => {
         (async () => {
             const users = await selectTableUsers();
+            console.table(users);
             console.log("users:", users, users.length);
-            setPeers(users.map(u => u.id));
-        })()
+            setPeers(users.map((u) => u.id));
+        })();
         console.log("useEffect called");
 
-        selectTableUsers()
-
+        selectTableUsers();
     }, [tableUsers]);
 
     function onClick(uuid) {

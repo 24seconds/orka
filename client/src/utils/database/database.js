@@ -5,6 +5,9 @@ async function initializeDb() {
     console.log("getExpDb called");
     const glue = await gluesql();
 
+    // debug purpose code
+    window.glue = glue;
+
     await glue.query(DDLQueries);
 
     // insert test purpose data
@@ -36,8 +39,46 @@ async function initializeDb() {
 
     await glue.query(`
         INSERT INTO comments VALUES (
-            "naive-comment-id-2", "naive-file-name-1", "FILE", "hoho", 
+            "naive-comment-id-2", "naive-file-id-1", "FILE", "hoho", 
             "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+    await glue.query(`
+            INSERT INTO comments VALUES (
+                "naive-comment-id-3", "naive-file-id-1", "FILE", "hoho", 
+                "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+    await glue.query(`
+                INSERT INTO comments VALUES (
+                    "naive-comment-id-4", "naive-file-id-1", "FILE", "hoho", 
+                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+
+    await glue.query(`
+                INSERT INTO comments VALUES (
+                    "naive-comment-id-5", "naive-file-id-2", "FILE", "hoho", 
+                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+
+    await glue.query(`
+                INSERT INTO comments VALUES (
+                    "naive-comment-id-6", "naive-file-id-2", "FILE", "hoho", 
+                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+
+    let q = `SELECT
+    f.*, COUNT(*)
+  FROM links f
+  LEFT JOIN comments c ON f.id = c.data_id
+  GROUP BY f.id`;
+
+    const resp = await glue.query(q);
+    console.table(resp?.[0]?.rows);
+    console.log("==================");
+
+    q = `SELECT
+    f.*, COUNT(*)
+  FROM files f
+  LEFT JOIN comments c ON f.id = c.data_id
+  GROUP BY f.id`;
+
+    const resp2 = await glue.query(q);
+    console.table(resp2?.[0]?.rows);
+    console.log("==================");
 
     return glue;
 }
