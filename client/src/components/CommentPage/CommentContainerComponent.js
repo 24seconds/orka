@@ -8,7 +8,9 @@ import {
     selectTableCommentMetadataByDataID,
     selectTableCommentsByDataID,
     selectTableUsersByID,
+    updateSelectedRowID,
 } from "../../utils/localApi";
+import { updateSelectedRow } from "../../redux/action";
 
 const StyledCommentRowComponent = styled(CommentRowComponent)`
     margin: 0 32px 28px 32px;
@@ -126,11 +128,18 @@ function CommentContainerComponent() {
         })();
     }, [dataID, senderID, tableComments]);
 
+    function onClose() {
+        console.log("onClose called");
+        updateSelectedRowID(null);
+    }
+
     return (
         <CommentContainer>
             <CommentTitleContainer>
                 <CommentTitle className="orka-title">Comments</CommentTitle>
-                <CloseIcon />
+                <div onClick={onClose}>
+                    <CloseIcon />
+                </div>
             </CommentTitleContainer>
             <CommentRowContainer className="hoho">
                 {user &&

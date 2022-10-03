@@ -61,8 +61,12 @@ function renderNotificationRow(notification, activeRow, onClick) {
 }
 
 function NotificationContainerComponent() {
-    const [activeRow, setActiveRow] = useState(null);
     const [notifications, setNotifications] = useState([]);
+
+    const selectedRowID = useSelector(
+        (state) => state.selectedRow,
+        shallowEqual
+    );
 
     const tableNotifications = useSelector(
         (state) => state.tableNotifications,
@@ -81,12 +85,10 @@ function NotificationContainerComponent() {
 
     function onClick(notificationID, dataID, senderID) {
         console.log("onClick called, rowID:", notificationID);
-        if (notificationID === activeRow) {
-            setActiveRow(null);
+        if (notificationID === selectedRowID) {
             updateSelectedRowID(null);
         } else {
-            setActiveRow(notificationID);
-            updateSelectedRowID(dataID);
+            updateSelectedRowID(notificationID);
         }
         updateSender(senderID);
     }
@@ -97,7 +99,7 @@ function NotificationContainerComponent() {
                 Notification
             </NotificationContainerTitle>
             {notifications.map((n) =>
-                renderNotificationRow(n, activeRow, onClick)
+                renderNotificationRow(n, selectedRowID, onClick)
             )}
         </NotificationContainer>
     );
