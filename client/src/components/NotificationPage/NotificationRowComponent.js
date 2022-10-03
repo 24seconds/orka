@@ -58,7 +58,7 @@ function NotificationRowComponent(props) {
         <NotificationRow
             className={className}
             isActive={isActive}
-            onClick={ () => onClick?.(rowID)}
+            onClick={() => onClick?.(rowID)}
         >
             <PeerProfile className="orka-peer-profile"></PeerProfile>
             <InfoContainer className="orka-info-container">
