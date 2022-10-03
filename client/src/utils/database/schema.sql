@@ -3,17 +3,16 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(50) NOT NULL,
     profile INT8 NOT NULL
 );
--- data: file type
 CREATE TABLE IF NOT EXISTS files (
     id CHAR(16) PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     size INT32 NOT NULL,
+    type VARCHAR(50) NOT NULL,
     download_count INT16 NOT NULL,
     hands_up BOOLEAN NOT NULL,
     uploaded_by CHAR(16) NOT NULL,
     uploaded_at TIMESTAMP NOT NULL
 );
--- data: link type
 CREATE TABLE IF NOT EXISTS links (
     id CHAR(16) PRIMARY KEY,
     text TEXT NOT NULL,
@@ -37,6 +36,7 @@ CREATE TABLE IF NOT EXISTS comment_metadata (
 );
 CREATE TABLE IF NOT EXISTS notifications (
     id CHAR(16) PRIMARY KEY,
+    type VARCHAR(50) NOT NULL,
     text TEXT NOT NULL,
     data_id CHAR(16) NOT NULL,
     data_type VARCHAR(16) NOT NULL,

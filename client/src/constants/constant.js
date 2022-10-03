@@ -14,3 +14,6 @@ export const Tabs = Object.freeze({
     Profile: "Profile",
     Notification: "Notification",
 });
+
+export const DATATYPE_FILE = "FILE";
+export const DATATYPE_LINK = "LINK";

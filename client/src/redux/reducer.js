@@ -11,6 +11,13 @@ import {
     ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
+    UPDATE_TABLE_USERS,
+    UPDATE_TABLE_FILES,
+    UPDATE_TABLE_LINKS,
+    UPDATE_TABLE_COMMENTS,
+    UPDATE_SENDER_ID,
+    UPDATE_TABLE_COMMENT_METADATA,
+    UPDATE_TABLE_NOTIFICATIONS,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -163,6 +170,76 @@ function selectedRow(state = null, action) {
     return state;
 }
 
+function selectedSender(state = null, action) {
+    if (action.type === UPDATE_SENDER_ID) {
+        const newState = action.payload;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableUsers(state = 0, action) {
+    if (action.type === UPDATE_TABLE_USERS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableFiles(state = 0, action) {
+    if (action.type === UPDATE_TABLE_FILES) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableLinks(state = 0, action) {
+    if (action.type === UPDATE_TABLE_LINKS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableComments(state = 0, action) {
+    if (action.type === UPDATE_TABLE_COMMENTS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableCommentMetadata(state = 0, action) {
+    if (action.type === UPDATE_TABLE_COMMENT_METADATA) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
+function tableNotifications(state = 0, action) {
+    if (action.type === UPDATE_TABLE_NOTIFICATIONS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
 const defaultSystemMessage = {
     message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
     fingerprint: generateFingerPrint(),
@@ -191,4 +268,11 @@ export default combineReducers({
     systemMessages,
     selectedPeer,
     selectedRow,
+    selectedSender,
+    tableUsers,
+    tableFiles,
+    tableLinks,
+    tableComments,
+    tableCommentMetadata,
+    tableNotifications,
 });

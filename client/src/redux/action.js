@@ -11,6 +11,13 @@ import {
     ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
+    UPDATE_TABLE_USERS,
+    UPDATE_TABLE_FILES,
+    UPDATE_TABLE_LINKS,
+    UPDATE_TABLE_COMMENTS,
+    UPDATE_SENDER_ID,
+    UPDATE_TABLE_COMMENT_METADATA,
+    UPDATE_TABLE_NOTIFICATIONS,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -70,4 +77,39 @@ export const updateSelectedPeer = (peerUUID) => ({
 export const updateSelectedRow = (rowID) => ({
     type: UPDATE_SELECTED_ROW,
     payload: rowID,
+});
+
+export const updateSenderID = (senderID) => ({
+    type: UPDATE_SENDER_ID,
+    payload: senderID,
+});
+
+export const updateTableUsers = () => ({
+    type: UPDATE_TABLE_USERS,
+    payload: 0,
+});
+
+export const updateTableFiles = () => ({
+    type: UPDATE_TABLE_FILES,
+    payload: 0,
+});
+
+export const updateTableLinks = () => ({
+    type: UPDATE_TABLE_LINKS,
+    payload: 0,
+});
+
+export const updateTableComments = () => ({
+    type: UPDATE_TABLE_COMMENTS,
+    payload: 0,
+});
+
+export const updateTableCommentMetadata = () => ({
+    type: UPDATE_TABLE_COMMENT_METADATA,
+    payload: 0,
+});
+
+export const updateTableNotifications = () => ({
+    type: UPDATE_TABLE_NOTIFICATIONS,
+    payload: 0,
 });

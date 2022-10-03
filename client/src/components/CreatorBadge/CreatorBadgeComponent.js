@@ -46,7 +46,6 @@ function CreatorBadgeComponent(props) {
 
     function onClickBehance() {
         window.open("https://www.behance.net/goodman089e31", "_blank");
-
     }
 
     return (

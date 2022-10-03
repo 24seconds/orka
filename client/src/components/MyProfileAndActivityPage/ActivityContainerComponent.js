@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
-import { updateSelectedRowID } from "../../utils/localApi";
+import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import {
+    selectTableFiles,
+    selectTableFilesWithCommentCount,
+    selectTableLinksWithCommentCount,
+    selectTableLinks,
+    updateSelectedRowID,
+    updateSender,
+} from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -104,10 +113,76 @@ const ActivityRowContainer = styled.div`
     }
 `;
 
+// TODO(young): use this later.
+function getFileExtension(name) {
+    return name.slice((Math.max(0, name.lastIndexOf(".")) || Infinity) + 1);
+}
+
+function renderActivityRowComponent(data, activeRow, onClick) {
+    if (data?.dataType === DATATYPE_FILE) {
+        return (
+            <ActivityRowComponent
+                key={data.id}
+                rowID={data.id}
+                senderID={data.uploaded_by}
+                isSelected={activeRow === data.id}
+                dataType={data.type}
+                displayName={data.name}
+                size={data.size}
+                usageCount={data.download_count}
+                commentCount={data.comment_count}
+                onClick={onClick}
+            />
+        );
+    } else {
+        // LINK type
+        return (
+            <ActivityRowComponent
+                key={data.id}
+                rowID={data.id}
+                senderID={data.uploaded_by}
+                isSelected={activeRow === data.id}
+                dataType={"TXT"}
+                onClick={onClick}
+                usageCount={data.view_count}
+                commentCount={data.comment_count}
+            />
+        );
+    }
+}
+
 function ActivityContainerComponent(props) {
     const [activeRow, setActiveRow] = useState(null);
+    const [data, setData] = useState([]);
 
-    function onClick(rowID) {
+    const tableFiles = useSelector((state) => state.tableFiles, shallowEqual);
+    const tableLinks = useSelector((state) => state.tableLinks, shallowEqual);
+
+    useEffect(() => {
+        (async () => {
+            const [files, links] = await Promise.all([
+                selectTableFilesWithCommentCount(),
+                selectTableLinksWithCommentCount(),
+            ]);
+
+            const filesWithType = files.map((f) => {
+                return { ...f, dataType: DATATYPE_FILE };
+            });
+            const linksWithType = links.map((l) => {
+                return { ...l, dataType: DATATYPE_LINK };
+            });
+
+            console.table(filesWithType);
+            console.table(linksWithType);
+
+            setData([...filesWithType, ...linksWithType]);
+        })();
+    }, [tableFiles, tableLinks]);
+
+    const handsUpData = data.filter((d) => d.handsUp);
+    const restData = data.filter((d) => !d.handsUp);
+
+    function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
         if (rowID === activeRow) {
             setActiveRow(null);
@@ -117,9 +192,8 @@ function ActivityContainerComponent(props) {
             setActiveRow(rowID);
             updateSelectedRowID(rowID);
         }
+        updateSender(senderID);
     }
-
-    const naiveActivityRowIds = ["row-id-1", "row-id-2", "row-id-3"];
 
     return (
         <ActivityContainer>
@@ -144,14 +218,9 @@ function ActivityContainerComponent(props) {
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                {naiveActivityRowIds.map((rowID) => (
-                    <ActivityRowComponent
-                        key={rowID}
-                        rowID={rowID}
-                        isSelected={activeRow === rowID}
-                        onClick={onClick}
-                    />
-                ))}
+                {restData.map((d) =>
+                    renderActivityRowComponent(d, activeRow, onClick)
+                )}
             </ActivityRowContainer>
         </ActivityContainer>
     );

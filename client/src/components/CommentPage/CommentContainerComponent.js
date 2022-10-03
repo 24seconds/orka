@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
 import CommentRowComponent from "./CommentRowComponent";
 import CommentInputComponent from "./CommentInputComponent";
+import { shallowEqual, useSelector } from "react-redux";
+import {
+    selectTableCommentMetadataByDataID,
+    selectTableCommentsByDataID,
+    selectTableUsersByID,
+    updateSelectedRowID,
+} from "../../utils/localApi";
+import { updateSelectedRow } from "../../redux/action";
 
 const StyledCommentRowComponent = styled(CommentRowComponent)`
     margin: 0 32px 28px 32px;
@@ -67,26 +75,76 @@ const CommentTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
+function renderCommentRow(comment, user, metadata) {
+    const { id, text, created_at } = comment;
+    const { name } = user;
+    const { last_read_comment_id } = metadata;
+
+    console.log("last_read_comment_id:", last_read_comment_id, id);
+
+    return (
+        <StyledCommentRowComponent
+            key={id}
+            senderName={name}
+            createdAt={new Date(created_at)}
+            text={text}
+            // TODO(young): This should be evaluated using timestamp and id.
+            isRead={last_read_comment_id !== id}
+        />
+    );
+}
+
 function CommentContainerComponent() {
+    const [comments, setComments] = useState([]);
+    const [user, setUser] = useState(null);
+    const [metadata, setMetadata] = useState(null);
+
+    const dataID = useSelector((state) => state.selectedRow, shallowEqual);
+    const senderID = useSelector((state) => state.selectedSender, shallowEqual);
+    const tableComments = useSelector(
+        (state) => state.tableComments,
+        shallowEqual
+    );
+    console.log("dataID:", dataID);
+    console.log("senderID:", senderID);
+
+    useEffect(() => {
+        (async () => {
+            if (!!dataID && !!senderID) {
+                const [comments, user, metadata] = await Promise.all([
+                    selectTableCommentsByDataID(dataID, senderID),
+                    selectTableUsersByID(senderID),
+                    selectTableCommentMetadataByDataID(dataID),
+                ]);
+
+                console.table(metadata);
+
+                console.table(comments);
+                setComments(comments);
+                setUser(user?.[0]);
+                // Todo(young): Check metadata table should be subscribed.
+                setMetadata(metadata?.[0]);
+            }
+        })();
+    }, [dataID, senderID, tableComments]);
+
+    function onClose() {
+        console.log("onClose called");
+        updateSelectedRowID(null);
+    }
+
     return (
         <CommentContainer>
             <CommentTitleContainer>
                 <CommentTitle className="orka-title">Comments</CommentTitle>
-                <CloseIcon />
+                <div onClick={onClose}>
+                    <CloseIcon />
+                </div>
             </CommentTitleContainer>
             <CommentRowContainer className="hoho">
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
-                <StyledCommentRowComponent />
+                {user &&
+                    metadata &&
+                    comments.map((c) => renderCommentRow(c, user, metadata))}
             </CommentRowContainer>
             <CommentInputContainer>
                 <StyledCommentInputComponent />

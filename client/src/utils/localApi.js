@@ -19,6 +19,10 @@ import {
     addSystemMessage,
     updateSelectedPeer,
     updateSelectedRow,
+    updateTableUsers as updateTableUsersCounter,
+    updateTableCommentMetadata as updateTableCommentMetadataCounter,
+    updateTableNotifications as updateTableNotificationsCounter,
+    updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { getCurrentTime, generateFingerPrint } from "./commonUtil";
@@ -28,6 +32,15 @@ import {
     isDownloadInProgress,
     handleDataChannelClose,
 } from "./downloadManager";
+import { run } from "./database/database";
+import {
+    TABLE_COMMENTS,
+    TABLE_COMMENT_METADATA,
+    TABLE_FILES,
+    TABLE_LINKS,
+    TABLE_NOTIFICATIONS,
+    TABLE_USERS,
+} from "./database/schema";
 
 function sendTextToPeer(uuid, text) {
     const event = new LocalDropEvent(
@@ -219,6 +232,129 @@ function updateSelectedRowID(id) {
     store.dispatch(updateSelectedRow(id));
 }
 
+function updateTableUsers() {
+    store.dispatch(updateTableUsersCounter());
+}
+
+function updateTableCommentMetadata() {
+    store.dispatch(updateTableCommentMetadataCounter());
+}
+
+function updateTableNotifications() {
+    store.dispatch(updateTableNotificationsCounter());
+}
+
+function updateSender(senderID) {
+    store.dispatch(updateSenderID(senderID));
+}
+
+async function selectTableUsers() {
+    const query = `SELECT * FROM ${TABLE_USERS.name}`;
+    console.log("query:", query);
+
+    // need to use try catch?
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableUsersByID(userID) {
+    const query = `SELECT * FROM ${TABLE_USERS.name}
+        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableFiles() {
+    const query = `SELECT * FROM ${TABLE_FILES.name}`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableLinks() {
+    const query = `SELECT * FROM ${TABLE_LINKS.name}`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableFilesWithCommentCount() {
+    const query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_FILES.fields.id};`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableLinksWithCommentCount() {
+    const query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY l.${TABLE_LINKS.fields.id};`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+// TODO(young): Add logic - filter by receiver ID
+async function selectTableCommentsByDataID(dataID, receiverID) {
+    const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
+        WHERE ${TABLE_COMMENTS.fields.data_id} = "${dataID}"
+        AND ${TABLE_COMMENTS.fields.receiver_id} = "${receiverID}"
+        ORDER BY ${TABLE_COMMENTS.fields.created_at} ASC;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableCommentMetadataByDataID(dataID) {
+    const query = `SELECT * FROM ${TABLE_COMMENT_METADATA.name}
+        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${dataID}";`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableNotifications() {
+    const query = `SELECT * FROM ${TABLE_NOTIFICATIONS.name}
+        ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -242,4 +378,18 @@ export {
     abortDownloadFile,
     updateSelectedPeerUUID,
     updateSelectedRowID,
+    updateSender,
+    // db interfaces
+    updateTableUsers,
+    updateTableCommentMetadata,
+    updateTableNotifications,
+    selectTableUsers,
+    selectTableUsersByID,
+    selectTableFiles,
+    selectTableLinks,
+    selectTableFilesWithCommentCount,
+    selectTableLinksWithCommentCount,
+    selectTableCommentsByDataID,
+    selectTableCommentMetadataByDataID,
+    selectTableNotifications,
 };

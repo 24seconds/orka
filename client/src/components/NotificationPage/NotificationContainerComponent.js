@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NotificationRowComponent from "./NotificationRowComponent";
-import { updateSelectedRowID } from "../../utils/localApi";
+import {
+    selectTableNotifications,
+    updateSelectedRowID,
+    updateSender,
+} from "../../utils/localApi";
+import { shallowEqual, useSelector } from "react-redux";
 
 const StyledNotificationRowComponent = styled(NotificationRowComponent)`
     :last-child {
@@ -38,29 +43,54 @@ const NotificationContainerTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
-const naiveNotificationRowIds = [
-    "row-id-1",
-    "row-id-2",
-    "row-id-3",
-    "row-id-4",
-    "row-id-5",
-    "row-id-6",
-    "row-id-7",
-    "row-id-8",
-];
+function renderNotificationRow(notification, activeRow, onClick) {
+    const { id, type, text, data_id, sender_id } = notification;
+
+    return (
+        <StyledNotificationRowComponent
+            key={id}
+            rowID={id}
+            type={type}
+            dataID={data_id}
+            senderID={sender_id}
+            isActive={activeRow === id}
+            text={text}
+            onClick={onClick}
+        />
+    );
+}
 
 function NotificationContainerComponent() {
-    const [activeRow, setActiveRow] = useState(null);
+    const [notifications, setNotifications] = useState([]);
 
-    function onClick(rowID) {
-        console.log("onClick called, rowID:", rowID);
-        if (rowID === activeRow) {
-            setActiveRow(null);
+    const selectedRowID = useSelector(
+        (state) => state.selectedRow,
+        shallowEqual
+    );
+
+    const tableNotifications = useSelector(
+        (state) => state.tableNotifications,
+        shallowEqual
+    );
+
+    useEffect(() => {
+        (async () => {
+            // TODO(young): select noficiation with user later
+            const notifications = await selectTableNotifications();
+            console.table(notifications);
+
+            setNotifications(notifications);
+        })();
+    }, [tableNotifications]);
+
+    function onClick(notificationID, dataID, senderID) {
+        console.log("onClick called, rowID:", notificationID);
+        if (notificationID === selectedRowID) {
             updateSelectedRowID(null);
         } else {
-            setActiveRow(rowID);
-            updateSelectedRowID(rowID);
+            updateSelectedRowID(notificationID);
         }
+        updateSender(senderID);
     }
 
     return (
@@ -68,14 +98,9 @@ function NotificationContainerComponent() {
             <NotificationContainerTitle>
                 Notification
             </NotificationContainerTitle>
-            {naiveNotificationRowIds.map((rowID) => (
-                <StyledNotificationRowComponent
-                    key={rowID}
-                    rowID={rowID}
-                    isActive={activeRow === rowID}
-                    onClick={onClick}
-                />
-            ))}
+            {notifications.map((n) =>
+                renderNotificationRow(n, selectedRowID, onClick)
+            )}
         </NotificationContainer>
     );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -7,6 +7,7 @@ const NotificationRow = styled.div`
     align-items: center;
     height: 106px;
     padding-left: 32px;
+    cursor: pointer;
 
     .orka-peer-profile {
         margin-right: 14px;
@@ -52,20 +53,43 @@ const TextHighlighter = styled.span`
 `;
 
 function NotificationRowComponent(props) {
-    const { className, isActive, onClick, rowID } = props;
+    const {
+        className,
+        rowID,
+        type,
+        dataID,
+        senderID,
+        isActive,
+        text,
+        onClick,
+    } = props;
 
     return (
         <NotificationRow
             className={className}
             isActive={isActive}
-            onClick={ () => onClick?.(rowID)}
+            onClick={() => onClick?.(rowID, dataID, senderID)}
         >
             <PeerProfile className="orka-peer-profile"></PeerProfile>
             <InfoContainer className="orka-info-container">
                 <div className="orka-text">
-                    <TextHighlighter>Person A</TextHighlighter> was downloaded
-                    <br />
-                    <TextHighlighter>filename.png</TextHighlighter> file!
+                    {type === "STATUS" ? (
+                        <Fragment>
+                            <TextHighlighter>Person A</TextHighlighter>{" "}
+                            downloaded
+                            <br />
+                            <TextHighlighter>filename.png</TextHighlighter>{" "}
+                            file!
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            <TextHighlighter>Person A</TextHighlighter> left a
+                            comment at
+                            <br />
+                            <TextHighlighter>filename.png</TextHighlighter>{" "}
+                            file!
+                        </Fragment>
+                    )}
                 </div>
                 <div className="orka-timestamp">20H ago</div>
             </InfoContainer>

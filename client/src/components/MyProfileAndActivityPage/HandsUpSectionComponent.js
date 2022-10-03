@@ -41,11 +41,6 @@ function HandsUpSectionComponent(props) {
                 <span> Hands Up!</span>
             </HandsUpTitle>
             <ActivityRowComponent
-                rowID={"row-id-handsup-1"}
-                isSelected={activeRow === "row-id-handsup-1"}
-                onClick={onClick}
-            />
-            <ActivityRowComponent
                 rowID={"row-id-handsup-2"}
                 isSelected={activeRow === "row-id-handsup-2"}
                 onClick={onClick}

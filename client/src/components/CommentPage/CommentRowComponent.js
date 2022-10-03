@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const MiniProfile = styled.div`
     display: inline-block;
@@ -68,23 +69,50 @@ const CommentRow = styled.div`
     }
 `;
 
+function convertTimestampTohhmm(date) {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    if (hours <= 12) {
+        return `AM ${hours}:${minutes}`;
+    } else {
+        return `PM ${hours - 12}:${minutes}`;
+    }
+}
+
 function CommentRowComponent(props) {
-    const { className } = props;
+    const { className, senderName, createdAt, text, isRead } = props;
+
+    console.log("createdAt:", createdAt);
+
+    const timestamp = useMemo(() => {
+        return convertTimestampTohhmm(createdAt);
+    }, [createdAt]);
 
     return (
         <CommentRow className={className}>
             <TitleContentStyle>
                 <MiniProfile></MiniProfile>
-                <span className="orka-profile-name">Person 2</span>
-                <span className="orka-timestamp">8:21AM</span>
-                <div className="orka-unread-dot"></div>
+                <span className="orka-profile-name">{senderName}</span>
+                <span className="orka-timestamp">{timestamp}</span>
+                {!isRead && <div className="orka-unread-dot"></div>}
             </TitleContentStyle>
-            <TextContentStyle>
-                i want to download but i
-                can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa
-            </TextContentStyle>
+            <TextContentStyle>{text}</TextContentStyle>
         </CommentRow>
     );
 }
+
+CommentRowComponent.propTypes = {
+    senderName: PropTypes.string.isRequired,
+    // date object
+    createdAt: PropTypes.instanceOf(Date).isRequired,
+    text: PropTypes.string,
+    isRead: PropTypes.bool,
+};
+
+CommentRowComponent.defaultProps = {
+    senderName: "",
+    isRead: true,
+};
 
 export default CommentRowComponent;
