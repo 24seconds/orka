@@ -19,6 +19,7 @@ import {
     addSystemMessage,
     updateSelectedPeer,
     updateSelectedRow,
+    updateTableUsers as updateTableUsersCounter,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { getCurrentTime, generateFingerPrint } from "./commonUtil";
@@ -28,6 +29,8 @@ import {
     isDownloadInProgress,
     handleDataChannelClose,
 } from "./downloadManager";
+import { run } from "./database/database";
+import { TABLE_USERS } from "./database/schema";
 
 function sendTextToPeer(uuid, text) {
     const event = new LocalDropEvent(
@@ -219,6 +222,20 @@ function updateSelectedRowID(id) {
     store.dispatch(updateSelectedRow(id));
 }
 
+function updateTableUsers() {
+    store.dispatch(updateTableUsersCounter());
+}
+
+async function selectTableUsers() {
+    const query = `SELECT * FROM ${TABLE_USERS.name}`;
+
+    // need to use try catch?
+    const result = await run(query);
+    console.log('result:', result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -242,4 +259,7 @@ export {
     abortDownloadFile,
     updateSelectedPeerUUID,
     updateSelectedRowID,
+    updateTableUsers,
+    // db interfaces
+    selectTableUsers,
 };

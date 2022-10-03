@@ -11,6 +11,7 @@ import {
     ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
+    UPDATE_TABLE_USERS,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -163,6 +164,16 @@ function selectedRow(state = null, action) {
     return state;
 }
 
+function tableUsers(state = 0, action) {
+    if (action.type === UPDATE_TABLE_USERS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
 const defaultSystemMessage = {
     message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
     fingerprint: generateFingerPrint(),
@@ -191,4 +202,5 @@ export default combineReducers({
     systemMessages,
     selectedPeer,
     selectedRow,
+    tableUsers,
 });

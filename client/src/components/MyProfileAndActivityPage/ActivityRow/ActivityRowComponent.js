@@ -139,6 +139,7 @@ ActivityRowComponent.propTypes = {
 
 ActivityRowComponent.defaultProps = {
     dataType: "PNG",
+    displayName: "",
 };
 
 export default ActivityRowComponent;

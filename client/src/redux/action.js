@@ -11,6 +11,7 @@ import {
     ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
+    UPDATE_TABLE_USERS,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -70,4 +71,9 @@ export const updateSelectedPeer = (peerUUID) => ({
 export const updateSelectedRow = (rowID) => ({
     type: UPDATE_SELECTED_ROW,
     payload: rowID,
+});
+
+export const updateTableUsers = () => ({
+    type: UPDATE_TABLE_USERS,
+    payload: 0,
 });
