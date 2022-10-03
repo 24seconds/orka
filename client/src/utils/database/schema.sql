@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS files (
     id CHAR(16) PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     size INT32 NOT NULL,
+    type VARCHAR(50) NOT NULL,
     download_count INT16 NOT NULL,
     hands_up BOOLEAN NOT NULL,
     uploaded_by CHAR(16) NOT NULL,

@@ -12,6 +12,8 @@ import {
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
+    UPDATE_TABLE_FILES,
+    UPDATE_TABLE_LINKS,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -75,5 +77,15 @@ export const updateSelectedRow = (rowID) => ({
 
 export const updateTableUsers = () => ({
     type: UPDATE_TABLE_USERS,
+    payload: 0,
+});
+
+export const updateTableFiles = () => ({
+    type: UPDATE_TABLE_FILES,
+    payload: 0,
+});
+
+export const updateTableLinks = () => ({
+    type: UPDATE_TABLE_LINKS,
     payload: 0,
 });

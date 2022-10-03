@@ -30,7 +30,7 @@ import {
     handleDataChannelClose,
 } from "./downloadManager";
 import { run } from "./database/database";
-import { TABLE_USERS } from "./database/schema";
+import { TABLE_FILES, TABLE_LINKS, TABLE_USERS } from "./database/schema";
 
 function sendTextToPeer(uuid, text) {
     const event = new LocalDropEvent(
@@ -236,6 +236,24 @@ async function selectTableUsers() {
     return result?.[0]?.rows;
 }
 
+async function selectTableFiles() {
+    const query = `SELECT * FROM ${TABLE_FILES.name}`;
+
+    const result = await run(query);
+    console.log('result:', result);
+
+    return result?.[0]?.rows;
+}
+
+async function selectTableLinks() {
+    const query = `SELECT * FROM ${TABLE_LINKS.name}`;
+
+    const result = await run(query);
+    console.log('result:', result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -262,4 +280,6 @@ export {
     updateTableUsers,
     // db interfaces
     selectTableUsers,
+    selectTableFiles,
+    selectTableLinks,
 };
