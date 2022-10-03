@@ -17,6 +17,7 @@ import {
     UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
     UPDATE_TABLE_COMMENT_METADATA,
+    UPDATE_TABLE_NOTIFICATIONS,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -229,6 +230,16 @@ function tableCommentMetadata(state = 0, action) {
     return state;
 }
 
+function tableNotifications(state = 0, action) {
+    if (action.type === UPDATE_TABLE_NOTIFICATIONS) {
+        const newState = state + 1;
+
+        return newState;
+    }
+
+    return state;
+}
+
 const defaultSystemMessage = {
     message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
     fingerprint: generateFingerPrint(),
@@ -263,4 +274,5 @@ export default combineReducers({
     tableLinks,
     tableComments,
     tableCommentMetadata,
+    tableNotifications,
 });

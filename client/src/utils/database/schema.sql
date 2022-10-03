@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS comment_metadata (
 );
 CREATE TABLE IF NOT EXISTS notifications (
     id CHAR(16) PRIMARY KEY,
+    type VARCHAR(50) NOT NULL,
     text TEXT NOT NULL,
     data_id CHAR(16) NOT NULL,
     data_type VARCHAR(16) NOT NULL,

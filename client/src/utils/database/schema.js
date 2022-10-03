@@ -60,9 +60,12 @@ const TABLE_NOTIFICATIONS = {
     name: "notifications",
     fields: {
         id: "id",
+        // type could be either STATUS or COMMENT
+        type: "type",
         text: "text",
         data_id: "data_id",
         data_type: "data_type",
+        sender_id: "sender_id",
         created_at: "created_at",
     },
 };
@@ -106,9 +109,11 @@ CREATE TABLE IF NOT EXISTS ${TABLE_COMMENT_METADATA.name} (
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.id} TEXT PRIMARY KEY,
+    ${TABLE_NOTIFICATIONS.fields.type} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.text} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_type} TEXT NOT NULL,
+    ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT,
     ${TABLE_NOTIFICATIONS.fields.created_at} TIMESTAMP NOT NULL
 );
 `;

@@ -71,6 +71,27 @@ async function initializeDb() {
         );
     `);
 
+    await glue.query(`
+        INSERT INTO notifications VALUES (
+            "naive-noti-id-1", "COMMENT", "notification came hohoho", "naive-file-id-2",
+            "FILE", "naive-id-2", "2022-10-02T08:21:00.000Z"
+        );
+    `);
+
+    await glue.query(`
+        INSERT INTO notifications VALUES (
+            "naive-noti-id-2", "COMMENT", "another notification came hohoho", "naive-file-id-1",
+            "FILE", "naive-id-2", "2022-10-02T08:17:00.000Z"
+        );
+    `);
+
+    await glue.query(`
+        INSERT INTO notifications VALUES (
+            "naive-noti-id-3", "STATUS", "peer downloaded!", "naive-link-id-1",
+            "FILE", "naive-id-1", "2022-10-02T12:17:00.000Z"
+        );
+    `);
+
     let q = `SELECT
     f.*, COUNT(*)
   FROM links f

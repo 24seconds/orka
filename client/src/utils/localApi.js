@@ -21,6 +21,7 @@ import {
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
     updateTableCommentMetadata as updateTableCommentMetadataCounter,
+    updateTableNotifications as updateTableNotificationsCounter,
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
@@ -37,6 +38,7 @@ import {
     TABLE_COMMENT_METADATA,
     TABLE_FILES,
     TABLE_LINKS,
+    TABLE_NOTIFICATIONS,
     TABLE_USERS,
 } from "./database/schema";
 
@@ -238,6 +240,10 @@ function updateTableCommentMetadata() {
     store.dispatch(updateTableCommentMetadataCounter());
 }
 
+function updateTableNotifications() {
+    store.dispatch(updateTableNotificationsCounter());
+}
+
 function updateSender(senderID) {
     store.dispatch(updateSenderID(senderID));
 }
@@ -337,6 +343,18 @@ async function selectTableCommentMetadataByDataID(dataID) {
     return result?.[0]?.rows;
 }
 
+async function selectTableNotifications() {
+    const query = `SELECT * FROM ${TABLE_NOTIFICATIONS.name}
+        ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -364,6 +382,7 @@ export {
     // db interfaces
     updateTableUsers,
     updateTableCommentMetadata,
+    updateTableNotifications,
     selectTableUsers,
     selectTableUsersByID,
     selectTableFiles,
@@ -372,4 +391,5 @@ export {
     selectTableLinksWithCommentCount,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
+    selectTableNotifications,
 };
