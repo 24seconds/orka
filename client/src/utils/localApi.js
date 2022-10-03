@@ -20,6 +20,7 @@ import {
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
+    updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { getCurrentTime, generateFingerPrint } from "./commonUtil";
@@ -231,6 +232,10 @@ function updateTableUsers() {
     store.dispatch(updateTableUsersCounter());
 }
 
+function updateSender(senderID) {
+    store.dispatch(updateSenderID(senderID));
+}
+
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
     console.log("query:", query);
@@ -241,6 +246,18 @@ async function selectTableUsers() {
 
     return result?.[0]?.rows;
 }
+
+async function selectTableUsersByID(userID) {
+    const query = `SELECT * FROM ${TABLE_USERS.name}
+        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 
 async function selectTableFiles() {
     const query = `SELECT * FROM ${TABLE_FILES.name}`;
@@ -288,6 +305,21 @@ async function selectTableLinksWithCommentCount() {
     return result?.[0]?.rows;
 }
 
+// TODO(young): Add logic - filter by receiver ID
+async function selectTableCommentsByDataID(dataID, receiverID) {
+    const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
+        WHERE ${TABLE_COMMENTS.fields.data_id} = "${dataID}"
+        AND ${TABLE_COMMENTS.fields.receiver_id} = "${receiverID}"
+        ORDER BY ${TABLE_COMMENTS.fields.created_at} ASC;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -311,11 +343,14 @@ export {
     abortDownloadFile,
     updateSelectedPeerUUID,
     updateSelectedRowID,
-    updateTableUsers,
+    updateSender,
     // db interfaces
+    updateTableUsers,
     selectTableUsers,
+    selectTableUsersByID,
     selectTableFiles,
     selectTableLinks,
     selectTableFilesWithCommentCount,
     selectTableLinksWithCommentCount,
+    selectTableCommentsByDataID,
 };

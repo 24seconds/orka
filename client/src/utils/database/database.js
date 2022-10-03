@@ -17,48 +17,53 @@ async function initializeDb() {
     await glue.query(
         `INSERT INTO users VALUES ("naive-id-2", "naive-name-2", 2);`
     );
+    await glue.query(
+        `INSERT INTO users VALUES ("naive-id-3", "naive-name-2", 2);`
+    );
 
     await glue.query(`
         INSERT INTO files VALUES (
             "naive-file-id-1", "naive-file-name-1", 128, "PNG", 1, false, 
-            "naive-uploader", "2022-10-01T14:48:00.000Z");`);
+            "naive-id-3", "2022-10-01T14:48:00.000Z");`);
     await glue.query(`
-            INSERT INTO files VALUES (
-                "naive-file-id-2", "naive-file-name-2", 256123, "JPEG", 0, true, 
-                "naive-uploader", "2022-10-01T15:48:00.000Z");`);
+        INSERT INTO files VALUES (
+            "naive-file-id-2", "naive-file-name-2", 256123, "JPEG", 0, true, 
+            "naive-id-2", "2022-10-01T15:48:00.000Z");`);
 
     await glue.query(`
-            INSERT INTO links VALUES (
-                "naive-link-id-1", "naive-link-name-1", 0, false, 
-                "naive-uploader", "2022-10-02T15:48:00.000Z");`);
+        INSERT INTO links VALUES (
+            "naive-link-id-1", "naive-link-name-1", 0, false, 
+            "naive-uploader", "2022-10-02T15:48:00.000Z");`);
 
     await glue.query(`
-            INSERT INTO links VALUES (
-                "naive-link-id-2", "naive-link-name-2", 0, false, 
-                "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+        INSERT INTO links VALUES (
+            "naive-link-id-2", "naive-link-name-2", 0, false, 
+            "naive-uploader", "2022-10-02T16:48:00.000Z");`);
 
     await glue.query(`
         INSERT INTO comments VALUES (
-            "naive-comment-id-2", "naive-file-id-1", "FILE", "hoho", 
-            "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+            "naive-comment-id-2", "naive-file-id-1", "FILE", "i want to download but i
+            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
+            "naive-sender", "naive-id-3", "2022-10-02T16:48:00.000Z");`);
     await glue.query(`
-            INSERT INTO comments VALUES (
-                "naive-comment-id-3", "naive-file-id-1", "FILE", "hoho", 
-                "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+        INSERT INTO comments VALUES (
+            "naive-comment-id-3", "naive-file-id-1", "FILE", "hoho", 
+            "naive-sender", "naive-id-3", "2022-10-02T17:48:00.000Z");`);
     await glue.query(`
-                INSERT INTO comments VALUES (
-                    "naive-comment-id-4", "naive-file-id-1", "FILE", "hoho", 
-                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+        INSERT INTO comments VALUES (
+            "naive-comment-id-4", "naive-file-id-1", "FILE", "hoho", 
+            "naive-sender", "naive-uploader", "2022-10-02T12:28:00.000Z");`);
 
     await glue.query(`
-                INSERT INTO comments VALUES (
-                    "naive-comment-id-5", "naive-file-id-2", "FILE", "hoho", 
-                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+        INSERT INTO comments VALUES (
+            "naive-comment-id-5", "naive-file-id-2", "FILE", "hoho", 
+            "naive-sender", "naive-id-2", "2022-10-02T16:48:00.000Z");`);
 
     await glue.query(`
-                INSERT INTO comments VALUES (
-                    "naive-comment-id-6", "naive-file-id-2", "FILE", "hoho", 
-                    "naive-sender", "naive-uploader", "2022-10-02T16:48:00.000Z");`);
+        INSERT INTO comments VALUES (
+            "naive-comment-id-6", "naive-file-id-2", "FILE", "i want to download but i
+            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
+            "naive-sender", "naive-id-2", "2022-10-02T08:21:00.000Z");`);
 
     let q = `SELECT
     f.*, COUNT(*)

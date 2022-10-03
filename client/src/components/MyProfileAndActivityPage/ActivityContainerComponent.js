@@ -9,6 +9,7 @@ import {
     selectTableLinksWithCommentCount,
     selectTableLinks,
     updateSelectedRowID,
+    updateSender,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
@@ -123,6 +124,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
+                senderID={data.uploaded_by}
                 isSelected={activeRow === data.id}
                 dataType={data.type}
                 displayName={data.name}
@@ -138,6 +140,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
+                senderID={data.uploaded_by}
                 isSelected={activeRow === data.id}
                 dataType={"TXT"}
                 onClick={onClick}
@@ -179,7 +182,7 @@ function ActivityContainerComponent(props) {
     const handsUpData = data.filter((d) => d.handsUp);
     const restData = data.filter((d) => !d.handsUp);
 
-    function onClick(rowID) {
+    function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
         if (rowID === activeRow) {
             setActiveRow(null);
@@ -189,6 +192,7 @@ function ActivityContainerComponent(props) {
             setActiveRow(rowID);
             updateSelectedRowID(rowID);
         }
+        updateSender(senderID);
     }
 
     return (

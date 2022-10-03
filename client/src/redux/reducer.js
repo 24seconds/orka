@@ -15,6 +15,7 @@ import {
     UPDATE_TABLE_FILES,
     UPDATE_TABLE_LINKS,
     UPDATE_TABLE_COMMENTS,
+    UPDATE_SENDER_ID,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -167,6 +168,16 @@ function selectedRow(state = null, action) {
     return state;
 }
 
+function selectedSender(state = null, action) {
+    if (action.type === UPDATE_SENDER_ID) {
+        const newState = action.payload;
+
+        return newState;
+    }
+
+    return state;
+}
+
 function tableUsers(state = 0, action) {
     if (action.type === UPDATE_TABLE_USERS) {
         const newState = state + 1;
@@ -198,7 +209,7 @@ function tableLinks(state = 0, action) {
 }
 
 function tableComments(state = 0, action) {
-    if (action.type === UPDATE_TABLE_LINKS) {
+    if (action.type === UPDATE_TABLE_COMMENTS) {
         const newState = state + 1;
 
         return newState;
@@ -235,6 +246,7 @@ export default combineReducers({
     systemMessages,
     selectedPeer,
     selectedRow,
+    selectedSender,
     tableUsers,
     tableFiles,
     tableLinks,

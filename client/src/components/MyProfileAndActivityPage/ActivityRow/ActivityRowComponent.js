@@ -112,6 +112,7 @@ function ActivityRowComponent(props) {
         onClick,
         // rowID is data ID
         rowID,
+        senderID,
         usageCount,
         size,
         commentCount,
@@ -126,7 +127,7 @@ function ActivityRowComponent(props) {
         <ActivityRow
             isSelected={isSelected}
             onClick={() => {
-                onClick(rowID);
+                onClick(rowID, senderID);
             }}
         >
             <DataTypeHolder className="orka-data-type-holder">
