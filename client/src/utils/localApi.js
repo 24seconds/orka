@@ -20,6 +20,7 @@ import {
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
+    updateTableCommentMetadata as updateTableCommentMetadataCounter,
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
@@ -33,6 +34,7 @@ import {
 import { run } from "./database/database";
 import {
     TABLE_COMMENTS,
+    TABLE_COMMENT_METADATA,
     TABLE_FILES,
     TABLE_LINKS,
     TABLE_USERS,
@@ -232,6 +234,10 @@ function updateTableUsers() {
     store.dispatch(updateTableUsersCounter());
 }
 
+function updateTableCommentMetadata() {
+    store.dispatch(updateTableCommentMetadataCounter());
+}
+
 function updateSender(senderID) {
     store.dispatch(updateSenderID(senderID));
 }
@@ -257,7 +263,6 @@ async function selectTableUsersByID(userID) {
 
     return result?.[0]?.rows;
 }
-
 
 async function selectTableFiles() {
     const query = `SELECT * FROM ${TABLE_FILES.name}`;
@@ -320,6 +325,18 @@ async function selectTableCommentsByDataID(dataID, receiverID) {
     return result?.[0]?.rows;
 }
 
+async function selectTableCommentMetadataByDataID(dataID) {
+    const query = `SELECT * FROM ${TABLE_COMMENT_METADATA.name}
+        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${dataID}";`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -346,6 +363,7 @@ export {
     updateSender,
     // db interfaces
     updateTableUsers,
+    updateTableCommentMetadata,
     selectTableUsers,
     selectTableUsersByID,
     selectTableFiles,
@@ -353,4 +371,5 @@ export {
     selectTableFilesWithCommentCount,
     selectTableLinksWithCommentCount,
     selectTableCommentsByDataID,
+    selectTableCommentMetadataByDataID,
 };

@@ -65,6 +65,12 @@ async function initializeDb() {
             can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
             "naive-sender", "naive-id-2", "2022-10-02T08:21:00.000Z");`);
 
+    await glue.query(`
+        INSERT INTO comment_metadata VALUES (
+            "naive-file-id-2", "naive-comment-id-5"
+        );
+    `);
+
     let q = `SELECT
     f.*, COUNT(*)
   FROM links f

@@ -4,7 +4,11 @@ import CloseIcon from "../../assets/CloseIcon";
 import CommentRowComponent from "./CommentRowComponent";
 import CommentInputComponent from "./CommentInputComponent";
 import { shallowEqual, useSelector } from "react-redux";
-import { selectTableCommentsByDataID, selectTableUsersByID } from "../../utils/localApi";
+import {
+    selectTableCommentMetadataByDataID,
+    selectTableCommentsByDataID,
+    selectTableUsersByID,
+} from "../../utils/localApi";
 
 const StyledCommentRowComponent = styled(CommentRowComponent)`
     margin: 0 32px 28px 32px;
@@ -69,22 +73,29 @@ const CommentTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
-function renderCommentRow(comment, user) {
+function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
     const { name } = user;
+    const { last_read_comment_id } = metadata;
+
+    console.log("last_read_comment_id:", last_read_comment_id, id);
 
     return (
-        <StyledCommentRowComponent 
+        <StyledCommentRowComponent
             key={id}
             senderName={name}
             createdAt={new Date(created_at)}
-            text={text}/>
-    )
+            text={text}
+            // TODO(young): This should be evaluated using timestamp and id.
+            isRead={last_read_comment_id !== id}
+        />
+    );
 }
 
 function CommentContainerComponent() {
     const [comments, setComments] = useState([]);
     const [user, setUser] = useState(null);
+    const [metadata, setMetadata] = useState(null);
 
     const dataID = useSelector((state) => state.selectedRow, shallowEqual);
     const senderID = useSelector((state) => state.selectedSender, shallowEqual);
@@ -98,14 +109,19 @@ function CommentContainerComponent() {
     useEffect(() => {
         (async () => {
             if (!!dataID && !!senderID) {
-                const [comments, user] = await Promise.all([
+                const [comments, user, metadata] = await Promise.all([
                     selectTableCommentsByDataID(dataID, senderID),
                     selectTableUsersByID(senderID),
+                    selectTableCommentMetadataByDataID(dataID),
                 ]);
+
+                console.table(metadata);
 
                 console.table(comments);
                 setComments(comments);
                 setUser(user?.[0]);
+                // Todo(young): Check metadata table should be subscribed.
+                setMetadata(metadata?.[0]);
             }
         })();
     }, [dataID, senderID, tableComments]);
@@ -117,10 +133,9 @@ function CommentContainerComponent() {
                 <CloseIcon />
             </CommentTitleContainer>
             <CommentRowContainer className="hoho">
-                {
-                    user &&
-                    comments.map(c => renderCommentRow(c, user))
-                }                
+                {user &&
+                    metadata &&
+                    comments.map((c) => renderCommentRow(c, user, metadata))}
             </CommentRowContainer>
             <CommentInputContainer>
                 <StyledCommentInputComponent />

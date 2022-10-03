@@ -80,7 +80,6 @@ function convertTimestampTohhmm(date) {
     }
 }
 
-
 function CommentRowComponent(props) {
     const { className, senderName, createdAt, text, isRead } = props;
 
@@ -88,7 +87,7 @@ function CommentRowComponent(props) {
 
     const timestamp = useMemo(() => {
         return convertTimestampTohhmm(createdAt);
-    }, [createdAt])
+    }, [createdAt]);
 
     return (
         <CommentRow className={className}>
@@ -96,11 +95,9 @@ function CommentRowComponent(props) {
                 <MiniProfile></MiniProfile>
                 <span className="orka-profile-name">{senderName}</span>
                 <span className="orka-timestamp">{timestamp}</span>
-                <div className="orka-unread-dot"></div>
+                {!isRead && <div className="orka-unread-dot"></div>}
             </TitleContentStyle>
-            <TextContentStyle>
-                { text }
-            </TextContentStyle>
+            <TextContentStyle>{text}</TextContentStyle>
         </CommentRow>
     );
 }
@@ -110,10 +107,12 @@ CommentRowComponent.propTypes = {
     // date object
     createdAt: PropTypes.instanceOf(Date).isRequired,
     text: PropTypes.string,
+    isRead: PropTypes.bool,
 };
 
 CommentRowComponent.defaultProps = {
     senderName: "",
+    isRead: true,
 };
 
 export default CommentRowComponent;

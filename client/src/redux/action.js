@@ -16,6 +16,7 @@ import {
     UPDATE_TABLE_LINKS,
     UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
+    UPDATE_TABLE_COMMENT_METADATA,
 } from "./actionType";
 
 export const addPeer = (peerList) => ({
@@ -99,5 +100,10 @@ export const updateTableLinks = () => ({
 
 export const updateTableComments = () => ({
     type: UPDATE_TABLE_COMMENTS,
+    payload: 0,
+});
+
+export const updateTableCommentMetadata = () => ({
+    type: UPDATE_TABLE_COMMENT_METADATA,
     payload: 0,
 });
