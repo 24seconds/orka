@@ -75,6 +75,10 @@ const CommentTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
+const CommentCloseContainer = styled.div`
+    cursor: pointer;
+`;
+
 function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
     const { name } = user;
@@ -137,9 +141,9 @@ function CommentContainerComponent() {
         <CommentContainer>
             <CommentTitleContainer>
                 <CommentTitle className="orka-title">Comments</CommentTitle>
-                <div onClick={onClose}>
+                <CommentCloseContainer onClick={onClose}>
                     <CloseIcon />
-                </div>
+                </CommentCloseContainer>
             </CommentTitleContainer>
             <CommentRowContainer className="hoho">
                 {user &&
