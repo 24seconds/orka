@@ -290,11 +290,21 @@ async function selectTableLinks() {
     return result?.[0]?.rows;
 }
 
-async function selectTableFilesWithCommentCount() {
-    const query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+// TODO(young): refactor this query
+async function selectTableFilesWithCommentCount(userID) {
+    let query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
         GROUP BY f.${TABLE_FILES.fields.id};`;
+
+    if (userID && userID !== "") {
+        query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE f.${TABLE_FILES.fields.uploaded_by} = ${userID}
+        GROUP BY f.${TABLE_FILES.fields.id};`;
+    }
+
     console.log("query:", query);
 
     const result = await run(query);
@@ -303,11 +313,21 @@ async function selectTableFilesWithCommentCount() {
     return result?.[0]?.rows;
 }
 
-async function selectTableLinksWithCommentCount() {
-    const query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
+// TODO(young): refactor this query
+async function selectTableLinksWithCommentCount(userID) {
+    let query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
         GROUP BY l.${TABLE_LINKS.fields.id};`;
+
+    if (userID && userID !== "") {
+        query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE l.${TABLE_LINKS.fields.uploaded_by} = ${userID}
+        GROUP BY l.${TABLE_LINKS.fields.id};`;
+    }
+
     console.log("query:", query);
 
     const result = await run(query);
