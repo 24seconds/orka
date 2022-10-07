@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
+import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import {
+    selectTableFilesWithCommentCount,
+    selectTableLinksWithCommentCount,
+    updateSelectedRowID,
+    updateSender,
+} from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
@@ -57,7 +65,83 @@ const ActivityRowContainer = styled.div`
     }
 `;
 
+// TODO(young): this function is duplicate. Refactor it later.
+function renderActivityRowComponent(data, activeRow, onClick) {
+    if (data?.dataType === DATATYPE_FILE) {
+        return (
+            <ActivityRowComponent
+                key={data.id}
+                rowID={data.id}
+                senderID={data.uploaded_by}
+                isSelected={activeRow === data.id}
+                dataType={data.type}
+                displayName={data.name}
+                size={data.size}
+                usageCount={data.download_count}
+                commentCount={data.comment_count}
+                onClick={onClick}
+            />
+        );
+    } else {
+        // LINK type
+        return (
+            <ActivityRowComponent
+                key={data.id}
+                rowID={data.id}
+                senderID={data.uploaded_by}
+                isSelected={activeRow === data.id}
+                dataType={"TXT"}
+                onClick={onClick}
+                usageCount={data.view_count}
+                commentCount={data.comment_count}
+            />
+        );
+    }
+}
+
 function MyProfileAndActivityPageContainerComponent() {
+    const [data, setData] = useState([]);
+
+    const tableFiles = useSelector((state) => state.tableFiles, shallowEqual);
+    const tableLinks = useSelector((state) => state.tableFiles, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
+
+    console.log("myOrkaUUID:", myOrkaUUID);
+
+    useEffect(() => {
+        (async () => {
+            const [files, links] = await Promise.all([
+                selectTableFilesWithCommentCount(),
+                selectTableLinksWithCommentCount(),
+            ]);
+
+            const filesWithType = files.map((f) => {
+                return { ...f, dataType: DATATYPE_FILE };
+            });
+            const linksWithType = links.map((l) => {
+                return { ...l, dataType: DATATYPE_LINK };
+            });
+
+            console.table(filesWithType);
+            console.table(linksWithType);
+
+            setData([...filesWithType, ...linksWithType]);
+        })();
+    }, [tableFiles, tableLinks, myOrkaUUID]);
+
+    function onClick(rowID, senderID) {
+        console.log("onClick called, rowID:", rowID);
+        if (rowID === activeRow) {
+            updateSelectedRowID(null);
+        } else {
+            updateSelectedRowID(rowID);
+        }
+        updateSender(senderID);
+    }
+
+    const restData = data.filter((d) => !d.handsUp);
+
     return (
         <MyProfileAndActivityPageContainer>
             <StyledProfileEditNameComponent />
@@ -70,10 +154,9 @@ function MyProfileAndActivityPageContainerComponent() {
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                <ActivityRowComponent />
-                <ActivityRowComponent />
-                <ActivityRowComponent />
-                <ActivityRowComponent />
+                {restData.map((d) =>
+                    renderActivityRowComponent(d, activeRow, onClick)
+                )}
             </ActivityRowContainer>
         </MyProfileAndActivityPageContainer>
     );

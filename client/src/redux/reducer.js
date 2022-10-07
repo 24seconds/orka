@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { v4 as uuidv4 } from "uuid";
 import {
     ADD_PEER,
     DELETE_PEER,
@@ -180,6 +181,11 @@ function selectedSender(state = null, action) {
     return state;
 }
 
+// TODO(young): use `uuidv4()`
+function myOrkaUUID(state = "naive-id-1", action) {
+    return state;
+}
+
 function tableUsers(state = 0, action) {
     if (action.type === UPDATE_TABLE_USERS) {
         const newState = state + 1;
@@ -275,4 +281,5 @@ export default combineReducers({
     tableComments,
     tableCommentMetadata,
     tableNotifications,
+    myOrkaUUID,
 });
