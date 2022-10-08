@@ -29,11 +29,23 @@ const StyledUploadLinkComponent = styled(UploadLinkComponent)`
     margin-bottom: 20px;
 `;
 
+const OrkaTitle = styled.div`
+    height: 68px;
+    color: ${(props) => props.theme.White};
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 68px;
+    letter-spacing: -0.04em;
+
+    margin-bottom: 20px;
+`;
+
 const MainLayout = styled.div``;
 
-function MainLayoutComponent() {
-    const [selectedTab, setSelectedTab] = useState(Tabs.Home);
+function MainLayoutComponent(props) {
+    const { className } = props;
 
+    const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
 
     console.log("selectedTab:", selectedTab);
@@ -48,7 +60,8 @@ function MainLayoutComponent() {
     }
 
     return (
-        <MainLayout>
+        <MainLayout className={className}>
+            <OrkaTitle>orka</OrkaTitle>
             <TabContainer>
                 {Object.values(Tabs).map((tab) => (
                     <TabComponent
