@@ -27,7 +27,7 @@ const HandsUpTitle = styled.div`
 
 const HandsUpSection = styled.div`
     ${SectionDivider} {
-        margin-top: 26px;
+        margin-top: 12x;
     }
 `;
 

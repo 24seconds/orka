@@ -1,6 +1,10 @@
 import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
+import {
+    updateSelectedPeerUUID,
+    updateSelectedRowID,
+} from "../../utils/localApi";
 import MyProfileAndActivityPageComponent from "../MyProfileAndActivityPage/MyProfileAndActivityLayoutComponent";
 import NotificationLayoutComponent from "../NotificationPage/NotificationLayoutComponent";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
@@ -29,11 +33,23 @@ const StyledUploadLinkComponent = styled(UploadLinkComponent)`
     margin-bottom: 20px;
 `;
 
+const OrkaTitle = styled.div`
+    height: 68px;
+    color: ${(props) => props.theme.White};
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 68px;
+    letter-spacing: -0.04em;
+
+    margin-bottom: 20px;
+`;
+
 const MainLayout = styled.div``;
 
-function MainLayoutComponent() {
-    const [selectedTab, setSelectedTab] = useState(Tabs.Home);
+function MainLayoutComponent(props) {
+    const { className } = props;
 
+    const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
 
     console.log("selectedTab:", selectedTab);
@@ -41,6 +57,10 @@ function MainLayoutComponent() {
 
     function onClick(tab) {
         setSelectedTab(tab);
+
+        // clear peerID and rowID
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
     }
 
     function onClickUplaodButton() {
@@ -48,7 +68,8 @@ function MainLayoutComponent() {
     }
 
     return (
-        <MainLayout>
+        <MainLayout className={className}>
+            <OrkaTitle>orka</OrkaTitle>
             <TabContainer>
                 {Object.values(Tabs).map((tab) => (
                     <TabComponent

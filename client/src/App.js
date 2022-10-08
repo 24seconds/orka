@@ -18,7 +18,7 @@ import CommentLayoutComponent from "./components/CommentPage/CommentLayoutCompon
 import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
 import CreatorBadgeComponent from "./components/CreatorBadge/CreatorBadgeComponent";
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle`  
   html, body {
     background-color: ${(props) => props.theme.Grayscale05};
   }
@@ -40,27 +40,40 @@ const OrkaCreatorBadgeComponent = styled(CreatorBadgeComponent)`
 
 const OrkaApp = styled.div`
     // TODO(young): Remove this height if it is not necessary
-    // height: calc(100% - 110px);
+    height: calc(100% - 110px);
+    display: grid;
     padding: 50px 100px;
 
     @media (max-width: ${mobileWidth}) {
         padding: 0;
     }
+
+    grid-template-areas:
+        "empty1 empty1 empty1"
+        "sidebar1 main sidebar2"
+        "empty2 empty2 empty2";
+
+    grid-template-columns: 1fr auto 1fr;
+`;
+
+const OrkaMainLayout = styled(MainLayoutComponent)`
+    height: 750px;
+
+    grid-area: ${(props) => (props.IsPeerActivityLayoutOpen ? "home" : "peer")};
+`;
+
+const OrkaPeerActivityLayout = styled(PeerActivityLayout)`
+    height: 750px;
 `;
 
 const OrkaContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
+    display: inline-grid;
 
-const OrkaTitle = styled.div`
-    color: ${(props) => props.theme.White};
-    font-weight: 600;
-    font-size: 56px;
-    line-height: 68px;
-    letter-spacing: -0.04em;
-
-    margin-bottom: 20px;
+    grid-area: main;
+    grid-template-areas: "home peer comment";
+    grid-template-columns: auto auto auto;
+    gap: 0 20px;
+    align-items: flex-start;
 `;
 
 const Container = styled.div`
@@ -139,6 +152,9 @@ class App extends Component {
         console.log("selectedPeer:", selectedPeer);
         console.log("selectedRow:", selectedRow);
 
+        const shouldOpenPeerActivityLayout = selectedPeer !== null;
+        const shouldOpenCommentLayout = selectedRow != null;
+
         return (
             <ThemeProvider theme={colorTheme}>
                 <GlobalStyle />
@@ -148,11 +164,17 @@ class App extends Component {
                         onChangeTheme={this.onChangeTheme}
                         theme={colorTheme}
                     />
-                    <OrkaTitle>orka</OrkaTitle>
                     <OrkaContainer>
-                        <MainLayoutComponent />
-                        {selectedPeer !== null && <PeerActivityLayout />}
-                        {selectedRow != null && <CommentLayoutComponent />}
+                        <OrkaMainLayout
+                            IsPeerActivityLayoutOpen={
+                                shouldOpenPeerActivityLayout ||
+                                shouldOpenCommentLayout
+                            }
+                        />
+                        {shouldOpenPeerActivityLayout && (
+                            <OrkaPeerActivityLayout />
+                        )}
+                        {shouldOpenCommentLayout && <CommentLayoutComponent />}
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                             <SendComponent />

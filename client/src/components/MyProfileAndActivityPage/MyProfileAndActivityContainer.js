@@ -20,6 +20,7 @@ const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
 const MyProfileAndActivityPageContainer = styled.div`
     display: flex;
     flex-direction: column;
+    width: 520px;
 `;
 
 const SortButton = styled.button`

@@ -10,6 +10,7 @@ import {
     selectTableLinks,
     updateSelectedRowID,
     updateSender,
+    updateSelectedPeerUUID,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
@@ -38,6 +39,7 @@ const IconContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 `;
 
 const ActivityTitleContainer = styled.div`
@@ -97,6 +99,8 @@ const ActivityFilterAndSortContainer = styled.div`
     ${SortButton} {
         margin-left: auto;
     }
+
+    margin-bottom: 26px;
 `;
 
 const ActivityRowContainer = styled.div`
@@ -152,6 +156,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
 }
 
 function ActivityContainerComponent(props) {
+    const [activeFilter, setActiveFilter] = useState("ALL");
     const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
 
@@ -195,6 +200,15 @@ function ActivityContainerComponent(props) {
         updateSender(senderID);
     }
 
+    function onClickFilterTab(tabName) {
+        setActiveFilter(tabName);
+    }
+
+    function onClose() {
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
+    }
+
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
@@ -204,16 +218,21 @@ function ActivityContainerComponent(props) {
                         Person
                     </ProfileName>
                 </ActivityProfileContainer>
-                <IconContainer>
+                <IconContainer onClick={onClose}>
                     <CloseIcon />
                 </IconContainer>
             </ActivityTitleContainer>
             <StyledHandsUpSection activeRow={activeRow} onClick={onClick} />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    <FilterTabComponent name="ALL" />
-                    <FilterTabComponent name="Files" />
-                    <FilterTabComponent name="Link" />
+                    {["ALL", "Files", "Link"].map((n) => (
+                        <FilterTabComponent
+                            key={n}
+                            name={n}
+                            onClickFilterTab={onClickFilterTab}
+                            isSelected={n === activeFilter}
+                        />
+                    ))}
                 </FilterContainer>
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>

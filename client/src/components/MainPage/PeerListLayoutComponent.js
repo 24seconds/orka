@@ -5,6 +5,7 @@ import styled from "styled-components";
 import {
     selectTableUsers,
     updateSelectedPeerUUID,
+    updateSelectedRowID,
     updateTableUsers,
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
@@ -16,11 +17,13 @@ const PeerListLayout = styled.div`
 `;
 
 function PeerListLayoutComponent() {
-    const [activePeer, setActivePeer] = useState(null);
     const [peers, setPeers] = useState([]);
 
     const tableUsers = useSelector((state) => state.tableUsers, shallowEqual);
-    console.log("tableUsers:", tableUsers);
+    const activePeerUUID = useSelector(
+        (state) => state.selectedPeer,
+        shallowEqual
+    );
 
     useEffect(() => {
         (async () => {
@@ -35,12 +38,11 @@ function PeerListLayoutComponent() {
     }, [tableUsers]);
 
     function onClick(uuid) {
-        if (uuid === activePeer) {
-            setActivePeer(null);
+        if (uuid === activePeerUUID) {
             // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(null);
+            updateSelectedRowID(null);
         } else {
-            setActivePeer(uuid);
             // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(uuid);
         }
@@ -54,7 +56,7 @@ function PeerListLayoutComponent() {
                 <PeerComponent
                     key={uuid}
                     uuid={uuid}
-                    isSelected={activePeer === uuid}
+                    isSelected={activePeerUUID === uuid}
                     onClick={onClick}
                 />
             ))}

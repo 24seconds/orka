@@ -2,13 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import ActivityContainerComponent from "../MyProfileAndActivityPage/ActivityContainerComponent";
 
-const PeerActivityLayout = styled.div`
-    margin-left: 28px;
+const PeerActivityLayout = styled.div``;
+
+const EmptyDivForTitle = styled.div`
+    height: 68px;
+    margin-bottom: 20px;
 `;
 
-function PeerActivityLayoutComponent() {
+function PeerActivityLayoutComponent(props) {
+    const { className } = props;
     return (
-        <PeerActivityLayout>
+        <PeerActivityLayout className={className}>
+            <EmptyDivForTitle />
             <ActivityContainerComponent />
         </PeerActivityLayout>
     );
