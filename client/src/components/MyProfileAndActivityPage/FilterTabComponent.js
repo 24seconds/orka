@@ -29,11 +29,10 @@ const FilterTab = styled.div`
 `;
 
 function FilterTabComponent(props) {
-    const { name } = props;
-    const [isSelected, setIsSelected] = useState(false);
+    const { name, isSelected, onClickFilterTab } = props;
 
     function onClick() {
-        setIsSelected(!isSelected);
+        onClickFilterTab?.(name);
     }
 
     return (
@@ -45,10 +44,12 @@ function FilterTabComponent(props) {
 
 FilterTabComponent.propTypes = {
     name: PropTypes.string,
+    isSelected: PropTypes.bool,
 };
 
 FilterTabComponent.defaultProps = {
     name: "ALL",
+    isSelected: false,
 };
 
 export default FilterTabComponent;

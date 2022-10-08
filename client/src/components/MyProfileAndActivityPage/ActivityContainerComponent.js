@@ -99,6 +99,8 @@ const ActivityFilterAndSortContainer = styled.div`
     ${SortButton} {
         margin-left: auto;
     }
+
+    margin-bottom: 26px;
 `;
 
 const ActivityRowContainer = styled.div`
@@ -154,6 +156,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
 }
 
 function ActivityContainerComponent(props) {
+    const [activeFilter, setActiveFilter] = useState("ALL");
     const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
 
@@ -197,6 +200,10 @@ function ActivityContainerComponent(props) {
         updateSender(senderID);
     }
 
+    function onClickFilterTab(tabName) {
+        setActiveFilter(tabName);
+    }
+
     function onClose() {
         updateSelectedPeerUUID(null);
         updateSelectedRowID(null);
@@ -218,9 +225,14 @@ function ActivityContainerComponent(props) {
             <StyledHandsUpSection activeRow={activeRow} onClick={onClick} />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    <FilterTabComponent name="ALL" />
-                    <FilterTabComponent name="Files" />
-                    <FilterTabComponent name="Link" />
+                    {["ALL", "Files", "Link"].map((n) => (
+                        <FilterTabComponent
+                            key={n}
+                            name={n}
+                            onClickFilterTab={onClickFilterTab}
+                            isSelected={n === activeFilter}
+                        />
+                    ))}
                 </FilterContainer>
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
