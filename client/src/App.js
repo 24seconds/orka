@@ -167,7 +167,7 @@ class App extends Component {
                     <OrkaContainer>
                         <OrkaMainLayout
                             IsPeerActivityLayoutOpen={
-                                shouldOpenPeerActivityLayout
+                                shouldOpenPeerActivityLayout || shouldOpenCommentLayout
                             }
                         />
                         {shouldOpenPeerActivityLayout && (

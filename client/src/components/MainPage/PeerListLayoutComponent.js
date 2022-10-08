@@ -5,6 +5,7 @@ import styled from "styled-components";
 import {
     selectTableUsers,
     updateSelectedPeerUUID,
+    updateSelectedRowID,
     updateTableUsers,
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
@@ -40,6 +41,7 @@ function PeerListLayoutComponent() {
         if (uuid === activePeerUUID) {
             // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(null);
+            updateSelectedRowID(null);
         } else {
             // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(uuid);
