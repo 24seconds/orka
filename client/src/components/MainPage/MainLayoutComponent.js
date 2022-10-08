@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
+import { updateSelectedPeerUUID, updateSelectedRowID } from "../../utils/localApi";
 import MyProfileAndActivityPageComponent from "../MyProfileAndActivityPage/MyProfileAndActivityLayoutComponent";
 import NotificationLayoutComponent from "../NotificationPage/NotificationLayoutComponent";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
@@ -53,6 +54,10 @@ function MainLayoutComponent(props) {
 
     function onClick(tab) {
         setSelectedTab(tab);
+
+        // clear peerID and rowID
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
     }
 
     function onClickUplaodButton() {
