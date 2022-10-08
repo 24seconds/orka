@@ -10,6 +10,7 @@ import {
     selectTableLinks,
     updateSelectedRowID,
     updateSender,
+    updateSelectedPeerUUID,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
@@ -38,6 +39,7 @@ const IconContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 `;
 
 const ActivityTitleContainer = styled.div`
@@ -195,6 +197,11 @@ function ActivityContainerComponent(props) {
         updateSender(senderID);
     }
 
+    function onClose() {
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
+    }
+
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
@@ -204,7 +211,7 @@ function ActivityContainerComponent(props) {
                         Person
                     </ProfileName>
                 </ActivityProfileContainer>
-                <IconContainer>
+                <IconContainer onClick={onClose}>
                     <CloseIcon />
                 </IconContainer>
             </ActivityTitleContainer>
