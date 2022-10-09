@@ -13,6 +13,7 @@ import {
     updateSelectedPeerUUID,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
+import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 
@@ -28,13 +29,6 @@ const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-bottom: 28px;
 `;
 
-const ActivityContainer = styled.div`
-    background: ${(props) => props.theme.Grayscale03};
-    border-radius: 30px;
-    min-width: 606px;
-    height: 746px;
-`;
-
 const IconContainer = styled.div`
     display: flex;
     align-items: center;
@@ -46,7 +40,7 @@ const ActivityTitleContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 108px;
+    height: 68px;
     margin-left: 32px;
 
     ${IconContainer} {
@@ -100,14 +94,16 @@ const ActivityFilterAndSortContainer = styled.div`
         margin-left: auto;
     }
 
-    margin-bottom: 26px;
+    margin-bottom: 20px;
 `;
 
 const ActivityRowContainer = styled.div`
-    height: 200px;
+    flex-grow: 1;
+    min-height: 0;
 
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
+    // overflow-y: auto;
 
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -117,42 +113,26 @@ const ActivityRowContainer = styled.div`
     }
 `;
 
+const ActivityContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+
+    background: ${(props) => props.theme.Grayscale03};
+    border-radius: 30px;
+    min-width: 606px;
+    height: 746px;
+
+    ${ActivityTitleContainer} {
+        margin-top: 24px;
+        margin-bottom: 22px;
+    }
+`;
+
 // TODO(young): use this later.
 function getFileExtension(name) {
     return name.slice((Math.max(0, name.lastIndexOf(".")) || Infinity) + 1);
-}
-
-function renderActivityRowComponent(data, activeRow, onClick) {
-    if (data?.dataType === DATATYPE_FILE) {
-        return (
-            <ActivityRowComponent
-                key={data.id}
-                rowID={data.id}
-                senderID={data.uploaded_by}
-                isSelected={activeRow === data.id}
-                dataType={data.type}
-                displayName={data.name}
-                size={data.size}
-                usageCount={data.download_count}
-                commentCount={data.comment_count}
-                onClick={onClick}
-            />
-        );
-    } else {
-        // LINK type
-        return (
-            <ActivityRowComponent
-                key={data.id}
-                rowID={data.id}
-                senderID={data.uploaded_by}
-                isSelected={activeRow === data.id}
-                dataType={"TXT"}
-                onClick={onClick}
-                usageCount={data.view_count}
-                commentCount={data.comment_count}
-            />
-        );
-    }
 }
 
 function ActivityContainerComponent(props) {
@@ -184,11 +164,14 @@ function ActivityContainerComponent(props) {
         })();
     }, [tableFiles, tableLinks]);
 
-    const handsUpData = data.filter((d) => d.handsUp);
-    const restData = data.filter((d) => !d.handsUp);
+    // only one hands up data is possible
+    const handsUpData = data.filter((d) => d.hands_up)?.[0];
+    const restData = data.filter((d) => !d.hands_up);
+
+    console.log("handsUpData:", handsUpData);
 
     function onClick(rowID, senderID) {
-        console.log("onClick called, rowID:", rowID);
+        console.log("onClick called, rowID:", rowID, senderID);
         if (rowID === activeRow) {
             setActiveRow(null);
             // dispatch function?
@@ -222,7 +205,13 @@ function ActivityContainerComponent(props) {
                     <CloseIcon />
                 </IconContainer>
             </ActivityTitleContainer>
-            <StyledHandsUpSection activeRow={activeRow} onClick={onClick} />
+            {handsUpData && (
+                <StyledHandsUpSection
+                    data={handsUpData}
+                    activeRow={activeRow}
+                    onClick={onClick}
+                />
+            )}
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     {["ALL", "Files", "Link"].map((n) => (

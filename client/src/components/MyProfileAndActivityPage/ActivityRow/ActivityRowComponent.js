@@ -127,7 +127,7 @@ function ActivityRowComponent(props) {
         <ActivityRow
             isSelected={isSelected}
             onClick={() => {
-                onClick(rowID, senderID);
+                onClick?.(rowID, senderID);
             }}
         >
             <DataTypeHolder className="orka-data-type-holder">
