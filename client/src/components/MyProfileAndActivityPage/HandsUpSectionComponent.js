@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import HandsUpIcon from "../../assets/HandsUpIcon";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
+import { renderActivityRowComponent } from "./common";
 
 const SectionDivider = styled.div`
     height: 10px;
@@ -12,7 +13,7 @@ const HandsUpTitle = styled.div`
     display: flex;
     align-items: center;
     margin-left: 32px;
-    margin-bottom: 32px;
+    margin-bottom: 11px;
 
     font-weight: 600;
     font-size: 24px;
@@ -27,12 +28,14 @@ const HandsUpTitle = styled.div`
 
 const HandsUpSection = styled.div`
     ${SectionDivider} {
-        margin-top: 12x;
+        margin-top: 12px;
     }
 `;
 
 function HandsUpSectionComponent(props) {
-    const { className, activeRow, onClick } = props;
+    const { className, data, activeRow, onClick } = props;
+
+    console.log("HandsUpSectionComponent:", data, activeRow, onClick);
 
     return (
         <HandsUpSection className={className}>
@@ -40,11 +43,9 @@ function HandsUpSectionComponent(props) {
                 <HandsUpIcon />
                 <span> Hands Up!</span>
             </HandsUpTitle>
-            <ActivityRowComponent
-                rowID={"row-id-handsup-2"}
-                isSelected={activeRow === "row-id-handsup-2"}
-                onClick={onClick}
-            />
+            {data &&
+                onClick &&
+                renderActivityRowComponent(data, activeRow, onClick)}
             <SectionDivider />
         </HandsUpSection>
     );
