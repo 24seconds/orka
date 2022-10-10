@@ -13,7 +13,7 @@ const Peer = styled.div`
     display: flex;
     flex-direction: column;
     width: 164px;
-    height: 245px;
+    height: 244px;
     border-radius: 30px;
     cursor: pointer;
 
