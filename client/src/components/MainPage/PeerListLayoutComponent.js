@@ -4,6 +4,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
     selectTableUsers,
+    selectTableUsersWithLatestFileType,
     updateSelectedPeerUUID,
     updateSelectedRowID,
     updateTableUsers,
@@ -26,15 +27,14 @@ function PeerListLayoutComponent() {
     );
 
     useEffect(() => {
+        console.log("PeerListLayoutComponent userEffect called");
         (async () => {
-            const users = await selectTableUsers();
-            console.table(users);
-            console.log("users:", users, users.length);
-            setPeers(users.map((u) => u.id));
+            const usersWithLatestFileType =
+                await selectTableUsersWithLatestFileType();
+            if (usersWithLatestFileType?.length > 0) {
+                setPeers(usersWithLatestFileType);
+            }
         })();
-        console.log("useEffect called");
-
-        selectTableUsers();
     }, [tableUsers]);
 
     function onClick(uuid) {
@@ -48,16 +48,17 @@ function PeerListLayoutComponent() {
         }
     }
 
-    const peerList = ["uuid-1", "uuid-2", "uuid-3", "uuid-4"];
-
     return (
         <PeerListLayout>
-            {peers.map((uuid) => (
+            {peers.map((user) => (
                 <PeerComponent
-                    key={uuid}
-                    uuid={uuid}
-                    isSelected={activePeerUUID === uuid}
+                    key={user.id}
+                    uuid={user.id}
+                    name={user.name}
+                    profile={user.profile}
+                    isSelected={activePeerUUID === user.id}
                     onClick={onClick}
+                    dataTypes={[user.latest_data_type]}
                 />
             ))}
         </PeerListLayout>

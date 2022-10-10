@@ -270,6 +270,26 @@ async function selectTableUsersByID(userID) {
     return result?.[0]?.rows;
 }
 
+async function selectTableUsersWithLatestFileType() {
+    const query = `
+    SELECT u.*,
+        f.${TABLE_FILES.fields.type} as latest_data_type
+    FROM ${TABLE_USERS.name} u
+        LEFT JOIN 
+        (SELECT ${TABLE_FILES.fields.uploaded_by} AS user_id, 
+            ${TABLE_FILES.fields.type}, Max(${TABLE_FILES.fields.uploaded_at})
+            FROM ${TABLE_FILES.name}
+            GROUP  BY ${TABLE_FILES.name}.${TABLE_FILES.fields.uploaded_by}) f
+        ON u.${TABLE_USERS.fields.id} = f.user_id; `;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableFiles() {
     const query = `SELECT * FROM ${TABLE_FILES.name}`;
     console.log("query:", query);
@@ -405,6 +425,7 @@ export {
     updateTableNotifications,
     selectTableUsers,
     selectTableUsersByID,
+    selectTableUsersWithLatestFileType,
     selectTableFiles,
     selectTableLinks,
     selectTableFilesWithCommentCount,
