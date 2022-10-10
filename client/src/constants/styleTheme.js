@@ -45,6 +45,8 @@ export const ThemeOrkaDark = {
     FilterTextInActive: "#FFFFFF",
     FilterBorder: "#656C78",
     FilterNewestText: "#656C78",
+
+    ActiveRowDisplayText: "#FFFFFF",
 };
 
 export const ThemeOrkaLight = {
@@ -91,6 +93,8 @@ export const ThemeOrkaLight = {
     FilterTextInActive: "#2E3136",
     FilterBorder: "#A3ADBE",
     FilterNewestText: "#A3ADBE",
+
+    ActiveRowDisplayText: "#2E3136",
 };
 
 export const MaterialThemeOceanic = {

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import HandsUpIcon from "../../assets/HandsUpIcon";
-import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import { renderActivityRowComponent } from "./common";
 
 const SectionDivider = styled.div`

@@ -73,10 +73,9 @@ const FileMetaData = styled.div`
     line-height: 29px;
     letter-spacing: -0.04em;
 
-    color: ${(props) => props.theme.White};
-
     .orka-file-name {
         margin-bottom: 10px;
+        color: ${(props) => props.theme.ActiveRowDisplayText};
     }
 
     .orka-size-and-timestamp {
