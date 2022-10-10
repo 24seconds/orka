@@ -32,6 +32,18 @@ const RecentData = styled.div`
     z-index: ${(props) => props.zIndex};
 `;
 
+const EmptyData = styled.div`
+    width: 80px;
+    height: 100px;
+    background: ${(props) => props.theme.Grayscale03p5};
+    border-radius: 11px;
+
+    position: absolute;
+    z-index: 1;
+    right: 0px;
+    bottom: 0px;
+`;
+
 function RecentDataComponent(props) {
     const { order, dataType } = props;
 
@@ -66,6 +78,7 @@ function PeerRecentComponent(props) {
                     />
                 );
             })}
+            <EmptyData />
         </PeerRecent>
     );
 }
