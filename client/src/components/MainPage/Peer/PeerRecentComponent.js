@@ -18,13 +18,13 @@ const RecentData = styled.div`
 
     width: 80px;
     height: 100px;
-    background: ${(props) => props.theme.PeerRecentData};
+    background: ${(props) => props.theme.DataTypeHolderBackground};
     border-radius: 11px;
     filter: drop-shadow(0px 2.6px 2.6px rgba(0, 0, 0, 0.25));
 
     font-weight: 600;
     font-size: 16px;
-    color: ${(props) => props.theme.PeerRecentText};
+    color: ${(props) => props.theme.DataTypeHolderText};
     line-height: 20px;
 
     left: ${(props) => props.order};
