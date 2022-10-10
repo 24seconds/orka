@@ -22,7 +22,10 @@ const Peer = styled.div`
 `;
 
 function PeerComponent(props) {
-    const { orders, dataTypes, isSelected, onClick, uuid } = props;
+    const { name, profile, orders, dataTypes, isSelected, onClick, uuid } =
+        props;
+
+    const isEmpty = dataTypes?.length === 0;
 
     return (
         <Peer
@@ -31,13 +34,17 @@ function PeerComponent(props) {
                 onClick(uuid);
             }}
         >
-            <PeerTitleComponent />
-            <PeerRecentComponent orders={orders} dataTypes={dataTypes} />
+            <PeerTitleComponent name={name} profile={profile} />
+            {!isEmpty && (
+                <PeerRecentComponent orders={orders} dataTypes={dataTypes} />
+            )}
         </Peer>
     );
 }
 
 PeerComponent.propTypes = {
+    name: PropTypes.string,
+    profile: PropTypes.number,
     orders: PropTypes.array,
     dataTypes: PropTypes.array,
     isSelected: PropTypes.bool,
@@ -45,6 +52,8 @@ PeerComponent.propTypes = {
 };
 
 PeerComponent.defaultProps = {
+    name: "",
+    profile: 0,
     orders: ["0", "1"],
     dataTypes: ["PNG", "TXT"],
     isSelected: false,

@@ -1,9 +1,47 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+import { IMAGE_URL } from "../../../constants/constant";
+
+const PeerMiniProfile = styled.div`
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #000000;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+`;
+
+const PeerNameContainer = styled.div`
+    display: flex;
+    align-items: center;
+    height: 38px;
+`;
+
+const PeerName = styled.div`
+    width: 82px;
+
+    font-size: 18px;
+    line-height: 110%;
+    letter-spacing: -0.04em;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    // TODO(young): Not sure about how to handle this.
+    &:hover {
+        overflow: visible;
+        white-space: normal;
+        height: auto;
+    }
+`;
 
 const PeerTitle = styled.div`
     display: flex;
-    width: 100%;
     height: 38px;
 
     margin: 20px 20px 0 20px;
@@ -11,35 +49,36 @@ const PeerTitle = styled.div`
     font-weight: 500;
     color: ${(props) => props.theme.White};
 
-    > div {
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        line-height: 110%;
-        letter-spacing: -0.04em;
+    ${PeerNameContainer} {
         margin-left: 6px;
     }
 `;
 
-const PeerMiniProfile = styled.div`
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #000000;
-`;
+function PeerTitleComponent(props) {
+    const { name, profile } = props;
 
-function PeerMiniProfileComponent() {
-    return <PeerMiniProfile />;
-}
+    const profilePath = `profile_${profile}.png`;
 
-function PeerTitleComponent() {
     return (
         <PeerTitle>
-            <PeerMiniProfileComponent />
-            <div>Good</div>
+            <PeerMiniProfile>
+                <img src={`/${IMAGE_URL}/${profilePath}`} alt="peer profile" />
+            </PeerMiniProfile>
+            <PeerNameContainer>
+                <PeerName>{name}</PeerName>
+            </PeerNameContainer>
         </PeerTitle>
     );
 }
+
+PeerTitleComponent.propTypes = {
+    name: PropTypes.string,
+    profile: PropTypes.number,
+};
+
+PeerTitleComponent.defaultProps = {
+    name: "",
+    profile: 0,
+};
 
 export default PeerTitleComponent;

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { isCompositeComponent } from "react-dom/test-utils";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
-    selectTableUsers,
+    selectTableUsersWithLatestFileType,
     updateSelectedPeerUUID,
     updateSelectedRowID,
-    updateTableUsers,
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
 
@@ -14,6 +12,19 @@ const PeerListLayout = styled.div`
     display: inline-grid;
     grid-template-columns: auto auto auto;
     gap: 14px;
+    padding: 2px;
+
+    flex-grow: 1;
+    min-height: 0;
+
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 function PeerListLayoutComponent() {
@@ -26,15 +37,14 @@ function PeerListLayoutComponent() {
     );
 
     useEffect(() => {
+        console.log("PeerListLayoutComponent userEffect called");
         (async () => {
-            const users = await selectTableUsers();
-            console.table(users);
-            console.log("users:", users, users.length);
-            setPeers(users.map((u) => u.id));
+            const usersWithLatestFileType =
+                await selectTableUsersWithLatestFileType();
+            if (usersWithLatestFileType?.length > 0) {
+                setPeers(usersWithLatestFileType);
+            }
         })();
-        console.log("useEffect called");
-
-        selectTableUsers();
     }, [tableUsers]);
 
     function onClick(uuid) {
@@ -48,18 +58,26 @@ function PeerListLayoutComponent() {
         }
     }
 
-    const peerList = ["uuid-1", "uuid-2", "uuid-3", "uuid-4"];
-
     return (
         <PeerListLayout>
-            {peers.map((uuid) => (
-                <PeerComponent
-                    key={uuid}
-                    uuid={uuid}
-                    isSelected={activePeerUUID === uuid}
-                    onClick={onClick}
-                />
-            ))}
+            {peers.map((user) => {
+                const dataTypes = [];
+                if (user.latest_data_type !== null) {
+                    dataTypes.push(user.latest_data_type);
+                }
+
+                return (
+                    <PeerComponent
+                        key={user.id}
+                        uuid={user.id}
+                        name={user.name}
+                        profile={user.profile}
+                        isSelected={activePeerUUID === user.id}
+                        onClick={onClick}
+                        dataTypes={dataTypes}
+                    />
+                );
+            })}
         </PeerListLayout>
     );
 }

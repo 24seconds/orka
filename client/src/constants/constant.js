@@ -17,3 +17,6 @@ export const Tabs = Object.freeze({
 
 export const DATATYPE_FILE = "FILE";
 export const DATATYPE_LINK = "LINK";
+
+// TODO(young): use later
+export const PROFILE_IMAGE_COUNT = 10;
