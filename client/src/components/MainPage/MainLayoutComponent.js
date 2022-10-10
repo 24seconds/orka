@@ -46,6 +46,12 @@ const OrkaTitle = styled.div`
 
 const MainLayout = styled.div``;
 
+const MainLayoutContainer = styled.div`
+    display: inline-grid;
+    flex-direction: column;
+    height: 746px;
+`;
+
 function MainLayoutComponent(props) {
     const { className } = props;
 
@@ -70,34 +76,36 @@ function MainLayoutComponent(props) {
     return (
         <MainLayout className={className}>
             <OrkaTitle>orka</OrkaTitle>
-            <TabContainer>
-                {Object.values(Tabs).map((tab) => (
-                    <TabComponent
-                        key={tab.toString()}
-                        iconType={tab}
-                        onClick={onClick}
-                        isSelected={selectedTab === tab}
-                    />
-                ))}
-            </TabContainer>
-            <StyledUploadButtonComponent
-                onClick={onClickUplaodButton}
-                isActive={uploadActivated}
-            />
-            {uploadActivated && (
-                <Fragment>
-                    <StyledUploadFilesComponent />
-                    <StyledUploadLinkComponent />
-                </Fragment>
-            )}
+            <MainLayoutContainer>
+                <TabContainer>
+                    {Object.values(Tabs).map((tab) => (
+                        <TabComponent
+                            key={tab.toString()}
+                            iconType={tab}
+                            onClick={onClick}
+                            isSelected={selectedTab === tab}
+                        />
+                    ))}
+                </TabContainer>
+                <StyledUploadButtonComponent
+                    onClick={onClickUplaodButton}
+                    isActive={uploadActivated}
+                />
+                {uploadActivated && (
+                    <Fragment>
+                        <StyledUploadFilesComponent />
+                        <StyledUploadLinkComponent />
+                    </Fragment>
+                )}
 
-            {
                 {
-                    [Tabs.Home]: <PeerListLayoutComponent />,
-                    [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
-                    [Tabs.Notification]: <NotificationLayoutComponent />,
-                }[selectedTab]
-            }
+                    {
+                        [Tabs.Home]: <PeerListLayoutComponent />,
+                        [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
+                        [Tabs.Notification]: <NotificationLayoutComponent />,
+                    }[selectedTab]
+                }
+            </MainLayoutContainer>
         </MainLayout>
     );
 }

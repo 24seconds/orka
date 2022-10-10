@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { isCompositeComponent } from "react-dom/test-utils";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
-    selectTableUsers,
     selectTableUsersWithLatestFileType,
     updateSelectedPeerUUID,
     updateSelectedRowID,
-    updateTableUsers,
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
 
@@ -15,6 +12,19 @@ const PeerListLayout = styled.div`
     display: inline-grid;
     grid-template-columns: auto auto auto;
     gap: 14px;
+    padding: 2px;
+
+    flex-grow: 1;
+    min-height: 0;
+
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 function PeerListLayoutComponent() {

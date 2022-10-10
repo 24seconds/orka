@@ -28,6 +28,26 @@ async function initializeDb() {
             `INSERT INTO users VALUES ("naive-id-3", "naive-long-long-long-name-3", 5);`
         )
     );
+    await glue.query(
+        middlewareForDebugQuery(
+            `INSERT INTO users VALUES ("naive-id-4", "naive-name-4", 5);`
+        )
+    );
+    await glue.query(
+        middlewareForDebugQuery(
+            `INSERT INTO users VALUES ("naive-id-5", "naive-name-5", 5);`
+        )
+    );
+    await glue.query(
+        middlewareForDebugQuery(
+            `INSERT INTO users VALUES ("naive-id-6", "naive-name-6", 5);`
+        )
+    );
+    await glue.query(
+        middlewareForDebugQuery(
+            `INSERT INTO users VALUES ("naive-id-7", "naive-name-7", 5);`
+        )
+    );
 
     await glue.query(
         middlewareForDebugQuery(`
