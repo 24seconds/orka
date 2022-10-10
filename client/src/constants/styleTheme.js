@@ -28,6 +28,15 @@ export const ThemeOrkaDark = {
 
     // TODO(young): Adhoc color - decide naming later
     Grayscale06: "#727987",
+
+    Button: "#FFFFFF",
+    IconColor: "#31353B",
+
+    OrkaTitle: "#FFFFFF",
+    TabButtonActive: "#FFFFFF",
+    TabButtonInActive: "#656C78",
+    PeerRecentData: "#31353B",
+    PeerRecentText: "#959CA8",
 };
 
 export const ThemeOrkaLight = {
@@ -57,6 +66,15 @@ export const ThemeOrkaLight = {
 
     // TODO(young): Adhoc color - decide naming later
     Grayscale06: "#727987",
+
+    Button: "#2E3136",
+    IconColor: "#FBFCFF",
+
+    OrkaTitle: "#2E3136",
+    TabButtonActive: "#2E3136",
+    TabButtonInActive: "#ABB4C1",
+    PeerRecentData: "#FFFFFF",
+    PeerRecentText: "#CCD7EC",
 };
 
 export const MaterialThemeOceanic = {

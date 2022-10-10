@@ -21,16 +21,10 @@ const Tab = styled.button`
         > path,
         circle {
             stroke: ${(props) =>
-                props.isSelected ? props.theme.White : props.theme.Grayscale01};
+                props.isSelected
+                    ? props.theme.TabButtonActive
+                    : props.theme.TabButtonInActive};
         }
-    }
-
-    /* > svg {
-        > path {
-            stroke: ${(props) => props.theme.White};
-        }
-    } */
-    .icon {
     }
 `;
 

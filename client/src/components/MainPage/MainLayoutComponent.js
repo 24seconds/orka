@@ -35,7 +35,7 @@ const StyledUploadLinkComponent = styled(UploadLinkComponent)`
 
 const OrkaTitle = styled.div`
     height: 68px;
-    color: ${(props) => props.theme.White};
+    color: ${(props) => props.theme.OrkaTitle};
     font-weight: 600;
     font-size: 56px;
     line-height: 68px;
@@ -57,9 +57,6 @@ function MainLayoutComponent(props) {
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
-
-    console.log("selectedTab:", selectedTab);
-    console.log("uploadActivated:", uploadActivated);
 
     function onClick(tab) {
         setSelectedTab(tab);
