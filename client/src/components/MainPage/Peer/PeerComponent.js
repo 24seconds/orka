@@ -25,6 +25,8 @@ function PeerComponent(props) {
     const { name, profile, orders, dataTypes, isSelected, onClick, uuid } =
         props;
 
+    const isEmpty = dataTypes?.length === 0;
+
     return (
         <Peer
             isSelected={isSelected}
@@ -33,7 +35,9 @@ function PeerComponent(props) {
             }}
         >
             <PeerTitleComponent name={name} profile={profile} />
-            <PeerRecentComponent orders={orders} dataTypes={dataTypes} />
+            {!isEmpty && (
+                <PeerRecentComponent orders={orders} dataTypes={dataTypes} />
+            )}
         </Peer>
     );
 }

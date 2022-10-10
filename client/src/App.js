@@ -60,8 +60,7 @@ const OrkaMainLayout = styled(MainLayoutComponent)`
     grid-area: ${(props) => (props.IsPeerActivityLayoutOpen ? "home" : "peer")};
 `;
 
-const OrkaPeerActivityLayout = styled(PeerActivityLayout)`
-`;
+const OrkaPeerActivityLayout = styled(PeerActivityLayout)``;
 
 const OrkaContainer = styled.div`
     display: inline-grid;

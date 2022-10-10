@@ -60,17 +60,24 @@ function PeerListLayoutComponent() {
 
     return (
         <PeerListLayout>
-            {peers.map((user) => (
-                <PeerComponent
-                    key={user.id}
-                    uuid={user.id}
-                    name={user.name}
-                    profile={user.profile}
-                    isSelected={activePeerUUID === user.id}
-                    onClick={onClick}
-                    dataTypes={[user.latest_data_type]}
-                />
-            ))}
+            {peers.map((user) => {
+                const dataTypes = [];
+                if (user.latest_data_type !== null) {
+                    dataTypes.push(user.latest_data_type);
+                }
+
+                return (
+                    <PeerComponent
+                        key={user.id}
+                        uuid={user.id}
+                        name={user.name}
+                        profile={user.profile}
+                        isSelected={activePeerUUID === user.id}
+                        onClick={onClick}
+                        dataTypes={dataTypes}
+                    />
+                );
+            })}
         </PeerListLayout>
     );
 }
