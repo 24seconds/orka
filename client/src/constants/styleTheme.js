@@ -47,6 +47,8 @@ export const ThemeOrkaDark = {
     FilterNewestText: "#656C78",
 
     ActiveRowDisplayText: "#FFFFFF",
+
+    CommentRowText: "#FEFEFE",
 };
 
 export const ThemeOrkaLight = {
@@ -95,6 +97,8 @@ export const ThemeOrkaLight = {
     FilterNewestText: "#A3ADBE",
 
     ActiveRowDisplayText: "#2E3136",
+
+    CommentRowText: "#2E3136",
 };
 
 export const MaterialThemeOceanic = {

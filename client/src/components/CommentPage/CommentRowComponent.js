@@ -21,7 +21,7 @@ const TitleContentStyle = styled.div`
         font-size: 18px;
         line-height: 22px;
         letter-spacing: -0.04em;
-        color: ${(props) => props.theme.White};
+        color: ${(props) => props.theme.CommentRowText};
     }
 
     .orka-timestamp {
@@ -32,7 +32,7 @@ const TitleContentStyle = styled.div`
         line-height: 19px;
         letter-spacing: -0.04em;
 
-        color: ${(props) => props.theme.Grayscale06};
+        color: ${(props) => props.theme.Grayscale01};
     }
 
     .orka-unread-dot {
@@ -57,7 +57,7 @@ const TextContentStyle = styled.p`
     font-size: 18px;
     line-height: 140%;
     letter-spacing: -0.04em;
-    color: ${(props) => props.theme.White};
+    color: ${(props) => props.theme.CommentRowText};
 `;
 
 const CommentRow = styled.div`
@@ -82,8 +82,6 @@ function convertTimestampTohhmm(date) {
 
 function CommentRowComponent(props) {
     const { className, senderName, createdAt, text, isRead } = props;
-
-    console.log("createdAt:", createdAt);
 
     const timestamp = useMemo(() => {
         return convertTimestampTohhmm(createdAt);

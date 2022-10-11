@@ -24,7 +24,7 @@ const InputStyle = styled.input`
     font-size: 18px;
     line-height: 120%;
     letter-spacing: -0.04em;
-    color: ${(props) => props.theme.White};
+    color: ${(props) => props.theme.CommentRowText};
 
     ::placeholder {
         ${placeHolderTextStyle}
