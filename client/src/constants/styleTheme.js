@@ -49,6 +49,8 @@ export const ThemeOrkaDark = {
     ActiveRowDisplayText: "#FFFFFF",
 
     CommentRowText: "#FEFEFE",
+
+    NotificationRowText: "#FEFEFE",
 };
 
 export const ThemeOrkaLight = {
@@ -99,6 +101,8 @@ export const ThemeOrkaLight = {
     ActiveRowDisplayText: "#2E3136",
 
     CommentRowText: "#2E3136",
+
+    NotificationRowText: "#2E3136",
 };
 
 export const MaterialThemeOceanic = {
