@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -18,11 +18,14 @@ const FilterTab = styled.div`
     line-height: 27px;
     letter-spacing: -0.04em;
     color: ${(props) =>
-        props.isSelected ? props.theme.Grayscale03 : props.theme.White};
+        props.isSelected
+            ? props.theme.FilterTextActive
+            : props.theme.FilterTextInActive};
 
     cursor: pointer;
 
-    background: ${(props) => (props.isSelected ? props.theme.White : "none")};
+    background: ${(props) =>
+        props.isSelected ? props.theme.FilterActive : "none"};
 
     // TODO(young): Consider using outline instead of border if it is annoying
     ${(props) => props.isSelected && `border-color: transparent;`}

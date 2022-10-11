@@ -28,6 +28,29 @@ export const ThemeOrkaDark = {
 
     // TODO(young): Adhoc color - decide naming later
     Grayscale06: "#727987",
+
+    Button: "#FFFFFF",
+    IconColor: "#31353B",
+
+    OrkaTitle: "#FFFFFF",
+
+    TabButtonActive: "#FFFFFF",
+    TabButtonInActive: "#656C78",
+
+    DataTypeHolderBackground: "#31353B",
+    DataTypeHolderText: "#959CA8",
+
+    FilterActive: "#FFFFFF",
+    FilterTextActive: "#202326",
+    FilterTextInActive: "#FFFFFF",
+    FilterBorder: "#656C78",
+    FilterNewestText: "#656C78",
+
+    ActiveRowDisplayText: "#FFFFFF",
+
+    CommentRowText: "#FEFEFE",
+
+    NotificationRowText: "#FEFEFE",
 };
 
 export const ThemeOrkaLight = {
@@ -38,7 +61,7 @@ export const ThemeOrkaLight = {
     Black: "#000000",
     Blackscale01: "#171819",
     PlaceholderBackgroundscale01: "#31353C",
-    PlaceholderTextscale01: "#FEFEFE",
+    PlaceholderTextscale01: "#2E3136",
     ActivityRowButtonTextscale01: "#E0E3E8",
     ActivityRowButtonTextscale02: "#61656D",
     ActivityRowBackgroundscale01: "#191A1C",
@@ -57,6 +80,29 @@ export const ThemeOrkaLight = {
 
     // TODO(young): Adhoc color - decide naming later
     Grayscale06: "#727987",
+
+    Button: "#2E3136",
+    IconColor: "#FBFCFF",
+
+    OrkaTitle: "#2E3136",
+
+    TabButtonActive: "#2E3136",
+    TabButtonInActive: "#ABB4C1",
+
+    DataTypeHolderBackground: "#FFFFFF",
+    DataTypeHolderText: "#CCD7EC",
+
+    FilterActive: "#2E3136",
+    FilterTextActive: "#ECF0F7",
+    FilterTextInActive: "#2E3136",
+    FilterBorder: "#A3ADBE",
+    FilterNewestText: "#A3ADBE",
+
+    ActiveRowDisplayText: "#2E3136",
+
+    CommentRowText: "#2E3136",
+
+    NotificationRowText: "#2E3136",
 };
 
 export const MaterialThemeOceanic = {

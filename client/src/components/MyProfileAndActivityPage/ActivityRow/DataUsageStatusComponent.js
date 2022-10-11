@@ -9,7 +9,7 @@ const DataUsageStatus = styled.div`
 
     height: 26px;
     padding: 0 15px;
-    background: ${(props) => props.theme.ActivityRowBackgroundscale01};
+    background: ${(props) => props.theme.Grayscale03p5};
     border-radius: 9px;
 
     font-weight: 400;

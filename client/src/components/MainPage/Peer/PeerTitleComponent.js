@@ -32,6 +32,8 @@ const PeerName = styled.div`
     overflow: hidden;
     white-space: nowrap;
 
+    color: ${(props) => props.theme.Button};
+
     // TODO(young): Not sure about how to handle this.
     &:hover {
         overflow: visible;

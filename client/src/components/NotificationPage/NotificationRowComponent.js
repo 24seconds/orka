@@ -31,7 +31,7 @@ const InfoContainer = styled.div`
     height: 100%;
 
     .orka-text {
-        color: ${(props) => props.theme.White};
+        color: ${(props) => props.theme.NotificationRowText};
         font-weight: 400;
         font-size: 20px;
         line-height: 120%;

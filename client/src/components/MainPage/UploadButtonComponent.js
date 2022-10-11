@@ -8,7 +8,7 @@ const UploadButton = styled.div`
     align-items: center;
     width: 520px;
     height: 100px;
-    background: ${(props) => props.theme.White};
+    background: ${(props) => props.theme.Button};
     border-radius: 30px;
     cursor: pointer;
 
@@ -23,6 +23,8 @@ const UploadButton = styled.div`
         align-items: center;
         font-weight: 600;
         margin-left: 48px;
+
+        color: ${(props) => props.theme.IconColor};
     }
 
     .orka-icon-container {
@@ -34,6 +36,10 @@ const UploadButton = styled.div`
         transition: 0.2s linear;
 
         ${(props) => props.isActive && `transform: rotate(45deg)`};
+
+        path {
+            stroke: ${(props) => props.theme.IconColor};
+        }
     }
 `;
 
