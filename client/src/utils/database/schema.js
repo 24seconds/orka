@@ -34,6 +34,28 @@ const TABLE_LINKS = {
     },
 };
 
+const TABLE_SHARING_DATA = {
+    name: "sharing_data",
+    fields: {
+        id: "id",
+
+        // file related fields
+        name: "name",
+        size: "size",
+        extension: "extension",
+
+        // link related fields
+        text: "text",
+
+        // common fields
+        type: "type",
+        status_count: "status_count",
+        hands_up: "hands_up",
+        uploaded_by: "uploaded_by",
+        uploaded_at: "uploaded_at",
+    },
+};
+
 const TABLE_COMMENTS = {
     name: "comments",
     fields: {
@@ -105,7 +127,7 @@ CREATE TABLE IF NOT EXISTS ${TABLE_COMMENTS.name} (
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_COMMENT_METADATA.name} (
     ${TABLE_COMMENT_METADATA.fields.data_id} TEXT PRIMARY KEY,
-    ${TABLE_COMMENT_METADATA.fields.last_read_comment_id} TEXT
+    ${TABLE_COMMENT_METADATA.fields.last_read_comment_id} TEXT NULL
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.id} TEXT PRIMARY KEY,
@@ -113,8 +135,20 @@ CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.text} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_type} TEXT NOT NULL,
-    ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT,
+    ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.created_at} TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ${TABLE_SHARING_DATA.name} (
+    ${TABLE_SHARING_DATA.fields.id} TEXT PRIMARY KEY,
+    ${TABLE_SHARING_DATA.fields.name} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.size} INTEGER NULL,
+    ${TABLE_SHARING_DATA.fields.extension} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.text} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.type} TEXT NOT NULL,
+    ${TABLE_SHARING_DATA.fields.status_count} INTEGER NOT NULL,
+    ${TABLE_SHARING_DATA.fields.hands_up} BOOLEAN NOT NULL,
+    ${TABLE_SHARING_DATA.fields.uploaded_by} TEXT NOT NULL,
+    ${TABLE_SHARING_DATA.fields.uploaded_at} TIMESTAMP NOT NULL
 );
 `;
 
