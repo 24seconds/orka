@@ -48,7 +48,11 @@ const MainLayout = styled.div``;
 
 const MainLayoutContainer = styled.div`
     display: inline-grid;
-    flex-direction: column;
+    grid-template-areas: 
+        "tabs" 
+        "upload" 
+        "peers";
+    grid-auto-rows: minmax(min-content, max-content);
     height: 746px;
 `;
 
