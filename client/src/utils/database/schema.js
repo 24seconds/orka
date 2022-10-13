@@ -51,7 +51,7 @@ const TABLE_SHARING_DATA = {
         type: "type",
         status_count: "status_count",
         hands_up: "hands_up",
-        uploaded_by: "uploaded_by",
+        uploader_id: "uploader_id",
         uploaded_at: "uploaded_at",
     },
 };
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS ${TABLE_SHARING_DATA.name} (
     ${TABLE_SHARING_DATA.fields.type} TEXT NOT NULL,
     ${TABLE_SHARING_DATA.fields.status_count} INTEGER NOT NULL,
     ${TABLE_SHARING_DATA.fields.hands_up} BOOLEAN NOT NULL,
-    ${TABLE_SHARING_DATA.fields.uploaded_by} TEXT NOT NULL,
+    ${TABLE_SHARING_DATA.fields.uploader_id} TEXT NOT NULL,
     ${TABLE_SHARING_DATA.fields.uploaded_at} TIMESTAMP NOT NULL
 );
 `;
@@ -157,6 +157,7 @@ export {
     TABLE_USERS,
     TABLE_FILES,
     TABLE_LINKS,
+    TABLE_SHARING_DATA,
     TABLE_COMMENTS,
     TABLE_COMMENT_METADATA,
     TABLE_NOTIFICATIONS,

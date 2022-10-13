@@ -39,6 +39,7 @@ import {
     TABLE_FILES,
     TABLE_LINKS,
     TABLE_NOTIFICATIONS,
+    TABLE_SHARING_DATA,
     TABLE_USERS,
 } from "./database/schema";
 
@@ -270,19 +271,23 @@ async function selectTableUsersByID(userID) {
     return result?.[0]?.rows;
 }
 
-async function selectTableUsersWithLatestFileType() {
+async function selectTableUsersWithLatestSharingDataType() {
     const query = `
     SELECT u.*,
-        f.${TABLE_FILES.fields.type} as latest_data_type
-    FROM ${TABLE_USERS.name} u
-        LEFT JOIN 
-        (SELECT ${TABLE_FILES.fields.uploaded_by} AS user_id, 
-            ${TABLE_FILES.fields.type}, Max(${TABLE_FILES.fields.uploaded_at})
-            FROM ${TABLE_FILES.name}
-            GROUP  BY ${TABLE_FILES.name}.${TABLE_FILES.fields.uploaded_by}) f
-        ON u.${TABLE_USERS.fields.id} = f.user_id; `;
+        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
+        THEN "URL" 
+        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latest_data_type,
+    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
+  FROM
+    ${TABLE_USERS.name} u
+  JOIN
+    ${TABLE_SHARING_DATA.name} s
+  ON
+    u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
+  GROUP BY
+    u.${TABLE_USERS.fields.id}`;
 
-    console.log("query:", query);
+    console.log("selectTableUsersWithLatestSharingDataType, query:", query);
 
     const result = await run(query);
     console.log("result:", result);
@@ -425,7 +430,7 @@ export {
     updateTableNotifications,
     selectTableUsers,
     selectTableUsersByID,
-    selectTableUsersWithLatestFileType,
+    selectTableUsersWithLatestSharingDataType,
     selectTableFiles,
     selectTableLinks,
     selectTableFilesWithCommentCount,
