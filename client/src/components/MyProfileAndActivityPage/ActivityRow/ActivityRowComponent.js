@@ -51,6 +51,7 @@ const DataTypeHolder = styled.div`
     align-items: center;
 
     width: 84px;
+    min-width: 84px;
     height: 100px;
     background: ${(props) => props.theme.DataTypeHolderBackground};
     border-radius: 11px;
@@ -74,8 +75,13 @@ const FileMetaData = styled.div`
     letter-spacing: -0.04em;
 
     .orka-file-name {
+        width: 220px;
         margin-bottom: 10px;
         color: ${(props) => props.theme.ActiveRowDisplayText};
+
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .orka-size-and-timestamp {
@@ -116,6 +122,7 @@ function ActivityRowComponent(props) {
         usageCount,
         size,
         commentCount,
+        isMyProfileRow,
     } = props;
 
     const sizeHumanReadable = useMemo(
@@ -170,9 +177,10 @@ function ActivityRowComponent(props) {
 
 ActivityRowComponent.propTypes = {
     dataType: PropTypes.string.isRequired,
-    displayName: PropTypes.string.isRequired,
+    displayName: PropTypes.string,
     usageCount: PropTypes.number.isRequired,
     commentCount: PropTypes.number.isRequired,
+    isMyProfileRow: PropTypes.bool,
 };
 
 ActivityRowComponent.defaultProps = {
@@ -180,6 +188,7 @@ ActivityRowComponent.defaultProps = {
     displayName: "",
     usageCount: 0,
     commentCount: 0,
+    isMyProfileRow: false,
 };
 
 export default ActivityRowComponent;

@@ -36,8 +36,6 @@ import { run } from "./database/database";
 import {
     TABLE_COMMENTS,
     TABLE_COMMENT_METADATA,
-    TABLE_FILES,
-    TABLE_LINKS,
     TABLE_NOTIFICATIONS,
     TABLE_SHARING_DATA,
     TABLE_USERS,
@@ -295,62 +293,20 @@ async function selectTableUsersWithLatestSharingDataType() {
     return result?.[0]?.rows;
 }
 
-async function selectTableFiles() {
-    const query = `SELECT * FROM ${TABLE_FILES.name}`;
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableLinks() {
-    const query = `SELECT * FROM ${TABLE_LINKS.name}`;
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-// TODO(young): refactor this query
-async function selectTableFilesWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+async function selectTableSharingDataWithCommentCount(userID) {
+    let query = `SELECT f.*, COUNT(*) as comment_count, 
+            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY f.${TABLE_FILES.fields.id};`;
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+        query = `SELECT f.*, COUNT(*) as comment_count,
+            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE f.${TABLE_FILES.fields.uploaded_by} = ${userID}
-        GROUP BY f.${TABLE_FILES.fields.id};`;
-    }
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-// TODO(young): refactor this query
-async function selectTableLinksWithCommentCount(userID) {
-    let query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY l.${TABLE_LINKS.fields.id};`;
-
-    if (userID && userID !== "") {
-        query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE l.${TABLE_LINKS.fields.uploaded_by} = ${userID}
-        GROUP BY l.${TABLE_LINKS.fields.id};`;
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
     }
 
     console.log("query:", query);
@@ -431,10 +387,7 @@ export {
     selectTableUsers,
     selectTableUsersByID,
     selectTableUsersWithLatestSharingDataType,
-    selectTableFiles,
-    selectTableLinks,
-    selectTableFilesWithCommentCount,
-    selectTableLinksWithCommentCount,
+    selectTableSharingDataWithCommentCount,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,

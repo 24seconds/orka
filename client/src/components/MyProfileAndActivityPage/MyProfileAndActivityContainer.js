@@ -3,8 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import {
-    selectTableFilesWithCommentCount,
-    selectTableLinksWithCommentCount,
+    selectTableSharingDataWithCommentCount,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
@@ -67,19 +66,21 @@ const ActivityRowContainer = styled.div`
 `;
 
 // TODO(young): this function is duplicate. Refactor it later.
-function renderActivityRowComponent(data, activeRow, onClick) {
+function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
+    console.log("renderActivityRowComponent:", data);
     if (data?.dataType === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
-                senderID={data.uploaded_by}
+                senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={data.type}
+                dataType={data.extension}
                 displayName={data.name}
                 size={data.size}
-                usageCount={data.download_count}
+                usageCount={data.status_count}
                 commentCount={data.comment_count}
+                isMyProfileRow={data.uploader_id === myOrkaUUID}
                 onClick={onClick}
             />
         );
@@ -89,12 +90,14 @@ function renderActivityRowComponent(data, activeRow, onClick) {
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
-                senderID={data.uploaded_by}
+                senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={"TXT"}
-                onClick={onClick}
-                usageCount={data.view_count}
+                dataType={"URL"}
+                displayName={data.text}
+                usageCount={data.status_count}
                 commentCount={data.comment_count}
+                isMyProfileRow={data.uploader_id === myOrkaUUID}
+                onClick={onClick}
             />
         );
     }
@@ -103,8 +106,10 @@ function renderActivityRowComponent(data, activeRow, onClick) {
 function MyProfileAndActivityPageContainerComponent() {
     const [data, setData] = useState([]);
 
-    const tableFiles = useSelector((state) => state.tableFiles, shallowEqual);
-    const tableLinks = useSelector((state) => state.tableFiles, shallowEqual);
+    const tableSharingData = useSelector(
+        (state) => state.tableSharingData,
+        shallowEqual
+    );
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
 
@@ -112,24 +117,12 @@ function MyProfileAndActivityPageContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            const [files, links] = await Promise.all([
-                selectTableFilesWithCommentCount(),
-                selectTableLinksWithCommentCount(),
-            ]);
-
-            const filesWithType = files.map((f) => {
-                return { ...f, dataType: DATATYPE_FILE };
-            });
-            const linksWithType = links.map((l) => {
-                return { ...l, dataType: DATATYPE_LINK };
-            });
-
-            console.table(filesWithType);
-            console.table(linksWithType);
-
-            setData([...filesWithType, ...linksWithType]);
+            const data = await selectTableSharingDataWithCommentCount(
+                myOrkaUUID
+            );
+            setData(data);
         })();
-    }, [tableFiles, tableLinks, myOrkaUUID]);
+    }, [tableSharingData, myOrkaUUID]);
 
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
@@ -156,7 +149,12 @@ function MyProfileAndActivityPageContainerComponent() {
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
                 {restData.map((d) =>
-                    renderActivityRowComponent(d, activeRow, onClick)
+                    renderActivityRowComponent(
+                        d,
+                        activeRow,
+                        onClick,
+                        myOrkaUUID
+                    )
                 )}
             </ActivityRowContainer>
         </MyProfileAndActivityPageContainer>

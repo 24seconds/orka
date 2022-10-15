@@ -3,19 +3,19 @@ import { DATATYPE_FILE } from "../../constants/constant";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 
 function renderActivityRowComponent(data, activeRow, onClick) {
-    console.log("data.uploaded_by:", data.uploaded_by);
+    console.log("renderActivityRowComponent, data:", data);
 
-    if (data?.dataType === DATATYPE_FILE) {
+    if (data?.type === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
-                senderID={data.uploaded_by}
+                senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={data.type}
+                dataType={data.extension}
                 displayName={data.name}
                 size={data.size}
-                usageCount={data.download_count}
+                usageCount={data.status_count}
                 commentCount={data.comment_count}
                 onClick={onClick}
             />
@@ -26,12 +26,13 @@ function renderActivityRowComponent(data, activeRow, onClick) {
             <ActivityRowComponent
                 key={data.id}
                 rowID={data.id}
-                senderID={data.uploaded_by}
+                senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={"TXT"}
-                onClick={onClick}
-                usageCount={data.view_count}
+                dataType={"URL"}
+                displayName={data.text}
+                usageCount={data.status_count}
                 commentCount={data.comment_count}
+                onClick={onClick}
             />
         );
     }

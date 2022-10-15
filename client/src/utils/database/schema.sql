@@ -3,22 +3,16 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(50) NOT NULL,
     profile INT8 NOT NULL
 );
-CREATE TABLE IF NOT EXISTS files (
+CREATE TABLE IF NOT EXISTS sharing_data (
     id CHAR(16) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    size INT32 NOT NULL,
+    name VARCHAR(50) NULL,
+    size INT32 NULL,
+    extension VARCHAR(50) NULL,
+    text VARCHAR(1000) NULL,
     type VARCHAR(50) NOT NULL,
-    download_count INT16 NOT NULL,
+    status_count INT16 NOT NULL,
     hands_up BOOLEAN NOT NULL,
-    uploaded_by CHAR(16) NOT NULL,
-    uploaded_at TIMESTAMP NOT NULL
-);
-CREATE TABLE IF NOT EXISTS links (
-    id CHAR(16) PRIMARY KEY,
-    text TEXT NOT NULL,
-    view_count INT16 NOT NULL,
-    hands_up BOOLEAN NOT NULL,
-    uploaded_by CHAR(16) NOT NULL,
+    uploader_id CHAR(16) NOT NULL,
     uploaded_at TIMESTAMP NOT NULL
 );
 CREATE TABLE IF NOT EXISTS comments (

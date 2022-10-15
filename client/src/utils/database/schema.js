@@ -8,32 +8,6 @@ const TABLE_USERS = {
     },
 };
 
-const TABLE_FILES = {
-    name: "files",
-    fields: {
-        id: "id",
-        name: "name",
-        size: "size",
-        type: "type",
-        download_count: "download_count",
-        hands_up: "hands_up",
-        uploaded_by: "uploaded_by",
-        uploaded_at: "uploaded_at",
-    },
-};
-
-const TABLE_LINKS = {
-    name: "links",
-    fields: {
-        id: "id",
-        text: "text",
-        view_count: "view_count",
-        hands_up: "hands_up",
-        uploaded_by: "uploaded_by",
-        uploaded_at: "uploaded_at",
-    },
-};
-
 const TABLE_SHARING_DATA = {
     name: "sharing_data",
     fields: {
@@ -98,24 +72,6 @@ CREATE TABLE IF NOT EXISTS ${TABLE_USERS.name} (
     ${TABLE_USERS.fields.name} TEXT NOT NULL,
     ${TABLE_USERS.fields.profile} INTEGER NOT NULL
 );
-CREATE TABLE IF NOT EXISTS ${TABLE_FILES.name} (
-    ${TABLE_FILES.fields.id} TEXT PRIMARY KEY,
-    ${TABLE_FILES.fields.name} TEXT NOT NULL,
-    ${TABLE_FILES.fields.size} INTEGER NOT NULL,
-    ${TABLE_FILES.fields.type} TEXT NOT NULL,
-    ${TABLE_FILES.fields.download_count} INTEGER NOT NULL,
-    ${TABLE_FILES.fields.hands_up} BOOLEAN NOT NULL,
-    ${TABLE_FILES.fields.uploaded_by} TEXT NOT NULL,
-    ${TABLE_FILES.fields.uploaded_at} TIMESTAMP NOT NULL
-);
-CREATE TABLE IF NOT EXISTS ${TABLE_LINKS.name} (
-    ${TABLE_LINKS.fields.id} TEXT PRIMARY KEY,
-    ${TABLE_LINKS.fields.text} TEXT NOT NULL,
-    ${TABLE_LINKS.fields.view_count} INTEGER NOT NULL,
-    ${TABLE_LINKS.fields.hands_up} BOOLEAN NOT NULL,
-    ${TABLE_LINKS.fields.uploaded_by} TEXT NOT NULL,
-    ${TABLE_LINKS.fields.uploaded_at} TIMESTAMP NOT NULL
-);
 CREATE TABLE IF NOT EXISTS ${TABLE_COMMENTS.name} (
     ${TABLE_COMMENTS.fields.id} TEXT PRIMARY KEY,
     ${TABLE_COMMENTS.fields.data_id} TEXT NOT NULL,
@@ -155,8 +111,6 @@ CREATE TABLE IF NOT EXISTS ${TABLE_SHARING_DATA.name} (
 export {
     DDLQueries,
     TABLE_USERS,
-    TABLE_FILES,
-    TABLE_LINKS,
     TABLE_SHARING_DATA,
     TABLE_COMMENTS,
     TABLE_COMMENT_METADATA,
