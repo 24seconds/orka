@@ -13,12 +13,11 @@ import {
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
-    UPDATE_TABLE_FILES,
-    UPDATE_TABLE_LINKS,
     UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
     UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
+    UPDATE_TABLE_SHARING_DATA,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
 import { LOCALDROP_APP_VERSION } from "../constants/constant";
@@ -182,7 +181,7 @@ function selectedSender(state = null, action) {
 }
 
 // TODO(young): use `uuidv4()`
-function myOrkaUUID(state = "naive-id-1", action) {
+function myOrkaUUID(state = "naive-id-2", action) {
     return state;
 }
 
@@ -196,18 +195,8 @@ function tableUsers(state = 0, action) {
     return state;
 }
 
-function tableFiles(state = 0, action) {
-    if (action.type === UPDATE_TABLE_FILES) {
-        const newState = state + 1;
-
-        return newState;
-    }
-
-    return state;
-}
-
-function tableLinks(state = 0, action) {
-    if (action.type === UPDATE_TABLE_LINKS) {
+function tableSharingData(state = 0, action) {
+    if (action.type === UPDATE_TABLE_SHARING_DATA) {
         const newState = state + 1;
 
         return newState;
@@ -276,8 +265,7 @@ export default combineReducers({
     selectedRow,
     selectedSender,
     tableUsers,
-    tableFiles,
-    tableLinks,
+    tableSharingData,
     tableComments,
     tableCommentMetadata,
     tableNotifications,

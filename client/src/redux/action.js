@@ -12,8 +12,6 @@ import {
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
-    UPDATE_TABLE_FILES,
-    UPDATE_TABLE_LINKS,
     UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
     UPDATE_TABLE_COMMENT_METADATA,
@@ -86,16 +84,6 @@ export const updateSenderID = (senderID) => ({
 
 export const updateTableUsers = () => ({
     type: UPDATE_TABLE_USERS,
-    payload: 0,
-});
-
-export const updateTableFiles = () => ({
-    type: UPDATE_TABLE_FILES,
-    payload: 0,
-});
-
-export const updateTableLinks = () => ({
-    type: UPDATE_TABLE_LINKS,
     payload: 0,
 });
 

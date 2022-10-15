@@ -4,15 +4,11 @@ import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import {
-    selectTableFiles,
-    selectTableFilesWithCommentCount,
-    selectTableLinksWithCommentCount,
-    selectTableLinks,
+    selectTableSharingDataWithCommentCount,
     updateSelectedRowID,
     updateSender,
     updateSelectedPeerUUID,
 } from "../../utils/localApi";
-import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -121,7 +117,7 @@ const ActivityContainer = styled.div`
 
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
-    min-width: 606px;
+    width: 606px;
     height: 746px;
 
     ${ActivityTitleContainer} {
@@ -140,29 +136,25 @@ function ActivityContainerComponent(props) {
     const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
 
-    const tableFiles = useSelector((state) => state.tableFiles, shallowEqual);
-    const tableLinks = useSelector((state) => state.tableLinks, shallowEqual);
+    const tableSharingData = useSelector(
+        (state) => state.tableSharingData,
+        shallowEqual
+    );
+    const activePeerUUID = useSelector(
+        (state) => state.selectedPeer,
+        shallowEqual
+    );
+
+    console.log("activePeerUUID:", activePeerUUID);
 
     useEffect(() => {
         (async () => {
-            const [files, links] = await Promise.all([
-                selectTableFilesWithCommentCount(),
-                selectTableLinksWithCommentCount(),
-            ]);
-
-            const filesWithType = files.map((f) => {
-                return { ...f, dataType: DATATYPE_FILE };
-            });
-            const linksWithType = links.map((l) => {
-                return { ...l, dataType: DATATYPE_LINK };
-            });
-
-            console.table(filesWithType);
-            console.table(linksWithType);
-
-            setData([...filesWithType, ...linksWithType]);
+            const sharingData = await selectTableSharingDataWithCommentCount(
+                activePeerUUID
+            );
+            setData(sharingData);
         })();
-    }, [tableFiles, tableLinks]);
+    }, [tableSharingData, activePeerUUID]);
 
     // only one hands up data is possible
     const handsUpData = data.filter((d) => d.hands_up)?.[0];

@@ -8,28 +8,24 @@ const TABLE_USERS = {
     },
 };
 
-const TABLE_FILES = {
-    name: "files",
+const TABLE_SHARING_DATA = {
+    name: "sharing_data",
     fields: {
         id: "id",
+
+        // file related fields
         name: "name",
         size: "size",
-        type: "type",
-        download_count: "download_count",
-        hands_up: "hands_up",
-        uploaded_by: "uploaded_by",
-        uploaded_at: "uploaded_at",
-    },
-};
+        extension: "extension",
 
-const TABLE_LINKS = {
-    name: "links",
-    fields: {
-        id: "id",
+        // link related fields
         text: "text",
-        view_count: "view_count",
+
+        // common fields
+        type: "type",
+        status_count: "status_count",
         hands_up: "hands_up",
-        uploaded_by: "uploaded_by",
+        uploader_id: "uploader_id",
         uploaded_at: "uploaded_at",
     },
 };
@@ -76,24 +72,6 @@ CREATE TABLE IF NOT EXISTS ${TABLE_USERS.name} (
     ${TABLE_USERS.fields.name} TEXT NOT NULL,
     ${TABLE_USERS.fields.profile} INTEGER NOT NULL
 );
-CREATE TABLE IF NOT EXISTS ${TABLE_FILES.name} (
-    ${TABLE_FILES.fields.id} TEXT PRIMARY KEY,
-    ${TABLE_FILES.fields.name} TEXT NOT NULL,
-    ${TABLE_FILES.fields.size} INTEGER NOT NULL,
-    ${TABLE_FILES.fields.type} TEXT NOT NULL,
-    ${TABLE_FILES.fields.download_count} INTEGER NOT NULL,
-    ${TABLE_FILES.fields.hands_up} BOOLEAN NOT NULL,
-    ${TABLE_FILES.fields.uploaded_by} TEXT NOT NULL,
-    ${TABLE_FILES.fields.uploaded_at} TIMESTAMP NOT NULL
-);
-CREATE TABLE IF NOT EXISTS ${TABLE_LINKS.name} (
-    ${TABLE_LINKS.fields.id} TEXT PRIMARY KEY,
-    ${TABLE_LINKS.fields.text} TEXT NOT NULL,
-    ${TABLE_LINKS.fields.view_count} INTEGER NOT NULL,
-    ${TABLE_LINKS.fields.hands_up} BOOLEAN NOT NULL,
-    ${TABLE_LINKS.fields.uploaded_by} TEXT NOT NULL,
-    ${TABLE_LINKS.fields.uploaded_at} TIMESTAMP NOT NULL
-);
 CREATE TABLE IF NOT EXISTS ${TABLE_COMMENTS.name} (
     ${TABLE_COMMENTS.fields.id} TEXT PRIMARY KEY,
     ${TABLE_COMMENTS.fields.data_id} TEXT NOT NULL,
@@ -105,7 +83,7 @@ CREATE TABLE IF NOT EXISTS ${TABLE_COMMENTS.name} (
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_COMMENT_METADATA.name} (
     ${TABLE_COMMENT_METADATA.fields.data_id} TEXT PRIMARY KEY,
-    ${TABLE_COMMENT_METADATA.fields.last_read_comment_id} TEXT
+    ${TABLE_COMMENT_METADATA.fields.last_read_comment_id} TEXT NULL
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.id} TEXT PRIMARY KEY,
@@ -113,16 +91,27 @@ CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.text} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_type} TEXT NOT NULL,
-    ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT,
+    ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.created_at} TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ${TABLE_SHARING_DATA.name} (
+    ${TABLE_SHARING_DATA.fields.id} TEXT PRIMARY KEY,
+    ${TABLE_SHARING_DATA.fields.name} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.size} INTEGER NULL,
+    ${TABLE_SHARING_DATA.fields.extension} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.text} TEXT NULL,
+    ${TABLE_SHARING_DATA.fields.type} TEXT NOT NULL,
+    ${TABLE_SHARING_DATA.fields.status_count} INTEGER NOT NULL,
+    ${TABLE_SHARING_DATA.fields.hands_up} BOOLEAN NOT NULL,
+    ${TABLE_SHARING_DATA.fields.uploader_id} TEXT NOT NULL,
+    ${TABLE_SHARING_DATA.fields.uploaded_at} TIMESTAMP NOT NULL
 );
 `;
 
 export {
     DDLQueries,
     TABLE_USERS,
-    TABLE_FILES,
-    TABLE_LINKS,
+    TABLE_SHARING_DATA,
     TABLE_COMMENTS,
     TABLE_COMMENT_METADATA,
     TABLE_NOTIFICATIONS,

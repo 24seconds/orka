@@ -36,9 +36,8 @@ import { run } from "./database/database";
 import {
     TABLE_COMMENTS,
     TABLE_COMMENT_METADATA,
-    TABLE_FILES,
-    TABLE_LINKS,
     TABLE_NOTIFICATIONS,
+    TABLE_SHARING_DATA,
     TABLE_USERS,
 } from "./database/schema";
 
@@ -270,29 +269,23 @@ async function selectTableUsersByID(userID) {
     return result?.[0]?.rows;
 }
 
-async function selectTableUsersWithLatestFileType() {
+async function selectTableUsersWithLatestSharingDataType() {
     const query = `
     SELECT u.*,
-        f.${TABLE_FILES.fields.type} as latest_data_type
-    FROM ${TABLE_USERS.name} u
-        LEFT JOIN 
-        (SELECT ${TABLE_FILES.fields.uploaded_by} AS user_id, 
-            ${TABLE_FILES.fields.type}, Max(${TABLE_FILES.fields.uploaded_at})
-            FROM ${TABLE_FILES.name}
-            GROUP  BY ${TABLE_FILES.name}.${TABLE_FILES.fields.uploaded_by}) f
-        ON u.${TABLE_USERS.fields.id} = f.user_id; `;
+        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
+        THEN "URL" 
+        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latest_data_type,
+    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
+  FROM
+    ${TABLE_USERS.name} u
+  JOIN
+    ${TABLE_SHARING_DATA.name} s
+  ON
+    u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
+  GROUP BY
+    u.${TABLE_USERS.fields.id}`;
 
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableFiles() {
-    const query = `SELECT * FROM ${TABLE_FILES.name}`;
-    console.log("query:", query);
+    console.log("selectTableUsersWithLatestSharingDataType, query:", query);
 
     const result = await run(query);
     console.log("result:", result);
@@ -300,52 +293,20 @@ async function selectTableFiles() {
     return result?.[0]?.rows;
 }
 
-async function selectTableLinks() {
-    const query = `SELECT * FROM ${TABLE_LINKS.name}`;
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-// TODO(young): refactor this query
-async function selectTableFilesWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+async function selectTableSharingDataWithCommentCount(userID) {
+    let query = `SELECT f.*, COUNT(*) as comment_count, 
+            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY f.${TABLE_FILES.fields.id};`;
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(*) as comment_count FROM ${TABLE_FILES.name} f 
+        query = `SELECT f.*, COUNT(*) as comment_count,
+            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_FILES.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE f.${TABLE_FILES.fields.uploaded_by} = ${userID}
-        GROUP BY f.${TABLE_FILES.fields.id};`;
-    }
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-// TODO(young): refactor this query
-async function selectTableLinksWithCommentCount(userID) {
-    let query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY l.${TABLE_LINKS.fields.id};`;
-
-    if (userID && userID !== "") {
-        query = `SELECT l.*, COUNT(*) as comment_count FROM ${TABLE_LINKS.name} l 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        l.${TABLE_LINKS.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE l.${TABLE_LINKS.fields.uploaded_by} = ${userID}
-        GROUP BY l.${TABLE_LINKS.fields.id};`;
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
     }
 
     console.log("query:", query);
@@ -425,11 +386,8 @@ export {
     updateTableNotifications,
     selectTableUsers,
     selectTableUsersByID,
-    selectTableUsersWithLatestFileType,
-    selectTableFiles,
-    selectTableLinks,
-    selectTableFilesWithCommentCount,
-    selectTableLinksWithCommentCount,
+    selectTableUsersWithLatestSharingDataType,
+    selectTableSharingDataWithCommentCount,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,

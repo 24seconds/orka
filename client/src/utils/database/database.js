@@ -51,51 +51,6 @@ async function initializeDb() {
 
     await glue.query(
         middlewareForDebugQuery(`
-        INSERT INTO files VALUES (
-            "naive-file-id-1", "naive-file-name-1", 128, "PNG", 1, false, 
-            "naive-id-3", "2022-10-01T14:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO files VALUES (
-            "naive-file-id-2", "naive-file-name-2", 256123, "JPEG", 0, true, 
-            "naive-id-2", "2022-10-01T15:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO files VALUES (
-            "naive-file-id-3", "naive-file-name-3", 256123, "HWP", 0, true, 
-            "naive-id-2", "2022-10-05T15:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO files VALUES (
-            "naive-file-id-4", "naive-file-name-2", 256123, "JPEG", 0, true, 
-            "naive-id-2", "2022-10-02T15:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO files VALUES (
-            "naive-file-id-5", "naive-file-name-5", 256123, "JPEG", 0, true, 
-            "naive-id-2", "2022-09-01T15:48:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO links VALUES (
-            "naive-link-id-1", "naive-link-name-4", 0, false, 
-            "naive-uploader", "2022-10-02T15:48:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO links VALUES (
-            "naive-link-id-2", "naive-link-name-2", 0, false, 
-            "naive-uploader", "2022-10-02T16:48:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
         INSERT INTO comments VALUES (
             "naive-comment-id-2", "naive-file-id-1", "FILE", "i want to download but i
             can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
@@ -164,25 +119,32 @@ async function initializeDb() {
     `)
     );
 
-    let q = `SELECT
-    f.*, COUNT(*)
-  FROM links f
-  LEFT JOIN comments c ON f.id = c.data_id
-  GROUP BY f.id`;
-
-    const resp = await glue.query(q);
-    console.table(resp?.[0]?.rows);
-    console.log("==================");
-
-    q = `SELECT
-    f.*, COUNT(*)
-  FROM files f
-  LEFT JOIN comments c ON f.id = c.data_id
-  GROUP BY f.id`;
-
-    const resp2 = await glue.query(q);
-    console.table(resp2?.[0]?.rows);
-    console.log("==================");
+    await glue.query(
+        middlewareForDebugQuery(`
+        INSERT INTO sharing_data VALUES ("naive-file-id-1", "naive-file-name-1", 128,
+    "PNG", NULL, "FILE", 1, false, "naive-id-3", "2022-10-01T14:48:00.000Z");
+INSERT INTO sharing_data VALUES ("naive-file-id-2", "naive-file-name-2", 256123,
+    "JPEG", NULL, "FILE", 0, true, "naive-id-2", "2022-10-01T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-file-id-3", "naive-file-name-3", 256123, "HWP", NULL, "FILE", 0, false, 
+    "naive-id-2", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-file-id-4", "naive-file-name-4", 256123, "JPEG", NULL, "FILE", 0, false, 
+    "naive-id-2", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-file-id-5", "naive-file-name-5", 256123, "JPEG", NULL, "FILE", 0, false, 
+    "naive-id-2", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-link-id-1", NULL, 0, NULL, "https://dev.orka.run", "LINK", 0, false, 
+    "naive-uploader", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-link-id-3", NULL, 0, NULL, "https://dev.orka.run.hohohohohohohohohohoho", "LINK", 0, false, 
+    "naive-id-2", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-link-id-2", NULL, 0, NULL, "https://orka.run", "LINK", 0, false, 
+    "naive-uploader", "2022-10-05T16:48:00.000Z");
+        `)
+    );
 
     let a = "";
 

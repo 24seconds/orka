@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
-    selectTableUsersWithLatestFileType,
+    selectTableUsersWithLatestSharingDataType,
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
@@ -10,7 +10,7 @@ import PeerComponent from "./Peer/PeerComponent";
 
 const PeerListLayout = styled.div`
     display: inline-grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 14px;
     padding: 2px;
 
@@ -40,7 +40,7 @@ function PeerListLayoutComponent() {
         console.log("PeerListLayoutComponent userEffect called");
         (async () => {
             const usersWithLatestFileType =
-                await selectTableUsersWithLatestFileType();
+                await selectTableUsersWithLatestSharingDataType();
             if (usersWithLatestFileType?.length > 0) {
                 setPeers(usersWithLatestFileType);
             }
