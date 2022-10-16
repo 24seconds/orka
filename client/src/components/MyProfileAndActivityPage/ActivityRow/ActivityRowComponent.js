@@ -109,6 +109,25 @@ function convertByteToHumanReadable(size) {
     return `Too large`;
 }
 
+function convertTimestampReadable(timestamp, now) {
+    // time in second.
+    const timeDiff = Math.round((now - timestamp) / 1000);
+
+    const timeInMinute = Math.round(timeDiff / 60);
+    const timeInHour = Math.round(timeDiff / 60 / 60);
+    const timeInDay = Math.round(timeDiff / 60 / 60 / 24);
+
+    if (timeInMinute < 60) {
+        return `${timeInMinute}m ago`;
+    }
+
+    if (timeInHour < 24) {
+        return `${timeInHour}H ago`;
+    }
+
+    return `${timeInDay}d ago`;
+}
+
 // TODO(young): refactor this later. dataType is used in several ways.
 function ActivityRowComponent(props) {
     const {
@@ -123,11 +142,17 @@ function ActivityRowComponent(props) {
         size,
         commentCount,
         isMyProfileRow,
+        createdAt,
     } = props;
 
     const sizeHumanReadable = useMemo(
         () => convertByteToHumanReadable(size),
         [size]
+    );
+
+    const timestampReadable = useMemo(
+        () => convertTimestampReadable(createdAt, new Date()),
+        [createdAt]
     );
 
     return (
@@ -148,8 +173,8 @@ function ActivityRowComponent(props) {
                         <div className="orka-file-name">{displayName}</div>
                         <div className="orka-size-and-timestamp">
                             {dataType === "TXT"
-                                ? "URL description blah blah blah | 20H ago"
-                                : `${sizeHumanReadable} | 20H ago`}
+                                ? `URL description blah blah blah | ${timestampReadable}`
+                                : `${sizeHumanReadable} | ${timestampReadable}`}
                         </div>
                     </FileMetaData>
                 </div>

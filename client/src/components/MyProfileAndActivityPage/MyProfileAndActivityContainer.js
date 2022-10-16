@@ -82,6 +82,7 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
             />
         );
@@ -98,6 +99,7 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
             />
         );

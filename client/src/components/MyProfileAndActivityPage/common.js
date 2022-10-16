@@ -17,6 +17,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
                 size={data.size}
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
             />
         );
@@ -32,6 +33,7 @@ function renderActivityRowComponent(data, activeRow, onClick) {
                 displayName={data.text}
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
             />
         );
