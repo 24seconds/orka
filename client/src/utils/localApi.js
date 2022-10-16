@@ -375,6 +375,43 @@ async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
     return result?.[0]?.rows;
 }
 
+async function deleteTableSharingDataByIDs(sharingDataIDs) {
+    if (sharingDataIDs.length === 0) {
+        return;
+    }
+
+    const naiveQueriesForTableSharingData = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
+    `
+    );
+
+    const navieQueriesForTableComments = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_COMMENTS.name} WHERE ${TABLE_COMMENTS.fields.data_id} = "${id}";
+    `
+    );
+
+    const naiveQueriesForTableCommentMetadata = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_COMMENT_METADATA.name} 
+        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${id}";
+    `
+    );
+
+    const query = [
+        ...naiveQueriesForTableSharingData,
+        ...navieQueriesForTableComments,
+        ...naiveQueriesForTableCommentMetadata,
+    ].join("\n");
+
+    console.log("deleteTableSharingDataByIDs, query:", query);
+
+    const result = await run(query);
+    console.log("deleteTableSharingDataByIDs, result:", result);
+    // return result?.[0]?.rows;
+}
+
 // TODO(young): Add logic - filter by receiver ID
 async function selectTableCommentsByDataID(dataID, receiverID) {
     const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
@@ -448,6 +485,7 @@ export {
     patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
+    deleteTableSharingDataByIDs,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,

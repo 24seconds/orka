@@ -26,7 +26,7 @@ const EditButton = styled.div`
     letter-spacing: -0.04em;
 
     &:hover {
-        background: ${props => props.theme.Grayscale04};
+        background: ${(props) => props.theme.Grayscale04};
         border-radius: 16px;
     }
 `;
@@ -111,7 +111,7 @@ const NameEditor = styled.div`
 `;
 
 function ProfileEditNameComponent(props) {
-    const { className } = props;
+    const { className, editMode: propEditMode, onClick, onSetEditMode } = props;
     const [myUserProfile, setMyUserProfile] = useState(0);
     const [myUserName, setMyUserName] = useState("");
     const [memoUserName, setMemoUserName] = useState("");
@@ -132,10 +132,21 @@ function ProfileEditNameComponent(props) {
 
     function onChange(event) {
         setMyUserName(event?.target?.value || "");
+
+        if (!propEditMode) {
+            onSetEditMode(true);
+        }
+    }
+
+    async function onChangeMode() {
+        onClick?.();
+
+        if (propEditMode) {
+            await onUpdateName();
+        }
     }
 
     async function onUpdateName() {
-        console.log("onUpdateName called");
         await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
 
         // reset memo
@@ -148,10 +159,9 @@ function ProfileEditNameComponent(props) {
     }
 
     const profilePath = `profile_${myUserProfile}.png`;
-    const shouldShowDone = myUserName !== memoUserName;
 
     return (
-        <ProfileEditName className={className} shouldShowDone={shouldShowDone}>
+        <ProfileEditName className={className} shouldShowDone={propEditMode}>
             <MiniProfile className="orka-mini-profile">
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
             </MiniProfile>
@@ -165,18 +175,19 @@ function ProfileEditNameComponent(props) {
                     <ProfileEditNameClearIcon />
                 </div>
             </NameEditor>
-            <EditButton
-                className="orka-edit-button"
-                onClick={shouldShowDone ? onUpdateName : null}
-            >
-                {shouldShowDone ? "Done" : "Edit"}
+            <EditButton className="orka-edit-button" onClick={onChangeMode}>
+                {propEditMode ? "Done" : "Edit"}
             </EditButton>
         </ProfileEditName>
     );
 }
 
-ProfileEditNameComponent.propTypes = {};
+ProfileEditNameComponent.propTypes = {
+    isDeleteMode: PropTypes.bool,
+};
 
-ProfileEditNameComponent.defaultProps = {};
+ProfileEditNameComponent.defaultProps = {
+    isDeleteMode: false,
+};
 
 export default ProfileEditNameComponent;

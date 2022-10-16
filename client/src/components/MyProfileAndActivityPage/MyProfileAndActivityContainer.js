@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
+    deleteTableSharingDataByIDs,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
     selectTableUsersByID,
@@ -69,8 +70,14 @@ const ActivityRowContainer = styled.div`
 `;
 
 // TODO(young): this function is duplicate. Refactor it later.
-function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
-    console.log("renderActivityRowComponent:", data);
+function renderActivityRowComponent(
+    data,
+    activeRow,
+    onClick,
+    myOrkaUUID,
+    isEditMode,
+    onDeleteRow
+) {
     if (data?.dataType === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
@@ -85,7 +92,9 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
+                isEditMode={isEditMode}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     } else {
@@ -102,7 +111,9 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
+                isEditMode={isEditMode}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     }
@@ -112,6 +123,8 @@ function MyProfileAndActivityPageContainerComponent() {
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [data, setData] = useState([]);
     const [sortOrder, setSortOrder] = useState("DESC");
+    const [editMode, setEditMode] = useState(false);
+    const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -132,6 +145,21 @@ function MyProfileAndActivityPageContainerComponent() {
         })();
     }, [tableSharingData, myOrkaUUID, sortOrder]);
 
+    useEffect(() => {
+        (async () => {
+            const rowsToDelete = Object.keys(rowsToBeDeleted);
+
+            if (!editMode && rowsToDelete.length > 0) {
+                console.log("useEffect, update database:", editMode);
+
+                await deleteTableSharingDataByIDs(rowsToDelete);
+                setRowsToBeDeleted({});
+            }
+
+            console.log("useEffect, editMode:", editMode);
+        })();
+    }, [editMode, rowsToBeDeleted]);
+
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
         if (rowID === activeRow) {
@@ -150,13 +178,35 @@ function MyProfileAndActivityPageContainerComponent() {
         setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
     }
 
+    function onClickEdit() {
+        setEditMode(!editMode);
+    }
+
+    function onSetEditMode(b) {
+        setEditMode(b);
+    }
+
+    function onDeleteRow(rowID) {
+        const newState = { ...rowsToBeDeleted };
+        newState[rowID] = rowID;
+        setRowsToBeDeleted(newState);
+    }
+
     const restData = data.filter((d) => !d.handsUp);
-    const filteredData = filterSharingData(restData, activeFilter);
+    const filteredData = filterSharingData(
+        restData,
+        activeFilter,
+        rowsToBeDeleted
+    );
     const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
 
     return (
         <MyProfileAndActivityPageContainer>
-            <StyledProfileEditNameComponent />
+            <StyledProfileEditNameComponent
+                onClick={onClickEdit}
+                editMode={editMode}
+                onSetEditMode={onSetEditMode}
+            />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     {
@@ -180,7 +230,9 @@ function MyProfileAndActivityPageContainerComponent() {
                         d,
                         activeRow,
                         onClick,
-                        myOrkaUUID
+                        myOrkaUUID,
+                        editMode,
+                        onDeleteRow
                     )
                 )}
             </ActivityRowContainer>

@@ -54,6 +54,6 @@ export const hoverRow = css`
 
 export const hoverFilterTab = css`
     &:hover {
-        border-color: ${props => props.theme.White};
+        border-color: ${(props) => props.theme.White};
     }
 `;

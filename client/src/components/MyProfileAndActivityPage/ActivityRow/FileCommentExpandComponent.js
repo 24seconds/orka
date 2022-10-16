@@ -15,6 +15,10 @@ const FileCommentExpand = styled.div`
     background: ${(props) => props.theme.Grayscale04};
 
     position: relative;
+
+    &:hover {
+        opacity: 0.6;
+    }
 `;
 
 const CommentCounter = styled.div`

@@ -33,8 +33,13 @@ function generateFingerPrint() {
     return "localdrop-file-" + stringArr.join("");
 }
 
-function filterSharingData(data, option) {
+function filterSharingData(data, option, rowsToBeDeleted) {
+    console.log("filterSharingData:", data, rowsToBeDeleted);
     return data.filter((d) => {
+        if (d.id in rowsToBeDeleted) {
+            return false;
+        }
+
         if (option === "Files") {
             return d.dataType === DATATYPE_FILE;
         }

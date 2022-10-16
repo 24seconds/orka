@@ -5,9 +5,6 @@ async function initializeDb() {
     console.log("getExpDb called");
     const glue = await gluesql();
 
-    // debug purpose code
-    window.glue = glue;
-
     console.debug(DDLQueries);
 
     await glue.query(DDLQueries);
@@ -176,6 +173,15 @@ async function run(sql) {
     const result = await db.query(sql);
     return result;
 }
+
+async function debug(sql) {
+    const db = await glue;
+    const result = await db.query(sql);
+    console.log(result);
+}
+
+// debug purpose code
+window.glue = debug;
 
 init();
 

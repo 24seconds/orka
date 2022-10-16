@@ -47,6 +47,8 @@ export const ThemeOrkaDark = {
     FilterNewestText: "#656C78",
 
     ActiveRowDisplayText: "#FFFFFF",
+    StatusActive: "#061728",
+    StatusActiveText: "#0066FF",
 
     CommentRowText: "#FEFEFE",
 
@@ -99,6 +101,8 @@ export const ThemeOrkaLight = {
     FilterNewestText: "#A3ADBE",
 
     ActiveRowDisplayText: "#2E3136",
+    StatusActive: "#061728",
+    StatusActiveText: "#0066FF",
 
     CommentRowText: "#2E3136",
 
