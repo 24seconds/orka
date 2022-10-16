@@ -3,13 +3,14 @@ import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import { filterSharingData } from "../../utils/commonUtil";
 import {
     selectTableSharingDataWithCommentCount,
     updateSelectedRowID,
     updateSender,
     updateSelectedPeerUUID,
 } from "../../utils/localApi";
-import { filterSharingData, renderActivityRowComponent } from "./common";
+import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 

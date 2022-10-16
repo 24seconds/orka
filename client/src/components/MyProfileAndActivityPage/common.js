@@ -40,16 +40,4 @@ function renderActivityRowComponent(data, activeRow, onClick) {
     }
 }
 
-function filterSharingData(data, option) {
-    return data.filter((d) => {
-        if (option === "Files") {
-            return d.dataType === DATATYPE_FILE;
-        }
-        if (option === "URLs") {
-            return d.dataType === DATATYPE_LINK;
-        }
-        return true;
-    });
-}
-
-export { renderActivityRowComponent, filterSharingData };
+export { renderActivityRowComponent };

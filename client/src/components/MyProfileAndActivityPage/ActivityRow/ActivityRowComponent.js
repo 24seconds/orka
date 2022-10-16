@@ -5,6 +5,7 @@ import DataUsageStatusComponent from "./DataUsageStatusComponent";
 import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
+import { hoverRow } from "../../SharedStyle";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
@@ -42,6 +43,8 @@ const ActivityRow = styled.div`
         margin-left: 16px;
         margin-right: 34px;
     }
+
+    ${(props) => !props.isSelected && hoverRow}
 `;
 
 // TODO(young): Refactor this to make it reusable. It is also used in peer component.

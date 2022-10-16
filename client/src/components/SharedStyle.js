@@ -45,3 +45,15 @@ export const rippleEffect = css`
         }
     }
 `;
+
+export const hoverRow = css`
+    &:hover {
+        background: ${(props) => props.theme.Grayscale02};
+    }
+`;
+
+export const hoverFilterTab = css`
+    &:hover {
+        border-color: ${props => props.theme.White};
+    }
+`;

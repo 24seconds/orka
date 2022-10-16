@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { hoverFilterTab } from "../SharedStyle";
 
 const FilterTab = styled.div`
     display: inline-flex;
@@ -29,6 +30,8 @@ const FilterTab = styled.div`
 
     // TODO(young): Consider using outline instead of border if it is annoying
     ${(props) => props.isSelected && `border-color: transparent;`}
+
+    ${props => !props.isSelected && hoverFilterTab}
 `;
 
 function FilterTabComponent(props) {

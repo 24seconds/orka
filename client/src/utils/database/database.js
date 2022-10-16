@@ -126,10 +126,10 @@ async function initializeDb() {
 INSERT INTO sharing_data VALUES ("naive-file-id-2", "naive-file-name-2", 256123,
     "JPEG", NULL, "FILE", 0, true, "naive-id-2", "2022-10-01T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
-    "naive-file-id-3", "naive-file-name-3", 556123, "HWP", NULL, "FILE", 0, false, 
+    "naive-file-id-3", "naive-file-name-3", 556123, "HWP", NULL, "FILE", 8, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
-    "naive-file-id-4", "naive-file-name-4", 256123, "JPEG", NULL, "FILE", 0, false, 
+    "naive-file-id-4", "naive-file-name-4", 256123, "JPEG", NULL, "FILE", 15, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
     "naive-file-id-5", "naive-file-name-5", 256123, "JPEG", NULL, "FILE", 0, false, 

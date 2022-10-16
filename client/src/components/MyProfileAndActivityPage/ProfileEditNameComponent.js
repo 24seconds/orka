@@ -9,6 +9,28 @@ import {
     selectTableUsersByID,
 } from "../../utils/localApi";
 
+const EditButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 66px;
+    height: 48px;
+
+    cursor: pointer;
+    margin-left: ${(props) => (props.shouldShowDone ? "1px" : "14px")};
+
+    color: ${(props) => props.theme.PrimaryColor};
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+    letter-spacing: -0.04em;
+
+    &:hover {
+        background: ${props => props.theme.Grayscale04};
+        border-radius: 16px;
+    }
+`;
+
 const ProfileEditName = styled.div`
     display: flex;
     align-items: center;
@@ -16,21 +38,6 @@ const ProfileEditName = styled.div`
 
     .orka-mini-profile {
         margin-right: 16px;
-    }
-
-    .orka-edit-button {
-        display: flex;
-        align-items: center;
-        max-width: 47px;
-        height: 100%;
-        cursor: pointer;
-        margin-left: ${(props) => (props.shouldShowDone ? "17px" : "30px")};
-
-        color: ${(props) => props.theme.PrimaryColor};
-        font-weight: 300;
-        font-size: 24px;
-        line-height: 29px;
-        letter-spacing: -0.04em;
     }
 `;
 
@@ -158,12 +165,12 @@ function ProfileEditNameComponent(props) {
                     <ProfileEditNameClearIcon />
                 </div>
             </NameEditor>
-            <div
+            <EditButton
                 className="orka-edit-button"
                 onClick={shouldShowDone ? onUpdateName : null}
             >
                 {shouldShowDone ? "Done" : "Edit"}
-            </div>
+            </EditButton>
         </ProfileEditName>
     );
 }

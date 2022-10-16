@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import { filterSharingData } from "../../utils/commonUtil";
 import {
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
@@ -10,7 +11,6 @@ import {
     updateSender,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
-import { filterSharingData } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
 
@@ -125,7 +125,8 @@ function MyProfileAndActivityPageContainerComponent() {
     useEffect(() => {
         (async () => {
             const data = await selectTableSharingDataWithCommentCountOrderBy(
-                myOrkaUUID, sortOrder,
+                myOrkaUUID,
+                sortOrder
             );
             setData(data);
         })();
@@ -159,13 +160,16 @@ function MyProfileAndActivityPageContainerComponent() {
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     {
-                        // duplicate logic in ActivityContainerComponent. 
+                        // duplicate logic in ActivityContainerComponent.
                         // Refactor this later.
-                        ["ALL", "Files", "URLs"].map((n) => <FilterTabComponent 
-                            key={n}
-                            name={n}
-                            isSelected={n === activeFilter}
-                            onClickFilterTab={onClickFilterTab} />)
+                        ["ALL", "Files", "URLs"].map((n) => (
+                            <FilterTabComponent
+                                key={n}
+                                name={n}
+                                isSelected={n === activeFilter}
+                                onClickFilterTab={onClickFilterTab}
+                            />
+                        ))
                     }
                 </FilterContainer>
                 <SortButton onClick={onClickSort}>{sortText}</SortButton>
