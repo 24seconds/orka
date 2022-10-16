@@ -1,5 +1,5 @@
 import React from "react";
-import { DATATYPE_FILE } from "../../constants/constant";
+import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 
 function renderActivityRowComponent(data, activeRow, onClick) {
@@ -40,4 +40,16 @@ function renderActivityRowComponent(data, activeRow, onClick) {
     }
 }
 
-export { renderActivityRowComponent };
+function filterSharingData(data, option) {
+    return data.filter((d) => {
+        if (option === "Files") {
+            return d.dataType === DATATYPE_FILE;
+        }
+        if (option === "URLs") {
+            return d.dataType === DATATYPE_LINK;
+        }
+        return true;
+    });
+}
+
+export { renderActivityRowComponent, filterSharingData };

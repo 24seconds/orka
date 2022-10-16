@@ -9,7 +9,7 @@ import {
     updateSender,
     updateSelectedPeerUUID,
 } from "../../utils/localApi";
-import { renderActivityRowComponent } from "./common";
+import { filterSharingData, renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 
@@ -159,6 +159,7 @@ function ActivityContainerComponent(props) {
     // only one hands up data is possible
     const handsUpData = data.filter((d) => d.hands_up)?.[0];
     const restData = data.filter((d) => !d.hands_up);
+    const filteredData = filterSharingData(restData, activeFilter);
 
     console.log("handsUpData:", handsUpData);
 
@@ -206,19 +207,22 @@ function ActivityContainerComponent(props) {
             )}
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    {["ALL", "Files", "Link"].map((n) => (
-                        <FilterTabComponent
-                            key={n}
-                            name={n}
-                            onClickFilterTab={onClickFilterTab}
-                            isSelected={n === activeFilter}
-                        />
-                    ))}
+                    {["ALL", "Files", "URLs"].map((n) => {
+                        console.log("FilterContainer:", n);
+                        return (
+                            <FilterTabComponent
+                                key={n}
+                                name={n}
+                                isSelected={n === activeFilter}
+                                onClickFilterTab={onClickFilterTab}
+                            />
+                        );
+                    })}
                 </FilterContainer>
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                {restData.map((d) =>
+                {filteredData.map((d) =>
                     renderActivityRowComponent(d, activeRow, onClick)
                 )}
             </ActivityRowContainer>

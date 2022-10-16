@@ -344,6 +344,37 @@ async function selectTableSharingDataWithCommentCount(userID) {
     return result?.[0]?.rows;
 }
 
+async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
+    let query = `SELECT f.*, COUNT(*) as comment_count, 
+            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
+
+    if (userID && userID !== "") {
+        query = `SELECT f.*, COUNT(*) as comment_count,
+            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
+    }
+
+    if (!!order) {
+        const stmt = order === "ASC" ? "ASC" : "DESC";
+        query += ` ORDER BY ${TABLE_SHARING_DATA.fields.uploaded_at} ${stmt};`;
+    } else {
+        query += `;`;
+    }
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 // TODO(young): Add logic - filter by receiver ID
 async function selectTableCommentsByDataID(dataID, receiverID) {
     const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
@@ -416,6 +447,7 @@ export {
     selectTableUsersWithLatestSharingDataType,
     patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
+    selectTableSharingDataWithCommentCountOrderBy,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,

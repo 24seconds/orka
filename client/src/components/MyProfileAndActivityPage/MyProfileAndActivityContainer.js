@@ -4,11 +4,13 @@ import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import {
     selectTableSharingDataWithCommentCount,
+    selectTableSharingDataWithCommentCountOrderBy,
     selectTableUsersByID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
+import { filterSharingData } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
 
@@ -107,7 +109,9 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
 }
 
 function MyProfileAndActivityPageContainerComponent() {
+    const [activeFilter, setActiveFilter] = useState("ALL");
     const [data, setData] = useState([]);
+    const [sortOrder, setSortOrder] = useState("DESC");
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -120,12 +124,12 @@ function MyProfileAndActivityPageContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCount(
-                myOrkaUUID
+            const data = await selectTableSharingDataWithCommentCountOrderBy(
+                myOrkaUUID, sortOrder,
             );
             setData(data);
         })();
-    }, [tableSharingData, myOrkaUUID]);
+    }, [tableSharingData, myOrkaUUID, sortOrder]);
 
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
@@ -137,21 +141,37 @@ function MyProfileAndActivityPageContainerComponent() {
         updateSender(senderID);
     }
 
+    function onClickFilterTab(tabName) {
+        setActiveFilter(tabName);
+    }
+
+    function onClickSort() {
+        setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+    }
+
     const restData = data.filter((d) => !d.handsUp);
+    const filteredData = filterSharingData(restData, activeFilter);
+    const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
 
     return (
         <MyProfileAndActivityPageContainer>
             <StyledProfileEditNameComponent />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    <FilterTabComponent name="ALL" />
-                    <FilterTabComponent name="Files" />
-                    <FilterTabComponent name="Link" />
+                    {
+                        // duplicate logic in ActivityContainerComponent. 
+                        // Refactor this later.
+                        ["ALL", "Files", "URLs"].map((n) => <FilterTabComponent 
+                            key={n}
+                            name={n}
+                            isSelected={n === activeFilter}
+                            onClickFilterTab={onClickFilterTab} />)
+                    }
                 </FilterContainer>
-                <SortButton>Newest</SortButton>
+                <SortButton onClick={onClickSort}>{sortText}</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                {restData.map((d) =>
+                {filteredData.map((d) =>
                     renderActivityRowComponent(
                         d,
                         activeRow,
