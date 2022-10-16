@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import {
     selectTableSharingDataWithCommentCount,
+    selectTableUsersByID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
@@ -13,7 +14,7 @@ import ProfileEditNameComponent from "./ProfileEditNameComponent";
 
 const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
     height: auto;
-    margin: 32px 32px 24px 32px;
+    margin: 24px 32px 16px 32px;
 `;
 
 const MyProfileAndActivityPageContainer = styled.div`
@@ -105,6 +106,7 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
 
 function MyProfileAndActivityPageContainerComponent() {
     const [data, setData] = useState([]);
+    const [myUser, setMyUser] = useState(null);
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -112,6 +114,7 @@ function MyProfileAndActivityPageContainerComponent() {
     );
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
+    const tableUsers = useSelector((state) => state.tableUsers, shallowEqual);
 
     console.log("myOrkaUUID:", myOrkaUUID);
 
@@ -123,6 +126,15 @@ function MyProfileAndActivityPageContainerComponent() {
             setData(data);
         })();
     }, [tableSharingData, myOrkaUUID]);
+
+    useEffect(() => {
+        (async () => {
+            if (!!myOrkaUUID) {
+                const user = await selectTableUsersByID(myOrkaUUID);
+                setMyUser(user?.[0]);
+            }
+        })();
+    }, [tableUsers, myOrkaUUID]);
 
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
@@ -136,9 +148,14 @@ function MyProfileAndActivityPageContainerComponent() {
 
     const restData = data.filter((d) => !d.handsUp);
 
+    console.log("myUser:", myUser);
+
     return (
         <MyProfileAndActivityPageContainer>
-            <StyledProfileEditNameComponent />
+            <StyledProfileEditNameComponent
+                name={myUser?.name || ""}
+                profile={myUser?.profile || 0}
+            />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     <FilterTabComponent name="ALL" />

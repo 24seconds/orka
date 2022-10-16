@@ -1,12 +1,13 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import ProfileEditNameClearIcon from "../../assets/ProfileEditNameClearIcon";
+import { IMAGE_URL } from "../../constants/constant";
 
 const ProfileEditName = styled.div`
     display: flex;
     align-items: center;
-    height: 96px;
+    height: 68px;
 
     .orka-mini-profile {
         margin-right: 16px;
@@ -28,21 +29,24 @@ const ProfileEditName = styled.div`
     }
 `;
 
-const MiniProfile = styled.div`
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #000000;
+const placeHolderTextStyle = css`
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -0.04em;
+
+    color: ${(props) => props.theme.Grayscale01};
 `;
 
-const NameEditor = styled.div`
-    display: flex;
-    align-items: center;
-    padding-left: 17px;
-    min-width: 260px;
-    height: 46px;
+const InputStyle = styled.input`
+    width: 100%;
+    height: 100%;
+
+    background: ${(props) => props.theme.Grayscale04};
     border-radius: 12px;
-    background: ${(props) => props.theme.PlaceholderBackgroundscale01};
+    border: none;
+    outline: none;
+    padding: 0 0 0 17px;
 
     font-style: normal;
     font-weight: 500;
@@ -52,6 +56,36 @@ const NameEditor = styled.div`
 
     letter-spacing: -0.04em;
     color: ${(props) => props.theme.PlaceholderTextscale01};
+
+    ::placeholder {
+        ${placeHolderTextStyle}
+        opacity: 1;
+    }
+
+    ::-ms-input-placeholder {
+        ${placeHolderTextStyle}
+    }
+`;
+
+const MiniProfile = styled.div`
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #000000;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+`;
+
+const NameEditor = styled.div`
+    display: flex;
+    align-items: center;
+    min-width: 260px;
+    height: 46px;
+    border-radius: 12px;
+    background: ${(props) => props.theme.Grayscale04};
 
     .orka-input-placeholder {
         width: 100%;
@@ -69,13 +103,18 @@ const NameEditor = styled.div`
 `;
 
 function ProfileEditNameComponent(props) {
-    const { className, name } = props;
+    const { className, name, profile } = props;
+
+    const profilePath = `profile_${profile}.png`;
 
     return (
         <ProfileEditName className={className}>
-            <MiniProfile className="orka-mini-profile" />
+            <MiniProfile className="orka-mini-profile">
+                <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
+            </MiniProfile>
             <NameEditor>
-                <div className="orka-input-placeholder">{name}</div>
+                <InputStyle value={name}></InputStyle>
+                {/* <div className="orka-input-placeholder">{name}</div> */}
                 <div className="orka-icon-container">
                     <ProfileEditNameClearIcon />
                 </div>
@@ -87,10 +126,12 @@ function ProfileEditNameComponent(props) {
 
 ProfileEditNameComponent.propTypes = {
     name: PropTypes.string,
+    profile: PropTypes.number,
 };
 
 ProfileEditNameComponent.defaultProps = {
     name: "Person",
+    profile: 0,
 };
 
 export default ProfileEditNameComponent;
