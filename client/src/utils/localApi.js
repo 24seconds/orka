@@ -293,6 +293,33 @@ async function selectTableUsersWithLatestSharingDataType() {
     return result?.[0]?.rows;
 }
 
+async function patchTableUsersByID({ name, profile }, userID) {
+    if (name == null && profile == null) {
+        return;
+    }
+
+    let query = `UPDATE ${TABLE_USERS.name} SET `;
+
+    const values = [];
+
+    if (!(name == null)) {
+        values.push(`${TABLE_USERS.fields.name} = "${name}"`);
+    }
+    if (!(profile == null)) {
+        values.push(`${TABLE_USERS.fields.profile} = ${profile}`);
+    }
+
+    query += values.join(", ");
+    query += ` WHERE id = "${userID}"`;
+
+    console.log("patchTableUsersByID, query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableSharingDataWithCommentCount(userID) {
     let query = `SELECT f.*, COUNT(*) as comment_count, 
             f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
@@ -387,6 +414,7 @@ export {
     selectTableUsers,
     selectTableUsersByID,
     selectTableUsersWithLatestSharingDataType,
+    patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,

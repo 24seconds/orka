@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import ProfileEditNameClearIcon from "../../assets/ProfileEditNameClearIcon";
 import { IMAGE_URL } from "../../constants/constant";
+import { shallowEqual, useSelector } from "react-redux";
+import {
+    patchTableUsersByID,
+    selectTableUsersByID,
+} from "../../utils/localApi";
 
 const ProfileEditName = styled.div`
     display: flex;
@@ -16,10 +21,10 @@ const ProfileEditName = styled.div`
     .orka-edit-button {
         display: flex;
         align-items: center;
-        width: 40px;
+        max-width: 47px;
         height: 100%;
         cursor: pointer;
-        margin-left: auto;
+        margin-left: ${(props) => (props.shouldShowDone ? "17px" : "30px")};
 
         color: ${(props) => props.theme.PrimaryColor};
         font-weight: 300;
@@ -87,10 +92,6 @@ const NameEditor = styled.div`
     border-radius: 12px;
     background: ${(props) => props.theme.Grayscale04};
 
-    .orka-input-placeholder {
-        width: 100%;
-    }
-
     .orka-icon-container {
         display: flex;
         align-items: center;
@@ -103,35 +104,72 @@ const NameEditor = styled.div`
 `;
 
 function ProfileEditNameComponent(props) {
-    const { className, name, profile } = props;
+    const { className } = props;
+    const [myUserProfile, setMyUserProfile] = useState(0);
+    const [myUserName, setMyUserName] = useState("");
+    const [memoUserName, setMemoUserName] = useState("");
 
-    const profilePath = `profile_${profile}.png`;
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const inputEl = useRef(null);
+
+    useEffect(() => {
+        (async () => {
+            const user = await selectTableUsersByID(myOrkaUUID);
+            const myUser = user?.[0];
+
+            setMyUserProfile(myUser?.profile || 0);
+            setMyUserName(myUser?.name || "");
+            setMemoUserName(myUser?.name || "");
+        })();
+    }, [myOrkaUUID]);
+
+    function onChange(event) {
+        setMyUserName(event?.target?.value || "");
+    }
+
+    async function onUpdateName() {
+        console.log("onUpdateName called");
+        await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
+
+        // reset memo
+        setMemoUserName(myUserName);
+    }
+
+    function onClear() {
+        setMyUserName("");
+        inputEl.current.focus();
+    }
+
+    const profilePath = `profile_${myUserProfile}.png`;
+    const shouldShowDone = myUserName !== memoUserName;
 
     return (
-        <ProfileEditName className={className}>
+        <ProfileEditName className={className} shouldShowDone={shouldShowDone}>
             <MiniProfile className="orka-mini-profile">
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
             </MiniProfile>
             <NameEditor>
-                <InputStyle value={name}></InputStyle>
-                {/* <div className="orka-input-placeholder">{name}</div> */}
-                <div className="orka-icon-container">
+                <InputStyle
+                    ref={inputEl}
+                    value={myUserName}
+                    onChange={onChange}
+                ></InputStyle>
+                <div className="orka-icon-container" onClick={onClear}>
                     <ProfileEditNameClearIcon />
                 </div>
             </NameEditor>
-            <div className="orka-edit-button">Edit</div>
+            <div
+                className="orka-edit-button"
+                onClick={shouldShowDone ? onUpdateName : null}
+            >
+                {shouldShowDone ? "Done" : "Edit"}
+            </div>
         </ProfileEditName>
     );
 }
 
-ProfileEditNameComponent.propTypes = {
-    name: PropTypes.string,
-    profile: PropTypes.number,
-};
+ProfileEditNameComponent.propTypes = {};
 
-ProfileEditNameComponent.defaultProps = {
-    name: "Person",
-    profile: 0,
-};
+ProfileEditNameComponent.defaultProps = {};
 
 export default ProfileEditNameComponent;

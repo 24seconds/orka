@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
@@ -106,7 +106,6 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
 
 function MyProfileAndActivityPageContainerComponent() {
     const [data, setData] = useState([]);
-    const [myUser, setMyUser] = useState(null);
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -114,7 +113,6 @@ function MyProfileAndActivityPageContainerComponent() {
     );
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
-    const tableUsers = useSelector((state) => state.tableUsers, shallowEqual);
 
     console.log("myOrkaUUID:", myOrkaUUID);
 
@@ -126,15 +124,6 @@ function MyProfileAndActivityPageContainerComponent() {
             setData(data);
         })();
     }, [tableSharingData, myOrkaUUID]);
-
-    useEffect(() => {
-        (async () => {
-            if (!!myOrkaUUID) {
-                const user = await selectTableUsersByID(myOrkaUUID);
-                setMyUser(user?.[0]);
-            }
-        })();
-    }, [tableUsers, myOrkaUUID]);
 
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
@@ -148,14 +137,9 @@ function MyProfileAndActivityPageContainerComponent() {
 
     const restData = data.filter((d) => !d.handsUp);
 
-    console.log("myUser:", myUser);
-
     return (
         <MyProfileAndActivityPageContainer>
-            <StyledProfileEditNameComponent
-                name={myUser?.name || ""}
-                profile={myUser?.profile || 0}
-            />
+            <StyledProfileEditNameComponent />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     <FilterTabComponent name="ALL" />
