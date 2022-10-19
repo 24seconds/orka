@@ -321,14 +321,14 @@ async function patchTableUsersByID({ name, profile }, userID) {
 }
 
 async function selectTableSharingDataWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(*) as comment_count, 
+    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
             f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
         GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(*) as comment_count,
+        query = `SELECT f.*, COUNT(c.id) as comment_count,
             f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
@@ -345,14 +345,14 @@ async function selectTableSharingDataWithCommentCount(userID) {
 }
 
 async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
-    let query = `SELECT f.*, COUNT(*) as comment_count, 
+    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
             f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(*) as comment_count,
+        query = `SELECT f.*, COUNT(c.id) as comment_count,
             f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
