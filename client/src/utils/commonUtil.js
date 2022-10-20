@@ -1,3 +1,5 @@
+import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
+
 function getSizeString(size) {
     if (size >= 1000 && size < 1000 * 1000) {
         return `${(size / 1000).toFixed(1)} KB`;
@@ -31,4 +33,26 @@ function generateFingerPrint() {
     return "localdrop-file-" + stringArr.join("");
 }
 
-export { getSizeString, getCurrentTime, generateFingerPrint };
+function filterSharingData(data, option, rowsToBeDeleted) {
+    console.log("filterSharingData:", data, rowsToBeDeleted);
+    return data.filter((d) => {
+        if (d.id in rowsToBeDeleted) {
+            return false;
+        }
+
+        if (option === "Files") {
+            return d.dataType === DATATYPE_FILE;
+        }
+        if (option === "URLs") {
+            return d.dataType === DATATYPE_LINK;
+        }
+        return true;
+    });
+}
+
+export {
+    getSizeString,
+    getCurrentTime,
+    generateFingerPrint,
+    filterSharingData,
+};

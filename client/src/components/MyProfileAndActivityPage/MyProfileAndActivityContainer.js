@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import { filterSharingData } from "../../utils/commonUtil";
 import {
+    deleteTableSharingDataByIDs,
     selectTableSharingDataWithCommentCount,
+    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableUsersByID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
@@ -13,7 +17,7 @@ import ProfileEditNameComponent from "./ProfileEditNameComponent";
 
 const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
     height: auto;
-    margin: 32px 32px 24px 32px;
+    margin: 24px 32px 16px 32px;
 `;
 
 const MyProfileAndActivityPageContainer = styled.div`
@@ -66,8 +70,14 @@ const ActivityRowContainer = styled.div`
 `;
 
 // TODO(young): this function is duplicate. Refactor it later.
-function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
-    console.log("renderActivityRowComponent:", data);
+function renderActivityRowComponent(
+    data,
+    activeRow,
+    onClick,
+    myOrkaUUID,
+    isEditMode,
+    onDeleteRow
+) {
     if (data?.dataType === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
@@ -81,7 +91,10 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
+                createdAt={new Date(data.uploaded_at)}
+                isEditMode={isEditMode}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     } else {
@@ -97,14 +110,21 @@ function renderActivityRowComponent(data, activeRow, onClick, myOrkaUUID) {
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
+                createdAt={new Date(data.uploaded_at)}
+                isEditMode={isEditMode}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     }
 }
 
 function MyProfileAndActivityPageContainerComponent() {
+    const [activeFilter, setActiveFilter] = useState("ALL");
     const [data, setData] = useState([]);
+    const [sortOrder, setSortOrder] = useState("DESC");
+    const [editMode, setEditMode] = useState(false);
+    const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -117,12 +137,28 @@ function MyProfileAndActivityPageContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCount(
-                myOrkaUUID
+            const data = await selectTableSharingDataWithCommentCountOrderBy(
+                myOrkaUUID,
+                sortOrder
             );
             setData(data);
         })();
-    }, [tableSharingData, myOrkaUUID]);
+    }, [tableSharingData, myOrkaUUID, sortOrder]);
+
+    useEffect(() => {
+        (async () => {
+            const rowsToDelete = Object.keys(rowsToBeDeleted);
+
+            if (!editMode && rowsToDelete.length > 0) {
+                console.log("useEffect, update database:", editMode);
+
+                await deleteTableSharingDataByIDs(rowsToDelete);
+                setRowsToBeDeleted({});
+            }
+
+            console.log("useEffect, editMode:", editMode);
+        })();
+    }, [editMode, rowsToBeDeleted]);
 
     function onClick(rowID, senderID) {
         console.log("onClick called, rowID:", rowID);
@@ -134,26 +170,69 @@ function MyProfileAndActivityPageContainerComponent() {
         updateSender(senderID);
     }
 
+    function onClickFilterTab(tabName) {
+        setActiveFilter(tabName);
+    }
+
+    function onClickSort() {
+        setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+    }
+
+    function onClickEdit() {
+        setEditMode(!editMode);
+    }
+
+    function onSetEditMode(b) {
+        setEditMode(b);
+    }
+
+    function onDeleteRow(rowID) {
+        const newState = { ...rowsToBeDeleted };
+        newState[rowID] = rowID;
+        setRowsToBeDeleted(newState);
+    }
+
     const restData = data.filter((d) => !d.handsUp);
+    const filteredData = filterSharingData(
+        restData,
+        activeFilter,
+        rowsToBeDeleted
+    );
+    const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
 
     return (
         <MyProfileAndActivityPageContainer>
-            <StyledProfileEditNameComponent />
+            <StyledProfileEditNameComponent
+                onClick={onClickEdit}
+                editMode={editMode}
+                onSetEditMode={onSetEditMode}
+            />
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    <FilterTabComponent name="ALL" />
-                    <FilterTabComponent name="Files" />
-                    <FilterTabComponent name="Link" />
+                    {
+                        // duplicate logic in ActivityContainerComponent.
+                        // Refactor this later.
+                        ["ALL", "Files", "URLs"].map((n) => (
+                            <FilterTabComponent
+                                key={n}
+                                name={n}
+                                isSelected={n === activeFilter}
+                                onClickFilterTab={onClickFilterTab}
+                            />
+                        ))
+                    }
                 </FilterContainer>
-                <SortButton>Newest</SortButton>
+                <SortButton onClick={onClickSort}>{sortText}</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                {restData.map((d) =>
+                {filteredData.map((d) =>
                     renderActivityRowComponent(
                         d,
                         activeRow,
                         onClick,
-                        myOrkaUUID
+                        myOrkaUUID,
+                        editMode,
+                        onDeleteRow
                     )
                 )}
             </ActivityRowContainer>

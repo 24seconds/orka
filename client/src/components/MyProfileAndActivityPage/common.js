@@ -2,9 +2,7 @@ import React from "react";
 import { DATATYPE_FILE } from "../../constants/constant";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 
-function renderActivityRowComponent(data, activeRow, onClick) {
-    console.log("renderActivityRowComponent, data:", data);
-
+function renderActivityRowComponent(data, activeRow, onClick, onDeleteRow) {
     if (data?.type === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
@@ -17,7 +15,9 @@ function renderActivityRowComponent(data, activeRow, onClick) {
                 size={data.size}
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     } else {
@@ -32,7 +32,9 @@ function renderActivityRowComponent(data, activeRow, onClick) {
                 displayName={data.text}
                 usageCount={data.status_count}
                 commentCount={data.comment_count}
+                createdAt={new Date(data.uploaded_at)}
                 onClick={onClick}
+                onDeleteRow={onDeleteRow}
             />
         );
     }

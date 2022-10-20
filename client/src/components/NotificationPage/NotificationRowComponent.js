@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { hoverRow } from "../SharedStyle";
 
 const NotificationRow = styled.div`
     display: flex;
@@ -14,6 +15,8 @@ const NotificationRow = styled.div`
     }
 
     background: ${(props) => props.isActive && props.theme.Grayscale04};
+
+    ${(props) => !props.isActive && hoverRow}
 `;
 
 const PeerProfile = styled.div`

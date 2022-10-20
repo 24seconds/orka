@@ -1,48 +1,64 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import ProfileEditNameClearIcon from "../../assets/ProfileEditNameClearIcon";
+import { IMAGE_URL } from "../../constants/constant";
+import { shallowEqual, useSelector } from "react-redux";
+import {
+    patchTableUsersByID,
+    selectTableUsersByID,
+} from "../../utils/localApi";
+
+const EditButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 66px;
+    height: 48px;
+
+    cursor: pointer;
+    margin-left: ${(props) => (props.shouldShowDone ? "1px" : "14px")};
+
+    color: ${(props) => props.theme.PrimaryColor};
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+    letter-spacing: -0.04em;
+
+    &:hover {
+        background: ${(props) => props.theme.Grayscale04};
+        border-radius: 16px;
+    }
+`;
 
 const ProfileEditName = styled.div`
     display: flex;
     align-items: center;
-    height: 96px;
+    height: 68px;
 
     .orka-mini-profile {
         margin-right: 16px;
     }
-
-    .orka-edit-button {
-        display: flex;
-        align-items: center;
-        width: 40px;
-        height: 100%;
-        cursor: pointer;
-        margin-left: auto;
-
-        color: ${(props) => props.theme.PrimaryColor};
-        font-weight: 300;
-        font-size: 24px;
-        line-height: 29px;
-        letter-spacing: -0.04em;
-    }
 `;
 
-const MiniProfile = styled.div`
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #000000;
+const placeHolderTextStyle = css`
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -0.04em;
+
+    color: ${(props) => props.theme.Grayscale01};
 `;
 
-const NameEditor = styled.div`
-    display: flex;
-    align-items: center;
-    padding-left: 17px;
-    min-width: 260px;
-    height: 46px;
+const InputStyle = styled.input`
+    width: 100%;
+    height: 100%;
+
+    background: ${(props) => props.theme.Grayscale04};
     border-radius: 12px;
-    background: ${(props) => props.theme.PlaceholderBackgroundscale01};
+    border: none;
+    outline: none;
+    padding: 0 0 0 17px;
 
     font-style: normal;
     font-weight: 500;
@@ -53,9 +69,35 @@ const NameEditor = styled.div`
     letter-spacing: -0.04em;
     color: ${(props) => props.theme.PlaceholderTextscale01};
 
-    .orka-input-placeholder {
-        width: 100%;
+    ::placeholder {
+        ${placeHolderTextStyle}
+        opacity: 1;
     }
+
+    ::-ms-input-placeholder {
+        ${placeHolderTextStyle}
+    }
+`;
+
+const MiniProfile = styled.div`
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #000000;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+`;
+
+const NameEditor = styled.div`
+    display: flex;
+    align-items: center;
+    min-width: 260px;
+    height: 46px;
+    border-radius: 12px;
+    background: ${(props) => props.theme.Grayscale04};
 
     .orka-icon-container {
         display: flex;
@@ -69,28 +111,83 @@ const NameEditor = styled.div`
 `;
 
 function ProfileEditNameComponent(props) {
-    const { className, name } = props;
+    const { className, editMode: propEditMode, onClick, onSetEditMode } = props;
+    const [myUserProfile, setMyUserProfile] = useState(0);
+    const [myUserName, setMyUserName] = useState("");
+    const [memoUserName, setMemoUserName] = useState("");
+
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const inputEl = useRef(null);
+
+    useEffect(() => {
+        (async () => {
+            const user = await selectTableUsersByID(myOrkaUUID);
+            const myUser = user?.[0];
+
+            setMyUserProfile(myUser?.profile || 0);
+            setMyUserName(myUser?.name || "");
+            setMemoUserName(myUser?.name || "");
+        })();
+    }, [myOrkaUUID]);
+
+    function onChange(event) {
+        setMyUserName(event?.target?.value || "");
+
+        if (!propEditMode) {
+            onSetEditMode(true);
+        }
+    }
+
+    async function onChangeMode() {
+        onClick?.();
+
+        if (propEditMode) {
+            await onUpdateName();
+        }
+    }
+
+    async function onUpdateName() {
+        await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
+
+        // reset memo
+        setMemoUserName(myUserName);
+    }
+
+    function onClear() {
+        setMyUserName("");
+        inputEl.current.focus();
+    }
+
+    const profilePath = `profile_${myUserProfile}.png`;
 
     return (
-        <ProfileEditName className={className}>
-            <MiniProfile className="orka-mini-profile" />
+        <ProfileEditName className={className} shouldShowDone={propEditMode}>
+            <MiniProfile className="orka-mini-profile">
+                <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
+            </MiniProfile>
             <NameEditor>
-                <div className="orka-input-placeholder">{name}</div>
-                <div className="orka-icon-container">
+                <InputStyle
+                    ref={inputEl}
+                    value={myUserName}
+                    onChange={onChange}
+                ></InputStyle>
+                <div className="orka-icon-container" onClick={onClear}>
                     <ProfileEditNameClearIcon />
                 </div>
             </NameEditor>
-            <div className="orka-edit-button">Edit</div>
+            <EditButton className="orka-edit-button" onClick={onChangeMode}>
+                {propEditMode ? "Done" : "Edit"}
+            </EditButton>
         </ProfileEditName>
     );
 }
 
 ProfileEditNameComponent.propTypes = {
-    name: PropTypes.string,
+    isDeleteMode: PropTypes.bool,
 };
 
 ProfileEditNameComponent.defaultProps = {
-    name: "Person",
+    isDeleteMode: false,
 };
 
 export default ProfileEditNameComponent;

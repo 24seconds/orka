@@ -293,15 +293,42 @@ async function selectTableUsersWithLatestSharingDataType() {
     return result?.[0]?.rows;
 }
 
+async function patchTableUsersByID({ name, profile }, userID) {
+    if (name == null && profile == null) {
+        return;
+    }
+
+    let query = `UPDATE ${TABLE_USERS.name} SET `;
+
+    const values = [];
+
+    if (!(name == null)) {
+        values.push(`${TABLE_USERS.fields.name} = "${name}"`);
+    }
+    if (!(profile == null)) {
+        values.push(`${TABLE_USERS.fields.profile} = ${profile}`);
+    }
+
+    query += values.join(", ");
+    query += ` WHERE id = "${userID}"`;
+
+    console.log("patchTableUsersByID, query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableSharingDataWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(*) as comment_count, 
+    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
             f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
         GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(*) as comment_count,
+        query = `SELECT f.*, COUNT(c.id) as comment_count,
             f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
         LEFT JOIN ${TABLE_COMMENTS.name} c on 
         f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
@@ -315,6 +342,74 @@ async function selectTableSharingDataWithCommentCount(userID) {
     console.log("result:", result);
 
     return result?.[0]?.rows;
+}
+
+async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
+    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
+            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
+
+    if (userID && userID !== "") {
+        query = `SELECT f.*, COUNT(c.id) as comment_count,
+            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
+        LEFT JOIN ${TABLE_COMMENTS.name} c on 
+        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
+    }
+
+    if (!!order) {
+        const stmt = order === "ASC" ? "ASC" : "DESC";
+        query += ` ORDER BY ${TABLE_SHARING_DATA.fields.uploaded_at} ${stmt};`;
+    } else {
+        query += `;`;
+    }
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function deleteTableSharingDataByIDs(sharingDataIDs) {
+    if (sharingDataIDs.length === 0) {
+        return;
+    }
+
+    const naiveQueriesForTableSharingData = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
+    `
+    );
+
+    const navieQueriesForTableComments = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_COMMENTS.name} WHERE ${TABLE_COMMENTS.fields.data_id} = "${id}";
+    `
+    );
+
+    const naiveQueriesForTableCommentMetadata = sharingDataIDs.map(
+        (id) => `
+        DELETE FROM ${TABLE_COMMENT_METADATA.name} 
+        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${id}";
+    `
+    );
+
+    const query = [
+        ...naiveQueriesForTableSharingData,
+        ...navieQueriesForTableComments,
+        ...naiveQueriesForTableCommentMetadata,
+    ].join("\n");
+
+    console.log("deleteTableSharingDataByIDs, query:", query);
+
+    const result = await run(query);
+    console.log("deleteTableSharingDataByIDs, result:", result);
+    // return result?.[0]?.rows;
 }
 
 // TODO(young): Add logic - filter by receiver ID
@@ -387,7 +482,10 @@ export {
     selectTableUsers,
     selectTableUsersByID,
     selectTableUsersWithLatestSharingDataType,
+    patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
+    selectTableSharingDataWithCommentCountOrderBy,
+    deleteTableSharingDataByIDs,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,

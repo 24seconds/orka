@@ -15,14 +15,19 @@ const TextCopy = styled.div`
     background: ${(props) => props.theme.Grayscale04};
 
     cursor: pointer;
+
+    &:hover {
+        opacity: 0.6;
+    }
 `;
 
 // TODO(young): Notify via any channel the the copy is done successfully
 function TextCopyComponent(props) {
     const { text } = props;
 
-    function onClick() {
+    function onClick(event) {
         navigator.clipboard.writeText(text);
+        event?.stopPropagation();
     }
 
     return (

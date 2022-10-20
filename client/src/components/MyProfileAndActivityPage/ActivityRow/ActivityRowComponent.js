@@ -1,10 +1,13 @@
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import DataUsageStatusComponent from "./DataUsageStatusComponent";
 import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
+import { hoverRow } from "../../SharedStyle";
+import { DATATYPE_LINK } from "../../../constants/constant";
+import CloseIcon from "../../../assets/CloseIcon";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
@@ -42,6 +45,8 @@ const ActivityRow = styled.div`
         margin-left: 16px;
         margin-right: 34px;
     }
+
+    ${(props) => !props.isSelected && hoverRow}
 `;
 
 // TODO(young): Refactor this to make it reusable. It is also used in peer component.
@@ -93,6 +98,22 @@ const FileMetaData = styled.div`
     }
 `;
 
+const DeleteButton = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: ${(props) => props.theme.Grayscale04};
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.6;
+    }
+`;
+
 function convertByteToHumanReadable(size) {
     if (!size) {
         return `Unknown`;
@@ -109,6 +130,50 @@ function convertByteToHumanReadable(size) {
     return `Too large`;
 }
 
+function convertTimestampReadable(timestamp, now) {
+    // time in second.
+    const timeDiff = Math.round((now - timestamp) / 1000);
+
+    const timeInMinute = Math.round(timeDiff / 60);
+    const timeInHour = Math.round(timeDiff / 60 / 60);
+    const timeInDay = Math.round(timeDiff / 60 / 60 / 24);
+
+    if (timeInMinute < 60) {
+        return `${timeInMinute}m ago`;
+    }
+
+    if (timeInHour < 24) {
+        return `${timeInHour}H ago`;
+    }
+
+    return `${timeInDay}d ago`;
+}
+
+function renderAction(isEditMode, dataType, commentCount, url, onClick) {
+    if (isEditMode) {
+        return (
+            <Fragment>
+                <DeleteButton onClick={onClick}>
+                    <CloseIcon />
+                </DeleteButton>
+            </Fragment>
+        );
+    }
+
+    return (
+        <Fragment>
+            {dataType === "URL" ? (
+                <TextCopyComponent text="https://github.com/24seconds/orka" />
+            ) : (
+                <FileCommentExpandComponent count={commentCount} />
+            )}
+            <ActionButtonComponent
+                type={dataType === "URL" ? "TEXT" : "FILE"}
+            />
+        </Fragment>
+    );
+}
+
 // TODO(young): refactor this later. dataType is used in several ways.
 function ActivityRowComponent(props) {
     const {
@@ -123,12 +188,25 @@ function ActivityRowComponent(props) {
         size,
         commentCount,
         isMyProfileRow,
+        isEditMode,
+        createdAt,
+        onDeleteRow,
     } = props;
 
     const sizeHumanReadable = useMemo(
         () => convertByteToHumanReadable(size),
         [size]
     );
+
+    const timestampReadable = useMemo(
+        () => convertTimestampReadable(createdAt, new Date()),
+        [createdAt]
+    );
+
+    function onClickDeleteButton(event) {
+        onDeleteRow?.(rowID);
+        event?.stopPropagation();
+    }
 
     return (
         <ActivityRow
@@ -148,28 +226,28 @@ function ActivityRowComponent(props) {
                         <div className="orka-file-name">{displayName}</div>
                         <div className="orka-size-and-timestamp">
                             {dataType === "TXT"
-                                ? "URL description blah blah blah | 20H ago"
-                                : `${sizeHumanReadable} | 20H ago`}
+                                ? `URL description blah blah blah | ${timestampReadable}`
+                                : `${sizeHumanReadable} | ${timestampReadable}`}
                         </div>
                     </FileMetaData>
                 </div>
                 <DataUsageStatusComponent
                     text={
-                        dataType === "TXT"
+                        dataType === "URL"
                             ? `${usageCount} views`
                             : `${usageCount} downloaded`
                     }
+                    isActive={usageCount > 0}
                 />
             </div>
             <div className="orka-action-container">
-                {dataType === "TXT" ? (
-                    <TextCopyComponent text="https://github.com/24seconds/orka" />
-                ) : (
-                    <FileCommentExpandComponent count={commentCount} />
+                {renderAction(
+                    isEditMode,
+                    dataType,
+                    commentCount,
+                    "",
+                    onClickDeleteButton
                 )}
-                <ActionButtonComponent
-                    type={dataType === "TXT" ? "TEXT" : "FILE"}
-                />
             </div>
         </ActivityRow>
     );

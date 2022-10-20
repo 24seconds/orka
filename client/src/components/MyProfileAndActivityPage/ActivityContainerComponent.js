@@ -3,6 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import { filterSharingData } from "../../utils/commonUtil";
 import {
     selectTableSharingDataWithCommentCount,
     updateSelectedRowID,
@@ -135,6 +136,7 @@ function ActivityContainerComponent(props) {
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
+    const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -159,6 +161,11 @@ function ActivityContainerComponent(props) {
     // only one hands up data is possible
     const handsUpData = data.filter((d) => d.hands_up)?.[0];
     const restData = data.filter((d) => !d.hands_up);
+    const filteredData = filterSharingData(
+        restData,
+        activeFilter,
+        rowsToBeDeleted
+    );
 
     console.log("handsUpData:", handsUpData);
 
@@ -184,6 +191,12 @@ function ActivityContainerComponent(props) {
         updateSelectedRowID(null);
     }
 
+    function onDeleteRow(rowID) {
+        const newState = { ...rowsToBeDeleted };
+        newState[rowID] = rowID;
+        setRowsToBeDeleted(newState);
+    }
+
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
@@ -206,20 +219,28 @@ function ActivityContainerComponent(props) {
             )}
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    {["ALL", "Files", "Link"].map((n) => (
-                        <FilterTabComponent
-                            key={n}
-                            name={n}
-                            onClickFilterTab={onClickFilterTab}
-                            isSelected={n === activeFilter}
-                        />
-                    ))}
+                    {["ALL", "Files", "URLs"].map((n) => {
+                        console.log("FilterContainer:", n);
+                        return (
+                            <FilterTabComponent
+                                key={n}
+                                name={n}
+                                isSelected={n === activeFilter}
+                                onClickFilterTab={onClickFilterTab}
+                            />
+                        );
+                    })}
                 </FilterContainer>
                 <SortButton>Newest</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
-                {restData.map((d) =>
-                    renderActivityRowComponent(d, activeRow, onClick)
+                {filteredData.map((d) =>
+                    renderActivityRowComponent(
+                        d,
+                        activeRow,
+                        onClick,
+                        onDeleteRow
+                    )
                 )}
             </ActivityRowContainer>
         </ActivityContainer>

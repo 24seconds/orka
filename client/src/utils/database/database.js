@@ -5,9 +5,6 @@ async function initializeDb() {
     console.log("getExpDb called");
     const glue = await gluesql();
 
-    // debug purpose code
-    window.glue = glue;
-
     console.debug(DDLQueries);
 
     await glue.query(DDLQueries);
@@ -126,10 +123,10 @@ async function initializeDb() {
 INSERT INTO sharing_data VALUES ("naive-file-id-2", "naive-file-name-2", 256123,
     "JPEG", NULL, "FILE", 0, true, "naive-id-2", "2022-10-01T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
-    "naive-file-id-3", "naive-file-name-3", 256123, "HWP", NULL, "FILE", 0, false, 
+    "naive-file-id-3", "naive-file-name-3", 556123, "HWP", NULL, "FILE", 8, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
-    "naive-file-id-4", "naive-file-name-4", 256123, "JPEG", NULL, "FILE", 0, false, 
+    "naive-file-id-4", "naive-file-name-4", 256123, "JPEG", NULL, "FILE", 15, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
     "naive-file-id-5", "naive-file-name-5", 256123, "JPEG", NULL, "FILE", 0, false, 
@@ -176,6 +173,15 @@ async function run(sql) {
     const result = await db.query(sql);
     return result;
 }
+
+async function debug(sql) {
+    const db = await glue;
+    const result = await db.query(sql);
+    console.log(result);
+}
+
+// debug purpose code
+window.glue = debug;
 
 init();
 
