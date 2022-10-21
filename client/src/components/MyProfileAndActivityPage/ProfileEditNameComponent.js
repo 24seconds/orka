@@ -50,6 +50,17 @@ const placeHolderTextStyle = css`
     color: ${(props) => props.theme.Grayscale01};
 `;
 
+const editText = css`
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    /* identical to box height */
+
+    letter-spacing: -0.04em;
+    color: ${(props) => props.theme.PlaceholderTextscale01};
+`;
+
 const InputStyle = styled.input`
     width: 100%;
     height: 100%;
@@ -60,14 +71,7 @@ const InputStyle = styled.input`
     outline: none;
     padding: 0 0 0 17px;
 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 29px;
-    /* identical to box height */
-
-    letter-spacing: -0.04em;
-    color: ${(props) => props.theme.PlaceholderTextscale01};
+    ${editText}
 
     ::placeholder {
         ${placeHolderTextStyle}
@@ -91,33 +95,49 @@ const MiniProfile = styled.div`
     }
 `;
 
-const NameEditor = styled.div`
-    display: flex;
-    align-items: center;
+const editorStyle = css`
     min-width: 260px;
     height: 46px;
     border-radius: 12px;
     background: ${(props) => props.theme.Grayscale04};
+`;
 
-    .orka-icon-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
-        margin-right: 18px;
-        cursor: pointer;
-    }
+const IconContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 18px;
+    ${(props) => props.editMode && "cursor: pointer;"}
+`;
+
+const NameEditor = styled.div`
+    display: flex;
+    align-items: center;
+
+    ${editorStyle}
+`;
+
+const NameHolder = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 17px;
+
+    ${editorStyle}
+
+    ${editText}
 `;
 
 function ProfileEditNameComponent(props) {
     const { className, editMode: propEditMode, onClick, onSetEditMode } = props;
     const [myUserProfile, setMyUserProfile] = useState(0);
     const [myUserName, setMyUserName] = useState("");
-    const [memoUserName, setMemoUserName] = useState("");
 
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
     const inputEl = useRef(null);
+
+    console.log("propEditMode:", propEditMode);
 
     useEffect(() => {
         (async () => {
@@ -126,7 +146,6 @@ function ProfileEditNameComponent(props) {
 
             setMyUserProfile(myUser?.profile || 0);
             setMyUserName(myUser?.name || "");
-            setMemoUserName(myUser?.name || "");
         })();
     }, [myOrkaUUID]);
 
@@ -148,9 +167,6 @@ function ProfileEditNameComponent(props) {
 
     async function onUpdateName() {
         await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
-
-        // reset memo
-        setMemoUserName(myUserName);
     }
 
     function onClear() {
@@ -170,10 +186,14 @@ function ProfileEditNameComponent(props) {
                     ref={inputEl}
                     value={myUserName}
                     onChange={onChange}
+                    readOnly={!propEditMode}
                 ></InputStyle>
-                <div className="orka-icon-container" onClick={onClear}>
-                    <ProfileEditNameClearIcon />
-                </div>
+                <IconContainer
+                    onClick={propEditMode && onClear}
+                    editMode={propEditMode}
+                >
+                    {propEditMode && <ProfileEditNameClearIcon />}
+                </IconContainer>
             </NameEditor>
             <EditButton className="orka-edit-button" onClick={onChangeMode}>
                 {propEditMode ? "Done" : "Edit"}
