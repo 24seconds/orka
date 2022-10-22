@@ -1,23 +1,9 @@
 import { THEME_ORKA_DARK } from "./constant";
 import { FontFamily } from "./styleConstants";
 
-export const ThemeOrkaDark = {
-    name: THEME_ORKA_DARK,
-
-    White: "#FFFFFF",
-    Gray: "#959CA8",
-    Black: "#000000",
-    Blackscale01: "#171819",
-    PlaceholderBackgroundscale01: "#31353C",
-    PlaceholderTextscale01: "#FEFEFE",
-    ActivityRowButtonTextscale01: "#E0E3E8",
-    ActivityRowButtonTextscale02: "#61656D",
-    ActivityRowBackgroundscale01: "#191A1C",
-    ActivityRowBackgroundscale02: "#0066FF",
-    ActivityRowBackgroundscale03: "#FF5151",
-
-    PrimaryColor: "#0066FF",
-    PrimaryColor02: "#061728",
+const PaletteDark = {
+    Primary: "#0066FF",
+    Primary02: "#061728",
 
     Grayscale01: "#656C78",
     Grayscale02: "#31353B",
@@ -26,52 +12,19 @@ export const ThemeOrkaDark = {
     Grayscale04: "#131415",
     Grayscale05: "#101010",
 
-    // TODO(young): Adhoc color - decide naming later
-    Grayscale06: "#727987",
-
-    Button: "#FFFFFF",
-    IconColor: "#31353B",
-
-    OrkaTitle: "#FFFFFF",
-
-    TabButtonActive: "#FFFFFF",
-    TabButtonInActive: "#656C78",
-
-    DataTypeHolderBackground: "#31353B",
-    DataTypeHolderText: "#959CA8",
-
-    FilterActive: "#FFFFFF",
-    FilterTextActive: "#202326",
-    FilterTextInActive: "#FFFFFF",
-    FilterBorder: "#656C78",
-    FilterNewestText: "#656C78",
-
-    ActiveRowDisplayText: "#FFFFFF",
-    StatusActive: "#061728",
-    StatusActiveText: "#0066FF",
-
-    CommentRowText: "#FEFEFE",
-
-    NotificationRowText: "#FEFEFE",
+    Gray: "#959CA8",
+    White: "#FFFFFF",
+    Whitescale01: "#FEFEFE",
+    Black: "#000000",
 };
 
-export const ThemeOrkaLight = {
-    name: "OrkaLight",
-
-    White: "#FFFFFF",
-    Gray: "#959CA8",
-    Black: "#000000",
-    Blackscale01: "#171819",
-    PlaceholderBackgroundscale01: "#31353C",
-    PlaceholderTextscale01: "#2E3136",
-    ActivityRowButtonTextscale01: "#E0E3E8",
-    ActivityRowButtonTextscale02: "#61656D",
-    ActivityRowBackgroundscale01: "#191A1C",
-    ActivityRowBackgroundscale02: "#0066FF",
-    ActivityRowBackgroundscale03: "#FF5151",
-
-    PrimaryColor: "#1B76FF",
-    PrimaryColor02: "#489DF1",
+const PaletteLight = {
+    Primary: "#1B76FF",
+    Primary02: "#489DF1",
+    Primaryscale01: "#A3ADBE",
+    
+    PrimaryDark: "#0066FF",
+    PrimaryDark02: "#061728",
 
     Grayscale01: "#6E7685",
     Grayscale02: "#929FB1",
@@ -80,33 +33,115 @@ export const ThemeOrkaLight = {
     Grayscale04: "#F6F9FF",
     Grayscale05: "#FBFCFF",
 
-    // TODO(young): Adhoc color - decide naming later
-    Grayscale06: "#727987",
+    Gray: "#959CA8",
+    White: "#FFFFFF",
+    Whitescale01: "#FEFEFE",
+    Black: "#000000",
+    Blackscale01: "#2E3136",
+};
 
-    Button: "#2E3136",
-    IconColor: "#FBFCFF",
+export const ThemeOrkaDark = {
+    name: THEME_ORKA_DARK,
 
-    OrkaTitle: "#2E3136",
+    White: PaletteDark.White,
+    Black: PaletteDark.Black,
 
-    TabButtonActive: "#2E3136",
+    // think about replacement color
+    PlaceholderBackgroundscale01: "#31353C",
+
+    // check which component use this color
+    PlaceholderTextscale01: PaletteDark.Whitescale01,
+
+    ActivityRowButtonTextscale01: "#E0E3E8",
+    ActivityRowButtonTextscale02: "#61656D",
+    ActivityRowBackgroundscale02: PaletteDark.Primary,
+    ActivityRowBackgroundscale03: "#FF5151",
+
+    PrimaryColor: PaletteDark.Primary,
+    PrimaryColor02: PaletteDark.Primary02,
+
+    Grayscale01: PaletteDark.Grayscale01,
+    Grayscale02: PaletteDark.Grayscale02,
+    Grayscale03: PaletteDark.Grayscale03,
+    Grayscale03p5: PaletteDark.Grayscale03p5,
+    Grayscale04: PaletteDark.Grayscale04,
+    Grayscale05: PaletteDark.Grayscale05,
+
+    Button: PaletteDark.White,
+    IconColor: PaletteDark.Grayscale02,
+
+    OrkaTitle: PaletteDark.White,
+
+    TabButtonActive: PaletteDark.White,
+    TabButtonInActive: PaletteDark.Grayscale01,
+
+    DataTypeHolderBackground: PaletteDark.Grayscale02,
+    DataTypeHolderText: PaletteDark.Gray,
+
+    FilterActive: PaletteDark.White,
+    FilterTextActive: PaletteDark.Grayscale03,
+    FilterTextInActive: PaletteDark.White,
+    FilterBorder: PaletteDark.Grayscale01,
+    FilterNewestText: PaletteDark.Grayscale01,
+
+    ActiveRowDisplayText: PaletteDark.White,
+    StatusActive: PaletteDark.Primary02,
+    StatusActiveText: PaletteDark.Primary,
+
+    CommentRowText: PaletteDark.Whitescale01,
+
+    NotificationRowText: PaletteDark.Whitescale01,
+};
+
+export const ThemeOrkaLight = {
+    name: "OrkaLight",
+
+    White: PaletteLight.White,
+    Gray: PaletteLight.Gray,
+    Black: PaletteLight.Black,
+
+    // think about replacement color
+    PlaceholderBackgroundscale01: "#31353C",
+    PlaceholderTextscale01: PaletteLight.Blackscale01,
+    ActivityRowButtonTextscale01: "#E0E3E8",
+    ActivityRowButtonTextscale02: "#61656D",
+    ActivityRowBackgroundscale02: "#0066FF",
+    ActivityRowBackgroundscale03: "#FF5151",
+
+    PrimaryColor: PaletteLight.Primary,
+    PrimaryColor02: PaletteLight.Primary02,
+
+    Grayscale01: PaletteLight.Grayscale01,
+    Grayscale02: PaletteLight.Grayscale02,
+    Grayscale03: PaletteLight.Grayscale03,
+    Grayscale03p5: PaletteLight.Grayscale03p5,
+    Grayscale04: PaletteLight.Grayscale04,
+    Grayscale05: PaletteLight.Grayscale05,
+
+    Button: PaletteLight.Blackscale01,
+    IconColor: PaletteLight.Grayscale05,
+
+    OrkaTitle: PaletteLight.Blackscale01,
+
+    TabButtonActive: PaletteLight.Blackscale01,
     TabButtonInActive: "#ABB4C1",
 
-    DataTypeHolderBackground: "#FFFFFF",
-    DataTypeHolderText: "#CCD7EC",
+    DataTypeHolderBackground: PaletteLight.White,
+    DataTypeHolderText: PaletteLight.Grayscale03p5,
 
-    FilterActive: "#2E3136",
+    FilterActive: PaletteLight.Blackscale01,
     FilterTextActive: "#ECF0F7",
-    FilterTextInActive: "#2E3136",
-    FilterBorder: "#A3ADBE",
-    FilterNewestText: "#A3ADBE",
+    FilterTextInActive: PaletteLight.Blackscale01,
+    FilterBorder: PaletteLight.Primaryscale01,
+    FilterNewestText: PaletteLight.Primaryscale01,
 
-    ActiveRowDisplayText: "#2E3136",
-    StatusActive: "#061728",
-    StatusActiveText: "#0066FF",
+    ActiveRowDisplayText: PaletteLight.Blackscale01,
+    StatusActive: PaletteLight.PrimaryDark02,
+    StatusActiveText: PaletteLight.PrimaryDark,
 
-    CommentRowText: "#2E3136",
+    CommentRowText: PaletteLight.Blackscale01,
 
-    NotificationRowText: "#2E3136",
+    NotificationRowText: PaletteLight.Blackscale01,
 };
 
 export const MaterialThemeOceanic = {
