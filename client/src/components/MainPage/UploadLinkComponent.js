@@ -17,7 +17,7 @@ const PlaceHolder = styled.div`
     align-items: center;
     width: 448px;
     height: 66px;
-    background: ${(props) => props.theme.Blackscale01};
+    background: ${(props) => props.theme.Grayscale04};
     border-radius: 18px;
 
     color: ${(props) => props.theme.Grayscale01};
@@ -48,7 +48,7 @@ const PlaceHolder = styled.div`
     }
 
     input {
-        background: ${(props) => props.theme.Blackscale01};
+        background: ${(props) => props.theme.Grayscale04};
         border: none;
         outline: none;
         height: 100%;
