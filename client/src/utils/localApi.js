@@ -22,6 +22,7 @@ import {
     updateTableUsers as updateTableUsersCounter,
     updateTableCommentMetadata as updateTableCommentMetadataCounter,
     updateTableNotifications as updateTableNotificationsCounter,
+    updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
@@ -235,6 +236,10 @@ function updateTableUsers() {
     store.dispatch(updateTableUsersCounter());
 }
 
+function updateTableSharingData() {
+    store.dispatch(updateTableSharingDataCounter());
+}
+
 function updateTableCommentMetadata() {
     store.dispatch(updateTableCommentMetadataCounter());
 }
@@ -317,6 +322,8 @@ async function patchTableUsersByID({ name, profile }, userID) {
     const result = await run(query);
     console.log("result:", result);
 
+    updateTableSharingData();
+
     return result?.[0]?.rows;
 }
 
@@ -371,6 +378,45 @@ async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
 
     const result = await run(query);
     console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function checkHandsUpTableSharingData(userID) {
+    const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
+        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
+        AND ${TABLE_SHARING_DATA.fields.hands_up} = TRUE;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
+async function patchTableSharingDataByID({ handsUp }, sharingDataID) {
+    if (handsUp == null) {
+        return;
+    }
+
+    let query = `UPDATE ${TABLE_SHARING_DATA.name} SET `;
+
+    const values = [];
+
+    if (!(handsUp == null)) {
+        values.push(`${TABLE_SHARING_DATA.fields.hands_up} = ${handsUp}`);
+    }
+
+    query += values.join(", ");
+    query += ` WHERE id = "${sharingDataID}"`;
+
+    console.log("patchTableSharingDataByID, query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    updateTableSharingData();
 
     return result?.[0]?.rows;
 }
@@ -477,6 +523,7 @@ export {
     updateSender,
     // db interfaces
     updateTableUsers,
+    updateTableSharingData,
     updateTableCommentMetadata,
     updateTableNotifications,
     selectTableUsers,
@@ -485,6 +532,8 @@ export {
     patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
+    checkHandsUpTableSharingData,
+    patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,

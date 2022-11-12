@@ -21,9 +21,11 @@ const HandsUpActivateButton = styled.div`
     ${hoverOpacity}
 `;
 
-function HandsUpActivateButtonComponent() {
+function HandsUpActivateButtonComponent(props) {
+    const { onClick } = props;
+
     return (
-        <HandsUpActivateButton>
+        <HandsUpActivateButton onClick={onClick}>
             <HandsUpCheckIcon />
         </HandsUpActivateButton>
     );

@@ -164,7 +164,8 @@ function renderAction(
     isMyProfileRow,
     isHandsUpRow,
     onClick,
-    onClickHandsUp
+    onClickHandsUp,
+    onCancelHandsUp
 ) {
     if (isEditMode) {
         return (
@@ -180,7 +181,7 @@ function renderAction(
 
     const renderIcon = () => {
         if (isMyProfileRow && isHandsUpRow) {
-            return <HandsUpActivateButtonComponent />;
+            return <HandsUpActivateButtonComponent onClick={onCancelHandsUp} />;
         }
 
         return isMyProfileRow ? (
@@ -199,9 +200,7 @@ function renderAction(
             ) : (
                 <FileCommentExpandComponent count={commentCount} />
             )}
-            {
-                renderIcon()
-            }
+            {renderIcon()}
         </Fragment>
     );
 }
@@ -254,6 +253,12 @@ function ActivityRowComponent(props) {
         }
     }
 
+    async function onCancelHandsUp(event) {
+        event?.stopPropagation();
+
+        await patchTableSharingDataByID({ handsUp: false }, rowID);
+    }
+
     return (
         <ActivityRow
             isSelected={isSelected}
@@ -295,7 +300,8 @@ function ActivityRowComponent(props) {
                     isMyProfileRow,
                     isHandsUpRow,
                     onClickDeleteButton,
-                    onClickHandsUp
+                    onClickHandsUp,
+                    onCancelHandsUp
                 )}
             </div>
         </ActivityRow>
