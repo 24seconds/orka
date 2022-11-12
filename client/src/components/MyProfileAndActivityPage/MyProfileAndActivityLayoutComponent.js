@@ -6,7 +6,8 @@ const MyProfileAndActivityPage = styled.div`
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
     min-width: 520px;
-    height: 506px;
+    /* height: 506px; */
+    max-height: 746px;
 `;
 
 function MyProfileAndActivityPageComponent() {

@@ -5,19 +5,24 @@ import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
-    selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
-    selectTableUsersByID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
+import { hoverOpacity } from "../SharedStyle";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
+import HandsUpSectionComponent from "./HandsUpSectionComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
+
+const StyledHandsUpSection = styled(HandsUpSectionComponent)`
+    margin-top: 8px;
+    margin-bottom: 20px;
+`;
 
 const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
     height: auto;
-    margin: 24px 32px 16px 32px;
+    margin: 32px 32px 24px 32px;
 `;
 
 const MyProfileAndActivityPageContainer = styled.div`
@@ -36,6 +41,8 @@ const SortButton = styled.button`
     border: none;
     cursor: pointer;
     margin-right: 32px;
+
+    ${hoverOpacity}
 `;
 
 const FilterContainer = styled.div`
@@ -55,8 +62,9 @@ const ActivityFilterAndSortContainer = styled.div`
 `;
 
 const ActivityRowContainer = styled.div`
-    height: 300px;
+    height: 323px;
     margin-top: 34px;
+    margin-bottom: 24px;
 
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
@@ -92,6 +100,7 @@ function renderActivityRowComponent(
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
+                isHandsUpRow={data.hands_up}
                 isEditMode={isEditMode}
                 onClick={onClick}
                 onDeleteRow={onDeleteRow}
@@ -111,6 +120,7 @@ function renderActivityRowComponent(
                 commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
+                isHandsUpRow={data.hands_up}
                 isEditMode={isEditMode}
                 onClick={onClick}
                 onDeleteRow={onDeleteRow}
@@ -134,6 +144,7 @@ function MyProfileAndActivityPageContainerComponent() {
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
 
     console.log("myOrkaUUID:", myOrkaUUID);
+    console.log("tableSharingData:", tableSharingData);
 
     useEffect(() => {
         (async () => {
@@ -192,7 +203,8 @@ function MyProfileAndActivityPageContainerComponent() {
         setRowsToBeDeleted(newState);
     }
 
-    const restData = data.filter((d) => !d.handsUp);
+    const handsUpData = data.filter((d) => d.hands_up)?.[0];
+    const restData = data.filter((d) => !d.hands_up);
     const filteredData = filterSharingData(
         restData,
         activeFilter,
@@ -207,6 +219,16 @@ function MyProfileAndActivityPageContainerComponent() {
                 editMode={editMode}
                 onSetEditMode={onSetEditMode}
             />
+            {
+                // handsup data
+                handsUpData && (
+                    <StyledHandsUpSection
+                        data={handsUpData}
+                        activeRow={activeRow}
+                        onClick={onClick}
+                    />
+                )
+            }
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     {

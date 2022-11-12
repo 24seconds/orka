@@ -12,6 +12,7 @@ import {
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
+    UPDATE_TABLE_SHARING_DATA,
     UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
     UPDATE_TABLE_COMMENT_METADATA,
@@ -84,6 +85,11 @@ export const updateSenderID = (senderID) => ({
 
 export const updateTableUsers = () => ({
     type: UPDATE_TABLE_USERS,
+    payload: 0,
+});
+
+export const updateTableSharingData = () => ({
+    type: UPDATE_TABLE_SHARING_DATA,
     payload: 0,
 });
 

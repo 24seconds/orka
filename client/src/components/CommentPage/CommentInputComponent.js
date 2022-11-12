@@ -15,7 +15,7 @@ const InputStyle = styled.input`
     width: 100%;
     margin-left: 24px;
 
-    background: ${(props) => props.theme.Blackscale01};
+    background: ${(props) => props.theme.Grayscale04};
     border: none;
     outline: none;
     padding: 0;
@@ -52,7 +52,7 @@ const CommentInput = styled.div`
     align-items: center;
     width: 302px;
     height: 54px;
-    background: ${(props) => props.theme.Blackscale01};
+    background: ${(props) => props.theme.Grayscale04};
     border-radius: 18px;
 
     .icon-container {

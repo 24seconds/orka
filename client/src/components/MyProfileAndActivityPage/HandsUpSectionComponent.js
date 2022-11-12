@@ -1,4 +1,5 @@
 import React from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import HandsUpIcon from "../../assets/HandsUpIcon";
 import { renderActivityRowComponent } from "./common";
@@ -34,7 +35,9 @@ const HandsUpSection = styled.div`
 function HandsUpSectionComponent(props) {
     const { className, data, activeRow, onClick } = props;
 
-    console.log("HandsUpSectionComponent:", data, activeRow, onClick);
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+
+    console.log("HandsUpSectionComponent, data:", data);
 
     return (
         <HandsUpSection className={className}>
@@ -44,7 +47,12 @@ function HandsUpSectionComponent(props) {
             </HandsUpTitle>
             {data &&
                 onClick &&
-                renderActivityRowComponent(data, activeRow, onClick)}
+                renderActivityRowComponent(
+                    data,
+                    activeRow,
+                    myOrkaUUID,
+                    onClick
+                )}
             <SectionDivider />
         </HandsUpSection>
     );
