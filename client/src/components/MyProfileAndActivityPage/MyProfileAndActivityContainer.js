@@ -11,6 +11,7 @@ import {
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
+import { hoverOpacity } from "../SharedStyle";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
@@ -36,6 +37,8 @@ const SortButton = styled.button`
     border: none;
     cursor: pointer;
     margin-right: 32px;
+
+    ${hoverOpacity}
 `;
 
 const FilterContainer = styled.div`

@@ -10,6 +10,7 @@ import {
     updateSender,
     updateSelectedPeerUUID,
 } from "../../utils/localApi";
+import { hoverOpacity } from "../SharedStyle";
 import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -75,6 +76,8 @@ const SortButton = styled.button`
     border: none;
     cursor: pointer;
     margin-right: 32px;
+
+    ${hoverOpacity}
 `;
 
 const FilterContainer = styled.div`
