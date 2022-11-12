@@ -57,3 +57,9 @@ export const hoverFilterTab = css`
         border-color: ${(props) => props.theme.White};
     }
 `;
+
+export const hoverOpacity = css`
+    &:hover {
+        opacity: 0.6;
+    }
+`;
