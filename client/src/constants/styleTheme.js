@@ -22,7 +22,7 @@ const PaletteLight = {
     Primary: "#1B76FF",
     Primary02: "#489DF1",
     Primaryscale01: "#A3ADBE",
-    
+
     PrimaryDark: "#0066FF",
     PrimaryDark02: "#061728",
 
@@ -136,8 +136,8 @@ export const ThemeOrkaLight = {
     FilterNewestText: PaletteLight.Primaryscale01,
 
     ActiveRowDisplayText: PaletteLight.Blackscale01,
-    StatusActive: PaletteLight.PrimaryDark02,
-    StatusActiveText: PaletteLight.PrimaryDark,
+    StatusActive: PaletteLight.Primary02,
+    StatusActiveText: PaletteLight.Primary,
 
     CommentRowText: PaletteLight.Blackscale01,
 

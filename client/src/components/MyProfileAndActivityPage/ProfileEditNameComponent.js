@@ -84,14 +84,12 @@ const InputStyle = styled.input`
 `;
 
 const MiniProfile = styled.div`
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
     background: #000000;
 
     img {
-        width: 100%;
-        height: 100%;
+        width: 52px;
+        height: 52px;
     }
 `;
 
@@ -189,7 +187,7 @@ function ProfileEditNameComponent(props) {
                     readOnly={!propEditMode}
                 ></InputStyle>
                 <IconContainer
-                    onClick={propEditMode && onClear}
+                    onClick={propEditMode ? onClear : undefined}
                     editMode={propEditMode}
                 >
                     {propEditMode && <ProfileEditNameClearIcon />}

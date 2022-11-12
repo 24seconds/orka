@@ -5,9 +5,18 @@ import DataUsageStatusComponent from "./DataUsageStatusComponent";
 import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
-import { hoverRow } from "../../SharedStyle";
+import { hoverOpacity, hoverRow } from "../../SharedStyle";
 import { DATATYPE_LINK } from "../../../constants/constant";
 import CloseIcon from "../../../assets/CloseIcon";
+import HandsUpButtonComponent from "./HandsUpButtonComponent";
+import HandsUpIcon from "../../../assets/HandsUpIcon";
+import {
+    checkHandsUpTableSharingData,
+    patchTableSharingDataByID,
+    selectTableSharingDataByID,
+} from "../../../utils/localApi";
+import { shallowEqual, useSelector } from "react-redux";
+import HandsUpActivateButtonComponent from "./HandsUpActivateButtomComponent";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
@@ -109,9 +118,7 @@ const DeleteButton = styled.div`
     background: ${(props) => props.theme.Grayscale04};
     cursor: pointer;
 
-    &:hover {
-        opacity: 0.6;
-    }
+    ${hoverOpacity}
 `;
 
 function convertByteToHumanReadable(size) {
@@ -149,7 +156,16 @@ function convertTimestampReadable(timestamp, now) {
     return `${timeInDay}d ago`;
 }
 
-function renderAction(isEditMode, dataType, commentCount, url, onClick) {
+function renderAction(
+    isEditMode,
+    dataType,
+    commentCount,
+    url,
+    isMyProfileRow,
+    isHandsUpRow,
+    onClick,
+    onClickHandsUp
+) {
     if (isEditMode) {
         return (
             <Fragment>
@@ -160,6 +176,22 @@ function renderAction(isEditMode, dataType, commentCount, url, onClick) {
         );
     }
 
+    console.log("isHandsUpRow:", isHandsUpRow, isMyProfileRow);
+
+    const renderIcon = () => {
+        if (isMyProfileRow && isHandsUpRow) {
+            return <HandsUpActivateButtonComponent />;
+        }
+
+        return isMyProfileRow ? (
+            <HandsUpButtonComponent onClick={onClickHandsUp} />
+        ) : (
+            <ActionButtonComponent
+                type={dataType === "URL" ? "TEXT" : "FILE"}
+            />
+        );
+    };
+
     return (
         <Fragment>
             {dataType === "URL" ? (
@@ -167,9 +199,9 @@ function renderAction(isEditMode, dataType, commentCount, url, onClick) {
             ) : (
                 <FileCommentExpandComponent count={commentCount} />
             )}
-            <ActionButtonComponent
-                type={dataType === "URL" ? "TEXT" : "FILE"}
-            />
+            {
+                renderIcon()
+            }
         </Fragment>
     );
 }
@@ -191,6 +223,7 @@ function ActivityRowComponent(props) {
         isEditMode,
         createdAt,
         onDeleteRow,
+        isHandsUpRow,
     } = props;
 
     const sizeHumanReadable = useMemo(
@@ -203,9 +236,22 @@ function ActivityRowComponent(props) {
         [createdAt]
     );
 
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+
     function onClickDeleteButton(event) {
         onDeleteRow?.(rowID);
         event?.stopPropagation();
+    }
+
+    async function onClickHandsUp(event) {
+        event?.stopPropagation();
+
+        const result = await checkHandsUpTableSharingData(myOrkaUUID);
+        console.log("onClickHandsUp, result:", result);
+
+        if (result?.length === 0) {
+            await patchTableSharingDataByID({ handsUp: true }, rowID);
+        }
     }
 
     return (
@@ -246,7 +292,10 @@ function ActivityRowComponent(props) {
                     dataType,
                     commentCount,
                     "",
-                    onClickDeleteButton
+                    isMyProfileRow,
+                    isHandsUpRow,
+                    onClickDeleteButton,
+                    onClickHandsUp
                 )}
             </div>
         </ActivityRow>
@@ -259,6 +308,7 @@ ActivityRowComponent.propTypes = {
     usageCount: PropTypes.number.isRequired,
     commentCount: PropTypes.number.isRequired,
     isMyProfileRow: PropTypes.bool,
+    isHandsUpRow: PropTypes.bool,
 };
 
 ActivityRowComponent.defaultProps = {
@@ -267,6 +317,7 @@ ActivityRowComponent.defaultProps = {
     usageCount: 0,
     commentCount: 0,
     isMyProfileRow: false,
+    isHandsUpRow: false,
 };
 
 export default ActivityRowComponent;

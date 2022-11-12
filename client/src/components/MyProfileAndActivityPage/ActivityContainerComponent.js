@@ -150,6 +150,8 @@ function ActivityContainerComponent(props) {
         shallowEqual
     );
 
+    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+
     console.log("activePeerUUID:", activePeerUUID);
 
     useEffect(() => {
@@ -241,6 +243,7 @@ function ActivityContainerComponent(props) {
                     renderActivityRowComponent(
                         d,
                         activeRow,
+                        myOrkaUUID,
                         onClick,
                         onDeleteRow
                     )
