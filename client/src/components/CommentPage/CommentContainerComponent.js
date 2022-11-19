@@ -81,19 +81,20 @@ const CommentCloseContainer = styled.div`
 
 function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
-    const { name } = user;
-    const { last_read_comment_id } = metadata;
+    const { id: userID, name: userName, profile: userProfile } = user;
 
-    console.log("last_read_comment_id:", last_read_comment_id, id);
 
     return (
         <StyledCommentRowComponent
             key={id}
-            senderName={name}
+            senderID={userID}
+            senderName={userName}
+            senderProfile={userProfile}
             createdAt={new Date(created_at)}
             text={text}
             // TODO(young): This should be evaluated using timestamp and id.
-            isRead={last_read_comment_id !== id}
+            // TODO(young): revisit the condition.
+            isRead={metadata?.last_read_comment_id !== id}
         />
     );
 }
@@ -109,8 +110,6 @@ function CommentContainerComponent() {
         (state) => state.tableComments,
         shallowEqual
     );
-    console.log("dataID:", dataID);
-    console.log("senderID:", senderID);
 
     useEffect(() => {
         (async () => {
@@ -133,7 +132,6 @@ function CommentContainerComponent() {
     }, [dataID, senderID, tableComments]);
 
     function onClose() {
-        console.log("onClose called");
         updateSelectedRowID(null);
     }
 
@@ -147,7 +145,6 @@ function CommentContainerComponent() {
             </CommentTitleContainer>
             <CommentRowContainer className="hoho">
                 {user &&
-                    metadata &&
                     comments.map((c) => renderCommentRow(c, user, metadata))}
             </CommentRowContainer>
             <CommentInputContainer>
