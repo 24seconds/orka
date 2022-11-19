@@ -63,7 +63,7 @@ async function initializeDb() {
         middlewareForDebugQuery(`
         INSERT INTO comments VALUES (
             "naive-comment-id-4", "naive-file-id-1", "FILE", "hoho", 
-            "naive-sender", "naive-uploader", "2022-10-02T12:28:00.000Z");`)
+            "naive-sender", "naive-id-3", "2022-10-02T12:28:00.000Z");`)
     );
 
     await glue.query(
@@ -120,6 +120,8 @@ async function initializeDb() {
         middlewareForDebugQuery(`
         INSERT INTO sharing_data VALUES ("naive-file-id-1", "naive-file-name-1", 128,
     "PNG", NULL, "FILE", 1, false, "naive-id-3", "2022-10-01T14:48:00.000Z");
+    INSERT INTO sharing_data VALUES ("naive-file-id-1-0", "naive-file-name-1-0", 128,
+    "PNG", NULL, "FILE", 1, true, "naive-id-3", "2022-11-01T14:48:00.000Z");
 INSERT INTO sharing_data VALUES ("naive-file-id-2", "naive-file-name-2", 256123,
     "JPEG", NULL, "FILE", 0, true, "naive-id-2", "2022-10-01T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
@@ -134,6 +136,9 @@ INSERT INTO sharing_data VALUES (
 INSERT INTO sharing_data VALUES (
     "naive-link-id-1", NULL, 0, NULL, "https://dev.orka.run", "LINK", 0, false, 
     "naive-uploader", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
+    "naive-link-id-1-0", NULL, 0, NULL, "https://dev.orka.run", "LINK", 0, false, 
+    "naive-id-3", "2022-11-19T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
     "naive-link-id-3", NULL, 0, NULL, "https://dev.orka.run.hohohohohohohohohohoho", "LINK", 0, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
