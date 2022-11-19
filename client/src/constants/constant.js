@@ -20,3 +20,6 @@ export const DATATYPE_LINK = "LINK";
 
 // TODO(young): use later
 export const PROFILE_IMAGE_COUNT = 10;
+
+export const NOTIFICATION_TYPE_STATUS = "STATUS";
+export const NOTIFICATION_TYPE_COMMENT = "COMMENT";

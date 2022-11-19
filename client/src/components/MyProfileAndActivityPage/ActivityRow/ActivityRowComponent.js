@@ -17,6 +17,7 @@ import {
 } from "../../../utils/localApi";
 import { shallowEqual, useSelector } from "react-redux";
 import HandsUpActivateButtonComponent from "./HandsUpActivateButtomComponent";
+import { convertTimestampReadable } from "../../../utils/commonUtil";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
@@ -137,25 +138,6 @@ function convertByteToHumanReadable(size) {
     return `Too large`;
 }
 
-function convertTimestampReadable(timestamp, now) {
-    // time in second.
-    const timeDiff = Math.round((now - timestamp) / 1000);
-
-    const timeInMinute = Math.round(timeDiff / 60);
-    const timeInHour = Math.round(timeDiff / 60 / 60);
-    const timeInDay = Math.round(timeDiff / 60 / 60 / 24);
-
-    if (timeInMinute < 60) {
-        return `${timeInMinute}m ago`;
-    }
-
-    if (timeInHour < 24) {
-        return `${timeInHour}H ago`;
-    }
-
-    return `${timeInDay}d ago`;
-}
-
 function renderAction(
     isEditMode,
     dataType,
@@ -231,7 +213,7 @@ function ActivityRowComponent(props) {
         [size]
     );
 
-    const timestampReadable = useMemo(
+    const timestampHumanReadable = useMemo(
         () => convertTimestampReadable(createdAt, new Date()),
         [createdAt]
     );
@@ -278,8 +260,8 @@ function ActivityRowComponent(props) {
                         <div className="orka-file-name">{displayName}</div>
                         <div className="orka-size-and-timestamp">
                             {dataType === "TXT"
-                                ? `URL description blah blah blah | ${timestampReadable}`
-                                : `${sizeHumanReadable} | ${timestampReadable}`}
+                                ? `URL description blah blah blah | ${timestampHumanReadable}`
+                                : `${sizeHumanReadable} | ${timestampHumanReadable}`}
                         </div>
                     </FileMetaData>
                 </div>

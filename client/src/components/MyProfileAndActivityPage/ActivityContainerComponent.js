@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
-import {
-    IMAGE_URL,
-} from "../../constants/constant";
+import { IMAGE_URL } from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     updateSelectedRowID,

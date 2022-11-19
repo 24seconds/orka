@@ -498,6 +498,29 @@ async function selectTableNotifications() {
     return result?.[0]?.rows;
 }
 
+async function selecTableNotificationsWithUserAndSharingData() {
+    const query = `SELECT 
+        n.*, 
+        u.${TABLE_USERS.fields.id} as user_id, 
+        u.${TABLE_USERS.fields.name} as user_name, 
+        u.${TABLE_USERS.fields.profile} as user_profile,
+        d.${TABLE_SHARING_DATA.fields.id} as sharing_data_id,
+        d.${TABLE_SHARING_DATA.fields.name} as sharing_data_name
+        FROM ${TABLE_NOTIFICATIONS.name} as n
+        LEFT JOIN ${TABLE_USERS.name} as u ON
+            n.${TABLE_NOTIFICATIONS.fields.sender_id} = u.${TABLE_USERS.fields.id}
+        LEFT JOIN ${TABLE_SHARING_DATA.name} as d ON
+            n.${TABLE_NOTIFICATIONS.fields.data_id} = d.${TABLE_SHARING_DATA.fields.id}
+        ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 export {
     sendTextToPeer,
     sendFilesToPeer,
@@ -539,4 +562,5 @@ export {
     selectTableCommentsByDataID,
     selectTableCommentMetadataByDataID,
     selectTableNotifications,
+    selecTableNotificationsWithUserAndSharingData,
 };

@@ -1,7 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { hoverRow } from "../SharedStyle";
+import { IMAGE_URL, NOTIFICATION_TYPE_STATUS } from "../../constants/constant";
+import { convertTimestampReadable } from "../../utils/commonUtil";
 
 const NotificationRow = styled.div`
     display: flex;
@@ -20,10 +22,13 @@ const NotificationRow = styled.div`
 `;
 
 const PeerProfile = styled.div`
-    width: 60px;
-    height: 60px;
     border-radius: 50%;
     background: ${(props) => props.theme.Black};
+
+    img {
+        width: 60px;
+        height: 60px;
+    }
 `;
 
 const InfoContainer = styled.div`
@@ -52,8 +57,41 @@ const InfoContainer = styled.div`
 `;
 
 const TextHighlighter = styled.span`
+    // should be same as font size
+    height: 20px;
     font-weight: 600;
+
+    ${(props) =>
+        props.shouldTruncated &&
+        `
+        display: inline-block;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;    `};
 `;
+
+function renderNotificationTypeStatus(userName, dataName) {
+    return (
+        <Fragment>
+            <TextHighlighter shouldTruncated={true}>{userName}</TextHighlighter>{" "}
+            downloaded
+            <br />
+            <TextHighlighter>{dataName}</TextHighlighter> file!
+        </Fragment>
+    );
+}
+
+function renderNotificationTypeComment(userName, dataName) {
+    return (
+        <Fragment>
+            <TextHighlighter shouldTruncated={true}>{userName}</TextHighlighter>{" "}
+            left a comment at
+            <br />
+            <TextHighlighter>{dataName}</TextHighlighter> file!
+        </Fragment>
+    );
+}
 
 function NotificationRowComponent(props) {
     const {
@@ -64,8 +102,20 @@ function NotificationRowComponent(props) {
         senderID,
         isActive,
         text,
+        createdAt,
+        userID,
+        userName,
+        userProfile,
         onClick,
+        dataName,
     } = props;
+
+    const profilePath = `profile_${userProfile}.png`;
+
+    const timestampHumanReadable = useMemo(
+        () => convertTimestampReadable(createdAt, new Date()),
+        [createdAt]
+    );
 
     return (
         <NotificationRow
@@ -73,28 +123,16 @@ function NotificationRowComponent(props) {
             isActive={isActive}
             onClick={() => onClick?.(rowID, dataID, senderID)}
         >
-            <PeerProfile className="orka-peer-profile"></PeerProfile>
+            <PeerProfile className="orka-peer-profile">
+                <img src={`/${IMAGE_URL}/${profilePath}`} alt="peer profile" />
+            </PeerProfile>
             <InfoContainer className="orka-info-container">
                 <div className="orka-text">
-                    {type === "STATUS" ? (
-                        <Fragment>
-                            <TextHighlighter>Person A</TextHighlighter>{" "}
-                            downloaded
-                            <br />
-                            <TextHighlighter>filename.png</TextHighlighter>{" "}
-                            file!
-                        </Fragment>
-                    ) : (
-                        <Fragment>
-                            <TextHighlighter>Person A</TextHighlighter> left a
-                            comment at
-                            <br />
-                            <TextHighlighter>filename.png</TextHighlighter>{" "}
-                            file!
-                        </Fragment>
-                    )}
+                    {type === NOTIFICATION_TYPE_STATUS
+                        ? renderNotificationTypeStatus(userName, dataName)
+                        : renderNotificationTypeComment(userName, dataName)}
                 </div>
-                <div className="orka-timestamp">20H ago</div>
+                <div className="orka-timestamp">{timestampHumanReadable}</div>
             </InfoContainer>
         </NotificationRow>
     );
@@ -102,10 +140,17 @@ function NotificationRowComponent(props) {
 
 NotificationRowComponent.propTypes = {
     isActive: PropTypes.bool.isRequired,
+    userID: PropTypes.string.isRequired,
+    userName: PropTypes.string,
+    userProfile: PropTypes.number.isRequired,
+    // date object
+    createdAt: PropTypes.instanceOf(Date).isRequired,
+    dataName: PropTypes.string,
 };
 
 NotificationRowComponent.defaultProps = {
     isActive: false,
+    userProfile: 0,
 };
 
 export default NotificationRowComponent;
