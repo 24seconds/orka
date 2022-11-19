@@ -196,7 +196,7 @@ function renderAction(
     return (
         <Fragment>
             {dataType === "URL" ? (
-                <TextCopyComponent text="https://github.com/24seconds/orka" />
+                <TextCopyComponent text={url} />
             ) : (
                 <FileCommentExpandComponent count={commentCount} />
             )}
@@ -223,6 +223,7 @@ function ActivityRowComponent(props) {
         createdAt,
         onDeleteRow,
         isHandsUpRow,
+        dataURL,
     } = props;
 
     const sizeHumanReadable = useMemo(
@@ -296,7 +297,7 @@ function ActivityRowComponent(props) {
                     isEditMode,
                     dataType,
                     commentCount,
-                    "",
+                    dataURL,
                     isMyProfileRow,
                     isHandsUpRow,
                     onClickDeleteButton,

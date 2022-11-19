@@ -263,6 +263,7 @@ async function selectTableUsers() {
     return result?.[0]?.rows;
 }
 
+// Todo(young): refactor name as selectTableUserByID and return only one row
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
         WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;

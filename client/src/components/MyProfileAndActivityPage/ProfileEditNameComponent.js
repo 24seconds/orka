@@ -135,8 +135,6 @@ function ProfileEditNameComponent(props) {
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
     const inputEl = useRef(null);
 
-    console.log("propEditMode:", propEditMode);
-
     useEffect(() => {
         (async () => {
             const user = await selectTableUsersByID(myOrkaUUID);

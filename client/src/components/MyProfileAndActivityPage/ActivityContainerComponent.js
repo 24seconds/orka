@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
-import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import {
+    IMAGE_URL,
+} from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
-    selectTableSharingDataWithCommentCount,
     updateSelectedRowID,
     updateSender,
     updateSelectedPeerUUID,
+    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableUsersByID,
 } from "../../utils/localApi";
 import { hoverOpacity } from "../SharedStyle";
 import { renderActivityRowComponent } from "./common";
@@ -17,10 +20,13 @@ import HandsUpSectionComponent from "./HandsUpSectionComponent";
 
 const MiniProfile = styled.div`
     display: inline-block;
-    width: 36px;
-    height: 36px;
     border-radius: 50%;
     background: #000000;
+
+    img {
+        width: 52px;
+        height: 52px;
+    }
 `;
 
 const StyledHandsUpSection = styled(HandsUpSectionComponent)`
@@ -38,7 +44,7 @@ const ActivityTitleContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 68px;
+    height: 52px;
     margin-left: 32px;
 
     ${IconContainer} {
@@ -48,12 +54,18 @@ const ActivityTitleContainer = styled.div`
 `;
 
 const ProfileName = styled.span`
+    max-width: 400px;
+
     font-weight: 500;
     font-size: 24px;
     line-height: 29px;
     letter-spacing: -0.04em;
 
     color: ${(props) => props.theme.PlaceholderTextscale01};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const ActivityProfileContainer = styled.div`
@@ -139,7 +151,11 @@ function ActivityContainerComponent(props) {
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
+    const [sortOrder, setSortOrder] = useState("DESC");
     const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
+
+    const [peerUserName, setPeerUserName] = useState("");
+    const [peerUserProfile, setPeerUserProfile] = useState(0);
 
     const tableSharingData = useSelector(
         (state) => state.tableSharingData,
@@ -152,16 +168,25 @@ function ActivityContainerComponent(props) {
 
     const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
 
-    console.log("activePeerUUID:", activePeerUUID);
+    useEffect(() => {
+        (async () => {
+            const data = await selectTableSharingDataWithCommentCountOrderBy(
+                activePeerUUID,
+                sortOrder
+            );
+            setData(data);
+        })();
+    }, [tableSharingData, activePeerUUID, sortOrder]);
 
     useEffect(() => {
         (async () => {
-            const sharingData = await selectTableSharingDataWithCommentCount(
-                activePeerUUID
-            );
-            setData(sharingData);
+            const user = await selectTableUsersByID(activePeerUUID);
+            const peerUser = user?.[0];
+
+            setPeerUserName(peerUser?.name || 0);
+            setPeerUserProfile(peerUser?.profile || "");
         })();
-    }, [tableSharingData, activePeerUUID]);
+    }, [activePeerUUID]);
 
     // only one hands up data is possible
     const handsUpData = data.filter((d) => d.hands_up)?.[0];
@@ -172,10 +197,7 @@ function ActivityContainerComponent(props) {
         rowsToBeDeleted
     );
 
-    console.log("handsUpData:", handsUpData);
-
     function onClick(rowID, senderID) {
-        console.log("onClick called, rowID:", rowID, senderID);
         if (rowID === activeRow) {
             setActiveRow(null);
             // dispatch function?
@@ -191,6 +213,10 @@ function ActivityContainerComponent(props) {
         setActiveFilter(tabName);
     }
 
+    function onClickSort() {
+        setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+    }
+
     function onClose() {
         updateSelectedPeerUUID(null);
         updateSelectedRowID(null);
@@ -202,13 +228,21 @@ function ActivityContainerComponent(props) {
         setRowsToBeDeleted(newState);
     }
 
+    const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
+    const profilePath = `profile_${peerUserProfile}.png`;
+
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
                 <ActivityProfileContainer>
-                    <MiniProfile />
+                    <MiniProfile>
+                        <img
+                            src={`/${IMAGE_URL}/${profilePath}`}
+                            alt="peer profile"
+                        />
+                    </MiniProfile>
                     <ProfileName className="orka-profile-name">
-                        Person
+                        {peerUserName}
                     </ProfileName>
                 </ActivityProfileContainer>
                 <IconContainer onClick={onClose}>
@@ -225,7 +259,6 @@ function ActivityContainerComponent(props) {
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
                     {["ALL", "Files", "URLs"].map((n) => {
-                        console.log("FilterContainer:", n);
                         return (
                             <FilterTabComponent
                                 key={n}
@@ -236,7 +269,7 @@ function ActivityContainerComponent(props) {
                         );
                     })}
                 </FilterContainer>
-                <SortButton>Newest</SortButton>
+                <SortButton onClick={onClickSort}>{sortText}</SortButton>
             </ActivityFilterAndSortContainer>
             <ActivityRowContainer>
                 {filteredData.map((d) =>

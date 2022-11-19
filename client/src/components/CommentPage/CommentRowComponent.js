@@ -1,31 +1,44 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { IMAGE_URL } from "../../constants/constant";
 
 const MiniProfile = styled.div`
     display: inline-block;
-    width: 36px;
-    height: 36px;
     border-radius: 50%;
     background: #000000;
+
+    img {
+        width: 36px;
+        height: 36px;
+    }
+`;
+
+const ProfileName = styled.span`
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.04em;
+    color: ${(props) => props.theme.CommentRowText};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const TitleContentStyle = styled.div`
     display: flex;
     align-items: center;
 
-    .orka-profile-name {
+    ${ProfileName} {
         margin-right: 10px;
-
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 22px;
-        letter-spacing: -0.04em;
-        color: ${(props) => props.theme.CommentRowText};
     }
 
     .orka-timestamp {
         margin-right: 6px;
+
+        min-width: 60px;
+        max-width: 60px;
 
         font-weight: 300;
         font-size: 16px;
@@ -37,8 +50,10 @@ const TitleContentStyle = styled.div`
 
     .orka-unread-dot {
         display: inline-block;
-        width: 8px;
-        height: 8px;
+        min-width: 8px;
+        max-width: 8px;
+        min-height: 8px;
+        max-height: 8px;
         border-radius: 50%;
         background: ${(props) => props.theme.ActivityRowBackgroundscale03};
     }
@@ -81,17 +96,32 @@ function convertTimestampTohhmm(date) {
 }
 
 function CommentRowComponent(props) {
-    const { className, senderName, createdAt, text, isRead } = props;
+    const {
+        className,
+        senderID,
+        senderName,
+        senderProfile,
+        createdAt,
+        text,
+        isRead,
+    } = props;
 
     const timestamp = useMemo(() => {
         return convertTimestampTohhmm(createdAt);
     }, [createdAt]);
 
+    const profilePath = `profile_${senderProfile}.png`;
+
     return (
         <CommentRow className={className}>
             <TitleContentStyle>
-                <MiniProfile></MiniProfile>
-                <span className="orka-profile-name">{senderName}</span>
+                <MiniProfile>
+                    <img
+                        src={`/${IMAGE_URL}/${profilePath}`}
+                        alt="sender profile"
+                    />
+                </MiniProfile>
+                <ProfileName>{senderName}</ProfileName>
                 <span className="orka-timestamp">{timestamp}</span>
                 {!isRead && <div className="orka-unread-dot"></div>}
             </TitleContentStyle>
@@ -102,6 +132,7 @@ function CommentRowComponent(props) {
 
 CommentRowComponent.propTypes = {
     senderName: PropTypes.string.isRequired,
+    senderID: PropTypes.string.isRequired,
     // date object
     createdAt: PropTypes.instanceOf(Date).isRequired,
     text: PropTypes.string,

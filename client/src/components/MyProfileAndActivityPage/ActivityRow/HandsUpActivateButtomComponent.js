@@ -24,8 +24,13 @@ const HandsUpActivateButton = styled.div`
 function HandsUpActivateButtonComponent(props) {
     const { onClick } = props;
 
+    function onCancel(event) {
+        event?.stopPropagation();
+        onClick?.();
+    }
+
     return (
-        <HandsUpActivateButton onClick={onClick}>
+        <HandsUpActivateButton onClick={onCancel}>
             <HandsUpCheckIcon />
         </HandsUpActivateButton>
     );

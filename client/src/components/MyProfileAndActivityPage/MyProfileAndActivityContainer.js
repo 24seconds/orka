@@ -121,6 +121,7 @@ function renderActivityRowComponent(
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
+                dataURL={data.text}
                 isEditMode={isEditMode}
                 onClick={onClick}
                 onDeleteRow={onDeleteRow}
