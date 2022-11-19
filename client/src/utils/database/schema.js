@@ -60,7 +60,6 @@ const TABLE_NOTIFICATIONS = {
         type: "type",
         text: "text",
         data_id: "data_id",
-        data_type: "data_type",
         sender_id: "sender_id",
         created_at: "created_at",
     },
@@ -90,7 +89,6 @@ CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.type} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.text} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.data_id} TEXT NOT NULL,
-    ${TABLE_NOTIFICATIONS.fields.data_type} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.sender_id} TEXT NOT NULL,
     ${TABLE_NOTIFICATIONS.fields.created_at} TIMESTAMP NOT NULL
 );

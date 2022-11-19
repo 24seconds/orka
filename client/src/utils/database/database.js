@@ -83,6 +83,14 @@ async function initializeDb() {
 
     await glue.query(
         middlewareForDebugQuery(`
+        INSERT INTO comments VALUES (
+            "naive-comment-id-7", "naive-file-id-1", "FILE", "i want to download but i
+            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
+            "naive-id-1", "naive-id-1", "2022-10-02T08:21:00.000Z");`)
+    );
+
+    await glue.query(
+        middlewareForDebugQuery(`
         INSERT INTO comment_metadata VALUES (
             "naive-file-id-2", "naive-comment-id-5"
         );
@@ -93,7 +101,7 @@ async function initializeDb() {
         middlewareForDebugQuery(`
         INSERT INTO notifications VALUES (
             "naive-noti-id-1", "COMMENT", "notification came hohoho", "naive-file-id-2",
-            "FILE", "naive-id-2", "2022-10-02T08:21:00.000Z"
+            "naive-id-2", "2022-10-02T08:21:00.000Z"
         );
     `)
     );
@@ -102,7 +110,7 @@ async function initializeDb() {
         middlewareForDebugQuery(`
         INSERT INTO notifications VALUES (
             "naive-noti-id-2", "COMMENT", "another notification came hohoho", "naive-file-id-1",
-            "FILE", "naive-id-2", "2022-10-02T08:17:00.000Z"
+            "naive-id-2", "2022-10-02T08:17:00.000Z"
         );
     `)
     );
@@ -110,8 +118,8 @@ async function initializeDb() {
     await glue.query(
         middlewareForDebugQuery(`
         INSERT INTO notifications VALUES (
-            "naive-noti-id-3", "STATUS", "peer downloaded!", "naive-link-id-1",
-            "FILE", "naive-id-1", "2022-10-02T12:17:00.000Z"
+            "naive-noti-id-3", "STATUS", "peer downloaded!", "naive-file-id-1",
+            "naive-id-1", "2022-11-02T12:17:00.000Z"
         );
     `)
     );

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NotificationRowComponent from "./NotificationRowComponent";
 import {
-    selectTableNotifications,
+    selecTableNotificationsWithUserAndSharingData,
+    updateSelectedPeerUUID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
 import { shallowEqual, useSelector } from "react-redux";
+import { updateSenderID } from "../../redux/action";
 
 const StyledNotificationRowComponent = styled(NotificationRowComponent)`
     :last-child {
@@ -44,7 +46,18 @@ const NotificationContainerTitle = styled.div`
 `;
 
 function renderNotificationRow(notification, activeRow, onClick) {
-    const { id, type, text, data_id, sender_id } = notification;
+    const {
+        id,
+        type,
+        text,
+        data_id,
+        sender_id,
+        created_at: createdAt,
+        user_id: userID,
+        user_name: userName,
+        user_profile: userProfile,
+        sharing_data_name: dataName,
+    } = notification;
 
     return (
         <StyledNotificationRowComponent
@@ -55,6 +68,11 @@ function renderNotificationRow(notification, activeRow, onClick) {
             senderID={sender_id}
             isActive={activeRow === id}
             text={text}
+            userID={userID}
+            userName={userName}
+            userProfile={userProfile}
+            dataName={dataName}
+            createdAt={new Date(createdAt)}
             onClick={onClick}
         />
     );
@@ -75,10 +93,10 @@ function NotificationContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            // TODO(young): select noficiation with user later
-            const notifications = await selectTableNotifications();
+            const notifications =
+                await selecTableNotificationsWithUserAndSharingData();
+            console.log("NotificationContainerComponent==================");
             console.table(notifications);
-
             setNotifications(notifications);
         })();
     }, [tableNotifications]);
@@ -87,8 +105,10 @@ function NotificationContainerComponent() {
         console.log("onClick called, rowID:", notificationID);
         if (notificationID === selectedRowID) {
             updateSelectedRowID(null);
+            updateSenderID(null);
         } else {
-            updateSelectedRowID(notificationID);
+            updateSelectedRowID(dataID);
+            updateSenderID(senderID);
         }
         updateSender(senderID);
     }

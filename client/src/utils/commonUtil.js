@@ -50,9 +50,33 @@ function filterSharingData(data, option, rowsToBeDeleted) {
     });
 }
 
+function convertTimestampReadable(timestamp, now) {
+    if (timestamp > now) {
+        return `future`;
+    }
+
+    // time in second.
+    const timeDiff = Math.round((now - timestamp) / 1000);
+
+    const timeInMinute = Math.round(timeDiff / 60);
+    const timeInHour = Math.round(timeDiff / 60 / 60);
+    const timeInDay = Math.round(timeDiff / 60 / 60 / 24);
+
+    if (timeInMinute < 60) {
+        return `${timeInMinute}m ago`;
+    }
+
+    if (timeInHour < 24) {
+        return `${timeInHour}H ago`;
+    }
+
+    return `${timeInDay}d ago`;
+}
+
 export {
     getSizeString,
     getCurrentTime,
     generateFingerPrint,
     filterSharingData,
+    convertTimestampReadable,
 };
