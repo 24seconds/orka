@@ -22,7 +22,7 @@ async function initializeDb() {
     );
     await glue.query(
         middlewareForDebugQuery(
-            `INSERT INTO users VALUES ("naive-id-3", "naive-long-long-long-name-3", 5);`
+            `INSERT INTO users VALUES ("naive-id-3", "naive-long-long-long-name-3-hohohohohohohohohohoho", 5);`
         )
     );
     await glue.query(
