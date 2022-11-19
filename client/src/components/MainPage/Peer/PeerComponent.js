@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import PeerTitleComponent from "./PeerTitleComponent";
 import PeerRecentComponent from "./PeerRecentComponent";
+import { updateSelectedRowID } from "../../../utils/localApi";
 
 const selectedStyle = css`
     outline: 2px solid ${(props) => props.theme.PrimaryColor};
@@ -32,6 +33,7 @@ function PeerComponent(props) {
             isSelected={isSelected}
             onClick={() => {
                 onClick(uuid);
+                updateSelectedRowID(null);
             }}
         >
             <PeerTitleComponent name={name} profile={profile} />
