@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
-import { DATATYPE_FILE, DATATYPE_LINK, IMAGE_URL } from "../../constants/constant";
+import {
+    IMAGE_URL,
+} from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     updateSelectedRowID,
@@ -170,7 +172,7 @@ function ActivityContainerComponent(props) {
         (async () => {
             const data = await selectTableSharingDataWithCommentCountOrderBy(
                 activePeerUUID,
-                sortOrder,
+                sortOrder
             );
             setData(data);
         })();
@@ -234,10 +236,13 @@ function ActivityContainerComponent(props) {
             <ActivityTitleContainer>
                 <ActivityProfileContainer>
                     <MiniProfile>
-                        <img src={`/${IMAGE_URL}/${profilePath}`} alt="peer profile"/>
+                        <img
+                            src={`/${IMAGE_URL}/${profilePath}`}
+                            alt="peer profile"
+                        />
                     </MiniProfile>
                     <ProfileName className="orka-profile-name">
-                        { peerUserName }
+                        {peerUserName}
                     </ProfileName>
                 </ActivityProfileContainer>
                 <IconContainer onClick={onClose}>
