@@ -138,9 +138,15 @@ function addMessagePacket(message) {
     store.dispatch(addMessage(message));
 }
 
-function updateUUID(uuid) {
+// createMyUserInfo generate my user info and update my UUID
+async function createMyUserInfo(uuid) {
+    // create user!
+    const { name, profile } = generateUserProfile();
+    await insertTableUser({ name, profile, userID: uuid });
+
     store.dispatch(updateMyUUID(uuid));
 }
+
 
 function getPeerUUID() {
     return store.getState().peerUUID;
@@ -252,6 +258,22 @@ function updateSender(senderID) {
     store.dispatch(updateSenderID(senderID));
 }
 
+async function insertTableUser({ name, profile, userID }) {
+    const query = `INSERT INTO ${TABLE_USERS.name} VALUES (
+        "${userID}",
+        "${name}",
+        ${profile}
+    );`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    updateTableUsers();
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
     console.log("query:", query);
@@ -263,7 +285,6 @@ async function selectTableUsers() {
     return result?.[0]?.rows;
 }
 
-// Todo(young): refactor name as selectTableUserByID and return only one row
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
         WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
@@ -532,7 +553,7 @@ export {
     addJoinedPeers,
     deleteLeavedPeers,
     addMessagePacket,
-    updateUUID,
+    createMyUserInfo,
     getPeerUUID,
     getMyUUID,
     getFileToTransfer,

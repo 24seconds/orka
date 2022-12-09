@@ -13,7 +13,7 @@ import {
     sendMessageToServer,
     addJoinedPeers,
     deleteLeavedPeers,
-    updateUUID,
+    createMyUserInfo,
     getMyUUID,
     addMessagePacket,
     transferFileToPeer,
@@ -465,11 +465,12 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 }
 
 function addMessageTypeEventListener(peerConnectionManager) {
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.UUID, (event) => {
+    peerConnectionManager.addEventListener(MESSAGE_TYPE.UUID, async (event) => {
         const { uuid } = event;
 
         peerConnectionManager.uuid = uuid;
-        updateUUID(uuid);
+        // TODO(young): consider in case of calling this event handler more than twice.
+        await createMyUserInfo(uuid);
     });
 
     peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, (event) => {
