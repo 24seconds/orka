@@ -15,6 +15,7 @@
     "dev": "concurrently \"npm:build:dev\" \"npm:start:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "npx eslint --ext .ts src/",
+    "fix-lint": "npx eslint --fix --ext .ts src/",
     "build": "npx tsc",
     "postinstall": "npm run compile",
     "deploy:heroku": "git subtree push --prefix signaling-server heroku main",

@@ -26,7 +26,7 @@ import {
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
-import { getCurrentTime, generateFingerPrint } from "./commonUtil";
+import { getCurrentTime, generateFingerPrint, generateUserProfile } from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,
@@ -138,9 +138,15 @@ function addMessagePacket(message) {
     store.dispatch(addMessage(message));
 }
 
-function updateUUID(uuid) {
+// createMyUserInfo generate my user info and update my UUID
+async function createMyUserInfo(uuid) {
+    // create user!
+    const { name, profile } = generateUserProfile();
+    await insertTableUser({ name, profile, userID: uuid });
+
     store.dispatch(updateMyUUID(uuid));
 }
+
 
 function getPeerUUID() {
     return store.getState().peerUUID;
@@ -252,6 +258,45 @@ function updateSender(senderID) {
     store.dispatch(updateSenderID(senderID));
 }
 
+async function insertTableUser({ name, profile, userID }) {
+    const query = `INSERT INTO ${TABLE_USERS.name} VALUES (
+        "${userID}",
+        "${name}",
+        ${profile}
+    );`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    updateTableUsers();
+
+    return result?.[0]?.rows;
+}
+
+async function upsertTableUser({ name, profile, id: userID }) {
+    const user = (await selectTableUsersByID(userID))?.[0];
+    
+    if (!!user) {
+        return;
+    }
+
+    const result =  await insertTableUser({ name, profile, userID });
+    console.log("upserTableUser, result:", result);
+
+    return result;
+}
+
+async function deleteTableUserByID(id) {
+    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = "${id}"`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
     console.log("query:", query);
@@ -263,7 +308,6 @@ async function selectTableUsers() {
     return result?.[0]?.rows;
 }
 
-// Todo(young): refactor name as selectTableUserByID and return only one row
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
         WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
@@ -275,7 +319,12 @@ async function selectTableUsersByID(userID) {
     return result?.[0]?.rows;
 }
 
-async function selectTableUsersWithLatestSharingDataType() {
+async function selectTableUsersMyself() {
+    const myUUID = getMyUUID();
+    return await selectTableUsersByID(myUUID);
+}
+
+async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
     const query = `
     SELECT u.*,
         (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
@@ -284,10 +333,11 @@ async function selectTableUsersWithLatestSharingDataType() {
     MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
   FROM
     ${TABLE_USERS.name} u
-  JOIN
+  LEFT JOIN
     ${TABLE_SHARING_DATA.name} s
   ON
     u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
+  WHERE u.${TABLE_USERS.fields.id} != "${getMyUUID()}"
   GROUP BY
     u.${TABLE_USERS.fields.id}`;
 
@@ -532,7 +582,7 @@ export {
     addJoinedPeers,
     deleteLeavedPeers,
     addMessagePacket,
-    updateUUID,
+    createMyUserInfo,
     getPeerUUID,
     getMyUUID,
     getFileToTransfer,
@@ -550,9 +600,12 @@ export {
     updateTableSharingData,
     updateTableCommentMetadata,
     updateTableNotifications,
+    upsertTableUser,
+    deleteTableUserByID,
     selectTableUsers,
     selectTableUsersByID,
-    selectTableUsersWithLatestSharingDataType,
+    selectTableUsersMyself,
+    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,

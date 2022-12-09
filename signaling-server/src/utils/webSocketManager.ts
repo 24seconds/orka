@@ -30,7 +30,7 @@ export class WebSocketManager {
 
   addPeer(ipAddress: string, uuid: string, ws: WebSocket) {
     const {
-      webSocketContainer
+      webSocketContainer,
     } = this;
 
     webSocketContainer[ipAddress] = webSocketContainer[ipAddress] || {};
@@ -43,7 +43,7 @@ export class WebSocketManager {
 
   pingPeriodically(ipAddress: string, uuid: string, ws: WebSocket) {
     const intervalId = setInterval(() => {
-      console.log(`[Ping]: Send ping to #${uuid}`);
+      console.log(`[Ping]: Send ping to #${uuid}, ws.readyState: ${ws.readyState}`);
       if (ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
         clearInterval(intervalId);
 
@@ -52,7 +52,7 @@ export class WebSocketManager {
       }
 
       const pingMessage = createMessage(MessageType.PING, {
-        message: 'Ping from server!'
+        message: 'Ping from server!',
       });
       ws.send(pingMessage);
     }, 1000 * 30);
@@ -61,7 +61,7 @@ export class WebSocketManager {
   addEventListenerToWebSocket(ipAddress: string, peerUUID: string, ws: WebSocket) {
     // Add event listeners
     const {
-      webSocketContainer
+      webSocketContainer,
     } = this;
 
     ws.on('message', (message: WebSocket.Data) => {
@@ -85,7 +85,7 @@ export class WebSocketManager {
       this.deletePeer(ipAddress, peerUUID);
 
       const leaveMessage = createMessage(MessageType.LEAVE, {
-        peers: [peerUUID]
+        peers: [peerUUID],
       });
       this.notifyEvent(ipAddress, peerUUID, leaveMessage);
     });
@@ -95,7 +95,7 @@ export class WebSocketManager {
       this.deletePeer(ipAddress, peerUUID);
 
       const leaveMessage = createMessage(MessageType.LEAVE, {
-        peers: [peerUUID]
+        peers: [peerUUID],
       });
       this.notifyEvent(ipAddress, peerUUID, leaveMessage);
     });
@@ -118,8 +118,8 @@ export class WebSocketManager {
       delete this.webSocketContainer[ipAddress].webSockets[peerUUID];
     }
 
-    if (this.webSocketContainer[ipAddress].webSockets &&
-      Object.keys(this.webSocketContainer[ipAddress].webSockets).length === 0) {
+    if (this.webSocketContainer[ipAddress].webSockets
+      && Object.keys(this.webSocketContainer[ipAddress].webSockets).length === 0) {
       delete this.webSocketContainer[ipAddress];
     }
 
@@ -141,7 +141,7 @@ export class WebSocketManager {
     }
 
     const {
-      webSockets
+      webSockets,
     } = this.webSocketContainer[ipAddress];
     Object.values(webSockets).forEach((otherWebSocket) => {
       otherWebSocket.send(message);
@@ -154,17 +154,18 @@ export class WebSocketManager {
     }
 
     const {
-      webSocketContainer
+      webSocketContainer,
     } = this;
 
     Object.entries(webSocketContainer[ipAddress].webSockets).forEach(([uuid, otherWebSocket]) => {
       const peerJoinMessage = createMessage(MessageType.JOIN, {
-        peers: [peerUUID]
+        peers: [peerUUID],
       });
+
       console.log(`[${uuid}]: readyState is `, otherWebSocket.readyState);
 
-      if (otherWebSocket.readyState === WebSocket.CLOSED ||
-        otherWebSocket.readyState === WebSocket.CLOSING) {
+      if (otherWebSocket.readyState === WebSocket.CLOSED
+        || otherWebSocket.readyState === WebSocket.CLOSING) {
         this.deletePeer(ipAddress, uuid);
 
         return;
@@ -189,13 +190,13 @@ export class WebSocketManager {
   handleMessageResult(event: HandleMessageEvent) {
     const {
       eventType,
-      data
+      data,
     } = event;
 
     if (eventType === HandleMessageEventType.DELETE_PEER) {
       const {
         ipAddress,
-        peerUUID
+        peerUUID,
       } = data as HandleMessageDeleteDataSchema;
 
       this.deletePeer(ipAddress, peerUUID);
