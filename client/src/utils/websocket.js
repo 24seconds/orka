@@ -67,6 +67,7 @@ function createWebSocketConnection(url) {
     return socket;
 }
 
+// handleMessage handles message from signaling server. 
 async function handleMessage(message, socket) {
     const { messageType, data } = message;
 

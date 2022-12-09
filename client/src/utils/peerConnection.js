@@ -26,6 +26,7 @@ import {
     connectToPeer,
     selectTableUsersMyself,
     upsertTableUser,
+    deleteTableUserByID,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
@@ -593,7 +594,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
         addJoinedPeers(filteredPeers);
     });
 
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, (event) => {
+    peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, async (event) => {        
         const { peers } = event;
         const filteredPeers = peers.filter(
             (peerUUID) => peerUUID !== peerConnectionManager.uuid
@@ -617,6 +618,9 @@ function addMessageTypeEventListener(peerConnectionManager) {
             dataChannel.close();
 
             delete peerConnectionManager.peerConnections[peerUUID];
+
+            // delete from database
+            await deleteTableUserByID(peerUUID);
         }
 
         deleteLeavedPeers(filteredPeers);

@@ -26,7 +26,7 @@ import {
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
-import { getCurrentTime, generateFingerPrint } from "./commonUtil";
+import { getCurrentTime, generateFingerPrint, generateUserProfile } from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,
@@ -274,6 +274,29 @@ async function insertTableUser({ name, profile, userID }) {
     return result?.[0]?.rows;
 }
 
+async function upsertTableUser({ name, profile, id: userID }) {
+    const user = (await selectTableUsersByID(userID))?.[0];
+    
+    if (!!user) {
+        return;
+    }
+
+    const result =  await insertTableUser({ name, profile, userID });
+    console.log("upserTableUser, result:", result);
+
+    return result;
+}
+
+async function deleteTableUserByID(id) {
+    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = "${id}"`;
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
     console.log("query:", query);
@@ -296,7 +319,12 @@ async function selectTableUsersByID(userID) {
     return result?.[0]?.rows;
 }
 
-async function selectTableUsersWithLatestSharingDataType() {
+async function selectTableUsersMyself() {
+    const myUUID = getMyUUID();
+    return await selectTableUsersByID(myUUID);
+}
+
+async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
     const query = `
     SELECT u.*,
         (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
@@ -305,10 +333,11 @@ async function selectTableUsersWithLatestSharingDataType() {
     MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
   FROM
     ${TABLE_USERS.name} u
-  JOIN
+  LEFT JOIN
     ${TABLE_SHARING_DATA.name} s
   ON
     u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
+  WHERE u.${TABLE_USERS.fields.id} != "${getMyUUID()}"
   GROUP BY
     u.${TABLE_USERS.fields.id}`;
 
@@ -571,9 +600,12 @@ export {
     updateTableSharingData,
     updateTableCommentMetadata,
     updateTableNotifications,
+    upsertTableUser,
+    deleteTableUserByID,
     selectTableUsers,
     selectTableUsersByID,
-    selectTableUsersWithLatestSharingDataType,
+    selectTableUsersMyself,
+    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
