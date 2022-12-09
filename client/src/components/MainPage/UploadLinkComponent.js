@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
+import { createTableSharingData, notifySharingData } from "../../utils/localApi";
 
 const UploadLink = styled.div`
     display: flex;
@@ -43,7 +44,7 @@ const PlaceHolder = styled.div`
 
         circle {
             fill: ${(props) =>
-                props.isActive && props.theme.ActivityRowBackgroundscale02};
+        props.isActive && props.theme.ActivityRowBackgroundscale02};
         }
     }
 
@@ -81,9 +82,25 @@ function UploadLinkComponent(props) {
         setText(event?.target?.value || "");
     }
 
-    function onKeyDown(event) {
+    async function onKeyDown(event) {
         if (event?.key === "Enter") {
             console.log("enter pressed");
+            await onClick(event);
+        }
+    }
+
+    async function onClick(event) {
+        console.log("clicked");
+
+        // save to database
+        const sharingData = await createTableSharingData({ text });
+
+        // flush
+        setText("");
+
+        // notify to other peers
+        if (!!sharingData) {
+            await notifySharingData(sharingData);
         }
     }
 
@@ -93,10 +110,11 @@ function UploadLinkComponent(props) {
                 <input
                     className="desc"
                     placeholder="Type the URL link here!"
+                    value={text}
                     onChange={onChange}
                     onKeyDown={onKeyDown}
                 />
-                <div className="icon-container">
+                <div className="icon-container" onClick={onClick}>
                     <UploadLinkIcon />
                 </div>
             </PlaceHolder>

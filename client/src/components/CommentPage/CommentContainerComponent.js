@@ -83,7 +83,6 @@ function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
     const { id: userID, name: userName, profile: userProfile } = user;
 
-
     return (
         <StyledCommentRowComponent
             key={id}

@@ -7,6 +7,7 @@ import {
     messageDownloadData,
     messageErrorData,
     messageUserInfoData,
+    messageUploadLink,
 } from "./dataSchema/PeerMessageData";
 import { createMessage } from "./message";
 import { createPeerMessage, parsePeerMessage } from "./peerMessage";
@@ -27,11 +28,15 @@ import {
     selectTableUsersMyself,
     upsertTableUser,
     deleteTableUserByID,
+    insertTableSharingData,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
+import { initGlueSQL } from "./database/database";
 
 function createPeerConnection(uuid) {
+    console.log("createPeerConnection called", uuid);
+
     const peerConnection = new RTCPeerConnection();
 
     // TODO: Handle createDataChannel error later
@@ -43,20 +48,26 @@ function createPeerConnection(uuid) {
         }
     );
 
+    console.log("dataChannel:", dataChannel);
+
     dataChannel.binaryType = "arraybuffer";
-    dataChannel.onopen = (event) => {
+    dataChannel.onopen = async (event) => {
+        console.log("dataChanel onopen called", uuid);
 
         handleDataChannelStatusChange(event, uuid);
+
         const e = new LocalDropEvent(
             CLIENT_EVENT_TYPE.SEND_USER_INFO,
-            new EventSendUserInfo({ uuid }),
+            new EventSendUserInfo({ uuid })
         );
 
-    
-        peerConnectionManager.dispatchEvent(e);
+        console.log("onopen, e:", e);
+
+        (await peerConnectionManager).dispatchEvent(e);
     };
 
     dataChannel.onclose = (event) => {
+        console.log(`data channel ${uuid} closed`);
         writeSystemMessage("dataChannel closed");
         handleDataChannelStatusChange(event, uuid);
 
@@ -159,10 +170,19 @@ async function handleDataChannelMessage(event, uuid) {
         // upsert to database
         const { message } = data;
 
+        console.log("upsert user!", data);
+
         if (!!message && Object.keys(message).length === 3) {
             await upsertTableUser(message);
         }
-        
+
+        return;
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
+        const { sharingData } = data;
+        await insertTableSharingData({ sharingData })
+
         return;
     }
 
@@ -258,8 +278,11 @@ async function setRemoteAnswer(peerConnection, answer) {
     await peerConnection.setRemoteDescription(answer);
 }
 
-function initializePeerConnections(peerConnectionManager, peers) {
+async function initializePeerConnections(peerConnectionManager, peers) {
     const connectionArr = [];
+
+    // connectToPeer
+    
 
     for (const peerUUID of peers) {
         if (!peerConnectionManager.peerConnections[peerUUID]) {
@@ -279,6 +302,8 @@ function addClientEventTypeEventListener(peerConnectionManager) {
         CLIENT_EVENT_TYPE.CONNECT,
         async (event) => {
             const { uuid: toUUID } = event;
+
+            console.log("CLIENT_EVENT_TYPE.CONNECT called");
 
             if (peerConnectionManager.peerConnections[toUUID]) {
                 // already exist
@@ -323,8 +348,9 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     peerConnectionManager.addEventListener(
         CLIENT_EVENT_TYPE.SEND_USER_INFO,
         async (event) => {
-            
             const { uuid: toUUID } = event;
+            console.log("SEND_USER_INFO called", event);
+
             // prepare user info
             const myInfo = (await selectTableUsersMyself())?.[0];
 
@@ -334,12 +360,18 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 return;
             }
 
-            const { dataChannel } = peerConnectionManager.peerConnections[toUUID];
+            console.log("myInfo:", myInfo);
+
+            const { dataChannel } =
+                peerConnectionManager.peerConnections[toUUID];
             const data = new messageUserInfoData({
                 message: myInfo,
             });
 
-            const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.USER_INFO, data);
+            const peerMessage = createPeerMessage(
+                PEER_MESSAGE_TYPE.USER_INFO,
+                data
+            );
 
             dataChannel.send(peerMessage);
 
@@ -348,6 +380,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
                         dataChannel.readyState
                 );
+                console.log("dataChannel not opened!, click the peer again!");
                 return;
             }
 
@@ -362,6 +395,39 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             // });
 
             // addMessagePacket(messagePacket);
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.UPLOAD_LINK,
+        async (event) => {
+            const { sharingData } = event;
+            console.log('CLIENT_EVENT_TYPE.UPLOAD_LINK, data:', sharingData, peerConnectionManager, !!peerConnectionManager.peerConnections);
+
+            if (peerConnectionManager.peerConnections == null ) {
+                writeSystemMessage(`there are no peer connections`);   
+                return;
+            }
+
+            console.log("peerConnectionManager.peerConnections:", peerConnectionManager.peerConnections);
+
+            for (const uuid of Object.keys(peerConnectionManager.peerConnections)) {
+                const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+                const data = new messageUploadLink({ sharingData });
+
+                const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.UPLOAD_LINK, data);
+
+                console.log("CLIENT_EVENT_TYPE.UPLOAD_LINK, message is ", peerMessage);
+
+                dataChannel.send(peerMessage);
+
+                if (dataChannel.readyState !== "open") {
+                    console.log(`dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`);
+                    continue;
+                }
+    
+                // dataChannel.send(peerMessage);
+            }
         }
     );
 
@@ -546,13 +612,45 @@ function addMessageTypeEventListener(peerConnectionManager) {
         await createMyUserInfo(uuid);
     });
 
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, (event) => {
+    // peer list 받았을 때 connection을 다 바로 맺네?
+    peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, async (event) => {
         const { peers } = event;
         const filteredPeers = peers.filter(
             (peerUUID) => peerUUID !== peerConnectionManager.uuid
         );
 
-        const connectionArr = initializePeerConnections(
+        console.log("MESSAGE_TYPE.PEERS peers", peers);
+
+        const connectionArr = await initializePeerConnections(
+            peerConnectionManager,
+            filteredPeers
+        );
+
+        console.log("connectionArr:", connectionArr);
+
+        for (const connection of connectionArr) {
+            const { uuid, peerConnection, dataChannel } = connection;
+
+            peerConnectionManager.peerConnections[uuid] = {
+                peerConnection,
+                dataChannel,
+            };
+
+            await connectToPeer(uuid);
+        }
+
+        // TODO: Inform this event to store
+        addJoinedPeers(filteredPeers);
+    });
+
+    // peer가 join 했다고 알림을 받으면 마찬가지로 connection을 맺으려고 하네?
+    peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, async (event) => {
+        const { peers } = event;
+        const filteredPeers = peers.filter(
+            (peerUUID) => peerUUID !== peerConnectionManager.uuid
+        );
+
+        const connectionArr = await initializePeerConnections(
             peerConnectionManager,
             filteredPeers
         );
@@ -568,63 +666,48 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
         // TODO: Inform this event to store
         addJoinedPeers(filteredPeers);
+
+        // if (filteredPeers?.length > 0) {
+        //     connectToPeer(filteredPeers[0]);
+        // }
     });
 
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, (event) => {
-        const { peers } = event;
-        const filteredPeers = peers.filter(
-            (peerUUID) => peerUUID !== peerConnectionManager.uuid
-        );
-
-        const connectionArr = initializePeerConnections(
-            peerConnectionManager,
-            filteredPeers
-        );
-
-        for (const connection of connectionArr) {
-            const { uuid, peerConnection, dataChannel } = connection;
-
-            peerConnectionManager.peerConnections[uuid] = {
-                peerConnection,
-                dataChannel,
-            };
-        }
-
-        // TODO: Inform this event to store
-        addJoinedPeers(filteredPeers);
-    });
-
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.LEAVE, async (event) => {        
-        const { peers } = event;
-        const filteredPeers = peers.filter(
-            (peerUUID) => peerUUID !== peerConnectionManager.uuid
-        );
-
-        // tear down and delete
-        for (const peerUUID of filteredPeers) {
-            if (!peerConnectionManager.peerConnections[peerUUID]) {
-                continue;
-            }
-
-            const { peerConnection, dataChannel } =
-                peerConnectionManager.peerConnections[peerUUID];
-
-            console.log(
-                "[LEAVE]: peerConnectionManager.peerConnections[peerUUID] is ",
-                peerConnectionManager.peerConnections[peerUUID]
+    peerConnectionManager.addEventListener(
+        MESSAGE_TYPE.LEAVE,
+        async (event) => {
+            const { peers } = event;
+            const filteredPeers = peers.filter(
+                (peerUUID) => peerUUID !== peerConnectionManager.uuid
             );
 
-            peerConnection.close();
-            dataChannel.close();
+            console.log("LEAVE called", filteredPeers);
 
-            delete peerConnectionManager.peerConnections[peerUUID];
+            // tear down and delete
+            for (const peerUUID of filteredPeers) {
+                if (!peerConnectionManager.peerConnections[peerUUID]) {
+                    continue;
+                }
 
-            // delete from database
-            await deleteTableUserByID(peerUUID);
+                const { peerConnection, dataChannel } =
+                    peerConnectionManager.peerConnections[peerUUID];
+
+                console.log(
+                    "[LEAVE]: peerConnectionManager.peerConnections[peerUUID] is ",
+                    peerConnectionManager.peerConnections[peerUUID]
+                );
+
+                peerConnection.close();
+                dataChannel.close();
+
+                delete peerConnectionManager.peerConnections[peerUUID];
+
+                // delete from database
+                await deleteTableUserByID(peerUUID);
+            }
+
+            deleteLeavedPeers(filteredPeers);
         }
-
-        deleteLeavedPeers(filteredPeers);
-    });
+    );
 
     peerConnectionManager.addEventListener(
         MESSAGE_TYPE.OFFER,
@@ -712,7 +795,9 @@ function addMessageTypeEventListener(peerConnectionManager) {
     );
 }
 
-function createPeerConnectionManager() {
+async function createPeerConnectionManager() {
+    await initGlueSQL();
+
     const peerConnectionManager = {
         uuid: null,
         peerConnections: {},

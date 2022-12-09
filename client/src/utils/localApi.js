@@ -7,6 +7,7 @@ import {
     EventConnectData,
     EventSendMessageData,
     EventErrorData,
+    EventUploadLink,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import websocketManager from "./websocket";
@@ -26,7 +27,12 @@ import {
     updateSenderID,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
-import { getCurrentTime, generateFingerPrint, generateUserProfile } from "./commonUtil";
+import {
+    getCurrentTime,
+    generateFingerPrint,
+    generateUserProfile,
+    generateSharingDataUUID,
+} from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,
@@ -41,17 +47,29 @@ import {
     TABLE_SHARING_DATA,
     TABLE_USERS,
 } from "./database/schema";
+import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
 
-function sendTextToPeer(uuid, text) {
+async function notifySharingData(data) {
+    const event = new LocalDropEvent(
+        CLIENT_EVENT_TYPE.UPLOAD_LINK,
+        new EventUploadLink({ sharingData: data })
+    );
+
+    (await peerConnectionManager).dispatchEvent(event);
+}
+
+async function sendTextToPeer(uuid, text) {
+    console.log("sendTextToPeer called");
+
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.SEND_TEXT,
         new EventSendTextData({ uuid, message: text })
     );
 
-    peerConnectionManager.dispatchEvent(event);
+    (await peerConnectionManager).dispatchEvent(event);
 }
 
-function sendFileToPeer(uuid, fingerprintedFile) {
+async function sendFileToPeer(uuid, fingerprintedFile) {
     const { file, fingerprint } = fingerprintedFile;
 
     console.log("sendFileToPeer, file is", file);
@@ -66,16 +84,16 @@ function sendFileToPeer(uuid, fingerprintedFile) {
         })
     );
 
-    peerConnectionManager.dispatchEvent(event);
+    (await peerConnectionManager).dispatchEvent(event);
 }
 
-function sendErrorToPeer(uuid, message) {
+async function sendErrorToPeer(uuid, message) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.ERROR,
         new EventErrorData({ uuid, message })
     );
 
-    peerConnectionManager.dispatchEvent(event);
+    (await peerConnectionManager).dispatchEvent(event);
 }
 
 function sendFilesToPeer(uuid, fingerprintedFiles) {
@@ -84,7 +102,7 @@ function sendFilesToPeer(uuid, fingerprintedFiles) {
     });
 }
 
-function requestDownloadFile(uuid, data) {
+async function requestDownloadFile(uuid, data) {
     const { fingerprint } = data;
 
     const event = new LocalDropEvent(
@@ -95,20 +113,20 @@ function requestDownloadFile(uuid, data) {
         })
     );
 
-    peerConnectionManager.dispatchEvent(event);
+    (await peerConnectionManager).dispatchEvent(event);
 }
 
 function abortDownloadFile(otherUUID) {
     handleDataChannelClose(otherUUID);
 }
 
-function connectToPeer(uuid) {
+async function connectToPeer(uuid) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.CONNECT,
         new EventConnectData({ uuid })
     );
 
-    peerConnectionManager.dispatchEvent(event);
+    (await peerConnectionManager).dispatchEvent(event);
 }
 
 function sendMessageToServer(message) {
@@ -142,11 +160,10 @@ function addMessagePacket(message) {
 async function createMyUserInfo(uuid) {
     // create user!
     const { name, profile } = generateUserProfile();
-    await insertTableUser({ name, profile, userID: uuid });
+    await createTableUser({ name, profile, userID: uuid });
 
     store.dispatch(updateMyUUID(uuid));
 }
-
 
 function getPeerUUID() {
     return store.getState().peerUUID;
@@ -162,7 +179,7 @@ function getFileToTransfer(fingerprint) {
     return filesToTransfer[fingerprint];
 }
 
-function transferFileToPeer(fingerprint, uuid) {
+async function transferFileToPeer(fingerprint, uuid) {
     const file = getFileToTransfer(fingerprint);
 
     if (!file) {
@@ -171,7 +188,7 @@ function transferFileToPeer(fingerprint, uuid) {
         return;
     }
 
-    if (!peerConnectionManager.peerConnections[uuid]) {
+    if (!(await peerConnectionManager).peerConnections[uuid]) {
         // There is nothing to do in this case..
         const systemMessage =
             `#${uuid} requested download but uuid not found : ` +
@@ -180,7 +197,7 @@ function transferFileToPeer(fingerprint, uuid) {
         return;
     }
 
-    const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+    const { dataChannel } = (await peerConnectionManager).peerConnections[uuid];
 
     if (isDownloadInProgress(fingerprint)) {
         const { name, size, type } = file;
@@ -258,7 +275,7 @@ function updateSender(senderID) {
     store.dispatch(updateSenderID(senderID));
 }
 
-async function insertTableUser({ name, profile, userID }) {
+async function createTableUser({ name, profile, userID }) {
     const query = `INSERT INTO ${TABLE_USERS.name} VALUES (
         "${userID}",
         "${name}",
@@ -276,12 +293,12 @@ async function insertTableUser({ name, profile, userID }) {
 
 async function upsertTableUser({ name, profile, id: userID }) {
     const user = (await selectTableUsersByID(userID))?.[0];
-    
+
     if (!!user) {
         return;
     }
 
-    const result =  await insertTableUser({ name, profile, userID });
+    const result = await createTableUser({ name, profile, userID });
     console.log("upserTableUser, result:", result);
 
     return result;
@@ -325,6 +342,8 @@ async function selectTableUsersMyself() {
 }
 
 async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
+    console.log("selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:", getMyUUID());
+
     const query = `
     SELECT u.*,
         (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
@@ -341,7 +360,7 @@ async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
   GROUP BY
     u.${TABLE_USERS.fields.id}`;
 
-    console.log("selectTableUsersWithLatestSharingDataType, query:", query);
+    console.log("selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:", query);
 
     const result = await run(query);
     console.log("result:", result);
@@ -377,6 +396,71 @@ async function patchTableUsersByID({ name, profile }, userID) {
 
     return result?.[0]?.rows;
 }
+
+async function createTableSharingData({ type, name, size, extension, text }) {
+    const id = generateSharingDataUUID();
+    const uploader_id = getMyUUID();
+    const uploaded_at = new Date().toISOString();
+    console.log(id, uploader_id, uploaded_at);
+
+    if (type === DATATYPE_FILE) {
+        console.log("shraing file is not supported yet!");
+        return;
+    }
+
+    const query = `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
+        "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
+        "${uploader_id}", "${uploaded_at}");`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    const data = await selectTableSharingDataByID(id);
+
+    updateTableSharingData();
+
+    return data;
+}
+
+async function insertTableSharingData({ sharingData }) {
+    const id = sharingData[TABLE_SHARING_DATA.fields.id];
+    const name = sharingData[TABLE_SHARING_DATA.fields.name];
+    const size = sharingData[TABLE_SHARING_DATA.fields.size];
+    const extension = sharingData[TABLE_SHARING_DATA.fields.extension];
+    const text = sharingData[TABLE_SHARING_DATA.fields.text];
+    const type = sharingData[TABLE_SHARING_DATA.fields.type];
+    const status_count = sharingData[TABLE_SHARING_DATA.fields.status_count];
+    const hands_up = sharingData[TABLE_SHARING_DATA.fields.hands_up]
+    const uploader_id = sharingData[TABLE_SHARING_DATA.fields.uploader_id]
+    const uploaded_at = sharingData[TABLE_SHARING_DATA.fields.uploaded_at];
+
+    const query = `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
+        "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
+        ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
+    );`
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    updateTableSharingData();
+
+    return result?.[0]?.rows?.[0];
+}
+
+async function selectTableSharingDataByID(id) {
+    const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
+        WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows?.[0];
+}
+
 
 async function selectTableSharingDataWithCommentCount(userID) {
     let query = `SELECT f.*, COUNT(c.id) as comment_count, 
@@ -572,6 +656,7 @@ async function selecTableNotificationsWithUserAndSharingData() {
 }
 
 export {
+    notifySharingData,
     sendTextToPeer,
     sendFilesToPeer,
     sendErrorToPeer,
@@ -607,6 +692,8 @@ export {
     selectTableUsersMyself,
     selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
+    createTableSharingData,
+    insertTableSharingData,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
     checkHandsUpTableSharingData,

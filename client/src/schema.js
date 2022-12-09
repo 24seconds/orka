@@ -92,6 +92,7 @@ export const CLIENT_EVENT_TYPE = {
     SEND_MESSAGE: "SEND_MESSAGE",
     CLOSE: "CLOSE",
     ERROR: "ERROR",
+    UPLOAD_LINK: "UPLOAD_LINK",
 };
 
 const clientEventDataSchema = {
@@ -105,6 +106,7 @@ const clientEventDataSchema = {
 // PEER_MESSAGE_TYPE defines event occurred from outside - peer connected by webRTC
 export const PEER_MESSAGE_TYPE = {
     USER_INFO: "USER_INFO",
+    UPLOAD_LINK: "UPLOAD_LINK",
     TEXT: "TEXT",
     FILE: "FILE",
     ERROR: "ERROR",

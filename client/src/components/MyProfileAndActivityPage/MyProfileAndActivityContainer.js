@@ -141,7 +141,7 @@ function MyProfileAndActivityPageContainerComponent() {
         (state) => state.tableSharingData,
         shallowEqual
     );
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
 
     console.log("myOrkaUUID:", myOrkaUUID);
