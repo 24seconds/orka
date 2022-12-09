@@ -1,4 +1,4 @@
-import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
+import { DATATYPE_FILE, DATATYPE_LINK, PROFILE_IMAGE_COUNT, RANDOM_ADJECTIVE, RANDOM_NAMES } from "../constants/constant";
 
 function getSizeString(size) {
     if (size >= 1000 && size < 1000 * 1000) {
@@ -73,10 +73,24 @@ function convertTimestampReadable(timestamp, now) {
     return `${timeInDay}d ago`;
 }
 
+// generateUserProfile generates my user profile
+function generateUserProfile() {
+    // TODO(young): use local storage as cache later
+    const name = `${RANDOM_ADJECTIVE[getRandomNumber(RANDOM_ADJECTIVE.length)]} ${RANDOM_NAMES[getRandomNumber(RANDOM_NAMES.length)]}`;
+    const profile = getRandomNumber(PROFILE_IMAGE_COUNT);
+    return { name, profile };
+}
+
+function getRandomNumber(max) {
+    return Math.floor(Math.random() * max);
+}
+
+
 export {
     getSizeString,
     getCurrentTime,
     generateFingerPrint,
     filterSharingData,
     convertTimestampReadable,
+    generateUserProfile,
 };

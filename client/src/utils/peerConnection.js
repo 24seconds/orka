@@ -1,9 +1,12 @@
+// TODO(young): remove this later
+/* eslint-disable indent */
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import {
     messageTextData,
     messageFileData,
     messageDownloadData,
     messageErrorData,
+    messageUserInfoData,
 } from "./dataSchema/PeerMessageData";
 import { createMessage } from "./message";
 import { createPeerMessage, parsePeerMessage } from "./peerMessage";
@@ -20,7 +23,12 @@ import {
     writePeerChunk,
     writeSystemMessage,
     abortDownloadFile,
+    connectToPeer,
+    selectTableUsersMyself,
+    upsertTableUser,
 } from "./localApi";
+import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
+import LocalDropEvent from "./LocalDropEvent";
 
 function createPeerConnection(uuid) {
     const peerConnection = new RTCPeerConnection();
@@ -36,7 +44,15 @@ function createPeerConnection(uuid) {
 
     dataChannel.binaryType = "arraybuffer";
     dataChannel.onopen = (event) => {
+
         handleDataChannelStatusChange(event, uuid);
+        const e = new LocalDropEvent(
+            CLIENT_EVENT_TYPE.SEND_USER_INFO,
+            new EventSendUserInfo({ uuid }),
+        );
+
+    
+        peerConnectionManager.dispatchEvent(e);
     };
 
     dataChannel.onclose = (event) => {
@@ -137,6 +153,17 @@ async function handleDataChannelMessage(event, uuid) {
     );
 
     const { messageType, data } = message;
+
+    if (messageType === PEER_MESSAGE_TYPE.USER_INFO) {
+        // upsert to database
+        const { message } = data;
+
+        if (!!message && Object.keys(message).length === 3) {
+            await upsertTableUser(message);
+        }
+        
+        return;
+    }
 
     if (messageType === PEER_MESSAGE_TYPE.TEXT) {
         const messagePacket = createMessagePacket({
@@ -289,6 +316,51 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             } catch (error) {
                 writeSystemMessage(JSON.stringify(error, undefined, 2));
             }
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.SEND_USER_INFO,
+        async (event) => {
+            
+            const { uuid: toUUID } = event;
+            // prepare user info
+            const myInfo = (await selectTableUsersMyself())?.[0];
+
+            // TODO(young): handle this later
+            if (!peerConnectionManager.peerConnections[toUUID]) {
+                writeSystemMessage(`can not find peer: #${toUUID}`);
+                return;
+            }
+
+            const { dataChannel } = peerConnectionManager.peerConnections[toUUID];
+            const data = new messageUserInfoData({
+                message: myInfo,
+            });
+
+            const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.USER_INFO, data);
+
+            dataChannel.send(peerMessage);
+
+            if (dataChannel.readyState !== "open") {
+                writeSystemMessage(
+                    "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
+                        dataChannel.readyState
+                );
+                return;
+            }
+
+            dataChannel.send(peerMessage);
+
+            // TODO(young): In orka, storing message packet is not necessary. Remove this when refactoring
+            // const messagePacket = createMessagePacket({
+            //     source: getMyUUID(),
+            //     destination: toUUID,
+            //     data,
+            //     messageType: PEER_MESSAGE_TYPE.TEXT,
+            // });
+
+            // addMessagePacket(messagePacket);
         }
     );
 

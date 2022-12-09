@@ -1,3 +1,9 @@
+class messageUserInfoData {
+    constructor({ message }) {
+        this.message = message;
+    }
+}
+
 class messageTextData {
     constructor({ message, size, fingerprint }) {
         this.message = message;
@@ -27,6 +33,7 @@ class messageErrorData {
 }
 
 export {
+    messageUserInfoData,
     messageTextData,
     messageFileData,
     messageDownloadData,

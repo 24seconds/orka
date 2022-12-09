@@ -79,8 +79,11 @@ const dataSchema = {
     },
 };
 
+// CLIENT_EVENT_TYPE defines event occurred in client app
 export const CLIENT_EVENT_TYPE = {
     CONNECT: "CONNECT",
+    // send my user info to peer
+    SEND_USER_INFO: "SEND_USER_INFO",
     SEND_TEXT: "SEND_TEXT",
     SEND_FILES: "SEND_FILES",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
@@ -99,11 +102,14 @@ const clientEventDataSchema = {
     errorDataSchema: EventErrorData,
 };
 
+// PEER_MESSAGE_TYPE defines event occurred from outside - peer connected by webRTC
 export const PEER_MESSAGE_TYPE = {
+    USER_INFO: "USER_INFO",
     TEXT: "TEXT",
     FILE: "FILE",
     ERROR: "ERROR",
     DOWNLOAD: "DOWNLOAD",
+    PEER_INFO: "PEER_INFO",
 };
 
 const peerMessageSchema = {

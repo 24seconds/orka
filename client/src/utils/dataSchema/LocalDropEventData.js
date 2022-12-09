@@ -1,3 +1,9 @@
+class EventSendUserInfo {
+    constructor({ uuid }) {
+        this.uuid = uuid;
+    }
+}
+
 class EventSendTextData {
     constructor({ uuid, message }) {
         this.uuid = uuid;
@@ -41,6 +47,7 @@ class EventErrorData {
 }
 
 export {
+    EventSendUserInfo,
     EventSendTextData,
     EventSendFilesData,
     EventDownloadFileData,
