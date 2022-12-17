@@ -4,6 +4,12 @@ class messageUserInfoData {
     }
 }
 
+class messageUploadLink {
+    constructor({ sharingData }) {
+        this.sharingData = sharingData;
+    }
+}
+
 class messageTextData {
     constructor({ message, size, fingerprint }) {
         this.message = message;
@@ -34,6 +40,7 @@ class messageErrorData {
 
 export {
     messageUserInfoData,
+    messageUploadLink,
     messageTextData,
     messageFileData,
     messageDownloadData,

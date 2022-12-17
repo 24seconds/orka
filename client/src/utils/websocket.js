@@ -67,7 +67,7 @@ function createWebSocketConnection(url) {
     return socket;
 }
 
-// handleMessage handles message from signaling server. 
+// handleMessage handles message from signaling server.
 async function handleMessage(message, socket) {
     const { messageType, data } = message;
 
@@ -77,8 +77,14 @@ async function handleMessage(message, socket) {
     if (messageType === MESSAGE_TYPE.UUID) {
         const { uuid } = data;
 
+        // create metadata
+
+        // send user data to peerConnection manager?
+
+        // send message to signaling server?
+
         const event = new LocalDropEvent(messageType, { uuid });
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
@@ -87,7 +93,7 @@ async function handleMessage(message, socket) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
@@ -96,7 +102,7 @@ async function handleMessage(message, socket) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
@@ -105,21 +111,21 @@ async function handleMessage(message, socket) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
 
     if (messageType === MESSAGE_TYPE.OFFER) {
         const event = new LocalDropEvent(messageType, data);
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
 
     if (messageType === MESSAGE_TYPE.ANSWER) {
         const event = new LocalDropEvent(messageType, data);
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
@@ -150,7 +156,7 @@ async function handleMessage(message, socket) {
         const event = new LocalDropEvent(messageType, {
             message: errorMessage,
         });
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
@@ -158,7 +164,7 @@ async function handleMessage(message, socket) {
     if (messageType === MESSAGE_TYPE.ICE_CANDIDATE) {
         const event = new LocalDropEvent(messageType, data);
 
-        peerConnectionManager.dispatchEvent(event);
+        (await peerConnectionManager).dispatchEvent(event);
         return;
     }
 }

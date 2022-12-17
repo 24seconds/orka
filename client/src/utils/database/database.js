@@ -25,7 +25,7 @@ async function initializeDb() {
             `INSERT INTO users VALUES ("naive-id-3", "naive-long-long-long-name-3-hohohohohohohohohohoho", 5);`
         )
     );
-    
+
     // TODO(young): remove this later
     // await glue.query(
     //     middlewareForDebugQuery(
@@ -200,4 +200,4 @@ window.glue = debug;
 
 init();
 
-export { run };
+export { run, init as initGlueSQL };

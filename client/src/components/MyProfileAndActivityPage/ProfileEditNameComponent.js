@@ -132,7 +132,7 @@ function ProfileEditNameComponent(props) {
     const [myUserProfile, setMyUserProfile] = useState(0);
     const [myUserName, setMyUserName] = useState("");
 
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
     const inputEl = useRef(null);
 
     useEffect(() => {

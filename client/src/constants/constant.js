@@ -25,7 +25,6 @@ export const NOTIFICATION_TYPE_COMMENT = "COMMENT";
 export const STORAGE_MY_PROFILE_KEY = "STORAGE_MY_PROFILE_KEY";
 export const STORAGE_MY_USERNAME_KEY = "STORAGE_MY_USERNAME_KEY";
 
-
 /////////////////////////////////////
 // user related constants
 export const PROFILE_IMAGE_COUNT = 10;
@@ -42,7 +41,7 @@ export const RANDOM_NAMES = [
     "Jammy",
     "Kinetic",
     "Lunar",
-]
+];
 export const RANDOM_ADJECTIVE = [
     "Seahorse",
     "Salmon",

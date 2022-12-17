@@ -35,6 +35,7 @@ function PeerListLayoutComponent() {
         (state) => state.selectedPeer,
         shallowEqual
     );
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
     useEffect(() => {
         console.log("PeerListLayoutComponent userEffect called");
@@ -45,7 +46,7 @@ function PeerListLayoutComponent() {
                 setPeers(usersWithLatestFileType);
             }
         })();
-    }, [tableUsers]);
+    }, [tableUsers, myOrkaUUID]);
 
     function onClick(uuid) {
         if (uuid === activePeerUUID) {
