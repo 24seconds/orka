@@ -2,6 +2,10 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
 import { Fragment } from "react";
+import { generateFingerPrint, getSubtypeOfMIMEtypes } from "../../utils/commonUtil";
+import FingerprintedFile from "../../utils/dataSchema/FingerprintedFile";
+import { addFingerPrintedFiles, createTableSharingData, notifySharingData } from "../../utils/localApi";
+import { DATATYPE_FILE } from "../../constants/constant";
 
 const UploadFiles = styled.div`
     display: flex;
@@ -51,11 +55,45 @@ const Description = styled.div`
 function UploadFilesComponent(props) {
     const { className } = props;
 
-    const onDrop = useCallback((acceptedFiles) => {
-        // TODO(young): handle files later
+    const onDrop = useCallback(async (acceptedFiles) => {
         // store File object in somehwere; store file related data to db;
         // display upload process - 0.3~0.5sec animation is okay
-        console.log("acceptedFiles:", acceptedFiles);
+        if (acceptedFiles?.length === 0) {
+            return;
+        }
+
+        const fingerprintedFiles = [];
+        for (let i = 0; i < acceptedFiles.length; i++) {
+            fingerprintedFiles.push(
+                new FingerprintedFile({
+                    file: acceptedFiles[i],
+                    // TODO(young): use generateSharingDataUUID later and unify terminology
+                    // fingerprint (x), data UUID (o)
+                    fingerprint: generateFingerPrint(),
+                })
+            );
+        }
+
+        // save to database
+        const sharingDataList = await Promise.all(fingerprintedFiles.map(fingerprintedFile => {
+            const dataID = fingerprintedFile.fingerprint;
+            const fileName = fingerprintedFile.file.name;
+            const fileType = getSubtypeOfMIMEtypes(fingerprintedFile.file.type) || "unknown";
+            const sizeInBytes = fingerprintedFile.file.size;
+
+            return createTableSharingData({ dataID, type: DATATYPE_FILE,
+                name: fileName, size: sizeInBytes, extension: fileType});
+        }));
+
+        // store in redux
+        addFingerPrintedFiles(fingerprintedFiles);
+
+        // notify to other peers
+        if (sharingDataList?.length > 0) {
+            for (const sharingData of sharingDataList) {
+                await notifySharingData(sharingData);
+            }
+        }
     }, []);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,

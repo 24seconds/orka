@@ -25,6 +25,7 @@ import {
     updateTableNotifications as updateTableNotificationsCounter,
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
+    addFiles,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import {
@@ -154,6 +155,10 @@ function deleteLeavedPeers(peers) {
 
 function addMessagePacket(message) {
     store.dispatch(addMessage(message));
+}
+
+function addFingerPrintedFiles(files) {
+    store.dispatch(addFiles(files))
 }
 
 // createMyUserInfo generate my user info and update my UUID
@@ -397,20 +402,23 @@ async function patchTableUsersByID({ name, profile }, userID) {
     return result?.[0]?.rows;
 }
 
-async function createTableSharingData({ type, name, size, extension, text }) {
-    const id = generateSharingDataUUID();
+async function createTableSharingData({ dataID, type, name, size, extension, text }) {
+    const id = dataID || generateSharingDataUUID();
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
     console.log(id, uploader_id, uploaded_at);
 
-    if (type === DATATYPE_FILE) {
-        console.log("shraing file is not supported yet!");
-        return;
-    }
-
-    const query = `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-        "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
-        "${uploader_id}", "${uploaded_at}");`;
+    const query = (() => {
+        if (type === DATATYPE_FILE) {
+            return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES(
+                "${id}", "${name}", ${size}, "${extension}", NULL, "${DATATYPE_FILE}", 0, false,
+                "${uploader_id}", "${uploaded_at}");`;
+        } else {
+            return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
+                "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
+                "${uploader_id}", "${uploaded_at}");`;
+        }
+    })();
 
     console.log("query:", query);
 
@@ -667,6 +675,7 @@ export {
     addJoinedPeers,
     deleteLeavedPeers,
     addMessagePacket,
+    addFingerPrintedFiles,
     createMyUserInfo,
     getPeerUUID,
     getMyUUID,
