@@ -131,9 +131,9 @@ function convertByteToHumanReadable(size) {
     let s = size;
     for (const dimension of ["B", "KB", "MB", "GB"]) {
         if (s < 1024) {
-            return `${Math.round(s)} ${dimension}`;
+            return `${s.toFixed(1)} ${dimension}`;
         }
-        s = size / 1024;
+        s = s / 1024;
     }
 
     return `Too large`;
