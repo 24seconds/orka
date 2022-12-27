@@ -118,7 +118,15 @@ const DeleteButton = styled.div`
     background: ${(props) => props.theme.Grayscale04};
     cursor: pointer;
 
-    ${hoverOpacity}
+    &:hover {
+        background: ${(props) => props.theme.DeleteButtonHover};
+
+        > svg {
+            > path {
+                stroke: ${(props) => props.theme.Grayscale03};
+            }
+        }
+    }
 `;
 
 function convertByteToHumanReadable(size) {

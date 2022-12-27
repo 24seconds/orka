@@ -63,3 +63,13 @@ export const hoverOpacity = css`
         opacity: 0.6;
     }
 `;
+
+export const hoverCloseButton = css`
+    &:hover {
+        background: ${(props) => props.theme.Grayscale04};
+        border-radius: 16px;
+        
+        transform: scale(1.5);
+    }
+`;
+

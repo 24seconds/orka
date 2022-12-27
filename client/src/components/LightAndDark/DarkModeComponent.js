@@ -30,6 +30,16 @@ const DarkMode = styled.button`
     > span {
         width: 95px;
     }
+
+    &:hover {
+        color: ${(props) => props.theme.White};
+
+        > svg {
+            > path {
+                fill: ${(props) => props.theme.White};
+            }
+        }
+    }
 `;
 
 function DarkModeComponent() {

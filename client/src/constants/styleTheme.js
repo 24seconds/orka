@@ -91,6 +91,8 @@ export const ThemeOrkaDark = {
     CommentRowText: PaletteDark.Whitescale01,
 
     NotificationRowText: PaletteDark.Whitescale01,
+
+    DeleteButtonHover: "#FF5151",
 };
 
 export const ThemeOrkaLight = {
@@ -142,6 +144,8 @@ export const ThemeOrkaLight = {
     CommentRowText: PaletteLight.Blackscale01,
 
     NotificationRowText: PaletteLight.Blackscale01,
+
+    DeleteButtonHover: "#FF5151",
 };
 
 export const MaterialThemeOceanic = {

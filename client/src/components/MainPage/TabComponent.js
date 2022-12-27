@@ -12,10 +12,12 @@ const Tab = styled.button`
     align-items: center;
     width: 164px;
     height: 100px;
+
     cursor: pointer;
+    box-sizing: border-box;
     border-radius: 30px;
     background: ${(props) => props.theme.Grayscale03};
-    border: none;
+    border: 2px solid transparent;
 
     > svg {
         > path,
@@ -25,6 +27,10 @@ const Tab = styled.button`
                     ? props.theme.TabButtonActive
                     : props.theme.TabButtonInActive};
         }
+    }
+
+    &:hover {
+        border: 2px solid ${(props) => props.theme.Grayscale01};
     }
 `;
 
