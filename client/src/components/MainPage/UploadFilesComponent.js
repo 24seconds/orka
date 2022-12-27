@@ -46,6 +46,10 @@ const BrowsFiles = styled.button`
     color: ${(props) => props.theme.ActivityRowBackgroundscale02};
     letter-spacing: -0.04em;
     line-height: 29px;
+
+    &:hover {
+        background: ${(props) => props.theme.PrimaryColor02};
+    }
 `;
 
 const Description = styled.div`

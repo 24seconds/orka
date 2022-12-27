@@ -7,7 +7,8 @@ import PeerRecentComponent from "./PeerRecentComponent";
 import { updateSelectedRowID } from "../../../utils/localApi";
 
 const selectedStyle = css`
-    outline: 2px solid ${(props) => props.theme.PrimaryColor};
+    /* outline: 2px solid ${(props) => props.theme.PrimaryColor}; */
+    border: 2px solid ${(props) => props.theme.PrimaryColor};
 `;
 
 const Peer = styled.div`
@@ -15,11 +16,19 @@ const Peer = styled.div`
     flex-direction: column;
     width: 164px;
     height: 244px;
+
     border-radius: 30px;
     cursor: pointer;
+    box-sizing: border-box;
+    border: 2px solid transparent;
 
     background: ${(props) => props.theme.Grayscale03};
     ${(props) => props.isSelected && selectedStyle}
+
+    &:hover {
+        /* outline: 2px solid ${(props) => props.theme.Grayscale01}; */
+        border: 2px solid ${(props) => props.theme.Grayscale01};
+    }
 `;
 
 function PeerComponent(props) {

@@ -11,7 +11,7 @@ import {
     selectTableSharingDataWithCommentCountOrderBy,
     selectTableUsersByID,
 } from "../../utils/localApi";
-import { hoverOpacity } from "../SharedStyle";
+import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
 import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -31,11 +31,14 @@ const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-bottom: 28px;
 `;
 
-const IconContainer = styled.div`
+const CloseIconContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    
+    // TODO(young): revisit hover effect for close icons later.
+    ${hoverCloseButton}
 `;
 
 const ActivityTitleContainer = styled.div`
@@ -45,7 +48,7 @@ const ActivityTitleContainer = styled.div`
     height: 52px;
     margin-left: 32px;
 
-    ${IconContainer} {
+    ${CloseIconContainer} {
         margin-left: auto;
         margin-right: 34px;
     }
@@ -243,9 +246,9 @@ function ActivityContainerComponent(props) {
                         {peerUserName}
                     </ProfileName>
                 </ActivityProfileContainer>
-                <IconContainer onClick={onClose}>
+                <CloseIconContainer onClick={onClose}>
                     <CloseIcon />
-                </IconContainer>
+                </CloseIconContainer>
             </ActivityTitleContainer>
             {handsUpData && (
                 <StyledHandsUpSection

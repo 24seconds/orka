@@ -17,6 +17,18 @@ const UploadButton = styled.div`
     line-height: 32px;
     letter-spacing: -0.04em;
 
+    &:hover {
+        .orka-upload-button-title {
+            color: ${(props) => props.theme.PrimaryColor};
+        }
+
+        .orka-icon-container {
+            path {
+                stroke: ${(props) => props.theme.PrimaryColor};
+            }
+        }
+    }
+
     .orka-upload-button-title {
         display: flex;
         width: 100%;
@@ -24,7 +36,7 @@ const UploadButton = styled.div`
         font-weight: 600;
         margin-left: 48px;
 
-        color: ${(props) => props.theme.IconColor};
+        color: ${(props) => props.theme.IconColor};   
     }
 
     .orka-icon-container {

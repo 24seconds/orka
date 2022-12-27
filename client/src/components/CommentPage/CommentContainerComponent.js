@@ -11,6 +11,7 @@ import {
     updateSelectedRowID,
 } from "../../utils/localApi";
 import { updateSelectedRow } from "../../redux/action";
+import { hoverCloseButton } from "../SharedStyle";
 
 const StyledCommentRowComponent = styled(CommentRowComponent)`
     margin: 0 32px 28px 32px;
@@ -49,6 +50,12 @@ const CommentContainer = styled.div`
     border-radius: 30px;
 `;
 
+const CommentCloseContainer = styled.div`
+    cursor: pointer;
+
+    ${hoverCloseButton}
+`;
+
 const CommentTitleContainer = styled.div`
     display: flex;
     align-items: center;
@@ -57,7 +64,7 @@ const CommentTitleContainer = styled.div`
         flex-grow: 1;
     }
 
-    svg {
+    ${CommentCloseContainer} {
         margin-right: 32px;
     }
 `;
@@ -75,9 +82,7 @@ const CommentTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
-const CommentCloseContainer = styled.div`
-    cursor: pointer;
-`;
+
 
 function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
