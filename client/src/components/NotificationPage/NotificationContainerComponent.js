@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NotificationRowComponent from "./NotificationRowComponent";
 import {
-    selecTableNotificationsWithUserAndSharingData,
+    selectTableNotificationsWithUserAndSharingData,
     updateSelectedPeerUUID,
     updateSelectedRowID,
     updateSender,
@@ -94,7 +94,7 @@ function NotificationContainerComponent() {
     useEffect(() => {
         (async () => {
             const notifications =
-                await selecTableNotificationsWithUserAndSharingData();
+                await selectTableNotificationsWithUserAndSharingData();
             console.log("NotificationContainerComponent==================");
             console.table(notifications);
             setNotifications(notifications);

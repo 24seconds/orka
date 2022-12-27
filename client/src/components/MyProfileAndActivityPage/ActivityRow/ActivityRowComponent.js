@@ -6,15 +6,13 @@ import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
 import { hoverOpacity, hoverRow } from "../../SharedStyle";
-import { DATATYPE_LINK } from "../../../constants/constant";
 import CloseIcon from "../../../assets/CloseIcon";
 import HandsUpButtonComponent from "./HandsUpButtonComponent";
-import HandsUpIcon from "../../../assets/HandsUpIcon";
 import {
     checkHandsUpTableSharingData,
+    notifySharingData,
     patchTableSharingDataByID,
     requestDownloadFile,
-    selectTableSharingDataByID,
 } from "../../../utils/localApi";
 import { shallowEqual, useSelector } from "react-redux";
 import HandsUpActivateButtonComponent from "./HandsUpActivateButtomComponent";
@@ -219,7 +217,7 @@ function ActivityRowComponent(props) {
         [createdAt]
     );
 
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
     function onClickDeleteButton(event) {
         onDeleteRow?.(rowID);
@@ -236,17 +234,25 @@ function ActivityRowComponent(props) {
         event?.stopPropagation();
 
         const result = await checkHandsUpTableSharingData(myOrkaUUID);
-        console.log("onClickHandsUp, result:", result);
-
         if (result?.length === 0) {
-            await patchTableSharingDataByID({ handsUp: true }, rowID);
+            const sharingData = await patchTableSharingDataByID({ handsUp: true }, rowID);
+
+            // notify to other peers
+            if (!!sharingData) {
+                await notifySharingData(sharingData);
+            }
         }
     }
 
     async function onCancelHandsUp(event) {
         event?.stopPropagation();
 
-        await patchTableSharingDataByID({ handsUp: false }, rowID);
+        const sharingData = await patchTableSharingDataByID({ handsUp: false }, rowID);
+
+        // notify to other peers
+        if (!!sharingData) {
+            await notifySharingData(sharingData);
+        }
     }
 
     

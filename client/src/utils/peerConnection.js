@@ -28,7 +28,7 @@ import {
     selectTableUsersMyself,
     upsertTableUser,
     deleteTableUserByID,
-    insertTableSharingData,
+    upsertTableSharingData,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
@@ -181,7 +181,7 @@ async function handleDataChannelMessage(event, uuid) {
 
     if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
         const { sharingData } = data;
-        await insertTableSharingData({ sharingData })
+        await upsertTableSharingData({ sharingData })
 
         return;
     }
