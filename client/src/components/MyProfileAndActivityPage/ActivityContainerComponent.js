@@ -164,7 +164,7 @@ function ActivityContainerComponent(props) {
         shallowEqual
     );
 
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
     useEffect(() => {
         (async () => {

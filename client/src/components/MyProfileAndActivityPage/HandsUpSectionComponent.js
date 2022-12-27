@@ -35,9 +35,7 @@ const HandsUpSection = styled.div`
 function HandsUpSectionComponent(props) {
     const { className, data, activeRow, onClick } = props;
 
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
-
-    console.log("HandsUpSectionComponent, data:", data);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
     return (
         <HandsUpSection className={className}>
