@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { IMAGE_URL } from "../../constants/constant";
+import { getProfilePath } from "../../utils/commonUtil";
 
 const MiniProfile = styled.div`
     display: inline-block;
@@ -110,7 +111,7 @@ function CommentRowComponent(props) {
         return convertTimestampTohhmm(createdAt);
     }, [createdAt]);
 
-    const profilePath = `profile_${senderProfile}.png`;
+    const profilePath = getProfilePath(senderProfile);
 
     return (
         <CommentRow className={className}>

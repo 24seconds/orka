@@ -86,10 +86,11 @@ function generateSharingDataUUID() {
 // generateUserProfile generates my user profile
 function generateUserProfile() {
     // TODO(young): use local storage as cache later
+    const profile = getRandomNumber(PROFILE_IMAGE_COUNT);
     const name = `${
         RANDOM_ADJECTIVE[getRandomNumber(RANDOM_ADJECTIVE.length)]
-    } ${RANDOM_NAMES[getRandomNumber(RANDOM_NAMES.length)]}`;
-    const profile = getRandomNumber(PROFILE_IMAGE_COUNT);
+    } ${RANDOM_NAMES[profile]}`;
+
     return { name, profile };
 }
 
@@ -109,6 +110,10 @@ function getSubtypeOfMIMEtypes(types) {
     return null;
 }
 
+function getProfilePath(profile) {
+    return `profile_${RANDOM_NAMES[profile].toLowerCase()}.png`;
+}
+
 export {
     getSizeString,
     getCurrentTime,
@@ -118,4 +123,5 @@ export {
     generateUserProfile,
     generateSharingDataUUID,
     getSubtypeOfMIMEtypes,
+    getProfilePath,
 };

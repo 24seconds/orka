@@ -8,6 +8,7 @@ import {
     patchTableUsersByID,
     selectTableUsersByID,
 } from "../../utils/localApi";
+import { getProfilePath } from "../../utils/commonUtil";
 
 const EditButton = styled.div`
     display: flex;
@@ -170,7 +171,7 @@ function ProfileEditNameComponent(props) {
         inputEl.current.focus();
     }
 
-    const profilePath = `profile_${myUserProfile}.png`;
+    const profilePath = getProfilePath(myUserProfile);
 
     return (
         <ProfileEditName className={className} shouldShowDone={propEditMode}>
