@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { hoverRow } from "../SharedStyle";
 import { IMAGE_URL, NOTIFICATION_TYPE_STATUS } from "../../constants/constant";
-import { convertTimestampReadable } from "../../utils/commonUtil";
+import { convertTimestampReadable, getProfilePath } from "../../utils/commonUtil";
 
 const NotificationRow = styled.div`
     display: flex;
@@ -110,7 +110,7 @@ function NotificationRowComponent(props) {
         dataName,
     } = props;
 
-    const profilePath = `profile_${userProfile}.png`;
+    const profilePath = getProfilePath(userProfile);
 
     const timestampHumanReadable = useMemo(
         () => convertTimestampReadable(createdAt, new Date()),

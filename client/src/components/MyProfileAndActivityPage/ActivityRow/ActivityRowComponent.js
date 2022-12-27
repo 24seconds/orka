@@ -227,7 +227,7 @@ function ActivityRowComponent(props) {
     async function onClickDonwloadButton(event) {
         event?.stopPropagation();
         // TODO(young): fingerprint should be renamed to sharingDataID
-        await requestDownloadFile(senderID, { fingerprint: rowID});
+        await requestDownloadFile(senderID, { fingerprint: rowID });
     }
 
     async function onClickHandsUp(event) {
@@ -235,7 +235,10 @@ function ActivityRowComponent(props) {
 
         const result = await checkHandsUpTableSharingData(myOrkaUUID);
         if (result?.length === 0) {
-            const sharingData = await patchTableSharingDataByID({ handsUp: true }, rowID);
+            const sharingData = await patchTableSharingDataByID(
+                { handsUp: true },
+                rowID
+            );
 
             // notify to other peers
             if (!!sharingData) {
@@ -247,15 +250,16 @@ function ActivityRowComponent(props) {
     async function onCancelHandsUp(event) {
         event?.stopPropagation();
 
-        const sharingData = await patchTableSharingDataByID({ handsUp: false }, rowID);
+        const sharingData = await patchTableSharingDataByID(
+            { handsUp: false },
+            rowID
+        );
 
         // notify to other peers
         if (!!sharingData) {
             await notifySharingData(sharingData);
         }
     }
-
-    
 
     return (
         <ActivityRow
@@ -300,7 +304,7 @@ function ActivityRowComponent(props) {
                     onClickDeleteButton,
                     onClickHandsUp,
                     onClickDonwloadButton,
-                    onCancelHandsUp,
+                    onCancelHandsUp
                 )}
             </div>
         </ActivityRow>

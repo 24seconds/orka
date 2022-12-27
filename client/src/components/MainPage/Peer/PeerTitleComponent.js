@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { IMAGE_URL } from "../../../constants/constant";
+import { getProfilePath } from "../../../utils/commonUtil";
 
 const PeerMiniProfile = styled.div`
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #000000;
 
     img {
         width: 100%;
@@ -59,7 +59,7 @@ const PeerTitle = styled.div`
 function PeerTitleComponent(props) {
     const { name, profile } = props;
 
-    const profilePath = `profile_${profile}.png`;
+    const profilePath = getProfilePath(profile);
 
     return (
         <PeerTitle>

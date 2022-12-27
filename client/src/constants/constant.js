@@ -28,7 +28,7 @@ export const STORAGE_MY_USERNAME_KEY = "STORAGE_MY_USERNAME_KEY";
 /////////////////////////////////////
 // user related constants
 export const PROFILE_IMAGE_COUNT = 10;
-export const RANDOM_NAMES = [
+export const RANDOM_ADJECTIVE = [
     "Artful",
     "Bionic",
     "Cosmic",
@@ -42,7 +42,7 @@ export const RANDOM_NAMES = [
     "Kinetic",
     "Lunar",
 ];
-export const RANDOM_ADJECTIVE = [
+export const RANDOM_NAMES = [
     "Seahorse",
     "Salmon",
     "Shark",

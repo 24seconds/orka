@@ -181,7 +181,7 @@ async function handleDataChannelMessage(event, uuid) {
 
     if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
         const { sharingData } = data;
-        await upsertTableSharingData({ sharingData })
+        await upsertTableSharingData({ sharingData });
 
         return;
     }
@@ -282,7 +282,6 @@ async function initializePeerConnections(peerConnectionManager, peers) {
     const connectionArr = [];
 
     // connectToPeer
-    
 
     for (const peerUUID of peers) {
         if (!peerConnectionManager.peerConnections[peerUUID]) {
@@ -402,30 +401,49 @@ function addClientEventTypeEventListener(peerConnectionManager) {
         CLIENT_EVENT_TYPE.UPLOAD_LINK,
         async (event) => {
             const { sharingData } = event;
-            console.log('CLIENT_EVENT_TYPE.UPLOAD_LINK, data:', sharingData, peerConnectionManager, !!peerConnectionManager.peerConnections);
+            console.log(
+                "CLIENT_EVENT_TYPE.UPLOAD_LINK, data:",
+                sharingData,
+                peerConnectionManager,
+                !!peerConnectionManager.peerConnections
+            );
 
-            if (peerConnectionManager.peerConnections == null ) {
-                writeSystemMessage(`there are no peer connections`);   
+            if (peerConnectionManager.peerConnections == null) {
+                writeSystemMessage(`there are no peer connections`);
                 return;
             }
 
-            console.log("peerConnectionManager.peerConnections:", peerConnectionManager.peerConnections);
+            console.log(
+                "peerConnectionManager.peerConnections:",
+                peerConnectionManager.peerConnections
+            );
 
-            for (const uuid of Object.keys(peerConnectionManager.peerConnections)) {
-                const { dataChannel } = peerConnectionManager.peerConnections[uuid];
+            for (const uuid of Object.keys(
+                peerConnectionManager.peerConnections
+            )) {
+                const { dataChannel } =
+                    peerConnectionManager.peerConnections[uuid];
                 const data = new messageUploadLink({ sharingData });
 
-                const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.UPLOAD_LINK, data);
+                const peerMessage = createPeerMessage(
+                    PEER_MESSAGE_TYPE.UPLOAD_LINK,
+                    data
+                );
 
-                console.log("CLIENT_EVENT_TYPE.UPLOAD_LINK, message is ", peerMessage);
+                console.log(
+                    "CLIENT_EVENT_TYPE.UPLOAD_LINK, message is ",
+                    peerMessage
+                );
 
                 dataChannel.send(peerMessage);
 
                 if (dataChannel.readyState !== "open") {
-                    console.log(`dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`);
+                    console.log(
+                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
+                    );
                     continue;
                 }
-    
+
                 // dataChannel.send(peerMessage);
             }
         }
@@ -614,35 +632,38 @@ function addMessageTypeEventListener(peerConnectionManager) {
     });
 
     // peer list 받았을 때 connection을 다 바로 맺네?
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.PEERS, async (event) => {
-        const { peers } = event;
-        const filteredPeers = peers.filter(
-            (peerUUID) => peerUUID !== peerConnectionManager.uuid
-        );
+    peerConnectionManager.addEventListener(
+        MESSAGE_TYPE.PEERS,
+        async (event) => {
+            const { peers } = event;
+            const filteredPeers = peers.filter(
+                (peerUUID) => peerUUID !== peerConnectionManager.uuid
+            );
 
-        console.log("MESSAGE_TYPE.PEERS peers", peers);
+            console.log("MESSAGE_TYPE.PEERS peers", peers);
 
-        const connectionArr = await initializePeerConnections(
-            peerConnectionManager,
-            filteredPeers
-        );
+            const connectionArr = await initializePeerConnections(
+                peerConnectionManager,
+                filteredPeers
+            );
 
-        console.log("connectionArr:", connectionArr);
+            console.log("connectionArr:", connectionArr);
 
-        for (const connection of connectionArr) {
-            const { uuid, peerConnection, dataChannel } = connection;
+            for (const connection of connectionArr) {
+                const { uuid, peerConnection, dataChannel } = connection;
 
-            peerConnectionManager.peerConnections[uuid] = {
-                peerConnection,
-                dataChannel,
-            };
+                peerConnectionManager.peerConnections[uuid] = {
+                    peerConnection,
+                    dataChannel,
+                };
 
-            await connectToPeer(uuid);
+                await connectToPeer(uuid);
+            }
+
+            // TODO: Inform this event to store
+            addJoinedPeers(filteredPeers);
         }
-
-        // TODO: Inform this event to store
-        addJoinedPeers(filteredPeers);
-    });
+    );
 
     // peer가 join 했다고 알림을 받으면 마찬가지로 connection을 맺으려고 하네?
     peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, async (event) => {

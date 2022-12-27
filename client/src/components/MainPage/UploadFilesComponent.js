@@ -2,9 +2,16 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
 import { Fragment } from "react";
-import { generateFingerPrint, getSubtypeOfMIMEtypes } from "../../utils/commonUtil";
+import {
+    generateFingerPrint,
+    getSubtypeOfMIMEtypes,
+} from "../../utils/commonUtil";
 import FingerprintedFile from "../../utils/dataSchema/FingerprintedFile";
-import { addFingerPrintedFiles, createTableSharingData, notifySharingData } from "../../utils/localApi";
+import {
+    addFingerPrintedFiles,
+    createTableSharingData,
+    notifySharingData,
+} from "../../utils/localApi";
 import { DATATYPE_FILE } from "../../constants/constant";
 
 const UploadFiles = styled.div`
@@ -75,15 +82,24 @@ function UploadFilesComponent(props) {
         }
 
         // save to database
-        const sharingDataList = await Promise.all(fingerprintedFiles.map(fingerprintedFile => {
-            const dataID = fingerprintedFile.fingerprint;
-            const fileName = fingerprintedFile.file.name;
-            const fileType = getSubtypeOfMIMEtypes(fingerprintedFile.file.type) || "unknown";
-            const sizeInBytes = fingerprintedFile.file.size;
+        const sharingDataList = await Promise.all(
+            fingerprintedFiles.map((fingerprintedFile) => {
+                const dataID = fingerprintedFile.fingerprint;
+                const fileName = fingerprintedFile.file.name;
+                const fileType =
+                    getSubtypeOfMIMEtypes(fingerprintedFile.file.type) ||
+                    "unknown";
+                const sizeInBytes = fingerprintedFile.file.size;
 
-            return createTableSharingData({ dataID, type: DATATYPE_FILE,
-                name: fileName, size: sizeInBytes, extension: fileType});
-        }));
+                return createTableSharingData({
+                    dataID,
+                    type: DATATYPE_FILE,
+                    name: fileName,
+                    size: sizeInBytes,
+                    extension: fileType,
+                });
+            })
+        );
 
         // save in store
         addFingerPrintedFiles(fingerprintedFiles);

@@ -37,7 +37,10 @@ function PeerListLayoutComponent() {
     );
     const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
-    const tableSharingData = useSelector((state) => state.tableSharingData, shallowEqual);
+    const tableSharingData = useSelector(
+        (state) => state.tableSharingData,
+        shallowEqual
+    );
 
     useEffect(() => {
         console.log("PeerListLayoutComponent userEffect called");
