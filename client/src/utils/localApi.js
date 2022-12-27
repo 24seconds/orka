@@ -317,6 +317,8 @@ async function deleteTableUserByID(id) {
     const result = await run(query);
     console.log("result:", result);
 
+    updateTableUsers();
+
     return result?.[0]?.rows;
 }
 
@@ -391,7 +393,7 @@ async function patchTableUsersByID({ name, profile }, userID) {
     }
 
     query += values.join(", ");
-    query += ` WHERE id = "${userID}"`;
+    query += ` WHERE ${TABLE_USERS.fields.id} = "${userID}"`;
 
     console.log("patchTableUsersByID, query:", query);
 
@@ -434,7 +436,7 @@ async function createTableSharingData({ dataID, type, name, size, extension, tex
 }
 
 // TODO(young): unify insert/create sharing data or refactor them together
-async function insertTableSharingData({ sharingData }) {
+async function upsertTableSharingData({ sharingData }) {
     const id = sharingData[TABLE_SHARING_DATA.fields.id];
     const name = sharingData[TABLE_SHARING_DATA.fields.name];
     const size = sharingData[TABLE_SHARING_DATA.fields.size];
@@ -446,11 +448,41 @@ async function insertTableSharingData({ sharingData }) {
     const uploader_id = sharingData[TABLE_SHARING_DATA.fields.uploader_id]
     const uploaded_at = sharingData[TABLE_SHARING_DATA.fields.uploaded_at];
 
-    const query = `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-        "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
-        ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
-    );`
+    const data = await selectTableSharingDataByID(id);
 
+
+    const query = (() => {
+        if (data) {
+            // update
+            let query = `UPDATE ${TABLE_SHARING_DATA.name} SET `;
+            const values = [
+                `${TABLE_SHARING_DATA.fields.name} = "${name}"`,
+                `${TABLE_SHARING_DATA.fields.size} = ${size}`,
+                `${TABLE_SHARING_DATA.fields.extension} = "${extension}"`,
+                // text and type name should be escaped.
+                `"${TABLE_SHARING_DATA.fields.text}" = "${text}"`,
+                `"${TABLE_SHARING_DATA.fields.type}" = "${type}"`,
+                `${TABLE_SHARING_DATA.fields.status_count} = ${status_count}`,
+                `${TABLE_SHARING_DATA.fields.hands_up} = ${hands_up}`,
+                `${TABLE_SHARING_DATA.fields.uploader_id} = "${uploader_id}"`,
+                `${TABLE_SHARING_DATA.fields.uploaded_at} = "${uploaded_at}"`,
+            ];
+
+            query += values.join(", ");
+            query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}"`;
+
+            return query;
+        } else {
+            // insert
+            return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
+                "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
+                ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
+            );`
+        }
+    })();
+
+    console.log("query:", query);
+ 
     const result = await run(query);
     console.log("result:", result);
 
@@ -561,9 +593,11 @@ async function patchTableSharingDataByID({ handsUp }, sharingDataID) {
     const result = await run(query);
     console.log("result:", result);
 
+    const data = await selectTableSharingDataByID(sharingDataID);
+
     updateTableSharingData();
 
-    return result?.[0]?.rows;
+    return data;
 }
 
 async function deleteTableSharingDataByIDs(sharingDataIDs) {
@@ -642,7 +676,7 @@ async function selectTableNotifications() {
     return result?.[0]?.rows;
 }
 
-async function selecTableNotificationsWithUserAndSharingData() {
+async function selectTableNotificationsWithUserAndSharingData() {
     const query = `SELECT 
         n.*, 
         u.${TABLE_USERS.fields.id} as user_id, 
@@ -703,7 +737,7 @@ export {
     patchTableUsersByID,
     
     createTableSharingData,
-    insertTableSharingData,
+    upsertTableSharingData,
     updateTableSharingData,
     selectTableSharingDataByID,
     selectTableSharingDataWithCommentCount,
@@ -718,5 +752,5 @@ export {
     updateTableCommentMetadata,
     
     selectTableNotifications,
-    selecTableNotificationsWithUserAndSharingData,
+    selectTableNotificationsWithUserAndSharingData,
 };

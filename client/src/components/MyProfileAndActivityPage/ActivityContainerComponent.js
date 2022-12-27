@@ -164,7 +164,7 @@ function ActivityContainerComponent(props) {
         shallowEqual
     );
 
-    const myOrkaUUID = useSelector((state) => state.myOrkaUUID, shallowEqual);
+    const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
     useEffect(() => {
         (async () => {
@@ -181,8 +181,8 @@ function ActivityContainerComponent(props) {
             const user = await selectTableUsersByID(activePeerUUID);
             const peerUser = user?.[0];
 
-            setPeerUserName(peerUser?.name || 0);
-            setPeerUserProfile(peerUser?.profile || "");
+            setPeerUserName(peerUser?.name || "");
+            setPeerUserProfile(peerUser?.profile || 0);
         })();
     }, [activePeerUUID]);
 
