@@ -317,6 +317,8 @@ async function deleteTableUserByID(id) {
     const result = await run(query);
     console.log("result:", result);
 
+    updateTableUsers();
+
     return result?.[0]?.rows;
 }
 
