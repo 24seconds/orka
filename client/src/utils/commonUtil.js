@@ -99,7 +99,7 @@ function getRandomNumber(max) {
 
 // ex) "image/png", "image/png;param=hoho"
 function getSubtypeOfMIMEtypes(types) {
-    const regex = /(.*){1}\/([^;]*){1}(;.*)*/; 
+    const regex = /(.*){1}\/([^;]*){1}(;.*)*/;
     const matched = types.match(regex);
 
     if (matched.length >= 3) {

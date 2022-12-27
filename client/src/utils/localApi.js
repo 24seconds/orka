@@ -158,7 +158,7 @@ function addMessagePacket(message) {
 }
 
 function addFingerPrintedFiles(files) {
-    store.dispatch(addFiles(files))
+    store.dispatch(addFiles(files));
 }
 
 // createMyUserInfo generate my user info and update my UUID
@@ -350,7 +350,10 @@ async function selectTableUsersMyself() {
 }
 
 async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
-    console.log("selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:", getMyUUID());
+    console.log(
+        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:",
+        getMyUUID()
+    );
 
     const query = `
     SELECT u.*,
@@ -368,7 +371,10 @@ async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
   GROUP BY
     u.${TABLE_USERS.fields.id}`;
 
-    console.log("selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:", query);
+    console.log(
+        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:",
+        query
+    );
 
     const result = await run(query);
     console.log("result:", result);
@@ -405,7 +411,14 @@ async function patchTableUsersByID({ name, profile }, userID) {
     return result?.[0]?.rows;
 }
 
-async function createTableSharingData({ dataID, type, name, size, extension, text }) {
+async function createTableSharingData({
+    dataID,
+    type,
+    name,
+    size,
+    extension,
+    text,
+}) {
     const id = dataID || generateSharingDataUUID();
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
@@ -444,12 +457,11 @@ async function upsertTableSharingData({ sharingData }) {
     const text = sharingData[TABLE_SHARING_DATA.fields.text];
     const type = sharingData[TABLE_SHARING_DATA.fields.type];
     const status_count = sharingData[TABLE_SHARING_DATA.fields.status_count];
-    const hands_up = sharingData[TABLE_SHARING_DATA.fields.hands_up]
-    const uploader_id = sharingData[TABLE_SHARING_DATA.fields.uploader_id]
+    const hands_up = sharingData[TABLE_SHARING_DATA.fields.hands_up];
+    const uploader_id = sharingData[TABLE_SHARING_DATA.fields.uploader_id];
     const uploaded_at = sharingData[TABLE_SHARING_DATA.fields.uploaded_at];
 
     const data = await selectTableSharingDataByID(id);
-
 
     const query = (() => {
         if (data) {
@@ -477,12 +489,12 @@ async function upsertTableSharingData({ sharingData }) {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
                 "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
                 ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
-            );`
+            );`;
         }
     })();
 
     console.log("query:", query);
- 
+
     const result = await run(query);
     console.log("result:", result);
 
@@ -502,7 +514,6 @@ async function selectTableSharingDataByID(id) {
 
     return result?.[0]?.rows?.[0];
 }
-
 
 async function selectTableSharingDataWithCommentCount(userID) {
     let query = `SELECT f.*, COUNT(c.id) as comment_count, 
@@ -725,9 +736,8 @@ export {
     updateSelectedRowID,
     updateSender,
     // db interfaces
+    // users
     updateTableUsers,
-    
-    updateTableNotifications,
     upsertTableUser,
     deleteTableUserByID,
     selectTableUsers,
@@ -735,7 +745,7 @@ export {
     selectTableUsersMyself,
     selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
-    
+    // sharing data
     createTableSharingData,
     upsertTableSharingData,
     updateTableSharingData,
@@ -745,12 +755,13 @@ export {
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
-    
+    // comments
     selectTableCommentsByDataID,
-    
+    // comment metadata
     selectTableCommentMetadataByDataID,
     updateTableCommentMetadata,
-    
+    // notifications
     selectTableNotifications,
+    updateTableNotifications,
     selectTableNotificationsWithUserAndSharingData,
 };

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
-import { createTableSharingData, notifySharingData } from "../../utils/localApi";
+import {
+    createTableSharingData,
+    notifySharingData,
+} from "../../utils/localApi";
 
 const UploadLink = styled.div`
     display: flex;
@@ -44,7 +47,7 @@ const PlaceHolder = styled.div`
 
         circle {
             fill: ${(props) =>
-        props.isActive && props.theme.ActivityRowBackgroundscale02};
+                props.isActive && props.theme.ActivityRowBackgroundscale02};
         }
     }
 
