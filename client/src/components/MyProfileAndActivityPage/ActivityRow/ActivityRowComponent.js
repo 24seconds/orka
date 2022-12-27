@@ -13,6 +13,7 @@ import HandsUpIcon from "../../../assets/HandsUpIcon";
 import {
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
+    requestDownloadFile,
     selectTableSharingDataByID,
 } from "../../../utils/localApi";
 import { shallowEqual, useSelector } from "react-redux";
@@ -147,6 +148,7 @@ function renderAction(
     isHandsUpRow,
     onClick,
     onClickHandsUp,
+    onClickDonwloadButton,
     onCancelHandsUp
 ) {
     if (isEditMode) {
@@ -159,8 +161,6 @@ function renderAction(
         );
     }
 
-    console.log("isHandsUpRow:", isHandsUpRow, isMyProfileRow);
-
     const renderIcon = () => {
         if (isMyProfileRow && isHandsUpRow) {
             return <HandsUpActivateButtonComponent onClick={onCancelHandsUp} />;
@@ -171,6 +171,7 @@ function renderAction(
         ) : (
             <ActionButtonComponent
                 type={dataType === "URL" ? "TEXT" : "FILE"}
+                onClick={onClickDonwloadButton}
             />
         );
     };
@@ -225,6 +226,12 @@ function ActivityRowComponent(props) {
         event?.stopPropagation();
     }
 
+    async function onClickDonwloadButton(event) {
+        event?.stopPropagation();
+        // TODO(young): fingerprint should be renamed to sharingDataID
+        await requestDownloadFile(senderID, { fingerprint: rowID});
+    }
+
     async function onClickHandsUp(event) {
         event?.stopPropagation();
 
@@ -241,6 +248,8 @@ function ActivityRowComponent(props) {
 
         await patchTableSharingDataByID({ handsUp: false }, rowID);
     }
+
+    
 
     return (
         <ActivityRow
@@ -284,7 +293,8 @@ function ActivityRowComponent(props) {
                     isHandsUpRow,
                     onClickDeleteButton,
                     onClickHandsUp,
-                    onCancelHandsUp
+                    onClickDonwloadButton,
+                    onCancelHandsUp,
                 )}
             </div>
         </ActivityRow>

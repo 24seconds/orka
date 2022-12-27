@@ -220,6 +220,7 @@ async function transferFileToPeer(fingerprint, uuid) {
     }
 }
 
+// TODO(young): deprecate messagePacket
 function getMessagePacket(fingerprint) {
     // TODO: Make O(1)
 
@@ -432,6 +433,7 @@ async function createTableSharingData({ dataID, type, name, size, extension, tex
     return data;
 }
 
+// TODO(young): unify insert/create sharing data or refactor them together
 async function insertTableSharingData({ sharingData }) {
     const id = sharingData[TABLE_SHARING_DATA.fields.id];
     const name = sharingData[TABLE_SHARING_DATA.fields.name];
@@ -681,7 +683,6 @@ export {
     getMyUUID,
     getFileToTransfer,
     transferFileToPeer,
-    getMessagePacket,
     parsePeerChunk,
     writePeerChunk,
     writeSystemMessage,
@@ -691,8 +692,7 @@ export {
     updateSender,
     // db interfaces
     updateTableUsers,
-    updateTableSharingData,
-    updateTableCommentMetadata,
+    
     updateTableNotifications,
     upsertTableUser,
     deleteTableUserByID,
@@ -701,15 +701,22 @@ export {
     selectTableUsersMyself,
     selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
+    
     createTableSharingData,
     insertTableSharingData,
+    updateTableSharingData,
+    selectTableSharingDataByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
+    
     selectTableCommentsByDataID,
+    
     selectTableCommentMetadataByDataID,
+    updateTableCommentMetadata,
+    
     selectTableNotifications,
     selecTableNotificationsWithUserAndSharingData,
 };

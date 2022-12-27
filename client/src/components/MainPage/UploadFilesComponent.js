@@ -85,7 +85,7 @@ function UploadFilesComponent(props) {
                 name: fileName, size: sizeInBytes, extension: fileType});
         }));
 
-        // store in redux
+        // save in store
         addFingerPrintedFiles(fingerprintedFiles);
 
         // notify to other peers

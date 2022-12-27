@@ -24,10 +24,10 @@ const ActionButton = styled.div`
 
 // TODO(young): implement onClick function later
 function ActionButtonComponent(props) {
-    const { type } = props;
+    const { type, onClick } = props;
 
     return (
-        <ActionButton type={type}>
+        <ActionButton type={type} onClick={type === "FILE" ? onClick : null}>
             <DownloadArrowIcon />
         </ActionButton>
     );

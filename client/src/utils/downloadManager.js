@@ -1,9 +1,9 @@
 import {
     parsePeerChunk,
-    getMessagePacket,
     sendErrorToPeer,
     getMyUUID,
     writeSystemMessage,
+    selectTableSharingDataByID,
 } from "./localApi";
 import {
     HEADER_SIZE_IN_BYTES,
@@ -59,12 +59,15 @@ async function accumulateChunk(chunkWithHeader, uuid) {
     };
 
     if (!chunkStore[fingerprint].downloadWriter) {
-        const messagePacket = getMessagePacket(fingerprint);
+        const sharingData = await selectTableSharingDataByID(fingerprint);
 
-        const filename =
-            (messagePacket && messagePacket.data.message) ||
-            "localdrop_download_file";
-        const fileSize = (messagePacket && messagePacket.data.size) || 0;
+        if (!sharingData) {
+            // TODO(young): handle error case
+            return;
+        }
+
+        const filename = sharingData.name;
+        const fileSize = sharingData.size;
         const options = { pathname: fingerprint, size: fileSize };
 
         chunkStore[fingerprint].size = fileSize;
