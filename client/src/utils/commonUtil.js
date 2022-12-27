@@ -97,6 +97,18 @@ function getRandomNumber(max) {
     return Math.floor(Math.random() * max);
 }
 
+// ex) "image/png", "image/png;param=hoho"
+function getSubtypeOfMIMEtypes(types) {
+    const regex = /(.*){1}\/([^;]*){1}(;.*)*/; 
+    const matched = types.match(regex);
+
+    if (matched.length >= 3) {
+        return matched[2];
+    }
+
+    return null;
+}
+
 export {
     getSizeString,
     getCurrentTime,
@@ -105,4 +117,5 @@ export {
     convertTimestampReadable,
     generateUserProfile,
     generateSharingDataUUID,
+    getSubtypeOfMIMEtypes,
 };

@@ -609,6 +609,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
         peerConnectionManager.uuid = uuid;
         // TODO(young): consider in case of calling this event handler more than twice.
+        // TODO(young): create my user info regardless of signaling server connection.
         await createMyUserInfo(uuid);
     });
 

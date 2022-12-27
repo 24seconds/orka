@@ -25,6 +25,7 @@ import {
     updateTableNotifications as updateTableNotificationsCounter,
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
+    addFiles,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import {
@@ -156,6 +157,10 @@ function addMessagePacket(message) {
     store.dispatch(addMessage(message));
 }
 
+function addFingerPrintedFiles(files) {
+    store.dispatch(addFiles(files))
+}
+
 // createMyUserInfo generate my user info and update my UUID
 async function createMyUserInfo(uuid) {
     // create user!
@@ -215,6 +220,7 @@ async function transferFileToPeer(fingerprint, uuid) {
     }
 }
 
+// TODO(young): deprecate messagePacket
 function getMessagePacket(fingerprint) {
     // TODO: Make O(1)
 
@@ -397,20 +403,23 @@ async function patchTableUsersByID({ name, profile }, userID) {
     return result?.[0]?.rows;
 }
 
-async function createTableSharingData({ type, name, size, extension, text }) {
-    const id = generateSharingDataUUID();
+async function createTableSharingData({ dataID, type, name, size, extension, text }) {
+    const id = dataID || generateSharingDataUUID();
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
     console.log(id, uploader_id, uploaded_at);
 
-    if (type === DATATYPE_FILE) {
-        console.log("shraing file is not supported yet!");
-        return;
-    }
-
-    const query = `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-        "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
-        "${uploader_id}", "${uploaded_at}");`;
+    const query = (() => {
+        if (type === DATATYPE_FILE) {
+            return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES(
+                "${id}", "${name}", ${size}, "${extension}", NULL, "${DATATYPE_FILE}", 0, false,
+                "${uploader_id}", "${uploaded_at}");`;
+        } else {
+            return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
+                "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
+                "${uploader_id}", "${uploaded_at}");`;
+        }
+    })();
 
     console.log("query:", query);
 
@@ -424,6 +433,7 @@ async function createTableSharingData({ type, name, size, extension, text }) {
     return data;
 }
 
+// TODO(young): unify insert/create sharing data or refactor them together
 async function insertTableSharingData({ sharingData }) {
     const id = sharingData[TABLE_SHARING_DATA.fields.id];
     const name = sharingData[TABLE_SHARING_DATA.fields.name];
@@ -667,12 +677,12 @@ export {
     addJoinedPeers,
     deleteLeavedPeers,
     addMessagePacket,
+    addFingerPrintedFiles,
     createMyUserInfo,
     getPeerUUID,
     getMyUUID,
     getFileToTransfer,
     transferFileToPeer,
-    getMessagePacket,
     parsePeerChunk,
     writePeerChunk,
     writeSystemMessage,
@@ -682,8 +692,7 @@ export {
     updateSender,
     // db interfaces
     updateTableUsers,
-    updateTableSharingData,
-    updateTableCommentMetadata,
+    
     updateTableNotifications,
     upsertTableUser,
     deleteTableUserByID,
@@ -692,15 +701,22 @@ export {
     selectTableUsersMyself,
     selectTableUsersWithLatestSharingDataTypeExcludingMyself,
     patchTableUsersByID,
+    
     createTableSharingData,
     insertTableSharingData,
+    updateTableSharingData,
+    selectTableSharingDataByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
+    
     selectTableCommentsByDataID,
+    
     selectTableCommentMetadataByDataID,
+    updateTableCommentMetadata,
+    
     selectTableNotifications,
     selecTableNotificationsWithUserAndSharingData,
 };

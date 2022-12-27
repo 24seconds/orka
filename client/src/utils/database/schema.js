@@ -15,6 +15,7 @@ const TABLE_SHARING_DATA = {
 
         // file related fields
         name: "name",
+        // size in bytes
         size: "size",
         extension: "extension",
 
