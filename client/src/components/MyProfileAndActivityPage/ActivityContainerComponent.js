@@ -181,8 +181,8 @@ function ActivityContainerComponent(props) {
             const user = await selectTableUsersByID(activePeerUUID);
             const peerUser = user?.[0];
 
-            setPeerUserName(peerUser?.name || 0);
-            setPeerUserProfile(peerUser?.profile || "");
+            setPeerUserName(peerUser?.name || "");
+            setPeerUserProfile(peerUser?.profile || 0);
         })();
     }, [activePeerUUID]);
 
