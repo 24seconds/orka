@@ -583,8 +583,11 @@ async function checkHandsUpTableSharingData(userID) {
     return result?.[0]?.rows;
 }
 
-async function patchTableSharingDataByID({ handsUp }, sharingDataID) {
-    if (handsUp == null) {
+async function patchTableSharingDataByID(
+    { handsUp, statusCount },
+    sharingDataID
+) {
+    if (handsUp == null && statusCount == null) {
         return;
     }
 
@@ -594,6 +597,12 @@ async function patchTableSharingDataByID({ handsUp }, sharingDataID) {
 
     if (!(handsUp == null)) {
         values.push(`${TABLE_SHARING_DATA.fields.hands_up} = ${handsUp}`);
+    }
+
+    if (!(statusCount == null)) {
+        values.push(
+            `${TABLE_SHARING_DATA.fields.status_count} = ${statusCount}`
+        );
     }
 
     query += values.join(", ");

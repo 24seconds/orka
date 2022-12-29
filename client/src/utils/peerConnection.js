@@ -29,6 +29,9 @@ import {
     upsertTableUser,
     deleteTableUserByID,
     upsertTableSharingData,
+    selectTableSharingDataByID,
+    patchTableSharingDataByID,
+    notifySharingData,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
@@ -224,6 +227,17 @@ async function handleDataChannelMessage(event, uuid) {
         const { fingerprint } = data;
         // transfer file
         transferFileToPeer(fingerprint, uuid);
+
+        // update download count, notify to peers
+        const sharingData = await selectTableSharingDataByID(fingerprint);
+        if (sharingData) {
+            const updated = await patchTableSharingDataByID(
+                { statusCount: sharingData.status_count + 1 },
+                fingerprint
+            );
+            await notifySharingData(updated);
+        }
+
         return;
     }
 
