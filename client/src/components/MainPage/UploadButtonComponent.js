@@ -36,7 +36,7 @@ const UploadButton = styled.div`
         font-weight: 600;
         margin-left: 48px;
 
-        color: ${(props) => props.theme.IconColor};   
+        color: ${(props) => props.theme.IconColor};
     }
 
     .orka-icon-container {

@@ -82,8 +82,6 @@ const CommentTitle = styled.div`
     letter-spacing: -0.04em;
 `;
 
-
-
 function renderCommentRow(comment, user, metadata) {
     const { id, text, created_at } = comment;
     const { id: userID, name: userName, profile: userProfile } = user;

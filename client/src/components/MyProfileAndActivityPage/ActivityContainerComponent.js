@@ -36,7 +36,7 @@ const CloseIconContainer = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    
+
     // TODO(young): revisit hover effect for close icons later.
     ${hoverCloseButton}
 `;
