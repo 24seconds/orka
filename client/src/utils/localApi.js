@@ -8,6 +8,7 @@ import {
     EventSendMessageData,
     EventErrorData,
     EventUploadLink,
+    EventUpdateUser,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import websocketManager from "./websocket";
@@ -54,6 +55,15 @@ async function notifySharingData(data) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.UPLOAD_LINK,
         new EventUploadLink({ sharingData: data })
+    );
+
+    (await peerConnectionManager).dispatchEvent(event);
+}
+
+async function notifyUser(user) {
+    const event = new LocalDropEvent(
+        CLIENT_EVENT_TYPE.UPDATE_USER,
+        new EventUpdateUser({ user: user })
     );
 
     (await peerConnectionManager).dispatchEvent(event);
@@ -298,7 +308,7 @@ async function createTableUser({ name, profile, userID }) {
 }
 
 async function upsertTableUser({ name, profile, id: userID }) {
-    const user = (await selectTableUsersByID(userID))?.[0];
+    const user = await selectTableUsersByID(userID);
 
     if (!!user) {
         return;
@@ -341,7 +351,7 @@ async function selectTableUsersByID(userID) {
     const result = await run(query);
     console.log("result:", result);
 
-    return result?.[0]?.rows;
+    return result?.[0]?.rows?.[0];
 }
 
 async function selectTableUsersMyself() {
@@ -406,9 +416,11 @@ async function patchTableUsersByID({ name, profile }, userID) {
     const result = await run(query);
     console.log("result:", result);
 
+    const data = await selectTableUsersByID(userID);
+
     updateTableSharingData();
 
-    return result?.[0]?.rows;
+    return data;
 }
 
 async function createTableSharingData({
@@ -721,6 +733,7 @@ async function selectTableNotificationsWithUserAndSharingData() {
 
 export {
     notifySharingData,
+    notifyUser,
     sendTextToPeer,
     sendFilesToPeer,
     sendErrorToPeer,

@@ -8,6 +8,7 @@ import {
     messageErrorData,
     messageUserInfoData,
     messageUploadLink,
+    messageUpdateUser,
 } from "./dataSchema/PeerMessageData";
 import { createMessage } from "./message";
 import { createPeerMessage, parsePeerMessage } from "./peerMessage";
@@ -32,6 +33,7 @@ import {
     selectTableSharingDataByID,
     patchTableSharingDataByID,
     notifySharingData,
+    patchTableUsersByID,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
@@ -185,6 +187,14 @@ async function handleDataChannelMessage(event, uuid) {
     if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
         const { sharingData } = data;
         await upsertTableSharingData({ sharingData });
+
+        return;
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.UPDATE_USER) {
+        const { user } = data;
+        const { id: userID, name, profile } = user;
+        await patchTableUsersByID({ name, profile }, userID);
 
         return;
     }
@@ -365,7 +375,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             console.log("SEND_USER_INFO called", event);
 
             // prepare user info
-            const myInfo = (await selectTableUsersMyself())?.[0];
+            const myInfo = await selectTableUsersMyself();
 
             // TODO(young): handle this later
             if (!peerConnectionManager.peerConnections[toUUID]) {
@@ -427,11 +437,6 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 return;
             }
 
-            console.log(
-                "peerConnectionManager.peerConnections:",
-                peerConnectionManager.peerConnections
-            );
-
             for (const uuid of Object.keys(
                 peerConnectionManager.peerConnections
             )) {
@@ -459,6 +464,51 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 }
 
                 // dataChannel.send(peerMessage);
+            }
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.UPDATE_USER,
+        async (event) => {
+            const { user } = event;
+            console.log(
+                "CLIENT_EVENT_TYPE.UPDATE_USER, data:",
+                user,
+                peerConnectionManager,
+                !!peerConnectionManager.peerConnections
+            );
+
+            if (peerConnectionManager.peerConnections == null) {
+                writeSystemMessage(`there are no peer connections`);
+                return;
+            }
+
+            for (const uuid of Object.keys(
+                peerConnectionManager.peerConnections
+            )) {
+                const { dataChannel } =
+                    peerConnectionManager.peerConnections[uuid];
+                const data = new messageUpdateUser({ user });
+
+                const peerMessage = createPeerMessage(
+                    PEER_MESSAGE_TYPE.UPDATE_USER,
+                    data
+                );
+
+                console.log(
+                    "CLIENT_EVENT_TYPE.UPDATE_USER, message is ",
+                    peerMessage
+                );
+
+                dataChannel.send(peerMessage);
+
+                if (dataChannel.readyState !== "open") {
+                    console.log(
+                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
+                    );
+                    continue;
+                }
             }
         }
     );

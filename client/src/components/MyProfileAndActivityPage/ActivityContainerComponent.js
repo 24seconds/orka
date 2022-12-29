@@ -181,8 +181,7 @@ function ActivityContainerComponent(props) {
 
     useEffect(() => {
         (async () => {
-            const user = await selectTableUsersByID(activePeerUUID);
-            const peerUser = user?.[0];
+            const peerUser = await selectTableUsersByID(activePeerUUID);
 
             setPeerUserName(peerUser?.name || "");
             setPeerUserProfile(peerUser?.profile || 0);

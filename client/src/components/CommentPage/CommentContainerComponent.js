@@ -126,7 +126,7 @@ function CommentContainerComponent() {
 
                 console.table(comments);
                 setComments(comments);
-                setUser(user?.[0]);
+                setUser(user);
                 // Todo(young): Check metadata table should be subscribed.
                 setMetadata(metadata?.[0]);
             }
