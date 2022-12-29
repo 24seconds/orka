@@ -10,6 +10,12 @@ class messageUploadLink {
     }
 }
 
+class messageUpdateUser {
+    constructor({ user }) {
+        this.user = user;
+    }
+}
+
 class messageTextData {
     constructor({ message, size, fingerprint }) {
         this.message = message;
@@ -41,6 +47,7 @@ class messageErrorData {
 export {
     messageUserInfoData,
     messageUploadLink,
+    messageUpdateUser,
     messageTextData,
     messageFileData,
     messageDownloadData,

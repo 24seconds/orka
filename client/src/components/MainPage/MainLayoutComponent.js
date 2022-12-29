@@ -98,13 +98,12 @@ function MainLayoutComponent(props) {
                         <StyledUploadLinkComponent />
                     </Fragment>
                 )}
-                {
-                    !uploadActivated && {
+                {!uploadActivated &&
+                    {
                         [Tabs.Home]: <PeerListLayoutComponent />,
                         [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
                         [Tabs.Notification]: <NotificationLayoutComponent />,
-                    }[selectedTab]
-                }
+                    }[selectedTab]}
             </MainLayoutContainer>
         </MainLayout>
     );

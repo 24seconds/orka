@@ -93,6 +93,7 @@ export const CLIENT_EVENT_TYPE = {
     CLOSE: "CLOSE",
     ERROR: "ERROR",
     UPLOAD_LINK: "UPLOAD_LINK",
+    UPDATE_USER: "UPDATE_USER",
 };
 
 const clientEventDataSchema = {
@@ -107,6 +108,7 @@ const clientEventDataSchema = {
 export const PEER_MESSAGE_TYPE = {
     USER_INFO: "USER_INFO",
     UPLOAD_LINK: "UPLOAD_LINK",
+    UPDATE_USER: "UPDATE_USER",
     TEXT: "TEXT",
     FILE: "FILE",
     ERROR: "ERROR",

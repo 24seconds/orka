@@ -36,7 +36,7 @@ const CloseIconContainer = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    
+
     // TODO(young): revisit hover effect for close icons later.
     ${hoverCloseButton}
 `;
@@ -181,8 +181,7 @@ function ActivityContainerComponent(props) {
 
     useEffect(() => {
         (async () => {
-            const user = await selectTableUsersByID(activePeerUUID);
-            const peerUser = user?.[0];
+            const peerUser = await selectTableUsersByID(activePeerUUID);
 
             setPeerUserName(peerUser?.name || "");
             setPeerUserProfile(peerUser?.profile || 0);

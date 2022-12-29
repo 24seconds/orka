@@ -5,6 +5,7 @@ import ProfileEditNameClearIcon from "../../assets/ProfileEditNameClearIcon";
 import { IMAGE_URL } from "../../constants/constant";
 import { shallowEqual, useSelector } from "react-redux";
 import {
+    notifyUser,
     patchTableUsersByID,
     selectTableUsersByID,
 } from "../../utils/localApi";
@@ -138,8 +139,7 @@ function ProfileEditNameComponent(props) {
 
     useEffect(() => {
         (async () => {
-            const user = await selectTableUsersByID(myOrkaUUID);
-            const myUser = user?.[0];
+            const myUser = await selectTableUsersByID(myOrkaUUID);
 
             setMyUserProfile(myUser?.profile || 0);
             setMyUserName(myUser?.name || "");
@@ -163,7 +163,12 @@ function ProfileEditNameComponent(props) {
     }
 
     async function onUpdateName() {
-        await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
+        const user = await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
+
+        // notify to other peers
+        if (!!user) {
+            await notifyUser(user);
+        }
     }
 
     function onClear() {

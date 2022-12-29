@@ -3,7 +3,10 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { hoverRow } from "../SharedStyle";
 import { IMAGE_URL, NOTIFICATION_TYPE_STATUS } from "../../constants/constant";
-import { convertTimestampReadable, getProfilePath } from "../../utils/commonUtil";
+import {
+    convertTimestampReadable,
+    getProfilePath,
+} from "../../utils/commonUtil";
 
 const NotificationRow = styled.div`
     display: flex;
