@@ -99,7 +99,7 @@ function MainLayoutComponent(props) {
                     </Fragment>
                 )}
                 {
-                    {
+                    !uploadActivated && {
                         [Tabs.Home]: <PeerListLayoutComponent />,
                         [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
                         [Tabs.Notification]: <NotificationLayoutComponent />,

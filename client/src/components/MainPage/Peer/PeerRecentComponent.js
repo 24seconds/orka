@@ -30,6 +30,10 @@ const RecentData = styled.div`
     left: ${(props) => props.order};
     top: ${(props) => props.order};
     z-index: ${(props) => props.zIndex};
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 `;
 
 const EmptyData = styled.div`
