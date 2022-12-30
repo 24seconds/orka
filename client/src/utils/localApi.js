@@ -1,8 +1,6 @@
-import { peerConnectionManager } from "./peerConnection";
+import { peerConnectionManager } from "./connections/peerConnection";
 import LocalDropEvent from "./LocalDropEvent";
 import {
-    EventSendTextData,
-    EventSendFilesData,
     EventDownloadFileData,
     EventConnectData,
     EventSendMessageData,
@@ -12,7 +10,7 @@ import {
     EventResponseSharingData,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
-import websocketManager from "./websocket";
+import websocketManager from "./connections/websocket";
 import store from "../redux/store";
 import {
     addPeer,

@@ -1,7 +1,7 @@
-import { parsePeerMessage } from "./peerMessage";
+import { parsePeerMessage } from "../peerMessage";
 
-import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
-import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../../schema";
+import { EventSendUserInfo } from "../dataSchema/LocalDropEventData";
 import {
     writeSystemMessage,
     abortDownloadFile,
@@ -16,8 +16,8 @@ import {
     selectTableSharingDataByID,
     patchTableSharingDataByID,
     notifySharingData,
-} from "./localApi";
-import LocalDropEvent from "./LocalDropEvent";
+} from "../localApi";
+import LocalDropEvent from "../LocalDropEvent";
 
 function registerDataChannelEventOnOpen(
     peerConnectionManager,

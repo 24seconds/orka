@@ -1,6 +1,6 @@
 // TODO(young): remove this later
 /* eslint-disable indent */
-import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../../schema";
 import {
     messageDownloadData,
     messageErrorData,
@@ -9,9 +9,9 @@ import {
     messageUpdateUser,
     messageRequestSharingData,
     messageResponseSharingData,
-} from "./dataSchema/PeerMessageData";
-import { createMessage } from "./message";
-import { createPeerMessage } from "./peerMessage";
+} from "../dataSchema/PeerMessageData";
+import { createMessage } from "../message";
+import { createPeerMessage } from "../peerMessage";
 import {
     sendMessageToServer,
     addJoinedPeers,
@@ -22,8 +22,8 @@ import {
     connectToPeer,
     selectTableUsersMyself,
     deleteTableUserByID,
-} from "./localApi";
-import { initGlueSQL } from "./database/database";
+} from "../localApi";
+import { initGlueSQL } from "../database/database";
 import {
     handleDataChannelMessage,
     registerDataChannelEventOnClose,

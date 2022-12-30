@@ -1,13 +1,13 @@
-import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../../schema";
 import {
     SOCKET_STATE,
     SOCKET_STATE_CODE,
     WEBSOCKET_CLOSE_EVENT_CODE,
-} from "./dataSchema/WebSocketData";
-import { createMessage, parseMessage } from "./message";
+} from "../dataSchema/WebSocketData";
+import { createMessage, parseMessage } from "../message";
 import { peerConnectionManager } from "./peerConnection";
-import LocalDropEvent from "./LocalDropEvent";
-import { writeSystemMessage, getMyUUID } from "./localApi";
+import LocalDropEvent from "../LocalDropEvent";
+import { writeSystemMessage, getMyUUID } from "../localApi";
 
 function createWebSocketConnection(url) {
     const socket = new WebSocket(url);

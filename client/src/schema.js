@@ -1,6 +1,4 @@
 import {
-    EventSendTextData,
-    EventSendFilesData,
     EventConnectData,
     EventSendMessageData,
     EventErrorData,
@@ -98,8 +96,6 @@ export const CLIENT_EVENT_TYPE = {
 };
 
 const clientEventDataSchema = {
-    sendTextDatSchema: EventSendTextData,
-    sendFileDataSchema: EventSendFilesData,
     connectDataSchema: EventConnectData,
     sendMessageDataSchema: EventSendMessageData,
     errorDataSchema: EventErrorData,
