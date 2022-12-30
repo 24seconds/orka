@@ -9,6 +9,8 @@ import {
     messageUserInfoData,
     messageUploadLink,
     messageUpdateUser,
+    messageRequestSharingData,
+    messageResponseSharingData,
 } from "./dataSchema/PeerMessageData";
 import { createMessage } from "./message";
 import { createPeerMessage, parsePeerMessage } from "./peerMessage";
@@ -34,6 +36,8 @@ import {
     patchTableSharingDataByID,
     notifySharingData,
     patchTableUsersByID,
+    selectTableSharingDataByUserID,
+    notifySharingDataToPeer,
 } from "./localApi";
 import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
 import LocalDropEvent from "./LocalDropEvent";
@@ -66,9 +70,14 @@ function createPeerConnection(uuid) {
             new EventSendUserInfo({ uuid })
         );
 
-        console.log("onopen, e:", e);
-
         (await peerConnectionManager).dispatchEvent(e);
+
+        const e2 = new LocalDropEvent(
+            CLIENT_EVENT_TYPE.REQUEST_DATA_LIST,
+            null
+        );
+
+        (await peerConnectionManager).dispatchEvent(e2);
     };
 
     dataChannel.onclose = (event) => {
@@ -180,6 +189,24 @@ async function handleDataChannelMessage(event, uuid) {
         if (!!message && Object.keys(message).length === 3) {
             await upsertTableUser(message);
         }
+
+        return;
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.REQUEST_DATA_LIST) {
+        const sharingDataList = await selectTableSharingDataByUserID(getMyUUID());
+
+        // make message and send back with data
+        for (const sharingData of sharingDataList) {
+            await notifySharingDataToPeer(sharingData, uuid);
+        }
+
+        return;
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.RESPONE_DATA_LIST) {
+        const { sharingData } = data;
+        await upsertTableSharingData({ sharingData });
 
         return;
     }
@@ -396,8 +423,6 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 data
             );
 
-            dataChannel.send(peerMessage);
-
             if (dataChannel.readyState !== "open") {
                 writeSystemMessage(
                     "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
@@ -418,6 +443,91 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             // });
 
             // addMessagePacket(messagePacket);
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.REQUEST_DATA_LIST,
+        async (event) => {
+            console.log(
+                "CLIENT_EVENT_TYPE.REQUEST_DATA_LIST, data:",
+                peerConnectionManager,
+                !!peerConnectionManager.peerConnections
+            );
+
+            if (peerConnectionManager.peerConnections == null) {
+                writeSystemMessage(`there are no peer connections`);
+                return;
+            }
+
+            for (const uuid of Object.keys(
+                peerConnectionManager.peerConnections
+            )) {
+                const { dataChannel } =
+                    peerConnectionManager.peerConnections[uuid];
+                // data may not be necessary
+                const data = new messageRequestSharingData();
+
+                const peerMessage = createPeerMessage(
+                    PEER_MESSAGE_TYPE.REQUEST_DATA_LIST,
+                    data
+                );
+
+                console.log(
+                    "CLIENT_EVENT_TYPE.REQUEST_DATA_LIST, message is ",
+                    peerMessage
+                );                
+
+                if (dataChannel.readyState !== "open") {
+                    console.log(
+                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
+                    );
+                    continue;
+                }
+
+                dataChannel.send(peerMessage);
+            }
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+        async (event) => {
+            const { sharingData, uuid: toUUID } = event;
+            console.log(
+                "CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, data:",
+                sharingData,
+                peerConnectionManager,
+                !!peerConnectionManager.peerConnections
+            );
+
+            if (peerConnectionManager.peerConnections == null) {
+                writeSystemMessage(`there are no peer connections`);
+                return;
+            }
+
+            const { dataChannel } =
+                peerConnectionManager.peerConnections[toUUID];
+            const data = new messageResponseSharingData({ sharingData });
+
+            const peerMessage = createPeerMessage(
+                PEER_MESSAGE_TYPE.RESPONE_DATA_LIST,
+                data
+            );
+
+            console.log(
+                "CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, message is ",
+                peerMessage
+            );
+
+            if (dataChannel.readyState !== "open") {
+                console.log(
+                    `dataChannel (${dataChannel.readyState}) not opened for uuid: ${toUUID}!, click the peer again!`
+                );
+                return;
+            }
+
+            dataChannel.send(peerMessage);
         }
     );
 
@@ -462,8 +572,6 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     );
                     continue;
                 }
-
-                // dataChannel.send(peerMessage);
             }
         }
     );
