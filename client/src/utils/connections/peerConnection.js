@@ -10,7 +10,7 @@ import {
     messageRequestSharingData,
     messageResponseSharingData,
 } from "../dataSchema/PeerMessageData";
-import { createMessage } from "../message";
+import { createSignalingMessage } from "../signaling_message";
 import { createPeerMessage } from "../peerMessage";
 import {
     sendMessageToSignalingServer,
@@ -69,7 +69,7 @@ function createPeerConnection(uuid) {
 
         if (event.candidate) {
             // Send the candidate to the remote peer
-            const message = createMessage(SIGNALING_MESSAGE_TYPE.ICE_CANDIDATE, {
+            const message = createSignalingMessage(SIGNALING_MESSAGE_TYPE.ICE_CANDIDATE, {
                 fromUUID: getMyUUID(),
                 toUUID: uuid,
                 ice: event.candidate,
@@ -204,7 +204,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             try {
                 const myUUID = peerConnectionManager.uuid;
                 const offer = await createOffer(peerConnection);
-                const message = createMessage(SIGNALING_MESSAGE_TYPE.OFFER, {
+                const message = createSignalingMessage(SIGNALING_MESSAGE_TYPE.OFFER, {
                     fromUUID: myUUID,
                     toUUID,
                     offer,
@@ -648,7 +648,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
                 await setRemoteOffer(peerConnection, offer);
 
                 const answer = await createAnswer(peerConnection);
-                const message = createMessage(SIGNALING_MESSAGE_TYPE.ANSWER, {
+                const message = createSignalingMessage(SIGNALING_MESSAGE_TYPE.ANSWER, {
                     fromUUID: toUUID,
                     toUUID: fromUUID,
                     answer,
