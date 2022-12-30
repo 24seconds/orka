@@ -17,7 +17,6 @@ import store from "../redux/store";
 import {
     addPeer,
     deletePeer,
-    addMessage,
     updateMyUUID,
     addSystemMessage,
     updateSelectedPeer,
@@ -54,7 +53,7 @@ import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
 
 async function notifySharingData(data) {
     const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.UPLOAD_LINK,
+        CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
         new EventUploadLink({ sharingData: data })
     );
 
@@ -79,35 +78,6 @@ async function notifyUser(user) {
     (await peerConnectionManager).dispatchEvent(event);
 }
 
-async function sendTextToPeer(uuid, text) {
-    console.log("sendTextToPeer called");
-
-    const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_TEXT,
-        new EventSendTextData({ uuid, message: text })
-    );
-
-    (await peerConnectionManager).dispatchEvent(event);
-}
-
-async function sendFileToPeer(uuid, fingerprintedFile) {
-    const { file, fingerprint } = fingerprintedFile;
-
-    console.log("sendFileToPeer, file is", file);
-
-    const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_FILES,
-        new EventSendFilesData({
-            uuid,
-            message: file.name,
-            size: file.size,
-            fingerprint,
-        })
-    );
-
-    (await peerConnectionManager).dispatchEvent(event);
-}
-
 async function sendErrorToPeer(uuid, message) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.ERROR,
@@ -115,12 +85,6 @@ async function sendErrorToPeer(uuid, message) {
     );
 
     (await peerConnectionManager).dispatchEvent(event);
-}
-
-function sendFilesToPeer(uuid, fingerprintedFiles) {
-    fingerprintedFiles.forEach((fingerprintedFile) => {
-        sendFileToPeer(uuid, fingerprintedFile);
-    });
 }
 
 async function requestDownloadFile(uuid, data) {
@@ -171,10 +135,6 @@ function addJoinedPeers(peers) {
 
 function deleteLeavedPeers(peers) {
     store.dispatch(deletePeer(peers));
-}
-
-function addMessagePacket(message) {
-    store.dispatch(addMessage(message));
 }
 
 function addFingerPrintedFiles(files) {
@@ -238,21 +198,6 @@ async function transferFileToPeer(fingerprint, uuid) {
     } else {
         transferFile(fingerprint, file, dataChannel, uuid);
     }
-}
-
-// TODO(young): deprecate messagePacket
-function getMessagePacket(fingerprint) {
-    // TODO: Make O(1)
-
-    const messagePacket = store
-        .getState()
-        .messagePackets.find((messagePacket) => {
-            const { data } = messagePacket;
-
-            return data.fingerprint === fingerprint;
-        });
-
-    return messagePacket;
 }
 
 function parsePeerChunk(chunkWithHeader) {
@@ -757,8 +702,6 @@ export {
     notifySharingData,
     notifySharingDataToPeer,
     notifyUser,
-    sendTextToPeer,
-    sendFilesToPeer,
     sendErrorToPeer,
     requestDownloadFile,
     sendMessageToServer,
@@ -766,7 +709,6 @@ export {
     closeWebSocket,
     addJoinedPeers,
     deleteLeavedPeers,
-    addMessagePacket,
     addFingerPrintedFiles,
     createMyUserInfo,
     getPeerUUID,

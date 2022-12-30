@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../schema";
 import {
     SOCKET_STATE,
     SOCKET_STATE_CODE,
@@ -13,7 +13,7 @@ function createWebSocketConnection(url) {
     const socket = new WebSocket(url);
 
     socket.addEventListener("open", async function (event) {
-        const message = createMessage(MESSAGE_TYPE.PING, {
+        const message = createMessage(SIGNALING_MESSAGE_TYPE.PING, {
             message: "ping, hello server!",
         });
         socket.send(message);
@@ -74,7 +74,7 @@ async function handleMessage(message, socket) {
     console.log("handleMessage, messageType is ", messageType);
     console.log("handleMessage, data is ", data);
 
-    if (messageType === MESSAGE_TYPE.UUID) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.UUID) {
         const { uuid } = data;
 
         // create metadata
@@ -89,7 +89,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.PEERS) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.PEERS) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
@@ -98,7 +98,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.JOIN) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.JOIN) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
@@ -107,7 +107,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.LEAVE) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.LEAVE) {
         const { peers } = data;
 
         const event = new LocalDropEvent(messageType, { peers });
@@ -116,23 +116,23 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.OFFER) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.OFFER) {
         const event = new LocalDropEvent(messageType, data);
         (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.ANSWER) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.ANSWER) {
         const event = new LocalDropEvent(messageType, data);
         (await peerConnectionManager).dispatchEvent(event);
 
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.PING) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.PING) {
         const myUUID = getMyUUID();
-        const message = createMessage(MESSAGE_TYPE.PONG, {
+        const message = createMessage(SIGNALING_MESSAGE_TYPE.PONG, {
             message: `[Client]: Pong!, uuid: #${myUUID}`,
         });
 
@@ -141,7 +141,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.PONG) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.PONG) {
         const { message } = data;
 
         console.log(`[pong from server]: ${message}`);
@@ -149,7 +149,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.ERROR) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.ERROR) {
         // show error!
         const errorMessage = data["message"];
 
@@ -161,7 +161,7 @@ async function handleMessage(message, socket) {
         return;
     }
 
-    if (messageType === MESSAGE_TYPE.ICE_CANDIDATE) {
+    if (messageType === SIGNALING_MESSAGE_TYPE.ICE_CANDIDATE) {
         const event = new LocalDropEvent(messageType, data);
 
         (await peerConnectionManager).dispatchEvent(event);

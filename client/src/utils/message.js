@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE } from "../schema";
 
 function createMessage(messageType, data) {
     const message = {
@@ -15,7 +15,7 @@ function parseMessage(rawMessage) {
         try {
             const message = JSON.parse(rawMessage);
 
-            if (!(message["messageType"] in MESSAGE_TYPE)) {
+            if (!(message["messageType"] in SIGNALING_MESSAGE_TYPE)) {
                 throw new Error(
                     `This messageType is not supported! type: ${message["messageType"]}`
                 );
@@ -24,7 +24,7 @@ function parseMessage(rawMessage) {
             return message;
         } catch (err) {
             return {
-                messageType: MESSAGE_TYPE.ERROR,
+                messageType: SIGNALING_MESSAGE_TYPE.ERROR,
                 data: {
                     message: err.message,
                 },

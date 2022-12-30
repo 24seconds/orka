@@ -1,7 +1,6 @@
 import {
     ADD_PEER,
     DELETE_PEER,
-    ADD_MESSAGE,
     UPDATE_MY_UUID,
     UPDATE_PEER_UUID,
     ADD_FILES,
@@ -27,11 +26,6 @@ export const addPeer = (peerList) => ({
 export const deletePeer = (peerList) => ({
     type: DELETE_PEER,
     payload: peerList,
-});
-
-export const addMessage = (message) => ({
-    type: ADD_MESSAGE,
-    payload: message,
 });
 
 export const updateMyUUID = (uuid) => ({

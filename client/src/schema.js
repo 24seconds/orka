@@ -6,7 +6,8 @@ import {
     EventErrorData,
 } from "./utils/dataSchema/LocalDropEventData";
 
-export const MESSAGE_TYPE = {
+// SIGNALING_MESSAGE_TYPE defines message from/to signaling server
+export const SIGNALING_MESSAGE_TYPE = {
     UUID: "UUID",
     PEERS: "PEERS",
     JOIN: "JOIN",
@@ -86,15 +87,13 @@ export const CLIENT_EVENT_TYPE = {
     SEND_USER_INFO: "SEND_USER_INFO",
     REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
     RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
-    SEND_TEXT: "SEND_TEXT",
-    SEND_FILES: "SEND_FILES",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
     RECONNECT: "RECONNECT",
     // TODO Change name to SEND_MESSAGE_TO_SIGNAL
     SEND_MESSAGE: "SEND_MESSAGE",
     CLOSE: "CLOSE",
     ERROR: "ERROR",
-    UPLOAD_LINK: "UPLOAD_LINK",
+    UPLOAD_SHARING_DATA: "UPLOAD_LINK",
     UPDATE_USER: "UPDATE_USER",
 };
 
@@ -113,8 +112,6 @@ export const PEER_MESSAGE_TYPE = {
     RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
     UPLOAD_LINK: "UPLOAD_LINK",
     UPDATE_USER: "UPDATE_USER",
-    TEXT: "TEXT",
-    FILE: "FILE",
     ERROR: "ERROR",
     DOWNLOAD: "DOWNLOAD",
     PEER_INFO: "PEER_INFO",
@@ -135,15 +132,6 @@ const peerMessageDataSchema = {
     },
     downloadDataSchema: { fingerprint: "string" },
     erroDataSchema: { message: "string" },
-};
-
-const messagePacketSchema = {
-    source: "uuid string",
-    destination: "uuid string",
-    type: "PEER_MESSAGE_TYPE string",
-    data: "peerDataSchema",
-    time: "date",
-    progress: "int",
 };
 
 const meesagePacketDownloadHeaderSchema = {

@@ -4,8 +4,7 @@ class messageUserInfoData {
     }
 }
 
-class messageRequestSharingData {
-}
+class messageRequestSharingData {}
 
 class messageResponseSharingData {
     constructor({ sharingData }) {
@@ -13,7 +12,7 @@ class messageResponseSharingData {
     }
 }
 
-class messageUploadLink {
+class messageUploadSharingData {
     constructor({ sharingData }) {
         this.sharingData = sharingData;
     }
@@ -22,22 +21,6 @@ class messageUploadLink {
 class messageUpdateUser {
     constructor({ user }) {
         this.user = user;
-    }
-}
-
-class messageTextData {
-    constructor({ message, size, fingerprint }) {
-        this.message = message;
-        this.size = size;
-        this.fingerprint = fingerprint;
-    }
-}
-
-class messageFileData {
-    constructor({ fingerprint, message, size }) {
-        this.fingerprint = fingerprint;
-        this.message = message;
-        this.size = size;
     }
 }
 
@@ -57,10 +40,8 @@ export {
     messageUserInfoData,
     messageRequestSharingData,
     messageResponseSharingData,
-    messageUploadLink,
+    messageUploadSharingData,
     messageUpdateUser,
-    messageTextData,
-    messageFileData,
     messageDownloadData,
     messageErrorData,
 };
