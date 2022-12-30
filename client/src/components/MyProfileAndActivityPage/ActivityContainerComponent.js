@@ -19,7 +19,6 @@ import HandsUpSectionComponent from "./HandsUpSectionComponent";
 const MiniProfile = styled.div`
     display: inline-block;
     border-radius: 50%;
-    background: #000000;
 
     img {
         width: 52px;

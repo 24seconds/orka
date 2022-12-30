@@ -5,13 +5,10 @@ import { IMAGE_URL } from "../../../constants/constant";
 import { getProfilePath } from "../../../utils/commonUtil";
 
 const PeerMiniProfile = styled.div`
-    width: 36px;
-    height: 36px;
     border-radius: 50%;
-
     img {
-        width: 100%;
-        height: 100%;
+        width: 36px;
+        height: 36px;
     }
 `;
 
