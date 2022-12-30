@@ -87,7 +87,6 @@ const InputStyle = styled.input`
 
 const MiniProfile = styled.div`
     border-radius: 50%;
-    background: #000000;
 
     img {
         width: 52px;

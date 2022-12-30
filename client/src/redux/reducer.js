@@ -20,7 +20,7 @@ import {
     UPDATE_TABLE_SHARING_DATA,
 } from "./actionType";
 import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
-import { LOCALDROP_APP_VERSION } from "../constants/constant";
+import { ORKA_APP_VERSION } from "../constants/constant";
 
 const initialState = { peers: [], message: [] };
 
@@ -236,7 +236,7 @@ function tableNotifications(state = 0, action) {
 }
 
 const defaultSystemMessage = {
-    message: `App version: ${LOCALDROP_APP_VERSION}\n\nHi, This is the first system message!`,
+    message: `App version: ${ORKA_APP_VERSION}\n\nHi, This is the first system message!`,
     fingerprint: generateFingerPrint(),
     createdAt: getCurrentTime(),
 };

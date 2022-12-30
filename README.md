@@ -124,6 +124,12 @@ REACT_APP_VERSION_NUMBER=v0.1.0
 BROWSER=none  
 ```
 
+### Verify downloaded file
+This is for checking download function works as expected. There is a file for this `verify_file.js`. You can use it as below.
+```sh
+$ node verify/verify_file.js vercel_build.sh ~/Downloads/vercel_build.sh
+```
+
 -------
 
 ### RoadMap
