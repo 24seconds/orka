@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import GithubLogo from "../assets/GithubLogo";
 import { mobileWidth } from "../constants/styleConstants";
-import { LOCALDROP_APP_VERSION } from "../constants/constant";
+import { ORKA_APP_VERSION } from "../constants/constant";
 
 const Footer = styled.div`
     display: flex;
@@ -55,7 +55,7 @@ function FooterComponent() {
                 repo : localdrop
             </div>
             <div className="localdrop-app-version">
-                {`version: ${LOCALDROP_APP_VERSION}`}
+                {`version: ${ORKA_APP_VERSION}`}
             </div>
         </Footer>
     );

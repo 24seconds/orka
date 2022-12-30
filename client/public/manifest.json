@@ -1,6 +1,6 @@
 {
-  "short_name": "LocalDrop",
-  "name": "LocalDrop",
+  "short_name": "Orka",
+  "name": "Orka",
   "start_url": ".",
   "display": "standalone",
   "categories": ["utilities", ""],
