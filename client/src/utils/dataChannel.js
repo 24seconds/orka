@@ -12,14 +12,12 @@ import {
     notifySharingDataToPeer,
     upsertTableSharingData,
     patchTableUsersByID,
-    addMessagePacket,
     transferFileToPeer,
     selectTableSharingDataByID,
     patchTableSharingDataByID,
     notifySharingData,
 } from "./localApi";
 import LocalDropEvent from "./LocalDropEvent";
-import { createMessagePacket } from "./messagePacket";
 
 function registerDataChannelEventOnOpen(
     peerConnectionManager,
@@ -133,40 +131,6 @@ async function handleDataChannelMessage(event, uuid) {
         const { user } = data;
         const { id: userID, name, profile } = user;
         await patchTableUsersByID({ name, profile }, userID);
-
-        return;
-    }
-
-    if (messageType === PEER_MESSAGE_TYPE.TEXT) {
-        const messagePacket = createMessagePacket({
-            source: uuid,
-            destination: getMyUUID(),
-            data,
-            messageType,
-        });
-
-        console.log(
-            "[handleDataChannelMessage]: messagePacket is ",
-            messagePacket
-        );
-        addMessagePacket(messagePacket);
-
-        return;
-    }
-
-    if (messageType === PEER_MESSAGE_TYPE.FILE) {
-        const messagePacket = createMessagePacket({
-            source: uuid,
-            destination: getMyUUID(),
-            data,
-            messageType,
-        });
-
-        console.log(
-            "[handleDataChannelMessage]: messagePacket is ",
-            messagePacket
-        );
-        addMessagePacket(messagePacket);
 
         return;
     }

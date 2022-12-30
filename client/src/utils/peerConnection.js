@@ -2,8 +2,6 @@
 /* eslint-disable indent */
 import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import {
-    messageTextData,
-    messageFileData,
     messageDownloadData,
     messageErrorData,
     messageUserInfoData,
@@ -433,82 +431,6 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 
                 dataChannel.send(peerMessage);
             }
-        }
-    );
-
-    peerConnectionManager.addEventListener(
-        CLIENT_EVENT_TYPE.SEND_TEXT,
-        (event) => {
-            const { uuid, message } = event;
-
-            if (!peerConnectionManager.peerConnections[uuid]) {
-                writeSystemMessage(`can not find peer: #${uuid}`);
-                return;
-            }
-
-            const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-            const data = new messageTextData({
-                message,
-                size: message.length,
-                fingerprint: generateFingerPrint(),
-            });
-
-            const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.TEXT, data);
-
-            console.log(
-                "CLIENT_EVENT_TYPE.SEND_TEXT, message is ",
-                peerMessage
-            );
-
-            console.log("dataChannel is ", dataChannel);
-            console.log("dataChannel.readyState is ", dataChannel.readyState);
-
-            if (dataChannel.readyState !== "open") {
-                writeSystemMessage(
-                    "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
-                        dataChannel.readyState
-                );
-                console.log("dataChannel not opened!, click the peer again!");
-                return;
-            }
-
-            dataChannel.send(peerMessage);
-        }
-    );
-
-    peerConnectionManager.addEventListener(
-        CLIENT_EVENT_TYPE.SEND_FILES,
-        (event) => {
-            const { uuid, message, size, fingerprint } = event;
-
-            if (!peerConnectionManager.peerConnections[uuid]) {
-                writeSystemMessage(`can not find peer: #${uuid}`);
-                return;
-            }
-
-            const { dataChannel } = peerConnectionManager.peerConnections[uuid];
-            const data = new messageFileData({ fingerprint, size, message });
-
-            const peerMessage = createPeerMessage(PEER_MESSAGE_TYPE.FILE, data);
-
-            console.log(
-                "CLIENT_EVENT_TYPE.SEND_FILES, message is ",
-                peerMessage
-            );
-
-            console.log("dataChannel is ", dataChannel);
-            console.log("dataChannel.readyState is ", dataChannel.readyState);
-
-            if (dataChannel.readyState !== "open") {
-                writeSystemMessage(
-                    "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
-                        dataChannel.readyState
-                );
-                console.log("dataChannel not opened!, click the peer again!");
-                return;
-            }
-
-            dataChannel.send(peerMessage);
         }
     );
 

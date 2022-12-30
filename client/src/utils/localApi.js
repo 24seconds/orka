@@ -78,35 +78,6 @@ async function notifyUser(user) {
     (await peerConnectionManager).dispatchEvent(event);
 }
 
-async function sendTextToPeer(uuid, text) {
-    console.log("sendTextToPeer called");
-
-    const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_TEXT,
-        new EventSendTextData({ uuid, message: text })
-    );
-
-    (await peerConnectionManager).dispatchEvent(event);
-}
-
-async function sendFileToPeer(uuid, fingerprintedFile) {
-    const { file, fingerprint } = fingerprintedFile;
-
-    console.log("sendFileToPeer, file is", file);
-
-    const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_FILES,
-        new EventSendFilesData({
-            uuid,
-            message: file.name,
-            size: file.size,
-            fingerprint,
-        })
-    );
-
-    (await peerConnectionManager).dispatchEvent(event);
-}
-
 async function sendErrorToPeer(uuid, message) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.ERROR,
@@ -114,12 +85,6 @@ async function sendErrorToPeer(uuid, message) {
     );
 
     (await peerConnectionManager).dispatchEvent(event);
-}
-
-function sendFilesToPeer(uuid, fingerprintedFiles) {
-    fingerprintedFiles.forEach((fingerprintedFile) => {
-        sendFileToPeer(uuid, fingerprintedFile);
-    });
 }
 
 async function requestDownloadFile(uuid, data) {
@@ -737,8 +702,6 @@ export {
     notifySharingData,
     notifySharingDataToPeer,
     notifyUser,
-    sendTextToPeer,
-    sendFilesToPeer,
     sendErrorToPeer,
     requestDownloadFile,
     sendMessageToServer,
