@@ -3,13 +3,6 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { connect } from "react-redux";
 import "./utils/localApi";
 import "./utils/window";
-import HeaderComponent from "./components/HeaderComponent";
-import PeerTabComponent from "./components/Message/PeerTabComponent";
-import MetaDataComponent from "./components/MetaData/MetaDataComponent";
-import MessageTableComponent from "./components/Message/MessageTableComponent";
-import MessageTableHeaderComponent from "./components/Message/MessageTableHeaderComponent";
-import FooterComponent from "./components/FooterComponent";
-import SendComponent from "./components/Send/SendComponent";
 import { mobileWidth } from "./constants/styleConstants";
 import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
@@ -173,15 +166,7 @@ class App extends Component {
                         {shouldOpenCommentLayout && <CommentLayoutComponent />}
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
-                            <SendComponent />
-                            <MetaDataComponent
-                                onChangeTheme={this.onChangeTheme}
-                            />
-                            <PeerTabComponent />
-                            <MessageTableHeaderComponent />
                         </MobileSticky>
-                        <MessageTableComponent />
-                        <FooterComponent />
                     </Container> */}
                     </OrkaContainer>
                 </OrkaApp>
