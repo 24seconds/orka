@@ -53,7 +53,7 @@ import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
 
 async function notifySharingData(data) {
     const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.UPLOAD_LINK,
+        CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
         new EventUploadLink({ sharingData: data })
     );
 

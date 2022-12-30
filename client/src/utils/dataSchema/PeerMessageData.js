@@ -12,7 +12,7 @@ class messageResponseSharingData {
     }
 }
 
-class messageUploadLink {
+class messageUploadSharingData {
     constructor({ sharingData }) {
         this.sharingData = sharingData;
     }
@@ -40,7 +40,7 @@ export {
     messageUserInfoData,
     messageRequestSharingData,
     messageResponseSharingData,
-    messageUploadLink,
+    messageUploadSharingData,
     messageUpdateUser,
     messageDownloadData,
     messageErrorData,

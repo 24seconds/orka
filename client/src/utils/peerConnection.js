@@ -5,7 +5,7 @@ import {
     messageDownloadData,
     messageErrorData,
     messageUserInfoData,
-    messageUploadLink,
+    messageUploadSharingData,
     messageUpdateUser,
     messageRequestSharingData,
     messageResponseSharingData,
@@ -345,11 +345,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     );
 
     peerConnectionManager.addEventListener(
-        CLIENT_EVENT_TYPE.UPLOAD_LINK,
+        CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
         async (event) => {
             const { sharingData } = event;
             console.log(
-                "CLIENT_EVENT_TYPE.UPLOAD_LINK, data:",
+                "CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA, data:",
                 sharingData,
                 peerConnectionManager,
                 !!peerConnectionManager.peerConnections
@@ -365,7 +365,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             )) {
                 const { dataChannel } =
                     peerConnectionManager.peerConnections[uuid];
-                const data = new messageUploadLink({ sharingData });
+                const data = new messageUploadSharingData({ sharingData });
 
                 const peerMessage = createPeerMessage(
                     PEER_MESSAGE_TYPE.UPLOAD_LINK,

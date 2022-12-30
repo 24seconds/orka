@@ -161,4 +161,8 @@ async function handleDataChannelMessage(event, uuid) {
     }
 }
 
-export { registerDataChannelEventOnOpen, registerDataChannelEventOnClose, handleDataChannelMessage};
+export {
+    registerDataChannelEventOnOpen,
+    registerDataChannelEventOnClose,
+    handleDataChannelMessage,
+};
