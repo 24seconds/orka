@@ -13,7 +13,7 @@ import {
 import { createMessage } from "../message";
 import { createPeerMessage } from "../peerMessage";
 import {
-    sendMessageToServer,
+    sendMessageToSignalingServer,
     addJoinedPeers,
     deleteLeavedPeers,
     createMyUserInfo,
@@ -75,7 +75,7 @@ function createPeerConnection(uuid) {
                 ice: event.candidate,
             });
 
-            sendMessageToServer(message);
+            sendMessageToSignalingServer(message);
         } else {
             // All ICE candidates have been sent
         }
@@ -210,7 +210,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     offer,
                 });
 
-                sendMessageToServer(message);
+                sendMessageToSignalingServer(message);
             } catch (error) {
                 writeSystemMessage(JSON.stringify(error, undefined, 2));
             }
@@ -367,12 +367,12 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 const data = new messageUploadSharingData({ sharingData });
 
                 const peerMessage = createPeerMessage(
-                    PEER_MESSAGE_TYPE.UPLOAD_LINK,
+                    PEER_MESSAGE_TYPE.UPLOAD_SHARING_DATA,
                     data
                 );
 
                 console.log(
-                    "CLIENT_EVENT_TYPE.UPLOAD_LINK, message is ",
+                    "CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA, message is ",
                     peerMessage
                 );
 
@@ -654,7 +654,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
                     answer,
                 });
 
-                sendMessageToServer(message);
+                sendMessageToSignalingServer(message);
             } catch (err) {
                 writeSystemMessage(JSON.stringify(err, undefined, 2));
             }

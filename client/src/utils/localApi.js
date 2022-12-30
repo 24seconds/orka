@@ -112,9 +112,9 @@ async function connectToPeer(uuid) {
     (await peerConnectionManager).dispatchEvent(event);
 }
 
-function sendMessageToServer(message) {
+function sendMessageToSignalingServer(message) {
     const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_MESSAGE,
+        CLIENT_EVENT_TYPE.SEND_MESSAGE_TO_SIGNALING_SERVER,
         new EventSendMessageData({ message })
     );
 
@@ -702,7 +702,7 @@ export {
     notifyUser,
     sendErrorToPeer,
     requestDownloadFile,
-    sendMessageToServer,
+    sendMessageToSignalingServer,
     connectToPeer,
     closeWebSocket,
     addJoinedPeers,

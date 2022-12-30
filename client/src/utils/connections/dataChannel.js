@@ -120,7 +120,7 @@ async function handleDataChannelMessage(event, uuid) {
         return;
     }
 
-    if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
+    if (messageType === PEER_MESSAGE_TYPE.UPLOAD_SHARING_DATA) {
         const { sharingData } = data;
         await upsertTableSharingData({ sharingData });
 

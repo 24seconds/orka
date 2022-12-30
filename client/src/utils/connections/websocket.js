@@ -171,7 +171,7 @@ async function handleMessage(message, socket) {
 
 function addCustomMessageTypeEventListener(webSocketManager) {
     webSocketManager.addEventListener(
-        CLIENT_EVENT_TYPE.SEND_MESSAGE,
+        CLIENT_EVENT_TYPE.SEND_MESSAGE_TO_SIGNALING_SERVER,
         (event) => {
             const { message } = event;
 
