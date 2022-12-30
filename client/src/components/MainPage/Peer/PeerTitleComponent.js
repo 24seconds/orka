@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { IMAGE_URL } from "../../../constants/constant";
 import { getProfilePath } from "../../../utils/commonUtil";
+import PeerNameTooltipComponent from "./PeerNameTooltipComponent";
 
 const PeerMiniProfile = styled.div`
     border-radius: 50%;
@@ -30,13 +31,6 @@ const PeerName = styled.div`
     white-space: nowrap;
 
     color: ${(props) => props.theme.Button};
-
-    // TODO(young): Not sure about how to handle this.
-    &:hover {
-        overflow: visible;
-        white-space: normal;
-        height: auto;
-    }
 `;
 
 const PeerTitle = styled.div`
@@ -57,6 +51,17 @@ function PeerTitleComponent(props) {
     const { name, profile } = props;
 
     const profilePath = getProfilePath(profile);
+    const peerNameEl = useRef(null);
+    const [tooltipPosition, setTooltipPosition] = useState([0, 0]);
+
+    function onMouseEnter() {
+        const { right, bottom } = peerNameEl.current.getBoundingClientRect();
+        setTooltipPosition([right - 100, bottom + 10]);
+    }
+
+    function onMouseLeave() {
+        setTooltipPosition([0, 0]);
+    }
 
     return (
         <PeerTitle>
@@ -64,7 +69,19 @@ function PeerTitleComponent(props) {
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="peer profile" />
             </PeerMiniProfile>
             <PeerNameContainer>
-                <PeerName>{name}</PeerName>
+                <PeerName
+                    ref={peerNameEl}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                >
+                    {name}
+                </PeerName>
+                {tooltipPosition[0] !== 0 && tooltipPosition[1] !== 0 && (
+                    <PeerNameTooltipComponent
+                        name={name}
+                        position={tooltipPosition}
+                    />
+                )}
             </PeerNameContainer>
         </PeerTitle>
     );
