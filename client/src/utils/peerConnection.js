@@ -1,6 +1,6 @@
 // TODO(young): remove this later
 /* eslint-disable indent */
-import { MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import {
     messageDownloadData,
     messageErrorData,
@@ -12,7 +12,6 @@ import {
 } from "./dataSchema/PeerMessageData";
 import { createMessage } from "./message";
 import { createPeerMessage } from "./peerMessage";
-import { generateFingerPrint } from "./commonUtil";
 import {
     sendMessageToServer,
     addJoinedPeers,
@@ -70,7 +69,7 @@ function createPeerConnection(uuid) {
 
         if (event.candidate) {
             // Send the candidate to the remote peer
-            const message = createMessage(MESSAGE_TYPE.ICE_CANDIDATE, {
+            const message = createMessage(SIGNALING_MESSAGE_TYPE.ICE_CANDIDATE, {
                 fromUUID: getMyUUID(),
                 toUUID: uuid,
                 ice: event.candidate,
@@ -205,7 +204,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             try {
                 const myUUID = peerConnectionManager.uuid;
                 const offer = await createOffer(peerConnection);
-                const message = createMessage(MESSAGE_TYPE.OFFER, {
+                const message = createMessage(SIGNALING_MESSAGE_TYPE.OFFER, {
                     fromUUID: myUUID,
                     toUUID,
                     offer,
@@ -513,7 +512,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 }
 
 function addMessageTypeEventListener(peerConnectionManager) {
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.UUID, async (event) => {
+    peerConnectionManager.addEventListener(SIGNALING_MESSAGE_TYPE.UUID, async (event) => {
         const { uuid } = event;
 
         peerConnectionManager.uuid = uuid;
@@ -524,7 +523,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
 
     // peer list 받았을 때 connection을 다 바로 맺네?
     peerConnectionManager.addEventListener(
-        MESSAGE_TYPE.PEERS,
+        SIGNALING_MESSAGE_TYPE.PEERS,
         async (event) => {
             const { peers } = event;
             const filteredPeers = peers.filter(
@@ -557,7 +556,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     );
 
     // peer가 join 했다고 알림을 받으면 마찬가지로 connection을 맺으려고 하네?
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.JOIN, async (event) => {
+    peerConnectionManager.addEventListener(SIGNALING_MESSAGE_TYPE.JOIN, async (event) => {
         const { peers } = event;
         const filteredPeers = peers.filter(
             (peerUUID) => peerUUID !== peerConnectionManager.uuid
@@ -586,7 +585,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     });
 
     peerConnectionManager.addEventListener(
-        MESSAGE_TYPE.LEAVE,
+        SIGNALING_MESSAGE_TYPE.LEAVE,
         async (event) => {
             const { peers } = event;
             const filteredPeers = peers.filter(
@@ -623,7 +622,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     );
 
     peerConnectionManager.addEventListener(
-        MESSAGE_TYPE.OFFER,
+        SIGNALING_MESSAGE_TYPE.OFFER,
         async (event) => {
             const { fromUUID, toUUID, offer, timeStamp } = event;
 
@@ -649,7 +648,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
                 await setRemoteOffer(peerConnection, offer);
 
                 const answer = await createAnswer(peerConnection);
-                const message = createMessage(MESSAGE_TYPE.ANSWER, {
+                const message = createMessage(SIGNALING_MESSAGE_TYPE.ANSWER, {
                     fromUUID: toUUID,
                     toUUID: fromUUID,
                     answer,
@@ -663,7 +662,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     );
 
     peerConnectionManager.addEventListener(
-        MESSAGE_TYPE.ANSWER,
+        SIGNALING_MESSAGE_TYPE.ANSWER,
         async (event) => {
             const { fromUUID, toUUID, answer, timeStamp } = event;
 
@@ -682,7 +681,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
         }
     );
 
-    peerConnectionManager.addEventListener(MESSAGE_TYPE.ERROR, (event) => {
+    peerConnectionManager.addEventListener(SIGNALING_MESSAGE_TYPE.ERROR, (event) => {
         // handle error later
 
         const { message } = event;
@@ -690,7 +689,7 @@ function addMessageTypeEventListener(peerConnectionManager) {
     });
 
     peerConnectionManager.addEventListener(
-        MESSAGE_TYPE.ICE_CANDIDATE,
+        SIGNALING_MESSAGE_TYPE.ICE_CANDIDATE,
         async (event) => {
             const { fromUUID, toUUID, ice } = event;
 

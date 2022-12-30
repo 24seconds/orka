@@ -6,7 +6,8 @@ import {
     EventErrorData,
 } from "./utils/dataSchema/LocalDropEventData";
 
-export const MESSAGE_TYPE = {
+// SIGNALING_MESSAGE_TYPE defines message from/to signaling server
+export const SIGNALING_MESSAGE_TYPE = {
     UUID: "UUID",
     PEERS: "PEERS",
     JOIN: "JOIN",
