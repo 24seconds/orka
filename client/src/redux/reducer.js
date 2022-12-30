@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import {
     ADD_PEER,
     DELETE_PEER,
-    ADD_MESSAGE,
     UPDATE_MY_UUID,
     UPDATE_PEER_UUID,
     ADD_FILES,
@@ -48,17 +47,6 @@ function localDropState(state = initialState, action) {
         const newPeers = newState.peers.filter((peer) => !peerSet.has(peer));
         console.log("newPeers is ", newPeers);
         newState.peers = newPeers;
-
-        return newState;
-    }
-
-    return state;
-}
-
-function messagePackets(state = [], action) {
-    if (action.type === ADD_MESSAGE) {
-        const message = action.payload;
-        const newState = [...state, message];
 
         return newState;
     }
@@ -254,7 +242,6 @@ function systemMessages(state = [defaultSystemMessage], action) {
 
 export default combineReducers({
     localDropState,
-    messagePackets,
     myUUID,
     peerUUID,
     filesToTransfer,

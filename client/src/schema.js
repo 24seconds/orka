@@ -137,15 +137,6 @@ const peerMessageDataSchema = {
     erroDataSchema: { message: "string" },
 };
 
-const messagePacketSchema = {
-    source: "uuid string",
-    destination: "uuid string",
-    type: "PEER_MESSAGE_TYPE string",
-    data: "peerDataSchema",
-    time: "date",
-    progress: "int",
-};
-
 const meesagePacketDownloadHeaderSchema = {
     fingerprint: "35 bytes",
 };

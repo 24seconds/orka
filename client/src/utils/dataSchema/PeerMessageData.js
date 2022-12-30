@@ -4,8 +4,7 @@ class messageUserInfoData {
     }
 }
 
-class messageRequestSharingData {
-}
+class messageRequestSharingData {}
 
 class messageResponseSharingData {
     constructor({ sharingData }) {

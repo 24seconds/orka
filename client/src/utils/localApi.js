@@ -17,7 +17,6 @@ import store from "../redux/store";
 import {
     addPeer,
     deletePeer,
-    addMessage,
     updateMyUUID,
     addSystemMessage,
     updateSelectedPeer,
@@ -173,10 +172,6 @@ function deleteLeavedPeers(peers) {
     store.dispatch(deletePeer(peers));
 }
 
-function addMessagePacket(message) {
-    store.dispatch(addMessage(message));
-}
-
 function addFingerPrintedFiles(files) {
     store.dispatch(addFiles(files));
 }
@@ -238,21 +233,6 @@ async function transferFileToPeer(fingerprint, uuid) {
     } else {
         transferFile(fingerprint, file, dataChannel, uuid);
     }
-}
-
-// TODO(young): deprecate messagePacket
-function getMessagePacket(fingerprint) {
-    // TODO: Make O(1)
-
-    const messagePacket = store
-        .getState()
-        .messagePackets.find((messagePacket) => {
-            const { data } = messagePacket;
-
-            return data.fingerprint === fingerprint;
-        });
-
-    return messagePacket;
 }
 
 function parsePeerChunk(chunkWithHeader) {
@@ -766,7 +746,6 @@ export {
     closeWebSocket,
     addJoinedPeers,
     deleteLeavedPeers,
-    addMessagePacket,
     addFingerPrintedFiles,
     createMyUserInfo,
     getPeerUUID,
