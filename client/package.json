@@ -11,6 +11,7 @@
         "@testing-library/react": "^13.3.0",
         "@testing-library/user-event": "^14.4.2",
         "concurrently": "^7.3.0",
+        "env-cmd": "^10.1.0",
         "gluesql": "^0.13.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -24,7 +25,9 @@
     },
     "scripts": {
         "start": "react-scripts start",
+        "build:staging": "env-cmd -f .env.staging react-scripts build",
         "build": "react-scripts build",
+        "build:vercel": "./vercel_build.sh",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "serve-service-worker": "./run_serve.sh",

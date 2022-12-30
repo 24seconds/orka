@@ -163,7 +163,10 @@ function ProfileEditNameComponent(props) {
     }
 
     async function onUpdateName() {
-        const user = await patchTableUsersByID({ name: myUserName.trim() }, myOrkaUUID);
+        const user = await patchTableUsersByID(
+            { name: myUserName.trim() },
+            myOrkaUUID
+        );
 
         // notify to other peers
         if (!!user) {
