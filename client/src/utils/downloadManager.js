@@ -1,7 +1,6 @@
 import {
     parsePeerChunk,
     sendErrorToPeer,
-    getMyUUID,
     writeSystemMessage,
     selectTableSharingDataByID,
 } from "./localApi";

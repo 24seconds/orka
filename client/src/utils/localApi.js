@@ -9,6 +9,7 @@ import {
     EventErrorData,
     EventUploadLink,
     EventUpdateUser,
+    EventResponseSharingData,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import websocketManager from "./websocket";
@@ -55,6 +56,15 @@ async function notifySharingData(data) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.UPLOAD_LINK,
         new EventUploadLink({ sharingData: data })
+    );
+
+    (await peerConnectionManager).dispatchEvent(event);
+}
+
+async function notifySharingDataToPeer(data, uuid) {
+    const event = new LocalDropEvent(
+        CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+        new EventResponseSharingData({ sharingData: data, uuid })
     );
 
     (await peerConnectionManager).dispatchEvent(event);
@@ -515,6 +525,18 @@ async function upsertTableSharingData({ sharingData }) {
     return result?.[0]?.rows?.[0];
 }
 
+async function selectTableSharingDataByUserID(userID) {
+    const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
+        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}";`;
+
+    console.log("query:", query);
+
+    const result = await run(query);
+    console.log("result:", result);
+
+    return result?.[0]?.rows;
+}
+
 async function selectTableSharingDataByID(id) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
         WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";`;
@@ -733,6 +755,7 @@ async function selectTableNotificationsWithUserAndSharingData() {
 
 export {
     notifySharingData,
+    notifySharingDataToPeer,
     notifyUser,
     sendTextToPeer,
     sendFilesToPeer,
@@ -771,6 +794,7 @@ export {
     createTableSharingData,
     upsertTableSharingData,
     updateTableSharingData,
+    selectTableSharingDataByUserID,
     selectTableSharingDataByID,
     selectTableSharingDataWithCommentCount,
     selectTableSharingDataWithCommentCountOrderBy,

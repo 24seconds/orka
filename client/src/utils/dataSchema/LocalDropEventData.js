@@ -4,6 +4,13 @@ class EventSendUserInfo {
     }
 }
 
+class EventResponseSharingData {
+    constructor({ sharingData, uuid }) {
+        this.sharingData = sharingData;
+        this.uuid = uuid;
+    }
+}
+
 class EventUploadLink {
     constructor({ sharingData }) {
         this.sharingData = sharingData;
@@ -60,6 +67,7 @@ class EventErrorData {
 
 export {
     EventSendUserInfo,
+    EventResponseSharingData,
     EventUploadLink,
     EventUpdateUser,
     EventSendTextData,

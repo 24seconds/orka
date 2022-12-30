@@ -84,6 +84,8 @@ export const CLIENT_EVENT_TYPE = {
     CONNECT: "CONNECT",
     // send my user info to peer
     SEND_USER_INFO: "SEND_USER_INFO",
+    REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
+    RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
     SEND_TEXT: "SEND_TEXT",
     SEND_FILES: "SEND_FILES",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
@@ -107,6 +109,8 @@ const clientEventDataSchema = {
 // PEER_MESSAGE_TYPE defines event occurred from outside - peer connected by webRTC
 export const PEER_MESSAGE_TYPE = {
     USER_INFO: "USER_INFO",
+    REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
+    RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
     UPLOAD_LINK: "UPLOAD_LINK",
     UPDATE_USER: "UPDATE_USER",
     TEXT: "TEXT",
