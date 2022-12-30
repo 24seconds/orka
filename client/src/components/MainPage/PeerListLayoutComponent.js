@@ -9,10 +9,10 @@ import {
 import PeerComponent from "./Peer/PeerComponent";
 
 const PeerListLayout = styled.div`
+    width: 520px;
     display: inline-grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 14px;
-    padding: 2px;
 
     flex-grow: 1;
     min-height: 0;
