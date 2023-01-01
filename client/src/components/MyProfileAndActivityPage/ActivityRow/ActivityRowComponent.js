@@ -155,6 +155,7 @@ function renderAction(
     onClick,
     onClickHandsUp,
     onClickDonwloadButton,
+    onClickURLNavigate,
     onCancelHandsUp
 ) {
     if (isEditMode) {
@@ -177,7 +178,7 @@ function renderAction(
         ) : (
             <ActionButtonComponent
                 type={dataType === "URL" ? "TEXT" : "FILE"}
-                onClick={onClickDonwloadButton}
+                onClick={dataType === "URL" ? onClickURLNavigate : onClickDonwloadButton}
             />
         );
     };
@@ -236,6 +237,10 @@ function ActivityRowComponent(props) {
         event?.stopPropagation();
         // TODO(young): fingerprint should be renamed to sharingDataID
         await requestDownloadFile(senderID, { fingerprint: rowID });
+    }
+
+    function onClickURLNavigate() {
+        window.open(dataURL, '_blank');
     }
 
     async function onClickHandsUp(event) {
@@ -312,6 +317,7 @@ function ActivityRowComponent(props) {
                     onClickDeleteButton,
                     onClickHandsUp,
                     onClickDonwloadButton,
+                    onClickURLNavigate,
                     onCancelHandsUp
                 )}
             </div>

@@ -27,7 +27,7 @@ function ActionButtonComponent(props) {
     const { type, onClick } = props;
 
     return (
-        <ActionButton type={type} onClick={type === "FILE" ? onClick : null}>
+        <ActionButton type={type} onClick={onClick}>
             <DownloadArrowIcon />
         </ActionButton>
     );
