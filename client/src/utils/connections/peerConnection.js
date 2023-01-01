@@ -37,7 +37,7 @@ function createPeerConnection(uuid) {
 
     // TODO: Handle createDataChannel error later
     const dataChannel = peerConnection.createDataChannel(
-        "localdropDataChannel",
+        "orkaDataChannel",
         {
             negotiated: true,
             id: 0,
