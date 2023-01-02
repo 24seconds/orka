@@ -1,8 +1,6 @@
-import { peerConnectionManager } from "./peerConnection";
+import { peerConnectionManager } from "./connections/peerConnection";
 import LocalDropEvent from "./LocalDropEvent";
 import {
-    EventSendTextData,
-    EventSendFilesData,
     EventDownloadFileData,
     EventConnectData,
     EventSendMessageData,
@@ -12,13 +10,12 @@ import {
     EventResponseSharingData,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
-import websocketManager from "./websocket";
+import websocketManager from "./connections/websocket";
 import store from "../redux/store";
 import {
     addPeer,
     deletePeer,
     updateMyUUID,
-    addSystemMessage,
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
@@ -29,12 +26,7 @@ import {
     addFiles,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
-import {
-    getCurrentTime,
-    generateFingerPrint,
-    generateUserProfile,
-    generateSharingDataUUID,
-} from "./commonUtil";
+import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,
@@ -114,9 +106,9 @@ async function connectToPeer(uuid) {
     (await peerConnectionManager).dispatchEvent(event);
 }
 
-function sendMessageToServer(message) {
+function sendMessageToSignalingServer(message) {
     const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.SEND_MESSAGE,
+        CLIENT_EVENT_TYPE.SEND_MESSAGE_TO_SIGNALING_SERVER,
         new EventSendMessageData({ message })
     );
 
@@ -178,7 +170,7 @@ async function transferFileToPeer(fingerprint, uuid) {
         const systemMessage =
             `#${uuid} requested download but uuid not found : ` +
             JSON.stringify({ fingerprint, file }, undefined, 2);
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
         return;
     }
 
@@ -206,16 +198,6 @@ function parsePeerChunk(chunkWithHeader) {
 
 async function writePeerChunk(chunkWithHeader, uuid) {
     await accumulateChunk(chunkWithHeader, uuid);
-}
-
-function writeSystemMessage(message) {
-    const systemMessage = {
-        message,
-        fingerprint: generateFingerPrint(),
-        createdAt: getCurrentTime(),
-    };
-
-    store.dispatch(addSystemMessage(systemMessage));
 }
 
 function updateSelectedPeerUUID(uuid) {
@@ -704,7 +686,7 @@ export {
     notifyUser,
     sendErrorToPeer,
     requestDownloadFile,
-    sendMessageToServer,
+    sendMessageToSignalingServer,
     connectToPeer,
     closeWebSocket,
     addJoinedPeers,
@@ -717,7 +699,6 @@ export {
     transferFileToPeer,
     parsePeerChunk,
     writePeerChunk,
-    writeSystemMessage,
     abortDownloadFile,
     updateSelectedPeerUUID,
     updateSelectedRowID,

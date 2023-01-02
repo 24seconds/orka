@@ -1,6 +1,6 @@
 import { SIGNALING_MESSAGE_TYPE } from "../schema";
 
-function createMessage(messageType, data) {
+function createSignalingMessage(messageType, data) {
     const message = {
         messageType,
         data,
@@ -9,7 +9,7 @@ function createMessage(messageType, data) {
     return JSON.stringify(message);
 }
 
-function parseMessage(rawMessage) {
+function parseSignalingMessage(rawMessage) {
     console.log("rawMessage is ", rawMessage);
     const parsedMessage = ((rawMessage) => {
         try {
@@ -35,4 +35,4 @@ function parseMessage(rawMessage) {
     return parsedMessage;
 }
 
-export { createMessage, parseMessage };
+export { createSignalingMessage, parseSignalingMessage };

@@ -1,19 +1,22 @@
-import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../schema";
+import { SIGNALING_MESSAGE_TYPE, CLIENT_EVENT_TYPE } from "../../schema";
 import {
     SOCKET_STATE,
     SOCKET_STATE_CODE,
     WEBSOCKET_CLOSE_EVENT_CODE,
-} from "./dataSchema/WebSocketData";
-import { createMessage, parseMessage } from "./message";
+} from "../dataSchema/WebSocketData";
+import {
+    createSignalingMessage,
+    parseSignalingMessage,
+} from "../signaling_message";
 import { peerConnectionManager } from "./peerConnection";
-import LocalDropEvent from "./LocalDropEvent";
-import { writeSystemMessage, getMyUUID } from "./localApi";
+import LocalDropEvent from "../LocalDropEvent";
+import { getMyUUID } from "../localApi";
 
 function createWebSocketConnection(url) {
     const socket = new WebSocket(url);
 
     socket.addEventListener("open", async function (event) {
-        const message = createMessage(SIGNALING_MESSAGE_TYPE.PING, {
+        const message = createSignalingMessage(SIGNALING_MESSAGE_TYPE.PING, {
             message: "ping, hello server!",
         });
         socket.send(message);
@@ -23,7 +26,7 @@ function createWebSocketConnection(url) {
         console.log("[Message form server], event is ", rawMessage);
         console.log("[Message from server] ", rawMessage.data);
 
-        const message = parseMessage(rawMessage.data);
+        const message = parseSignalingMessage(rawMessage.data);
 
         // handle message depends on messageType
         handleMessage(message, socket);
@@ -48,7 +51,7 @@ function createWebSocketConnection(url) {
         const systemMessage =
             "Websocket connection closed, " +
             JSON.stringify(payload, undefined, 2);
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
     });
 
     socket.addEventListener("error", (event) => {
@@ -59,7 +62,7 @@ function createWebSocketConnection(url) {
             event,
         };
 
-        writeSystemMessage(
+        console.log(
             "websocket error: " + JSON.stringify(payload, undefined, 2)
         );
     });
@@ -132,7 +135,7 @@ async function handleMessage(message, socket) {
 
     if (messageType === SIGNALING_MESSAGE_TYPE.PING) {
         const myUUID = getMyUUID();
-        const message = createMessage(SIGNALING_MESSAGE_TYPE.PONG, {
+        const message = createSignalingMessage(SIGNALING_MESSAGE_TYPE.PONG, {
             message: `[Client]: Pong!, uuid: #${myUUID}`,
         });
 
@@ -171,7 +174,7 @@ async function handleMessage(message, socket) {
 
 function addCustomMessageTypeEventListener(webSocketManager) {
     webSocketManager.addEventListener(
-        CLIENT_EVENT_TYPE.SEND_MESSAGE,
+        CLIENT_EVENT_TYPE.SEND_MESSAGE_TO_SIGNALING_SERVER,
         (event) => {
             const { message } = event;
 
@@ -219,7 +222,7 @@ function createWebSocketManager(url) {
             const message =
                 `websocket it not opened! state: ` +
                 SOCKET_STATE_CODE[socket.readyState];
-            writeSystemMessage(message);
+            console.log(message);
         }
 
         webSocketManager.socket.send(message);

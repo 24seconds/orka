@@ -1,9 +1,8 @@
-import { parsePeerMessage } from "./peerMessage";
+import { parsePeerMessage } from "../peerMessage";
 
-import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
-import { EventSendUserInfo } from "./dataSchema/LocalDropEventData";
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../../schema";
+import { EventSendUserInfo } from "../dataSchema/LocalDropEventData";
 import {
-    writeSystemMessage,
     abortDownloadFile,
     writePeerChunk,
     upsertTableUser,
@@ -16,8 +15,8 @@ import {
     selectTableSharingDataByID,
     patchTableSharingDataByID,
     notifySharingData,
-} from "./localApi";
-import LocalDropEvent from "./LocalDropEvent";
+} from "../localApi";
+import LocalDropEvent from "../LocalDropEvent";
 
 function registerDataChannelEventOnOpen(
     peerConnectionManager,
@@ -48,7 +47,6 @@ function registerDataChannelEventOnOpen(
 function registerDataChannelEventOnClose(dataChannel, uuid) {
     dataChannel.onclose = (event) => {
         console.log(`data channel ${uuid} closed`);
-        writeSystemMessage("dataChannel closed");
         handleDataChannelStatusChange(event, uuid);
 
         abortDownloadFile(uuid);
@@ -65,7 +63,7 @@ function handleDataChannelStatusChange(event, uuid) {
     // TODO: Delete dataChannel in peerConnectionManager
     if (eventType === "close") {
         const systemMessage = `[peer #${uuid}]: dataChannel closed `;
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
     }
 }
 
@@ -120,7 +118,7 @@ async function handleDataChannelMessage(event, uuid) {
         return;
     }
 
-    if (messageType === PEER_MESSAGE_TYPE.UPLOAD_LINK) {
+    if (messageType === PEER_MESSAGE_TYPE.UPLOAD_SHARING_DATA) {
         const { sharingData } = data;
         await upsertTableSharingData({ sharingData });
 
@@ -156,13 +154,26 @@ async function handleDataChannelMessage(event, uuid) {
     if (messageType === PEER_MESSAGE_TYPE.ERROR) {
         const { message } = data;
 
-        writeSystemMessage(message);
+        console.log(message);
         return;
     }
+}
+
+// TODO(young): handle readyState is not open case
+function sendIfReady(eventType, dataChannel, message) {
+    if (dataChannel.readyState !== "open") {
+        console.log(
+            `[${eventType}]: dataChannel not opened!.. refresh the web page or contact to developer\ndataChannel.readyState: ${dataChannel.readyState}`
+        );
+        return;
+    }
+
+    dataChannel.send(message);
 }
 
 export {
     registerDataChannelEventOnOpen,
     registerDataChannelEventOnClose,
     handleDataChannelMessage,
+    sendIfReady,
 };

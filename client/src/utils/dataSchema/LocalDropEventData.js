@@ -23,22 +23,6 @@ class EventUpdateUser {
     }
 }
 
-class EventSendTextData {
-    constructor({ uuid, message }) {
-        this.uuid = uuid;
-        this.message = message;
-    }
-}
-
-class EventSendFilesData {
-    constructor({ uuid, message, size, fingerprint }) {
-        this.uuid = uuid;
-        this.message = message;
-        this.size = size;
-        this.fingerprint = fingerprint;
-    }
-}
-
 class EventDownloadFileData {
     constructor({ uuid, fingerprint }) {
         this.uuid = uuid;
@@ -70,8 +54,6 @@ export {
     EventResponseSharingData,
     EventUploadLink,
     EventUpdateUser,
-    EventSendTextData,
-    EventSendFilesData,
     EventDownloadFileData,
     EventConnectData,
     EventSendMessageData,

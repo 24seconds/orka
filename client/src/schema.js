@@ -1,6 +1,4 @@
 import {
-    EventSendTextData,
-    EventSendFilesData,
     EventConnectData,
     EventSendMessageData,
     EventErrorData,
@@ -89,17 +87,14 @@ export const CLIENT_EVENT_TYPE = {
     RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
     RECONNECT: "RECONNECT",
-    // TODO Change name to SEND_MESSAGE_TO_SIGNAL
-    SEND_MESSAGE: "SEND_MESSAGE",
+    SEND_MESSAGE_TO_SIGNALING_SERVER: "SEND_MESSAGE_TO_SIGNALING_SERVER",
     CLOSE: "CLOSE",
     ERROR: "ERROR",
-    UPLOAD_SHARING_DATA: "UPLOAD_LINK",
+    UPLOAD_SHARING_DATA: "UPLOAD_SHARING_DATA",
     UPDATE_USER: "UPDATE_USER",
 };
 
 const clientEventDataSchema = {
-    sendTextDatSchema: EventSendTextData,
-    sendFileDataSchema: EventSendFilesData,
     connectDataSchema: EventConnectData,
     sendMessageDataSchema: EventSendMessageData,
     errorDataSchema: EventErrorData,
@@ -110,7 +105,7 @@ export const PEER_MESSAGE_TYPE = {
     USER_INFO: "USER_INFO",
     REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
     RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
-    UPLOAD_LINK: "UPLOAD_LINK",
+    UPLOAD_SHARING_DATA: "UPLOAD_SHARING_DATA",
     UPDATE_USER: "UPDATE_USER",
     ERROR: "ERROR",
     DOWNLOAD: "DOWNLOAD",
@@ -146,10 +141,4 @@ const peerConnectionMangerSchema = {
             dataChannel: "RTCDataChannel",
         },
     },
-};
-
-const systemMessageSchema = {
-    message: "string",
-    fingerprint: "string",
-    createdAt: "time string",
 };

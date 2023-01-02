@@ -6,8 +6,6 @@ import {
     ADD_FILES,
     DELETE_FILES,
     UPDATE_PROGRESS,
-    UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
-    ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
@@ -51,15 +49,6 @@ export const deleteFiles = (files) => ({
 export const updateProgress = (fingerprint, progress) => ({
     type: UPDATE_PROGRESS,
     payload: { fingerprint, progress },
-});
-
-export const updateIsSystemMessageTabSelected = () => ({
-    type: UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
-});
-
-export const addSystemMessage = (systemMessage) => ({
-    type: ADD_SYSTEM_MESSAGE,
-    payload: systemMessage,
 });
 
 export const updateSelectedPeer = (peerUUID) => ({
