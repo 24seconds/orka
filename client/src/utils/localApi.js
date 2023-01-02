@@ -26,10 +26,7 @@ import {
     addFiles,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
-import {
-    generateUserProfile,
-    generateSharingDataUUID,
-} from "./commonUtil";
+import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,

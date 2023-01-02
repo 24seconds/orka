@@ -178,7 +178,11 @@ function renderAction(
         ) : (
             <ActionButtonComponent
                 type={dataType === "URL" ? "TEXT" : "FILE"}
-                onClick={dataType === "URL" ? onClickURLNavigate : onClickDonwloadButton}
+                onClick={
+                    dataType === "URL"
+                        ? onClickURLNavigate
+                        : onClickDonwloadButton
+                }
             />
         );
     };
@@ -240,7 +244,7 @@ function ActivityRowComponent(props) {
     }
 
     function onClickURLNavigate() {
-        window.open(dataURL, '_blank');
+        window.open(dataURL, "_blank");
     }
 
     async function onClickHandsUp(event) {

@@ -1,7 +1,4 @@
-import {
-    parsePeerChunk,
-    selectTableSharingDataByID,
-} from "./localApi";
+import { parsePeerChunk, selectTableSharingDataByID } from "./localApi";
 import {
     HEADER_SIZE_IN_BYTES,
     DATACHANNEL_MAX_BUFFERED_AMOUNT,

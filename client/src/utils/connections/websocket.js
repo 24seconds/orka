@@ -4,7 +4,10 @@ import {
     SOCKET_STATE_CODE,
     WEBSOCKET_CLOSE_EVENT_CODE,
 } from "../dataSchema/WebSocketData";
-import { createSignalingMessage, parseSignalingMessage } from "../signaling_message";
+import {
+    createSignalingMessage,
+    parseSignalingMessage,
+} from "../signaling_message";
 import { peerConnectionManager } from "./peerConnection";
 import LocalDropEvent from "../LocalDropEvent";
 import { getMyUUID } from "../localApi";
