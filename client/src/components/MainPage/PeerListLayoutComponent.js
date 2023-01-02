@@ -42,7 +42,7 @@ function PeerListLayoutComponent() {
         shallowEqual
     );
 
-    useEffect(() => {        
+    useEffect(() => {
         if (myOrkaUUID === null) {
             return;
         }

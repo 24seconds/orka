@@ -159,8 +159,21 @@ async function handleDataChannelMessage(event, uuid) {
     }
 }
 
+// TODO(young): handle readyState is not open case
+function sendIfReady(eventType, dataChannel, message) {
+    if (dataChannel.readyState !== "open") {
+        console.log(
+            `[${eventType}]: dataChannel not opened!.. refresh the web page or contact to developer\ndataChannel.readyState: ${dataChannel.readyState}`
+        );
+        return;
+    }
+
+    dataChannel.send(message);
+}
+
 export {
     registerDataChannelEventOnOpen,
     registerDataChannelEventOnClose,
     handleDataChannelMessage,
+    sendIfReady,
 };

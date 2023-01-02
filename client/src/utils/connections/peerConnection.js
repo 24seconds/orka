@@ -31,6 +31,7 @@ import {
     handleDataChannelMessage,
     registerDataChannelEventOnClose,
     registerDataChannelEventOnOpen,
+    sendIfReady,
 } from "./dataChannel";
 
 function createPeerConnection(uuid) {
@@ -167,6 +168,37 @@ async function initializePeerConnections(peerConnectionManager, peers) {
     return connectionArr;
 }
 
+function doesPeerConnectionForUUIDExist(
+    peerConnectionManager,
+    eventType,
+    uuid
+) {
+    if (peerConnectionManager.peerConnections[uuid]) {
+        // already exist
+        console.log(
+            `[peerConnectionManger]: ${eventType}/${uuid}, peerConnection already exist`
+        );
+        return true;
+    }
+
+    console(`can not find peer: #${uuid}, eventType: ${eventType}`);
+    return false;
+}
+
+function doesPeerConnectionsExist(peerConnectionManager) {
+    if (peerConnectionManager.peerConnections == null) {
+        console.log(`there are no peer connections`);
+        return false;
+    }
+
+    if (peerConnectionManager?.peerConnections?.length === 0) {
+        console.log(`there are no peer connections list`);
+        return false;
+    }
+
+    return true;
+}
+
 function addClientEventTypeEventListener(peerConnectionManager) {
     peerConnectionManager.addEventListener(
         CLIENT_EVENT_TYPE.CONNECT,
@@ -175,12 +207,14 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 
             console.log("CLIENT_EVENT_TYPE.CONNECT called");
 
-            if (peerConnectionManager.peerConnections[toUUID]) {
-                // already exist
-                console.log(
-                    `[peerConnectionManger]: ${CLIENT_EVENT_TYPE.CONNECT}, peerConnection already exist`
-                );
-                // return;
+            if (
+                doesPeerConnectionForUUIDExist(
+                    peerConnectionManager,
+                    CLIENT_EVENT_TYPE.CONNECT,
+                    toUUID
+                )
+            ) {
+                // TODO(young): decide returning immediately or not
             }
 
             const { peerConnection, dataChannel } =
@@ -231,12 +265,15 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             const myInfo = await selectTableUsersMyself();
 
             // TODO(young): handle this later
-            if (!peerConnectionManager.peerConnections[toUUID]) {
-                console(`can not find peer: #${toUUID}`);
+            if (
+                !doesPeerConnectionForUUIDExist(
+                    peerConnectionManager,
+                    CLIENT_EVENT_TYPE.SEND_USER_INFO,
+                    toUUID
+                )
+            ) {
                 return;
             }
-
-            console.log("myInfo:", myInfo);
 
             const { dataChannel } =
                 peerConnectionManager.peerConnections[toUUID];
@@ -249,16 +286,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 data
             );
 
-            if (dataChannel.readyState !== "open") {
-                console.log(
-                    "dataChannel not opened!, try to clikc the peer again!\ndataChannel.readyState: " +
-                        dataChannel.readyState
-                );
-                console.log("dataChannel not opened!, click the peer again!");
-                return;
-            }
-
-            dataChannel.send(peerMessage);
+            sendIfReady(CLIENT_EVENT_TYPE.SEND_USER_INFO, dataChannel, peerMessage);
         }
     );
 
@@ -271,8 +299,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 !!peerConnectionManager.peerConnections
             );
 
-            if (peerConnectionManager.peerConnections == null) {
-                console.log(`there are no peer connections`);
+            if (!doesPeerConnectionsExist(peerConnectionManager)) {
                 return;
             }
 
@@ -294,14 +321,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                if (dataChannel.readyState !== "open") {
-                    console.log(
-                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
-                    );
-                    continue;
-                }
-
-                dataChannel.send(peerMessage);
+                sendIfReady(CLIENT_EVENT_TYPE.REQUEST_DATA_LIST, dataChannel, peerMessage);
             }
         }
     );
@@ -317,8 +337,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 !!peerConnectionManager.peerConnections
             );
 
-            if (peerConnectionManager.peerConnections == null) {
-                console.log(`there are no peer connections`);
+            if (!doesPeerConnectionsExist(peerConnectionManager)) {
                 return;
             }
 
@@ -336,14 +355,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 peerMessage
             );
 
-            if (dataChannel.readyState !== "open") {
-                console.log(
-                    `dataChannel (${dataChannel.readyState}) not opened for uuid: ${toUUID}!, click the peer again!`
-                );
-                return;
-            }
-
-            dataChannel.send(peerMessage);
+            sendIfReady(CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, dataChannel, peerMessage);
         }
     );
 
@@ -358,8 +370,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 !!peerConnectionManager.peerConnections
             );
 
-            if (peerConnectionManager.peerConnections == null) {
-                console.log(`there are no peer connections`);
+            if (!doesPeerConnectionsExist(peerConnectionManager)) {
                 return;
             }
 
@@ -380,14 +391,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                dataChannel.send(peerMessage);
-
-                if (dataChannel.readyState !== "open") {
-                    console.log(
-                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
-                    );
-                    continue;
-                }
+                sendIfReady(CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA, dataChannel, peerMessage);
             }
         }
     );
@@ -403,8 +407,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 !!peerConnectionManager.peerConnections
             );
 
-            if (peerConnectionManager.peerConnections == null) {
-                console.log(`there are no peer connections`);
+            if (!doesPeerConnectionsExist(peerConnectionManager)) {
                 return;
             }
 
@@ -425,14 +428,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                if (dataChannel.readyState !== "open") {
-                    console.log(
-                        `dataChannel (${dataChannel.readyState}) not opened for uuid: ${uuid}!, click the peer again!`
-                    );
-                    continue;
-                }
-
-                dataChannel.send(peerMessage);
+                sendIfReady(CLIENT_EVENT_TYPE.UPDATE_USER, dataChannel, peerMessage);
             }
         }
     );
@@ -461,19 +457,9 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             );
 
             console.log("dataChannel is ", dataChannel);
-            console.log("dataChannel.readyState is ", dataChannel.readyState);
 
-            if (dataChannel.readyState !== "open") {
-                console.log(
-                    `CLIENT_EVENT ${CLIENT_EVENT_TYPE.DOWNLOAD_FILE}: dataChannel not opened!` +
-                        `dataChannel.readyState: ${dataChannel.readyState}`
-                );
-                console.log("dataChannel not opened!");
-                return;
-            }
-
-            dataChannel.send(peerMessage);
             // TODO: should I notify that peerMessage has been sent well?
+            sendIfReady(CLIENT_EVENT_TYPE.DOWNLOAD_FILE, dataChannel, peerMessage);
         }
     );
 
@@ -495,15 +481,7 @@ function addClientEventTypeEventListener(peerConnectionManager) {
         console.log("dataChannel is ", dataChannel);
         console.log("dataChannel.readyState is ", dataChannel.readyState);
 
-        if (dataChannel.readyState !== "open") {
-            console.log(
-                `CLIENT_EVENT ${CLIENT_EVENT_TYPE.ERROR}: dataChannel not opened!`
-            );
-            console.log("dataChannel not opened!");
-            return;
-        }
-
-        dataChannel.send(peerMessage);
+        sendIfReady(CLIENT_EVENT_TYPE.ERROR, dataChannel, peerMessage);
     });
 
     peerConnectionManager.addEventListener(
