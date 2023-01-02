@@ -1,7 +1,5 @@
 import {
     parsePeerChunk,
-    sendErrorToPeer,
-    writeSystemMessage,
     selectTableSharingDataByID,
 } from "./localApi";
 import {
@@ -160,7 +158,7 @@ function readFile(file, offset, chunkSize, reader, fingerprint, uuid) {
         console.log("file.size is ", file.size);
 
         const message = `Transfer file to #${uuid} done.\nFile: ${file.name}`;
-        writeSystemMessage(message);
+        console.log(message);
 
         return;
     }
@@ -247,7 +245,7 @@ function handleDataChannelClose(otherUUID) {
         currentDownloadJob[otherUUID].forEach(({ writer }) => {
             writer.abort();
             // TODO: Record File name also
-            writeSystemMessage(`Download from #${otherUUID} Aborted`);
+            console.log(`Download from #${otherUUID} Aborted`);
         });
 
         delete currentDownloadJob[otherUUID];

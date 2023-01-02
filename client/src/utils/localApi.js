@@ -16,7 +16,6 @@ import {
     addPeer,
     deletePeer,
     updateMyUUID,
-    addSystemMessage,
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
@@ -28,8 +27,6 @@ import {
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import {
-    getCurrentTime,
-    generateFingerPrint,
     generateUserProfile,
     generateSharingDataUUID,
 } from "./commonUtil";
@@ -176,7 +173,7 @@ async function transferFileToPeer(fingerprint, uuid) {
         const systemMessage =
             `#${uuid} requested download but uuid not found : ` +
             JSON.stringify({ fingerprint, file }, undefined, 2);
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
         return;
     }
 
@@ -204,16 +201,6 @@ function parsePeerChunk(chunkWithHeader) {
 
 async function writePeerChunk(chunkWithHeader, uuid) {
     await accumulateChunk(chunkWithHeader, uuid);
-}
-
-function writeSystemMessage(message) {
-    const systemMessage = {
-        message,
-        fingerprint: generateFingerPrint(),
-        createdAt: getCurrentTime(),
-    };
-
-    store.dispatch(addSystemMessage(systemMessage));
 }
 
 function updateSelectedPeerUUID(uuid) {
@@ -715,7 +702,6 @@ export {
     transferFileToPeer,
     parsePeerChunk,
     writePeerChunk,
-    writeSystemMessage,
     abortDownloadFile,
     updateSelectedPeerUUID,
     updateSelectedRowID,

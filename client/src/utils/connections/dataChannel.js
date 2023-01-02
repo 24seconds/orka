@@ -3,7 +3,6 @@ import { parsePeerMessage } from "../peerMessage";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../../schema";
 import { EventSendUserInfo } from "../dataSchema/LocalDropEventData";
 import {
-    writeSystemMessage,
     abortDownloadFile,
     writePeerChunk,
     upsertTableUser,
@@ -48,7 +47,6 @@ function registerDataChannelEventOnOpen(
 function registerDataChannelEventOnClose(dataChannel, uuid) {
     dataChannel.onclose = (event) => {
         console.log(`data channel ${uuid} closed`);
-        writeSystemMessage("dataChannel closed");
         handleDataChannelStatusChange(event, uuid);
 
         abortDownloadFile(uuid);
@@ -65,7 +63,7 @@ function handleDataChannelStatusChange(event, uuid) {
     // TODO: Delete dataChannel in peerConnectionManager
     if (eventType === "close") {
         const systemMessage = `[peer #${uuid}]: dataChannel closed `;
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
     }
 }
 
@@ -156,7 +154,7 @@ async function handleDataChannelMessage(event, uuid) {
     if (messageType === PEER_MESSAGE_TYPE.ERROR) {
         const { message } = data;
 
-        writeSystemMessage(message);
+        console.log(message);
         return;
     }
 }

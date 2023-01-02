@@ -7,8 +7,6 @@ import {
     UPDATE_PEER_UUID,
     ADD_FILES,
     UPDATE_PROGRESS,
-    UPDATE_IS_SYSTEM_MESSAGE_SELECTED,
-    ADD_SYSTEM_MESSAGE,
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
@@ -18,8 +16,6 @@ import {
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_TABLE_SHARING_DATA,
 } from "./actionType";
-import { generateFingerPrint, getCurrentTime } from "../utils/commonUtil";
-import { ORKA_APP_VERSION } from "../constants/constant";
 
 const initialState = { peers: [], message: [] };
 
@@ -115,29 +111,6 @@ function filesToTransfer(state = {}, action) {
     return state;
 }
 
-function systemMessageMetaData(
-    state = { isSelected: false, isRead: true },
-    action
-) {
-    if (action.type === UPDATE_IS_SYSTEM_MESSAGE_SELECTED) {
-        const newState = { ...state };
-
-        newState.isSelected = !newState.isSelected;
-        newState.isRead = newState.isSelected ? true : newState.isRead;
-
-        return newState;
-    }
-
-    if (action.type === ADD_SYSTEM_MESSAGE) {
-        const newState = { ...state };
-        newState.isRead = newState.isSelected ? true : false;
-
-        return newState;
-    }
-
-    return state;
-}
-
 function selectedPeer(state = null, action) {
     if (action.type === UPDATE_SELECTED_PEER) {
         const newState = action.payload;
@@ -223,31 +196,12 @@ function tableNotifications(state = 0, action) {
     return state;
 }
 
-const defaultSystemMessage = {
-    message: `App version: ${ORKA_APP_VERSION}\n\nHi, This is the first system message!`,
-    fingerprint: generateFingerPrint(),
-    createdAt: getCurrentTime(),
-};
-
-function systemMessages(state = [defaultSystemMessage], action) {
-    if (action.type === ADD_SYSTEM_MESSAGE) {
-        const systemMessage = action.payload;
-        const newState = [systemMessage, ...state];
-
-        return newState;
-    }
-
-    return state;
-}
-
 export default combineReducers({
     localDropState,
     myUUID,
     peerUUID,
     filesToTransfer,
     messageProgresses,
-    systemMessageMetaData,
-    systemMessages,
     selectedPeer,
     selectedRow,
     selectedSender,

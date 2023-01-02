@@ -142,9 +142,3 @@ const peerConnectionMangerSchema = {
         },
     },
 };
-
-const systemMessageSchema = {
-    message: "string",
-    fingerprint: "string",
-    createdAt: "time string",
-};

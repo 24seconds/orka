@@ -7,7 +7,7 @@ import {
 import { createSignalingMessage, parseSignalingMessage } from "../signaling_message";
 import { peerConnectionManager } from "./peerConnection";
 import LocalDropEvent from "../LocalDropEvent";
-import { writeSystemMessage, getMyUUID } from "../localApi";
+import { getMyUUID } from "../localApi";
 
 function createWebSocketConnection(url) {
     const socket = new WebSocket(url);
@@ -48,7 +48,7 @@ function createWebSocketConnection(url) {
         const systemMessage =
             "Websocket connection closed, " +
             JSON.stringify(payload, undefined, 2);
-        writeSystemMessage(systemMessage);
+        console.log(systemMessage);
     });
 
     socket.addEventListener("error", (event) => {
@@ -59,7 +59,7 @@ function createWebSocketConnection(url) {
             event,
         };
 
-        writeSystemMessage(
+        console.log(
             "websocket error: " + JSON.stringify(payload, undefined, 2)
         );
     });
@@ -219,7 +219,7 @@ function createWebSocketManager(url) {
             const message =
                 `websocket it not opened! state: ` +
                 SOCKET_STATE_CODE[socket.readyState];
-            writeSystemMessage(message);
+            console.log(message);
         }
 
         webSocketManager.socket.send(message);
