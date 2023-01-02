@@ -42,8 +42,11 @@ function PeerListLayoutComponent() {
         shallowEqual
     );
 
-    useEffect(() => {
-        console.log("PeerListLayoutComponent userEffect called");
+    useEffect(() => {        
+        if (myOrkaUUID === null) {
+            return;
+        }
+
         (async () => {
             const usersWithLatestFileType =
                 await selectTableUsersWithLatestSharingDataTypeExcludingMyself();
