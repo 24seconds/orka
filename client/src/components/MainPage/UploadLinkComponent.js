@@ -56,8 +56,9 @@ const PlaceHolder = styled.div`
         border: none;
         outline: none;
         height: 100%;
+        padding: 0;
 
-        font-weight: 300;
+        font-weight: 400;
         font-size: 18px;
         line-height: 120%;
         letter-spacing: -0.04em;
