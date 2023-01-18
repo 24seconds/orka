@@ -67,7 +67,7 @@ export const hoverOpacity = css`
 export const hoverCloseButton = css`
     &:hover {
         background: ${(props) => props.theme.Grayscale04};
-        border-radius: 16px;
+        border-radius: 50%;
 
         transform: scale(1.5);
     }
