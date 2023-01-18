@@ -67,7 +67,7 @@ const InputStyle = styled.input`
     width: 100%;
     height: 100%;
 
-    background: ${(props) => props.theme.Grayscale04};
+    background: ${(props) => props.readOnly ? props.theme.Grayscale03 : props.theme.Grayscale04};
     border-radius: 12px;
     border: none;
     outline: none;
@@ -116,16 +116,6 @@ const NameEditor = styled.div`
     align-items: center;
 
     ${editorStyle}
-`;
-
-const NameHolder = styled.div`
-    display: flex;
-    align-items: center;
-    padding: 0 0 0 17px;
-
-    ${editorStyle}
-
-    ${editText}
 `;
 
 function ProfileEditNameComponent(props) {
@@ -185,19 +175,19 @@ function ProfileEditNameComponent(props) {
             <MiniProfile className="orka-mini-profile">
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
             </MiniProfile>
-            <NameEditor>
+            <NameEditor readOnly={!propEditMode}>
                 <InputStyle
                     ref={inputEl}
                     value={myUserName}
                     onChange={onChange}
                     readOnly={!propEditMode}
                 ></InputStyle>
-                <IconContainer
+                {propEditMode && <IconContainer
                     onClick={propEditMode ? onClear : undefined}
                     editMode={propEditMode}
                 >
                     {propEditMode && <ProfileEditNameClearIcon />}
-                </IconContainer>
+                </IconContainer>}
             </NameEditor>
             <EditButton className="orka-edit-button" onClick={onChangeMode}>
                 {propEditMode ? "Done" : "Edit"}
