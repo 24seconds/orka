@@ -16,6 +16,8 @@ const FileCommentExpand = styled.div`
 
     position: relative;
 
+    cursor: pointer;
+
     &:hover {
         opacity: 0.6;
     }
@@ -45,10 +47,10 @@ const CommentCounter = styled.div`
 `;
 
 function FileCommentExpandComponent(props) {
-    const { count } = props;
+    const { count, onClickComment } = props;
 
     return (
-        <FileCommentExpand>
+        <FileCommentExpand onClick={onClickComment}>
             <FileCommentIcon />
             {count !== 0 && <CommentCounter>{count}</CommentCounter>}
         </FileCommentExpand>

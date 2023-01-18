@@ -29,7 +29,6 @@ const ActivityRow = styled.div`
     height: 128px;
     /* margin: 0 32px; */
     /* background: red; */
-    cursor: pointer;
 
     ${(props) => props.isSelected && selectedStyle}
 
@@ -152,16 +151,17 @@ function renderAction(
     url,
     isMyProfileRow,
     isHandsUpRow,
-    onClick,
+    onClickDeleteButton,
     onClickHandsUp,
     onClickDonwloadButton,
     onClickURLNavigate,
-    onCancelHandsUp
+    onCancelHandsUp,
+    onClickComment
 ) {
     if (isEditMode) {
         return (
             <Fragment>
-                <DeleteButton onClick={onClick}>
+                <DeleteButton onClick={onClickDeleteButton}>
                     <CloseIcon />
                 </DeleteButton>
             </Fragment>
@@ -192,7 +192,10 @@ function renderAction(
             {dataType === "URL" ? (
                 <TextCopyComponent text={url} />
             ) : (
-                <FileCommentExpandComponent count={commentCount} />
+                <FileCommentExpandComponent
+                    count={commentCount}
+                    onClickComment={onClickComment}
+                />
             )}
             {renderIcon()}
         </Fragment>
@@ -205,7 +208,7 @@ function ActivityRowComponent(props) {
         dataType,
         displayName,
         isSelected,
-        onClick,
+        onClickComment,
         // rowID is data ID
         rowID,
         senderID,
@@ -278,13 +281,13 @@ function ActivityRowComponent(props) {
         }
     }
 
+    function onClickCommentIcon() {
+        console.log("onClickCommentIcon called");
+        onClickComment?.(rowID, senderID);
+    }
+
     return (
-        <ActivityRow
-            isSelected={isSelected}
-            onClick={() => {
-                onClick?.(rowID, senderID);
-            }}
-        >
+        <ActivityRow isSelected={isSelected}>
             <DataTypeHolder className="orka-data-type-holder">
                 {/* TODO(young): refactor this part. 
                     if the dataType is FILE then extract extensions. FILE type's default is 'FILE'  */}
@@ -322,7 +325,8 @@ function ActivityRowComponent(props) {
                     onClickHandsUp,
                     onClickDonwloadButton,
                     onClickURLNavigate,
-                    onCancelHandsUp
+                    onCancelHandsUp,
+                    onClickCommentIcon
                 )}
             </div>
         </ActivityRow>

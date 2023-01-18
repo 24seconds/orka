@@ -196,7 +196,7 @@ function ActivityContainerComponent(props) {
         rowsToBeDeleted
     );
 
-    function onClick(rowID, senderID) {
+    function onClickComment(rowID, senderID) {
         if (rowID === activeRow) {
             setActiveRow(null);
             // dispatch function?
@@ -252,7 +252,7 @@ function ActivityContainerComponent(props) {
                 <StyledHandsUpSection
                     data={handsUpData}
                     activeRow={activeRow}
-                    onClick={onClick}
+                    onClick={onClickComment}
                 />
             )}
             <ActivityFilterAndSortContainer>
@@ -276,7 +276,7 @@ function ActivityContainerComponent(props) {
                         d,
                         activeRow,
                         myOrkaUUID,
-                        onClick,
+                        onClickComment,
                         onDeleteRow
                     )
                 )}
