@@ -67,7 +67,8 @@ const InputStyle = styled.input`
     width: 100%;
     height: 100%;
 
-    background: ${(props) => props.readOnly ? props.theme.Grayscale03 : props.theme.Grayscale04};
+    background: ${(props) =>
+        props.readOnly ? props.theme.Grayscale03 : props.theme.Grayscale04};
     border-radius: 12px;
     border: none;
     outline: none;
@@ -182,12 +183,14 @@ function ProfileEditNameComponent(props) {
                     onChange={onChange}
                     readOnly={!propEditMode}
                 ></InputStyle>
-                {propEditMode && <IconContainer
-                    onClick={propEditMode ? onClear : undefined}
-                    editMode={propEditMode}
-                >
-                    {propEditMode && <ProfileEditNameClearIcon />}
-                </IconContainer>}
+                {propEditMode && (
+                    <IconContainer
+                        onClick={propEditMode ? onClear : undefined}
+                        editMode={propEditMode}
+                    >
+                        {propEditMode && <ProfileEditNameClearIcon />}
+                    </IconContainer>
+                )}
             </NameEditor>
             <EditButton className="orka-edit-button" onClick={onChangeMode}>
                 {propEditMode ? "Done" : "Edit"}

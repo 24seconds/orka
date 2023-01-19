@@ -18,6 +18,12 @@ const FileCommentExpand = styled.div`
 
     cursor: pointer;
 
+    ${props => props.isSelected && `
+        > svg {
+            fill: ${props => props.theme.Grayscale03};
+        }
+    `}
+
     &:hover {
         opacity: 0.6;
     }
@@ -47,10 +53,10 @@ const CommentCounter = styled.div`
 `;
 
 function FileCommentExpandComponent(props) {
-    const { count, onClickComment } = props;
+    const { isSelected, count, onClickComment } = props;
 
     return (
-        <FileCommentExpand onClick={onClickComment}>
+        <FileCommentExpand onClick={onClickComment} isSelected={isSelected}>
             <FileCommentIcon />
             {count !== 0 && <CommentCounter>{count}</CommentCounter>}
         </FileCommentExpand>
