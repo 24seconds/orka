@@ -84,6 +84,8 @@ const ActivityRow = styled.div`
         ${DataTypeHolder} {
             background: ${(props) => props.theme.Grayscale01};
         }
+
+        background: ${(props) => props.theme.Grayscale02};
     }
 `;
 

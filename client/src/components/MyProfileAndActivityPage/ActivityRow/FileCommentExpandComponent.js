@@ -12,7 +12,7 @@ const FileCommentExpand = styled.div`
     height: 50px;
     border-radius: 50%;
 
-    background: ${(props) => props.theme.Grayscale04};
+    background: ${(props) => props.isSelected ? props.theme.Grayscale03 : props.theme.Grayscale04};
 
     position: relative;
 
