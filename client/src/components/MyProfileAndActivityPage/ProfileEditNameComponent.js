@@ -19,7 +19,7 @@ const EditButton = styled.div`
     height: 48px;
 
     cursor: pointer;
-    margin-left: ${(props) => (props.shouldShowDone ? "1px" : "14px")};
+    margin-left: ${(props) => (props.shouldShowDone ? "1px" : "auto")};
 
     color: ${(props) => props.theme.PrimaryColor};
     font-weight: 300;
