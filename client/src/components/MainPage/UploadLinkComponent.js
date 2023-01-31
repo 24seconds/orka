@@ -47,7 +47,7 @@ const PlaceHolder = styled.div`
 
         circle {
             fill: ${(props) =>
-                props.isActive && props.theme.ActivityRowBackgroundscale02};
+                props.isActive ? props.theme.ActivityRowBackgroundscale02 : props.theme.Grayscale01 };
         }
     }
 
@@ -56,13 +56,14 @@ const PlaceHolder = styled.div`
         border: none;
         outline: none;
         height: 100%;
+        padding: 0;
 
-        font-weight: 300;
+        font-weight: 400;
         font-size: 18px;
         line-height: 120%;
         letter-spacing: -0.04em;
 
-        color: ${(props) => props.theme.White};
+        color: ${(props) => props.theme.UploadInputText};
 
         ::placeholder {
             color: ${(props) => props.theme.Grayscale01};

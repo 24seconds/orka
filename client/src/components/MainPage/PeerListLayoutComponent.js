@@ -7,6 +7,8 @@ import {
     updateSelectedRowID,
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
+import { v4 as uuidv4 } from "uuid";
+import EmpyPeerComponent from "./Peer/EmptyPeerComponent";
 
 const PeerListLayout = styled.div`
     width: 520px;
@@ -26,6 +28,23 @@ const PeerListLayout = styled.div`
         display: none;
     }
 `;
+
+const maxEmptyPeerCount = 6;
+
+function renderEmptyPeerComponent(number) {
+    if (number <= 0) {
+        return;
+    }
+
+    const dummyKeys = [];
+    for (let i = 0; i < number; i++) {
+        dummyKeys.push(`dummy-peer-${uuidv4()}`);
+    }
+
+    return dummyKeys.map((key) => {
+        return <EmpyPeerComponent key={key} />;
+    });
+}
 
 function PeerListLayoutComponent() {
     const [peers, setPeers] = useState([]);
@@ -87,6 +106,8 @@ function PeerListLayoutComponent() {
                     />
                 );
             })}
+            {peers.length < maxEmptyPeerCount &&
+                renderEmptyPeerComponent(maxEmptyPeerCount - peers.length)}
         </PeerListLayout>
     );
 }

@@ -22,6 +22,30 @@ const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
 `;
 
+// TODO(young): Refactor this to make it reusable. It is also used in peer component.
+const DataTypeHolder = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 84px;
+    min-width: 84px;
+    height: 100px;
+    background: ${(props) => props.theme.DataTypeHolderBackground};
+    border-radius: 11px;
+    word-break: break-all;
+    filter: drop-shadow(0px 2.6px 2.6px rgba(0, 0, 0, 0.25));
+
+    font-weight: 600;
+    font-size: 20px;
+    color: ${(props) => props.theme.DataTypeHolderText};
+    line-height: 23px;
+
+    left: ${(props) => props.order};
+    top: ${(props) => props.order};
+    z-index: ${(props) => props.zIndex};
+`;
+
 const ActivityRow = styled.div`
     display: flex;
     align-items: center;
@@ -29,7 +53,6 @@ const ActivityRow = styled.div`
     height: 128px;
     /* margin: 0 32px; */
     /* background: red; */
-    cursor: pointer;
 
     ${(props) => props.isSelected && selectedStyle}
 
@@ -56,30 +79,14 @@ const ActivityRow = styled.div`
     }
 
     ${(props) => !props.isSelected && hoverRow}
-`;
 
-// TODO(young): Refactor this to make it reusable. It is also used in peer component.
-const DataTypeHolder = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    &:hover {
+        ${DataTypeHolder} {
+            background: ${(props) => props.theme.Grayscale01};
+        }
 
-    width: 84px;
-    min-width: 84px;
-    height: 100px;
-    background: ${(props) => props.theme.DataTypeHolderBackground};
-    border-radius: 11px;
-    word-break: break-all;
-    filter: drop-shadow(0px 2.6px 2.6px rgba(0, 0, 0, 0.25));
-
-    font-weight: 600;
-    font-size: 20px;
-    color: ${(props) => props.theme.DataTypeHolderText};
-    line-height: 23px;
-
-    left: ${(props) => props.order};
-    top: ${(props) => props.order};
-    z-index: ${(props) => props.zIndex};
+        background: ${(props) => props.theme.Grayscale02};
+    }
 `;
 
 const FileMetaData = styled.div`
@@ -146,22 +153,24 @@ function convertByteToHumanReadable(size) {
 }
 
 function renderAction(
+    isSelected,
     isEditMode,
     dataType,
     commentCount,
     url,
     isMyProfileRow,
     isHandsUpRow,
-    onClick,
+    onClickDeleteButton,
     onClickHandsUp,
     onClickDonwloadButton,
     onClickURLNavigate,
-    onCancelHandsUp
+    onCancelHandsUp,
+    onClickComment
 ) {
     if (isEditMode) {
         return (
             <Fragment>
-                <DeleteButton onClick={onClick}>
+                <DeleteButton onClick={onClickDeleteButton}>
                     <CloseIcon />
                 </DeleteButton>
             </Fragment>
@@ -192,7 +201,11 @@ function renderAction(
             {dataType === "URL" ? (
                 <TextCopyComponent text={url} />
             ) : (
-                <FileCommentExpandComponent count={commentCount} />
+                <FileCommentExpandComponent
+                    isSelected={isSelected}
+                    count={commentCount}
+                    onClickComment={onClickComment}
+                />
             )}
             {renderIcon()}
         </Fragment>
@@ -205,7 +218,7 @@ function ActivityRowComponent(props) {
         dataType,
         displayName,
         isSelected,
-        onClick,
+        onClickComment,
         // rowID is data ID
         rowID,
         senderID,
@@ -278,13 +291,12 @@ function ActivityRowComponent(props) {
         }
     }
 
+    function onClickCommentIcon() {
+        onClickComment?.(rowID, senderID);
+    }
+
     return (
-        <ActivityRow
-            isSelected={isSelected}
-            onClick={() => {
-                onClick?.(rowID, senderID);
-            }}
-        >
+        <ActivityRow isSelected={isSelected}>
             <DataTypeHolder className="orka-data-type-holder">
                 {/* TODO(young): refactor this part. 
                     if the dataType is FILE then extract extensions. FILE type's default is 'FILE'  */}
@@ -312,6 +324,7 @@ function ActivityRowComponent(props) {
             </div>
             <div className="orka-action-container">
                 {renderAction(
+                    isSelected,
                     isEditMode,
                     dataType,
                     commentCount,
@@ -322,7 +335,8 @@ function ActivityRowComponent(props) {
                     onClickHandsUp,
                     onClickDonwloadButton,
                     onClickURLNavigate,
-                    onCancelHandsUp
+                    onCancelHandsUp,
+                    onClickCommentIcon
                 )}
             </div>
         </ActivityRow>

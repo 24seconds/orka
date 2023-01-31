@@ -286,7 +286,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 data
             );
 
-            sendIfReady(CLIENT_EVENT_TYPE.SEND_USER_INFO, dataChannel, peerMessage);
+            sendIfReady(
+                CLIENT_EVENT_TYPE.SEND_USER_INFO,
+                dataChannel,
+                peerMessage
+            );
         }
     );
 
@@ -321,7 +325,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                sendIfReady(CLIENT_EVENT_TYPE.REQUEST_DATA_LIST, dataChannel, peerMessage);
+                sendIfReady(
+                    CLIENT_EVENT_TYPE.REQUEST_DATA_LIST,
+                    dataChannel,
+                    peerMessage
+                );
             }
         }
     );
@@ -355,7 +363,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                 peerMessage
             );
 
-            sendIfReady(CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, dataChannel, peerMessage);
+            sendIfReady(
+                CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+                dataChannel,
+                peerMessage
+            );
         }
     );
 
@@ -391,7 +403,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                sendIfReady(CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA, dataChannel, peerMessage);
+                sendIfReady(
+                    CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
+                    dataChannel,
+                    peerMessage
+                );
             }
         }
     );
@@ -428,7 +444,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
                     peerMessage
                 );
 
-                sendIfReady(CLIENT_EVENT_TYPE.UPDATE_USER, dataChannel, peerMessage);
+                sendIfReady(
+                    CLIENT_EVENT_TYPE.UPDATE_USER,
+                    dataChannel,
+                    peerMessage
+                );
             }
         }
     );
@@ -459,7 +479,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             console.log("dataChannel is ", dataChannel);
 
             // TODO: should I notify that peerMessage has been sent well?
-            sendIfReady(CLIENT_EVENT_TYPE.DOWNLOAD_FILE, dataChannel, peerMessage);
+            sendIfReady(
+                CLIENT_EVENT_TYPE.DOWNLOAD_FILE,
+                dataChannel,
+                peerMessage
+            );
         }
     );
 

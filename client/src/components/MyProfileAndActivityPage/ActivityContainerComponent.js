@@ -149,7 +149,6 @@ function getFileExtension(name) {
 
 function ActivityContainerComponent(props) {
     const [activeFilter, setActiveFilter] = useState("ALL");
-    const [activeRow, setActiveRow] = useState(null);
     const [data, setData] = useState([]);
     const [sortOrder, setSortOrder] = useState("DESC");
     const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
@@ -163,6 +162,10 @@ function ActivityContainerComponent(props) {
     );
     const activePeerUUID = useSelector(
         (state) => state.selectedPeer,
+        shallowEqual
+    );
+    const selectedRowID = useSelector(
+        (state) => state.selectedRow,
         shallowEqual
     );
 
@@ -196,13 +199,11 @@ function ActivityContainerComponent(props) {
         rowsToBeDeleted
     );
 
-    function onClick(rowID, senderID) {
-        if (rowID === activeRow) {
-            setActiveRow(null);
+    function onClickComment(rowID, senderID) {
+        if (rowID === selectedRowID) {
             // dispatch function?
             updateSelectedRowID(null);
         } else {
-            setActiveRow(rowID);
             updateSelectedRowID(rowID);
         }
         updateSender(senderID);
@@ -251,8 +252,8 @@ function ActivityContainerComponent(props) {
             {handsUpData && (
                 <StyledHandsUpSection
                     data={handsUpData}
-                    activeRow={activeRow}
-                    onClick={onClick}
+                    activeRow={selectedRowID}
+                    onClick={onClickComment}
                 />
             )}
             <ActivityFilterAndSortContainer>
@@ -274,9 +275,9 @@ function ActivityContainerComponent(props) {
                 {filteredData.map((d) =>
                     renderActivityRowComponent(
                         d,
-                        activeRow,
+                        selectedRowID,
                         myOrkaUUID,
-                        onClick,
+                        onClickComment,
                         onDeleteRow
                     )
                 )}

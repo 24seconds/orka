@@ -12,9 +12,20 @@ const FileCommentExpand = styled.div`
     height: 50px;
     border-radius: 50%;
 
-    background: ${(props) => props.theme.Grayscale04};
+    background: ${(props) =>
+        props.isSelected ? props.theme.Grayscale03 : props.theme.Grayscale04};
 
     position: relative;
+
+    cursor: pointer;
+
+    ${(props) =>
+        props.isSelected &&
+        `
+        > svg {
+            fill: ${(props) => props.theme.Grayscale03};
+        }
+    `}
 
     &:hover {
         opacity: 0.6;
@@ -45,10 +56,10 @@ const CommentCounter = styled.div`
 `;
 
 function FileCommentExpandComponent(props) {
-    const { count } = props;
+    const { isSelected, count, onClickComment } = props;
 
     return (
-        <FileCommentExpand>
+        <FileCommentExpand onClick={onClickComment} isSelected={isSelected}>
             <FileCommentIcon />
             {count !== 0 && <CommentCounter>{count}</CommentCounter>}
         </FileCommentExpand>

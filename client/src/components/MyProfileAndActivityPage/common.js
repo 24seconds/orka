@@ -6,7 +6,7 @@ function renderActivityRowComponent(
     data,
     activeRow,
     myOrkaUUID,
-    onClick,
+    onClickComment,
     onDeleteRow
 ) {
     if (data?.type === DATATYPE_FILE) {
@@ -24,7 +24,7 @@ function renderActivityRowComponent(
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
-                onClick={onClick}
+                onClickComment={onClickComment}
                 onDeleteRow={onDeleteRow}
             />
         );
@@ -44,7 +44,7 @@ function renderActivityRowComponent(
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
                 dataURL={data.text}
-                onClick={onClick}
+                onClickComment={onClickComment}
                 onDeleteRow={onDeleteRow}
             />
         );

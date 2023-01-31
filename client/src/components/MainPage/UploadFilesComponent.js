@@ -24,6 +24,7 @@ const UploadFiles = styled.div`
     cursor: pointer;
 
     .orka-or {
+        font-weight: 600;
         margin: 18px 0;
     }
 
@@ -53,8 +54,8 @@ const BrowsFiles = styled.button`
 `;
 
 const Description = styled.div`
-    width: 300px;
-    margin: 29px 109px 0 109px;
+    width: 100%;
+    padding: 29px 109px 0 109px;
     color: ${(props) => props.theme.Grayscale01};
     font-weight: 400;
     font-size: 24px;
@@ -129,10 +130,12 @@ function UploadFilesComponent(props) {
                     </div>
                 ) : (
                     <Fragment>
-                        <div>
+                        {/* <div>
                             Drag your documents, photos or videos here to
                             uploading.
-                        </div>
+                        </div> */}
+                        <div>Drag your documents, photos</div>
+                        <div>or videos here to uploading.</div>
                         <div className="orka-or">or</div>
                     </Fragment>
                 )}
