@@ -26,6 +26,16 @@ const LightMode = styled.button`
     > svg {
         margin-left: 7px;
     }
+
+    &:hover {
+        color: ${(props) => props.theme.LightModeHover};
+
+        > svg {
+            > path {
+                fill: ${(props) => props.theme.LightModeHover};
+            }
+        }
+    }
 `;
 
 function LightModeComponent() {

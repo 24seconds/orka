@@ -38,6 +38,7 @@ const PaletteLight = {
     Whitescale01: "#FEFEFE",
     Black: "#000000",
     Blackscale01: "#2E3136",
+    DarkGrayscale03: PaletteDark.Grayscale03,
 };
 
 export const ThemeOrkaDark = {
@@ -150,6 +151,8 @@ export const ThemeOrkaLight = {
     DeleteButtonHover: "#FF5151",
 
     UploadInputText: PaletteLight.Black,
+
+    LightModeHover: PaletteLight.DarkGrayscale03,
 };
 
 export const ColorThemes = {
