@@ -93,6 +93,8 @@ export const ThemeOrkaDark = {
     NotificationRowText: PaletteDark.Whitescale01,
 
     DeleteButtonHover: "#FF5151",
+
+    UploadInputText: PaletteDark.White,
 };
 
 export const ThemeOrkaLight = {
@@ -146,6 +148,8 @@ export const ThemeOrkaLight = {
     NotificationRowText: PaletteLight.Blackscale01,
 
     DeleteButtonHover: "#FF5151",
+
+    UploadInputText: PaletteLight.Black,
 };
 
 export const ColorThemes = {

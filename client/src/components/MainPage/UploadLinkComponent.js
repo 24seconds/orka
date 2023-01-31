@@ -63,7 +63,7 @@ const PlaceHolder = styled.div`
         line-height: 120%;
         letter-spacing: -0.04em;
 
-        color: ${(props) => props.theme.White};
+        color: ${(props) => props.theme.UploadInputText};
 
         ::placeholder {
             color: ${(props) => props.theme.Grayscale01};
