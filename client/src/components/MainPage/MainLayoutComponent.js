@@ -68,10 +68,17 @@ function MainLayoutComponent(props) {
         // clear peerID and rowID
         updateSelectedPeerUUID(null);
         updateSelectedRowID(null);
+
+        setUploadActivated(false);
     }
 
     function onClickUplaodButton() {
         setUploadActivated(!uploadActivated);
+
+        setSelectedTab(null);
+        // clear peerID and rowID
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
     }
 
     return (
