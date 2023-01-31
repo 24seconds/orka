@@ -134,12 +134,8 @@ function UploadFilesComponent(props) {
                             Drag your documents, photos or videos here to
                             uploading.
                         </div> */}
-                        <div>
-                            Drag your documents, photos
-                        </div>
-                        <div>
-                            or videos here to uploading.
-                        </div>
+                        <div>Drag your documents, photos</div>
+                        <div>or videos here to uploading.</div>
                         <div className="orka-or">or</div>
                     </Fragment>
                 )}

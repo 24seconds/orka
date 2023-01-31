@@ -202,7 +202,7 @@ function renderAction(
                 <TextCopyComponent text={url} />
             ) : (
                 <FileCommentExpandComponent
-                    isSelected={isSelected}    
+                    isSelected={isSelected}
                     count={commentCount}
                     onClickComment={onClickComment}
                 />

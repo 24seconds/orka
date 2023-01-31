@@ -12,15 +12,18 @@ const FileCommentExpand = styled.div`
     height: 50px;
     border-radius: 50%;
 
-    background: ${(props) => props.isSelected ? props.theme.Grayscale03 : props.theme.Grayscale04};
+    background: ${(props) =>
+        props.isSelected ? props.theme.Grayscale03 : props.theme.Grayscale04};
 
     position: relative;
 
     cursor: pointer;
 
-    ${props => props.isSelected && `
+    ${(props) =>
+        props.isSelected &&
+        `
         > svg {
-            fill: ${props => props.theme.Grayscale03};
+            fill: ${(props) => props.theme.Grayscale03};
         }
     `}
 
