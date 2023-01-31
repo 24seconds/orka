@@ -47,7 +47,9 @@ const PlaceHolder = styled.div`
 
         circle {
             fill: ${(props) =>
-                props.isActive ? props.theme.ActivityRowBackgroundscale02 : props.theme.Grayscale01 };
+                props.isActive
+                    ? props.theme.ActivityRowBackgroundscale02
+                    : props.theme.Grayscale01};
         }
     }
 
