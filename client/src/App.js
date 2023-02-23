@@ -1,15 +1,15 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { connect } from "react-redux";
 import "./utils/localApi";
 import "./utils/window";
 import { mobileWidth } from "./constants/styleConstants";
-import { ColorThemes } from "./constants/styleTheme";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 import CommentLayoutComponent from "./components/CommentPage/CommentLayoutComponent";
 import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
 import CreatorBadgeComponent from "./components/CreatorBadge/CreatorBadgeComponent";
+import { onSwitchTheme } from "./utils/localApi";
 
 const GlobalStyle = createGlobalStyle`  
   html, body {
@@ -86,58 +86,20 @@ const MobileSticky = styled.div`
 `;
 
 class App extends Component {
-    STORAGE_COLOR_THEME_KEY = "STORAGE_COLOR_THEME_KEY";
-    themeIndex = 0;
-
     constructor(props) {
         super(props);
-
-        this.state = {
-            colorTheme:
-                ColorThemes[this.getStorageColorTheme() || "ThemeOrkaDark"],
-        };
 
         this.onChangeTheme = this.onChangeTheme.bind(this);
     }
 
-    getStorageColorTheme() {
-        return window.localStorage.getItem(this.STORAGE_COLOR_THEME_KEY);
-    }
-
-    setStorageColorTheme(value) {
-        window.localStorage.setItem(this.STORAGE_COLOR_THEME_KEY, value);
-    }
-
-    getNextKey(keys) {
-        const nextKey = keys[this.themeIndex];
-        this.themeIndex = (this.themeIndex + 1) % keys.length;
-
-        if (nextKey === localStorage.getItem(this.STORAGE_COLOR_THEME_KEY)) {
-            return this.getNextKey(keys);
-        } else {
-            return nextKey;
-        }
-    }
-
     onChangeTheme() {
-        console.log("onChangeTheme called");
-
-        const keys = Object.keys(ColorThemes);
-        const nextKey = this.getNextKey(keys);
-        this.setStorageColorTheme(nextKey);
-
-        console.log("randomKey is ", nextKey);
-
-        this.setState({
-            colorTheme: ColorThemes[nextKey],
-        });
+        onSwitchTheme();
     }
 
     render() {
-        const { selectedPeer, selectedRow } = this.props;
-        const { colorTheme } = this.state;
+        const { orkaTheme, selectedPeer, selectedRow } = this.props;
 
-        console.log("colorTheme is ", colorTheme);
+        console.log("colorTheme is ", orkaTheme);
         console.log("selectedPeer:", selectedPeer);
         console.log("selectedRow:", selectedRow);
 
@@ -145,13 +107,13 @@ class App extends Component {
         const shouldOpenCommentLayout = selectedRow != null;
 
         return (
-            <ThemeProvider theme={colorTheme}>
+            <ThemeProvider theme={orkaTheme}>
                 <GlobalStyle />
                 <OrkaApp className="App">
                     <OrkaCreatorBadgeComponent />
                     <OrkaLightAndDarkContainerComponent
                         onChangeTheme={this.onChangeTheme}
-                        theme={colorTheme}
+                        theme={orkaTheme}
                     />
                     <OrkaContainer>
                         <OrkaMainLayout
@@ -178,6 +140,7 @@ class App extends Component {
 const mapStateToProps = (state) => ({
     selectedPeer: state.selectedPeer,
     selectedRow: state.selectedRow,
+    orkaTheme: state.orkaTheme,
 });
 
 export default connect(mapStateToProps)(App);

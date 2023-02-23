@@ -24,6 +24,7 @@ import {
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
     addFiles,
+    updateOrkaTheme,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
@@ -42,6 +43,10 @@ import {
     TABLE_USERS,
 } from "./database/schema";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
+
+function onSwitchTheme() {
+    store.dispatch(updateOrkaTheme());
+}
 
 async function notifySharingData(data) {
     const event = new LocalDropEvent(
@@ -681,6 +686,7 @@ async function selectTableNotificationsWithUserAndSharingData() {
 }
 
 export {
+    onSwitchTheme,
     notifySharingData,
     notifySharingDataToPeer,
     notifyUser,

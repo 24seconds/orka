@@ -14,7 +14,13 @@ import {
     UPDATE_SENDER_ID,
     UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
+    UPDATE_ORKA_THEME,
 } from "./actionType";
+
+export const updateOrkaTheme = () => ({
+    type: UPDATE_ORKA_THEME,
+    payload: null,
+});
 
 export const addPeer = (peerList) => ({
     type: ADD_PEER,
