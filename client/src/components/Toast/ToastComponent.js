@@ -1,8 +1,9 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useRef, useState } from "react";
+import styled, { ThemeProvider } from "styled-components";
 import PropTypes from "prop-types";
 import ToastCheckIcon from "../../assets/ToastCheckIcon";
 import CloseIcon from "../../assets/CloseIcon";
+import { shallowEqual, useSelector } from "react-redux";
 
 const ToastCheck = styled.div`
     display: flex;
@@ -26,6 +27,8 @@ const ToastMessage = styled.div`
         /* identical to box height, or 28px */
 
         letter-spacing: -0.04em;
+
+        margin-bottom: 6px;
     }
 
     .orka-toast-desc {
@@ -42,7 +45,11 @@ const ToastMessage = styled.div`
 
 const ToastCloseContainer = styled.div`
     > svg > path {
-        stroke: ${props => props.theme.White};
+        stroke: ${(props) => props.theme.White};
+    }
+
+    &:hover {
+        cursor: pointer;
     }
 `;
 
@@ -62,25 +69,88 @@ const Toast = styled.div`
     ${ToastCloseContainer} {
         margin-right: 48px;
     }
+
+    @keyframes show-toast {
+        from {
+            transform: translate(0, 110%);
+        }
+        to {
+            transform: translate(0, -110%);
+        }
+    }
+
+    @keyframes hide-toast {
+        from {
+            transform: ${(props) => props.transform};
+        }
+        to {
+            transform: translate(0, 110%);
+        }
+    }
+
+    animation-name: ${(props) =>
+        props.shouldReverse ? "hide-toast" : "show-toast"};
+    animation-duration: 0.3s;
+
+    transform: ${(props) =>
+        props.shouldReverse ? "translate(0, 110%)" : "translate(0, -110%)"};
 `;
 
 function ToastComponent(props) {
-    const { className } = props;
+    const { className, title, description } = props;
+    const [shouldReverse, setShouldReverse] = useState(false);
+    const [transformStyle, setTransformStyle] = useState("translate(0, -110%)");
+
+    useEffect(() => {
+        const timeoutID = setTimeout(() => {
+            setShouldReverse(true);
+        }, 2300);
+
+        return () => clearTimeout(timeoutID);;
+    }, []);
+
+    const ref = useRef(null);
+
+    const orkaTheme = useSelector((state) => state.orkaTheme, shallowEqual);
+
+    function onClose() {
+        const styles = getComputedStyle(ref.current);
+        setTransformStyle(styles.transform);
+
+        setShouldReverse(true);
+    }
 
     return (
-        <Toast className={className}>
-            <ToastCheck>
-                <ToastCheckIcon />
-            </ToastCheck>
-            <ToastMessage>
-                <div className="orka-toast-title">TItle</div>
-                <div className="orka-toast-desc">Description</div>
-            </ToastMessage>
-            <ToastCloseContainer>
-                <CloseIcon/>
-            </ToastCloseContainer>
-        </Toast>
+        <ThemeProvider theme={orkaTheme}>
+            <Toast
+                className={className}
+                transform={transformStyle}
+                shouldReverse={shouldReverse}
+                ref={ref}
+            >
+                <ToastCheck>
+                    <ToastCheckIcon />
+                </ToastCheck>
+                <ToastMessage>
+                    <div className="orka-toast-title">{title}</div>
+                    <div className="orka-toast-desc">{description}</div>
+                </ToastMessage>
+                <ToastCloseContainer onClick={onClose}>
+                    <CloseIcon />
+                </ToastCloseContainer>
+            </Toast>
+        </ThemeProvider>
     );
 }
+
+ToastComponent.propTypes = {
+    title: PropTypes.string,
+    description: PropTypes.string,
+};
+
+ToastComponent.defaultProps = {
+    title: "Title",
+    description: "Description",
+};
 
 export default ToastComponent;
