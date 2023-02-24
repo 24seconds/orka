@@ -1,7 +1,12 @@
 import { combineReducers } from "redux";
 import { v4 as uuidv4 } from "uuid";
 import {
-    ADD_PEER,
+    STORAGE_COLOR_THEME_KEY,
+    THEME_ORKA_DARK,
+} from "../constants/constant";
+import { ColorThemes } from "../constants/styleTheme";
+import {
+    UPDATE_ORKA_THEME,
     DELETE_PEER,
     UPDATE_MY_UUID,
     UPDATE_PEER_UUID,
@@ -15,36 +20,30 @@ import {
     UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_TABLE_SHARING_DATA,
+    ADD_TOAST_MESSAGE,
+    DELETE_TOAST_MESSAGE,
 } from "./actionType";
 
-const initialState = { peers: [], message: [] };
+function getStorageColorTheme() {
+    return window.localStorage.getItem(STORAGE_COLOR_THEME_KEY);
+}
 
-function localDropState(state = initialState, action) {
-    console.log("localDropReducer is called ", state);
-    console.log("action is ", action);
+function setStoargeColorTheme(theme) {
+    return window.localStorage.setItem(STORAGE_COLOR_THEME_KEY, theme);
+}
 
-    if (action.type === ADD_PEER) {
-        // naive implementation
-        const newState = { ...state };
-        const peers = action.payload;
-
-        console.log("ADD_PEER!!!");
-        newState.peers = [...newState.peers, ...peers];
-        console.log("ADD_PEER!!!, ", newState);
-
-        return newState;
-    } else if (action.type === DELETE_PEER) {
-        // naive implementation
-        const newState = { ...state };
-        const peerSet = new Set(action.payload);
-
-        console.log("peerSet is ", peerSet);
-
-        const newPeers = newState.peers.filter((peer) => !peerSet.has(peer));
-        console.log("newPeers is ", newPeers);
-        newState.peers = newPeers;
-
-        return newState;
+function orkaTheme(
+    state = ColorThemes[getStorageColorTheme() || "ThemeOrkaDark"],
+    action
+) {
+    if (action.type === UPDATE_ORKA_THEME) {
+        if (state?.name === THEME_ORKA_DARK) {
+            setStoargeColorTheme("ThemeOrkaLight");
+            return ColorThemes["ThemeOrkaLight"];
+        } else {
+            setStoargeColorTheme("ThemeOrkaDark");
+            return ColorThemes["ThemeOrkaDark"];
+        }
     }
 
     return state;
@@ -141,6 +140,21 @@ function selectedSender(state = null, action) {
     return state;
 }
 
+function toastMessages(state = [], action) {
+    if (action.type === ADD_TOAST_MESSAGE) {
+        const newState = [...state, action.payload];
+
+        return newState;
+    }
+
+    if (action.type === DELETE_TOAST_MESSAGE) {
+        console.log("reducer, action payload:", action.payload);
+        return state.filter((message) => message.id !== action.payload);
+    }
+
+    return state;
+}
+
 // TODO(young): use `uuidv4()`
 function myOrkaUUID(state = "naive-id-2", action) {
     return state;
@@ -197,7 +211,7 @@ function tableNotifications(state = 0, action) {
 }
 
 export default combineReducers({
-    localDropState,
+    orkaTheme,
     myUUID,
     peerUUID,
     filesToTransfer,
@@ -205,6 +219,7 @@ export default combineReducers({
     selectedPeer,
     selectedRow,
     selectedSender,
+    toastMessages,
     tableUsers,
     tableSharingData,
     tableComments,

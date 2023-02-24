@@ -24,6 +24,9 @@ import {
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
     addFiles,
+    updateOrkaTheme,
+    addToastMessage,
+    deleteToastMessage,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
@@ -42,6 +45,11 @@ import {
     TABLE_USERS,
 } from "./database/schema";
 import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
+import { v4 as uuidv4 } from "uuid";
+
+function onSwitchTheme() {
+    store.dispatch(updateOrkaTheme());
+}
 
 async function notifySharingData(data) {
     const event = new LocalDropEvent(
@@ -198,6 +206,21 @@ function parsePeerChunk(chunkWithHeader) {
 
 async function writePeerChunk(chunkWithHeader, uuid) {
     await accumulateChunk(chunkWithHeader, uuid);
+}
+
+function addToast(title, description) {
+    const id = uuidv4();
+    const message = {
+        id,
+        title,
+        description,
+    };
+
+    store.dispatch(addToastMessage(message));
+}
+
+function deleteToast(id) {
+    store.dispatch(deleteToastMessage(id));
 }
 
 function updateSelectedPeerUUID(uuid) {
@@ -681,6 +704,7 @@ async function selectTableNotificationsWithUserAndSharingData() {
 }
 
 export {
+    onSwitchTheme,
     notifySharingData,
     notifySharingDataToPeer,
     notifyUser,
@@ -700,6 +724,8 @@ export {
     parsePeerChunk,
     writePeerChunk,
     abortDownloadFile,
+    addToast,
+    deleteToast,
     updateSelectedPeerUUID,
     updateSelectedRowID,
     updateSender,

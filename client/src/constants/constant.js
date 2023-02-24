@@ -8,6 +8,7 @@ export const DATACHANNEL_MAX_BUFFERED_AMOUNT = 8 * 1024 * 1024;
 export const DATACHANNEL_BUFFER_THRESHOLD = 65535;
 
 export const THEME_ORKA_DARK = "OrkaDark";
+export const THEME_ORKA_LIGHT = "OrkaLight";
 
 export const Tabs = Object.freeze({
     Home: "Home",
@@ -54,3 +55,5 @@ export const RANDOM_NAMES = [
     "Tuna",
     "Skate",
 ];
+
+export const STORAGE_COLOR_THEME_KEY = "STORAGE_COLOR_THEME_KEY";

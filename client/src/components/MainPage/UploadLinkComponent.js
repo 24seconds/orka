@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
 import {
+    addToast,
     createTableSharingData,
     notifySharingData,
 } from "../../utils/localApi";
@@ -47,7 +48,13 @@ const PlaceHolder = styled.div`
 
         circle {
             fill: ${(props) =>
-                props.isActive ? props.theme.ActivityRowBackgroundscale02 : props.theme.Grayscale01 };
+                props.isActive
+                    ? props.theme.ActivityRowBackgroundscale02
+                    : props.theme.Grayscale01};
+        }
+
+        > svg > path {
+            stroke: ${(props => props.theme.Grayscale04)};
         }
     }
 
@@ -102,9 +109,12 @@ function UploadLinkComponent(props) {
         // flush
         setText("");
 
-        // notify to other peers
         if (!!sharingData) {
+            // notify to other peers
             await notifySharingData(sharingData);
+
+            // notify to user with toast message
+            addToast("Success!", "Check out 'my page'!");
         }
     }
 

@@ -6,6 +6,7 @@ import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import "./utils/database/database";
+import ToastContainerComponent from "./components/Toast/ToastContainerComponent";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -13,6 +14,16 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <App />
+        </Provider>
+    </React.StrictMode>
+);
+
+const toastContainer = document.getElementById("toast-root");
+const toastRoot = createRoot(toastContainer);
+toastRoot.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <ToastContainerComponent />
         </Provider>
     </React.StrictMode>
 );

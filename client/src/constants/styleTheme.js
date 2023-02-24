@@ -1,4 +1,4 @@
-import { THEME_ORKA_DARK } from "./constant";
+import { THEME_ORKA_DARK, THEME_ORKA_LIGHT } from "./constant";
 import { FontFamily } from "./styleConstants";
 
 const PaletteDark = {
@@ -16,6 +16,9 @@ const PaletteDark = {
     White: "#FFFFFF",
     Whitescale01: "#FEFEFE",
     Black: "#000000",
+
+    // PaletteLight.Grayscale03p5
+    LightGrayscale03p5: "#CCD7EC",
 };
 
 const PaletteLight = {
@@ -38,7 +41,9 @@ const PaletteLight = {
     Whitescale01: "#FEFEFE",
     Black: "#000000",
     Blackscale01: "#2E3136",
-    DarkGrayscale03: PaletteDark.Grayscale03,
+
+    // PaletteDark.Grayscale03
+    DarkGrayscale03: "#202326",
 };
 
 export const ThemeOrkaDark = {
@@ -96,10 +101,14 @@ export const ThemeOrkaDark = {
     DeleteButtonHover: "#FF5151",
 
     UploadInputText: PaletteDark.White,
+
+    ToastBackground: PaletteDark.Primary,
+    ToastMessageTitleText: PaletteDark.White,
+    ToastMessageDescriptionText: PaletteDark.LightGrayscale03p5,
 };
 
 export const ThemeOrkaLight = {
-    name: "OrkaLight",
+    name: THEME_ORKA_LIGHT,
 
     White: PaletteLight.White,
     Gray: PaletteLight.Gray,
@@ -153,6 +162,10 @@ export const ThemeOrkaLight = {
     UploadInputText: PaletteLight.Black,
 
     LightModeHover: PaletteLight.DarkGrayscale03,
+
+    ToastBackground: PaletteLight.PrimaryDark,
+    ToastMessageTitleText: PaletteLight.White,
+    ToastMessageDescriptionText: PaletteLight.Grayscale03p5,
 };
 
 export const ColorThemes = {
