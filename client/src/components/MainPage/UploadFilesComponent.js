@@ -9,6 +9,7 @@ import {
 import FingerprintedFile from "../../utils/dataSchema/FingerprintedFile";
 import {
     addFingerPrintedFiles,
+    addToast,
     createTableSharingData,
     notifySharingData,
 } from "../../utils/localApi";
@@ -109,11 +110,14 @@ function UploadFilesComponent(props) {
         // save in store
         addFingerPrintedFiles(fingerprintedFiles);
 
-        // notify to other peers
         if (sharingDataList?.length > 0) {
+            // notify to other peers
             for (const sharingData of sharingDataList) {
                 await notifySharingData(sharingData);
             }
+
+            // notify to user with toast message
+            addToast("Success!", "Check out 'my page'!");
         }
     }, []);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
