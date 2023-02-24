@@ -15,6 +15,8 @@ import {
     UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_ORKA_THEME,
+    ADD_TOAST_MESSAGE,
+    DELETE_TOAST_MESSAGE,
 } from "./actionType";
 
 export const updateOrkaTheme = () => ({
@@ -95,4 +97,14 @@ export const updateTableCommentMetadata = () => ({
 export const updateTableNotifications = () => ({
     type: UPDATE_TABLE_NOTIFICATIONS,
     payload: 0,
+});
+
+export const addToastMessage = (message) => ({
+    type: ADD_TOAST_MESSAGE,
+    payload: message,
+});
+
+export const deleteToastMessage = (id) => ({
+    type: DELETE_TOAST_MESSAGE,
+    payload: id,
 });

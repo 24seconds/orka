@@ -20,6 +20,8 @@ import {
     UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_TABLE_SHARING_DATA,
+    ADD_TOAST_MESSAGE,
+    DELETE_TOAST_MESSAGE,
 } from "./actionType";
 
 function getStorageColorTheme() {
@@ -132,6 +134,21 @@ function selectedSender(state = null, action) {
     return state;
 }
 
+function toastMessages(state = [], action) {
+    if (action.type === ADD_TOAST_MESSAGE) {
+        const newState = [...state, action.payload];
+
+        return newState;
+    }
+
+    if (action.type === DELETE_TOAST_MESSAGE) {
+        console.log("reducer, action payload:", action.payload);
+        return state.filter((message) => message.id !== action.payload);
+    }
+
+    return state;
+}
+
 // TODO(young): use `uuidv4()`
 function myOrkaUUID(state = "naive-id-2", action) {
     return state;
@@ -196,6 +213,7 @@ export default combineReducers({
     selectedPeer,
     selectedRow,
     selectedSender,
+    toastMessages,
     tableUsers,
     tableSharingData,
     tableComments,
