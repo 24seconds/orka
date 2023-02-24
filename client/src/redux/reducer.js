@@ -28,14 +28,20 @@ function getStorageColorTheme() {
     return window.localStorage.getItem(STORAGE_COLOR_THEME_KEY);
 }
 
+function setStoargeColorTheme(theme) {
+    return window.localStorage.setItem(STORAGE_COLOR_THEME_KEY, theme);
+}
+
 function orkaTheme(
     state = ColorThemes[getStorageColorTheme() || "ThemeOrkaDark"],
     action
 ) {
     if (action.type === UPDATE_ORKA_THEME) {
         if (state?.name === THEME_ORKA_DARK) {
+            setStoargeColorTheme("ThemeOrkaLight");
             return ColorThemes["ThemeOrkaLight"];
         } else {
+            setStoargeColorTheme("ThemeOrkaDark");
             return ColorThemes["ThemeOrkaDark"];
         }
     }
