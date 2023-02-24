@@ -52,6 +52,10 @@ const PlaceHolder = styled.div`
                     ? props.theme.ActivityRowBackgroundscale02
                     : props.theme.Grayscale01};
         }
+
+        > svg > path {
+            stroke: ${(props => props.theme.Grayscale04)};
+        }
     }
 
     input {
