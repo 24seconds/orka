@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import UploadLinkIcon from "../../assets/UploadLinkIcon";
 import {
@@ -12,16 +12,15 @@ const UploadLink = styled.div`
     justify-content: center;
     align-items: center;
     width: 520px;
-    height: 138px;
+    max-height: 226px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
 `;
 
 const PlaceHolder = styled.div`
     display: flex;
-    align-items: center;
     width: 448px;
-    height: 66px;
+    max-height: 226px;
     background: ${(props) => props.theme.Grayscale04};
     border-radius: 18px;
 
@@ -30,6 +29,8 @@ const PlaceHolder = styled.div`
     font-size: 24px;
     line-height: 120%;
     letter-spacing: -0.04em;
+
+    margin: 36px;
 
     .desc {
         width: 100%;
@@ -40,10 +41,10 @@ const PlaceHolder = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 54px;
-        height: 54px;
+        width: 33px;
+        height: 33px;
 
-        margin: 0 13px;
+        margin: 16px 13px 0 13px;
         cursor: pointer;
 
         circle {
@@ -54,16 +55,21 @@ const PlaceHolder = styled.div`
         }
 
         > svg > path {
-            stroke: ${(props => props.theme.Grayscale04)};
+            stroke: ${(props) => props.theme.Grayscale04};
         }
     }
 
-    input {
+    textarea {
+        resize: none;
         background: ${(props) => props.theme.Grayscale04};
         border: none;
         outline: none;
-        height: 100%;
+        height: ${(props) => props.textareaDefaultHeight};
+        max-height: 110px;
         padding: 0;
+
+        margin-top: 22px;
+        margin-bottom: 22px;
 
         font-weight: 400;
         font-size: 18px;
@@ -88,21 +94,26 @@ function UploadLinkComponent(props) {
     const { className } = props;
 
     const [text, setText] = useState("");
+    const textareaRef = useRef(null);
+
+    const textareaDefaultHeight = `22px`;
 
     function onChange(event) {
         setText(event?.target?.value || "");
+
+        textareaRef.current.style.height = "1px";
+        textareaRef.current.style.height = `${event.target.scrollHeight}px`;
     }
 
     async function onKeyDown(event) {
-        if (event?.key === "Enter") {
-            console.log("enter pressed");
+        if (event?.key === "Enter" && (event?.metaKey || event?.ctrlKey)) {
             await onClick(event);
+
+            textareaRef.current.style.height = textareaDefaultHeight;
         }
     }
 
     async function onClick(event) {
-        console.log("clicked");
-
         // save to database
         const sharingData = await createTableSharingData({ text });
 
@@ -120,11 +131,12 @@ function UploadLinkComponent(props) {
 
     return (
         <UploadLink className={className}>
-            <PlaceHolder isActive={text.length > 0}>
-                <input
+            <PlaceHolder isActive={text.length > 0} textareaDefaultHeight={textareaDefaultHeight}>
+                <textarea
                     className="desc"
                     placeholder="Type the URL link here!"
                     value={text}
+                    ref={textareaRef}
                     onChange={onChange}
                     onKeyDown={onKeyDown}
                 />
