@@ -18,7 +18,7 @@ const Container = styled.div`
     font-weight: 300;
     font-size: 18px;
     line-height: 23px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.Grayscale01};
 
     svg {

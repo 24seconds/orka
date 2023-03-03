@@ -28,7 +28,7 @@ const PlaceHolder = styled.div`
     font-weight: 400;
     font-size: 24px;
     line-height: 120%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     margin: 36px;
 
@@ -74,7 +74,7 @@ const PlaceHolder = styled.div`
         font-weight: 400;
         font-size: 18px;
         line-height: 120%;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
 
         color: ${(props) => props.theme.UploadInputText};
 
@@ -110,6 +110,7 @@ function UploadLinkComponent(props) {
             await onClick(event);
 
             textareaRef.current.style.height = textareaDefaultHeight;
+            textareaRef.current.style.height = `${event.target.scrollHeight}px`;
         }
     }
 

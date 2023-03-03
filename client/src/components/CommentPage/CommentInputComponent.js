@@ -6,7 +6,7 @@ const placeHolderTextStyle = css`
     font-weight: 400;
     font-size: 18px;
     line-height: 120%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     color: ${(props) => props.theme.Grayscale01};
 `;
@@ -23,7 +23,7 @@ const InputStyle = styled.input`
     font-weight: 300;
     font-size: 18px;
     line-height: 120%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.CommentRowText};
 
     ::placeholder {

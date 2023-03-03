@@ -52,7 +52,7 @@ const CommentCounter = styled.div`
     font-size: 17px;
     line-height: 100%;
 
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 `;
 
 function FileCommentExpandComponent(props) {

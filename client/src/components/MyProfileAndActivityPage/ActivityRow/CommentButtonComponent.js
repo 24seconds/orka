@@ -9,7 +9,7 @@ const CommentButton = styled(StyledButton)`
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     .orka-title {
         margin-left: 20px;

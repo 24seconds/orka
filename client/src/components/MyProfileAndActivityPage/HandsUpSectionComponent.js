@@ -18,7 +18,7 @@ const HandsUpTitle = styled.div`
     font-weight: 600;
     font-size: 24px;
     line-height: 29px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.PlaceholderTextscale01};
 
     svg {

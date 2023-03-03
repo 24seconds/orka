@@ -59,7 +59,7 @@ const ProfileName = styled.span`
     font-weight: 500;
     font-size: 24px;
     line-height: 29px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     color: ${(props) => props.theme.PlaceholderTextscale01};
 
@@ -82,7 +82,7 @@ const SortButton = styled.button`
     font-weight: 400;
     font-size: 18px;
     line-height: 22px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.Grayscale01};
     background: none;
     border: none;
