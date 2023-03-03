@@ -116,8 +116,16 @@ function UploadFilesComponent(props) {
                 await notifySharingData(sharingData);
             }
 
-            // notify to user with toast message
-            addToast("Success!", "Check out 'my page'!");
+            if (sharingDataList?.length > 1) {
+                // notify to user with toast message
+                addToast(
+                    `(${sharingDataList?.length}/${sharingDataList?.length}) Success!`,
+                    "Check out 'my page'!"
+                );
+            } else {
+                // notify to user with toast message
+                addToast("Success!", "Check out 'my page'!");
+            }
         }
     }, []);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
