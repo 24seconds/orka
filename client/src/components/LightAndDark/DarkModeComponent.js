@@ -20,7 +20,7 @@ const DarkMode = styled.button`
     line-height: 100%;
     /* identical to box height, or 20px */
 
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.Grayscale01};
 
     > svg {

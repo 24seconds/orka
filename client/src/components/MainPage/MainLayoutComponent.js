@@ -39,7 +39,7 @@ const OrkaTitle = styled.div`
     font-weight: 600;
     font-size: 56px;
     line-height: 68px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     margin-bottom: 20px;
 `;

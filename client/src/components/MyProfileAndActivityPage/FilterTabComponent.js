@@ -17,7 +17,7 @@ const FilterTab = styled.div`
     font-weight: 600;
     font-size: 22px;
     line-height: 27px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) =>
         props.isSelected
             ? props.theme.FilterTextActive

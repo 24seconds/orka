@@ -46,7 +46,7 @@ const InfoContainer = styled.div`
         font-weight: 400;
         font-size: 20px;
         line-height: 120%;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
         margin-bottom: 8px;
     }
 
@@ -55,7 +55,7 @@ const InfoContainer = styled.div`
         font-weight: 400;
         font-size: 15px;
         line-height: 18px;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
     }
 `;
 

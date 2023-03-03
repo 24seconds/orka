@@ -24,7 +24,7 @@ const PeerName = styled.div`
 
     font-size: 18px;
     line-height: 110%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     text-overflow: ellipsis;
     overflow: hidden;

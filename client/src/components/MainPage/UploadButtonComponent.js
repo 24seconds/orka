@@ -15,7 +15,7 @@ const UploadButton = styled.div`
     font-weight: 600;
     font-size: 32px;
     line-height: 32px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     &:hover {
         .orka-upload-button-title {

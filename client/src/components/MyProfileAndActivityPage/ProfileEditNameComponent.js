@@ -25,7 +25,7 @@ const EditButton = styled.div`
     font-weight: 300;
     font-size: 24px;
     line-height: 29px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     &:hover {
         background: ${(props) => props.theme.Grayscale04};
@@ -47,7 +47,7 @@ const placeHolderTextStyle = css`
     font-weight: 400;
     font-size: 18px;
     line-height: 120%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     color: ${(props) => props.theme.Grayscale01};
 `;
@@ -59,7 +59,7 @@ const editText = css`
     line-height: 29px;
     /* identical to box height */
 
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.PlaceholderTextscale01};
 `;
 

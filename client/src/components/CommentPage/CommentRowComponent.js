@@ -19,7 +19,7 @@ const ProfileName = styled.span`
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.CommentRowText};
 
     overflow: hidden;
@@ -44,7 +44,7 @@ const TitleContentStyle = styled.div`
         font-weight: 300;
         font-size: 16px;
         line-height: 19px;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
 
         color: ${(props) => props.theme.Grayscale01};
     }
@@ -72,7 +72,7 @@ const TextContentStyle = styled.p`
     font-weight: 300;
     font-size: 18px;
     line-height: 140%;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) => props.theme.CommentRowText};
 `;
 

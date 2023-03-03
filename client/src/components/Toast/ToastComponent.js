@@ -27,7 +27,7 @@ const ToastMessage = styled.div`
         line-height: 100%;
         /* identical to box height, or 28px */
 
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
 
         margin-bottom: 6px;
     }
@@ -40,7 +40,7 @@ const ToastMessage = styled.div`
         line-height: 100%;
         /* identical to box height, or 20px */
 
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
     }
 `;
 

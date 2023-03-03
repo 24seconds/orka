@@ -93,7 +93,7 @@ const FileMetaData = styled.div`
     font-weight: 500;
     font-size: 24px;
     line-height: 29px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 
     .orka-file-name {
         width: 220px;
@@ -109,7 +109,7 @@ const FileMetaData = styled.div`
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
         color: ${(props) => props.theme.Grayscale01};
     }
 `;

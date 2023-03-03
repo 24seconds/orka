@@ -16,7 +16,7 @@ const DataUsageStatus = styled.div`
     font-weight: 400;
     font-size: 14px;
     line-height: 17px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     color: ${(props) =>
         props.isActive
             ? props.theme.StatusActiveText
