@@ -1,6 +1,7 @@
 import {
     DATATYPE_FILE,
     DATATYPE_LINK,
+    DATA_EXTENSION_GENERAL,
     PROFILE_IMAGE_COUNT,
     RANDOM_ADJECTIVE,
     RANDOM_NAMES,
@@ -98,16 +99,39 @@ function getRandomNumber(max) {
     return Math.floor(Math.random() * max);
 }
 
-// ex) "image/png", "image/png;param=hoho"
-function getSubtypeOfMIMEtypes(types) {
-    const regex = /(.*){1}\/([^;]*){1}(;.*)*/;
-    const matched = types.match(regex);
+// inferFileExtension tries to infer the file extension.
+// if it failed to infer, it returns "GENERAL"
+function inferFileExtension(mimeType, name) {
+    const subType = getSubtypeOfMIMEtype(mimeType);
 
-    if (matched.length >= 3) {
+    if (subType !== null) {
+        return subType;
+    }
+
+    return getFileExtenstion(name);
+}
+
+// ex) input "image/png" -> output "png",
+// input "image/png;param=hoho" -> output "png"
+function getSubtypeOfMIMEtype(type) {
+    const regex = /(.*){1}\/([^;]*){1}(;.*)*/;
+    const matched = type.match(regex);
+
+    if (matched && matched.length >= 3) {
         return matched[2];
     }
 
     return null;
+}
+
+// ex) input "orka.har" -> output "har"
+// fallback type is DATA_EXTENSION_GENERAL
+function getFileExtenstion(name) {
+    const arr = name.split(".");
+    if (arr.length === 1) {
+        return DATA_EXTENSION_GENERAL;
+    }
+    return arr.pop();
 }
 
 function getProfilePath(profile) {
@@ -122,6 +146,6 @@ export {
     convertTimestampReadable,
     generateUserProfile,
     generateSharingDataUUID,
-    getSubtypeOfMIMEtypes,
+    inferFileExtension,
     getProfilePath,
 };

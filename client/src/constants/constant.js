@@ -19,6 +19,8 @@ export const Tabs = Object.freeze({
 export const DATATYPE_FILE = "FILE";
 export const DATATYPE_LINK = "LINK";
 
+export const DATA_EXTENSION_GENERAL = "GENERAL";
+
 export const NOTIFICATION_TYPE_STATUS = "STATUS";
 export const NOTIFICATION_TYPE_COMMENT = "COMMENT";
 
