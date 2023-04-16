@@ -132,7 +132,10 @@ function UploadLinkComponent(props) {
 
     return (
         <UploadLink className={className}>
-            <PlaceHolder isActive={text.length > 0} textareaDefaultHeight={textareaDefaultHeight}>
+            <PlaceHolder
+                isActive={text.length > 0}
+                textareaDefaultHeight={textareaDefaultHeight}
+            >
                 <textarea
                     className="desc"
                     placeholder="Type the URL link here!"

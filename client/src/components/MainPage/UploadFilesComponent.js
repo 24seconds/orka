@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import {
     generateFingerPrint,
     getSubtypeOfMIMEtypes,
+    inferFileExtension,
 } from "../../utils/commonUtil";
 import FingerprintedFile from "../../utils/dataSchema/FingerprintedFile";
 import {
@@ -92,9 +93,10 @@ function UploadFilesComponent(props) {
             fingerprintedFiles.map((fingerprintedFile) => {
                 const dataID = fingerprintedFile.fingerprint;
                 const fileName = fingerprintedFile.file.name;
-                const fileType =
-                    getSubtypeOfMIMEtypes(fingerprintedFile.file.type) ||
-                    "unknown";
+                const fileType = inferFileExtension(
+                    fingerprintedFile.file.type,
+                    fingerprintedFile.file.name
+                );
                 const sizeInBytes = fingerprintedFile.file.size;
 
                 return createTableSharingData({
