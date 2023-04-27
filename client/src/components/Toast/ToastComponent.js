@@ -85,10 +85,12 @@ const Toast = styled.div`
 
     @keyframes hide-toast {
         from {
-            transform: ${(props) => props.transform};
+            opacity: 1;
+            transform: translate(0, -110%);
         }
         to {
-            transform: translate(0, 110%);
+            opacity: 0;
+            transform: translate(0, -110%);
         }
     }
 
