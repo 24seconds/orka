@@ -1,6 +1,9 @@
+import isURL from "validator/lib/isURL";
+
 import {
     DATATYPE_FILE,
     DATATYPE_LINK,
+    DATATYPE_TEXT,
     DATA_EXTENSION_GENERAL,
     PROFILE_IMAGE_COUNT,
     RANDOM_ADJECTIVE,
@@ -134,6 +137,16 @@ function getFileExtenstion(name) {
     return arr.pop();
 }
 
+// inferDataTypeOfText infers data type of text.
+// if it failed to infer, fallback to DATATYPE_TEXT
+function inferDataTypeOfText(text) {
+    if (isURL(text)) {
+        return DATATYPE_LINK;
+    }
+
+    return DATATYPE_TEXT;
+}
+
 function getProfilePath(profile) {
     return `profile_${RANDOM_NAMES[profile].toLowerCase()}.png`;
 }
@@ -147,5 +160,6 @@ export {
     generateUserProfile,
     generateSharingDataUUID,
     inferFileExtension,
+    inferDataTypeOfText,
     getProfilePath,
 };

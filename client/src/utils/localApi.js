@@ -46,7 +46,7 @@ import {
 } from "./database/schema";
 import {
     DATATYPE_FILE,
-    DATATYPE_LINK,
+    DATATYPE_TEXT,
     TOAST_HIDE_STRATEGY_FADE_OUT,
 } from "../constants/constant";
 import { v4 as uuidv4 } from "uuid";
@@ -399,7 +399,6 @@ async function createTableSharingData({
     const id = dataID || generateSharingDataUUID();
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
-    console.log(id, uploader_id, uploaded_at);
 
     const query = (() => {
         if (type === DATATYPE_FILE) {
@@ -408,7 +407,7 @@ async function createTableSharingData({
                 "${uploader_id}", "${uploaded_at}");`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
+                "${id}", NULL, 0, NULL, "${text}", "${type || DATATYPE_TEXT}", 0, false, 
                 "${uploader_id}", "${uploaded_at}");`;
         }
     })();

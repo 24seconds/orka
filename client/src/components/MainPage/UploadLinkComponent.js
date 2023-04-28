@@ -6,6 +6,7 @@ import {
     createTableSharingData,
     notifySharingData,
 } from "../../utils/localApi";
+import { inferDataTypeOfText } from "../../utils/commonUtil";
 
 const UploadLink = styled.div`
     display: flex;
@@ -116,7 +117,10 @@ function UploadLinkComponent(props) {
 
     async function onClick(event) {
         // save to database
-        const sharingData = await createTableSharingData({ text });
+
+        // infer text is LINK or TEXT
+        const type = inferDataTypeOfText(text);
+        const sharingData = await createTableSharingData({ text, type });
 
         // flush
         setText("");

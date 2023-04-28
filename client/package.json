@@ -21,7 +21,8 @@
         "redux": "^4.0.5",
         "streamsaver": "^2.0.4",
         "styled-components": "^5.1.1",
-        "uuid": "^9.0.0"
+        "uuid": "^9.0.0",
+        "validator": "^13.9.0"
     },
     "scripts": {
         "start": "react-scripts start",
