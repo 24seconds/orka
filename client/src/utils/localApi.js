@@ -44,7 +44,11 @@ import {
     TABLE_SHARING_DATA,
     TABLE_USERS,
 } from "./database/schema";
-import { DATATYPE_FILE, DATATYPE_LINK } from "../constants/constant";
+import {
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+    TOAST_HIDE_STRATEGY_FADE_OUT,
+} from "../constants/constant";
 import { v4 as uuidv4 } from "uuid";
 
 function onSwitchTheme() {
@@ -214,6 +218,7 @@ function addToast(title, description) {
         id,
         title,
         description,
+        hideStrategy: TOAST_HIDE_STRATEGY_FADE_OUT,
     };
 
     store.dispatch(addToastMessage(message));

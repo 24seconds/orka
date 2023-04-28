@@ -30,6 +30,7 @@ function ToastContainerComponent() {
                             messageID={message.id}
                             title={message.title}
                             description={message.description}
+                            hideStrategy={message.hideStrategy}
                         />
                     );
                 })}

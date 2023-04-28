@@ -5,6 +5,11 @@ import ToastCheckIcon from "../../assets/ToastCheckIcon";
 import CloseIcon from "../../assets/CloseIcon";
 import { shallowEqual, useSelector } from "react-redux";
 import { deleteToast } from "../../utils/localApi";
+import { TOAST_HIDE_STRATEGY_SRHINK } from "../../constants/constant";
+
+const ANIMATION_STATE_SHOW = "ANIMATION_STATE_SHOW";
+const ANIMATION_STATE_FADE_OUT = "ANIMATION_STATE_FADE_OUT";
+const ANIMATION_STATE_SHRINK = "ANIMATION_STATE_SHRINK";
 
 const ToastCheck = styled.div`
     display: flex;
@@ -64,6 +69,9 @@ const Toast = styled.div`
     grid-column-start: 2;
     grid-row-start: 1;
 
+    align-self: center;
+    justify-self: center;
+
     background-color: ${(props) => props.theme.ToastBackground};
 
     ${ToastCheck} {
@@ -94,18 +102,55 @@ const Toast = styled.div`
         }
     }
 
-    animation-name: ${(props) =>
-        props.shouldReverse ? "hide-toast" : "show-toast"};
-    animation-duration: 0.3s;
+    @keyframes hide-toast-shrink {
+        from {
+            opacity: 1;
+            transform: translate(0, -110%);
+            width: 520px;
+            height: 100px;
+        }
+        to {
+            opacity: 0;
+            transform: translate(0, -100%);
+            width: 416px;
+            height: 80px;
+        }
+    }
 
-    transform: ${(props) =>
-        props.shouldReverse ? "translate(0, 110%)" : "translate(0, -110%)"};
+    animation-duration: ${(props) => {
+        if (props.animationState === ANIMATION_STATE_SHRINK) {
+            return "1.3s";
+        }
+
+        return "0.3s";
+    }};
+
+    animation-name: ${(props) => {
+        if (props.animationState === ANIMATION_STATE_SHOW) {
+            return "show-toast";
+        } else if (props.animationState === ANIMATION_STATE_FADE_OUT) {
+            return "hide-toast";
+        } else if (props.animationState === ANIMATION_STATE_SHRINK) {
+            return "hide-toast-shrink";
+        }
+    }};
+
+    transform: ${(props) => {
+        if (props.animationState === ANIMATION_STATE_SHOW) {
+            return "translate(0, -110%)";
+        } else if (props.animationState === ANIMATION_STATE_FADE_OUT) {
+            return "translate(0, 110%)";
+        } else if (props.animationState === ANIMATION_STATE_SHRINK) {
+            return "translate(0, 110%)";
+        }
+    }};
 `;
 
 function ToastComponent(props) {
-    const { className, messageID, title, description } = props;
-    const [shouldReverse, setShouldReverse] = useState(false);
+    const { className, messageID, title, description, hideStrategy } = props;
     const [transformStyle, setTransformStyle] = useState("translate(0, -110%)");
+    const [animationState, setAnimationState] = useState(ANIMATION_STATE_SHOW);
+    const [reverseReady, setReverseReady] = useState(false);
 
     const ref = useRef(null);
 
@@ -113,7 +158,8 @@ function ToastComponent(props) {
         const time = 2300;
 
         const timeoutID = setTimeout(() => {
-            setShouldReverse(true);
+            setAnimationState(ANIMATION_STATE_FADE_OUT);
+            setReverseReady(true);
         }, time);
 
         return () => clearTimeout(timeoutID);
@@ -123,7 +169,7 @@ function ToastComponent(props) {
         const styles = getComputedStyle(ref.current);
         setTransformStyle(styles.transform);
 
-        setShouldReverse(true);
+        setAnimationState(ANIMATION_STATE_FADE_OUT);
     }, [ref]);
 
     const onAnimationEnd = useCallback(
@@ -135,11 +181,19 @@ function ToastComponent(props) {
         [messageID]
     );
 
+    const computedAnimationStyle = (() => {
+        if (hideStrategy === TOAST_HIDE_STRATEGY_SRHINK) {
+            return ANIMATION_STATE_SHRINK;
+        }
+
+        return animationState;
+    })();
+
     return (
         <Toast
             className={className}
             transform={transformStyle}
-            shouldReverse={shouldReverse}
+            animationState={computedAnimationStyle}
             ref={ref}
             onAnimationEnd={onAnimationEnd}
         >
