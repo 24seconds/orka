@@ -17,13 +17,19 @@ import {
 import { shallowEqual, useSelector } from "react-redux";
 import HandsUpActivateButtonComponent from "./HandsUpActivateButtomComponent";
 import { convertTimestampReadable } from "../../../utils/commonUtil";
+import {
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+    DATATYPE_TEXT,
+    DATA_EXTENSION_GENERAL,
+} from "../../../constants/constant";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
 `;
 
 // TODO(young): Refactor this to make it reusable. It is also used in peer component.
-const DataTypeHolder = styled.div`
+const DataExtensionHolder = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,7 +62,7 @@ const ActivityRow = styled.div`
 
     ${(props) => props.isSelected && selectedStyle}
 
-    .orka-data-type-holder {
+    .orka-data-extension-holder {
         margin-left: 32px;
     }
 
@@ -81,7 +87,7 @@ const ActivityRow = styled.div`
     ${(props) => !props.isSelected && hoverRow}
 
     &:hover {
-        ${DataTypeHolder} {
+        ${DataExtensionHolder} {
             background: ${(props) => props.theme.Grayscale01};
         }
 
@@ -182,11 +188,17 @@ function renderAction(
             return <HandsUpActivateButtonComponent onClick={onCancelHandsUp} />;
         }
 
-        return isMyProfileRow ? (
-            <HandsUpButtonComponent onClick={onClickHandsUp} />
-        ) : (
+        if (isMyProfileRow) {
+            return <HandsUpButtonComponent onClick={onClickHandsUp} />;
+        }
+
+        if (dataType === DATATYPE_LINK) {
+            return <TextCopyComponent text={url}/>;
+        }
+
+        return (
             <ActionButtonComponent
-                type={dataType === "URL" ? "TEXT" : "FILE"}
+                type=""
                 onClick={
                     dataType === "URL"
                         ? onClickURLNavigate
@@ -198,15 +210,6 @@ function renderAction(
 
     return (
         <Fragment>
-            {dataType === "URL" ? (
-                <TextCopyComponent text={url} />
-            ) : (
-                <FileCommentExpandComponent
-                    isSelected={isSelected}
-                    count={commentCount}
-                    onClickComment={onClickComment}
-                />
-            )}
             {renderIcon()}
         </Fragment>
     );
@@ -216,12 +219,14 @@ function renderAction(
 function ActivityRowComponent(props) {
     const {
         dataType,
+        dataExtension,
         displayName,
         isSelected,
         onClickComment,
         // rowID is data ID
         rowID,
         senderID,
+        // TODO(young): remove this later
         usageCount,
         size,
         commentCount,
@@ -242,6 +247,14 @@ function ActivityRowComponent(props) {
         () => convertTimestampReadable(createdAt, new Date()),
         [createdAt]
     );
+
+    const metadataDesc = useMemo(() => {
+        if (dataType === DATATYPE_FILE) {
+            return `${sizeHumanReadable} | ${timestampHumanReadable}`;
+        } else {
+            return `${timestampHumanReadable}`;
+        }
+    }, [sizeHumanReadable, timestampHumanReadable, dataType]);
 
     const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
@@ -297,30 +310,19 @@ function ActivityRowComponent(props) {
 
     return (
         <ActivityRow isSelected={isSelected}>
-            <DataTypeHolder className="orka-data-type-holder">
-                {/* TODO(young): refactor this part. 
-                    if the dataType is FILE then extract extensions. FILE type's default is 'FILE'  */}
-                {dataType}
-            </DataTypeHolder>
+            {/* TODO(young): refactor this. It should show icon, not text */}
+            <DataExtensionHolder className="orka-data-extension-holder">
+                {dataExtension}
+            </DataExtensionHolder>
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
                     <FileMetaData>
                         <div className="orka-file-name">{displayName}</div>
                         <div className="orka-size-and-timestamp">
-                            {dataType === "TXT"
-                                ? `URL description blah blah blah | ${timestampHumanReadable}`
-                                : `${sizeHumanReadable} | ${timestampHumanReadable}`}
+                            {metadataDesc}
                         </div>
                     </FileMetaData>
                 </div>
-                <DataUsageStatusComponent
-                    text={
-                        dataType === "URL"
-                            ? `${usageCount} views`
-                            : `${usageCount} downloaded`
-                    }
-                    isActive={usageCount > 0}
-                />
             </div>
             <div className="orka-action-container">
                 {renderAction(
@@ -345,6 +347,7 @@ function ActivityRowComponent(props) {
 
 ActivityRowComponent.propTypes = {
     dataType: PropTypes.string.isRequired,
+    dataExtension: PropTypes.string.isRequired,
     displayName: PropTypes.string,
     usageCount: PropTypes.number.isRequired,
     commentCount: PropTypes.number.isRequired,
@@ -354,6 +357,7 @@ ActivityRowComponent.propTypes = {
 
 ActivityRowComponent.defaultProps = {
     dataType: "PNG",
+    dataExtension: DATA_EXTENSION_GENERAL,
     displayName: "",
     usageCount: 0,
     commentCount: 0,

@@ -407,7 +407,9 @@ async function createTableSharingData({
                 "${uploader_id}", "${uploaded_at}");`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, NULL, "${text}", "${type || DATATYPE_TEXT}", 0, false, 
+                "${id}", NULL, 0, NULL, "${text}", "${
+                type || DATATYPE_TEXT
+            }", 0, false, 
                 "${uploader_id}", "${uploaded_at}");`;
         }
     })();

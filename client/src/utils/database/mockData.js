@@ -121,6 +121,9 @@ INSERT INTO sharing_data VALUES (
     "naive-link-id-3", NULL, 0, NULL, "https://dev.orka.run.hohohohohohohohohohoho", "LINK", 0, false, 
     "naive-id-2", "2022-10-05T15:48:00.000Z");
 INSERT INTO sharing_data VALUES (
+    "naive-text-id-1", NULL, 0, NULL, "hohoho", "TEXT", 0, false, 
+    "naive-id-2", "2022-10-05T15:48:00.000Z");
+INSERT INTO sharing_data VALUES (
     "naive-link-id-2", NULL, 0, NULL, "https://orka.run", "LINK", 0, false, 
     "naive-uploader", "2022-10-05T16:48:00.000Z");
         `)

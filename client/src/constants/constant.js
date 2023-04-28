@@ -21,6 +21,11 @@ export const DATATYPE_LINK = "LINK";
 export const DATATYPE_TEXT = "TEXT";
 
 export const DATA_EXTENSION_GENERAL = "GENERAL";
+export const DATA_EXTENSION_LINK = "LINK";
+export const DATA_EXTENSION_TEXT = "TEXT";
+export const DATA_EXTENSION_VIDEO = "VIDEO";
+export const DATA_EXTENSION_AUDIO = "AUDIO";
+export const DATA_EXTENSION_IMAGE = "IMAGE";
 
 export const NOTIFICATION_TYPE_STATUS = "STATUS";
 export const NOTIFICATION_TYPE_COMMENT = "COMMENT";

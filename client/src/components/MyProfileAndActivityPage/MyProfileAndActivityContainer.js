@@ -93,7 +93,8 @@ function renderActivityRowComponent(
                 rowID={data.id}
                 senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={data.extension}
+                dataType={data.type}
+                dataExtension={data.extension}
                 displayName={data.name}
                 size={data.size}
                 usageCount={data.status_count}
@@ -114,7 +115,8 @@ function renderActivityRowComponent(
                 rowID={data.id}
                 senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={"URL"}
+                dataType={data.type}
+                dataExtension={data.extension}
                 displayName={data.text}
                 usageCount={data.status_count}
                 commentCount={data.comment_count}

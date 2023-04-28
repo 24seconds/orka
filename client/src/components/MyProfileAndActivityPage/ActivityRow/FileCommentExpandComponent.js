@@ -55,6 +55,7 @@ const CommentCounter = styled.div`
     letter-spacing: -0.02em;
 `;
 
+// TODO(young): remove this. It's unused.
 function FileCommentExpandComponent(props) {
     const { isSelected, count, onClickComment } = props;
 

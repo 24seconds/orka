@@ -23,6 +23,7 @@ const DataUsageStatus = styled.div`
             : props.theme.Grayscale02};
 `;
 
+// TODO (young): remove this later. It's unused
 function DataUsageStatusComponent(props) {
     const { text, isActive } = props;
     return <DataUsageStatus isActive={isActive}>{text}</DataUsageStatus>;
