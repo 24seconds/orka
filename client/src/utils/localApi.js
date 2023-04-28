@@ -19,7 +19,6 @@ import {
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
-    updateTableCommentMetadata as updateTableCommentMetadataCounter,
     updateTableNotifications as updateTableNotificationsCounter,
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
@@ -38,8 +37,6 @@ import {
 } from "./downloadManager";
 import { run } from "./database/database";
 import {
-    TABLE_COMMENTS,
-    TABLE_COMMENT_METADATA,
     TABLE_NOTIFICATIONS,
     TABLE_SHARING_DATA,
     TABLE_USERS,
@@ -242,10 +239,6 @@ function updateTableUsers() {
 
 function updateTableSharingData() {
     store.dispatch(updateTableSharingDataCounter());
-}
-
-function updateTableCommentMetadata() {
-    store.dispatch(updateTableCommentMetadataCounter());
 }
 
 function updateTableNotifications() {
@@ -585,63 +578,17 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
         return;
     }
 
-    const naiveQueriesForTableSharingData = sharingDataIDs.map(
+    const query = sharingDataIDs.map(
         (id) => `
         DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
     `
     );
-
-    const navieQueriesForTableComments = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_COMMENTS.name} WHERE ${TABLE_COMMENTS.fields.data_id} = "${id}";
-    `
-    );
-
-    const naiveQueriesForTableCommentMetadata = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_COMMENT_METADATA.name} 
-        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${id}";
-    `
-    );
-
-    const query = [
-        ...naiveQueriesForTableSharingData,
-        ...navieQueriesForTableComments,
-        ...naiveQueriesForTableCommentMetadata,
-    ].join("\n");
 
     console.log("deleteTableSharingDataByIDs, query:", query);
 
     const result = await run(query);
     console.log("deleteTableSharingDataByIDs, result:", result);
     // return result?.[0]?.rows;
-}
-
-// TODO(young): Add logic - filter by receiver ID
-async function selectTableCommentsByDataID(dataID, receiverID) {
-    const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
-        WHERE ${TABLE_COMMENTS.fields.data_id} = "${dataID}"
-        AND ${TABLE_COMMENTS.fields.receiver_id} = "${receiverID}"
-        ORDER BY ${TABLE_COMMENTS.fields.created_at} ASC;`;
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableCommentMetadataByDataID(dataID) {
-    const query = `SELECT * FROM ${TABLE_COMMENT_METADATA.name}
-        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${dataID}";`;
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
 }
 
 async function selectTableNotifications() {
@@ -725,11 +672,6 @@ export {
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
-    // comments
-    selectTableCommentsByDataID,
-    // comment metadata
-    selectTableCommentMetadataByDataID,
-    updateTableCommentMetadata,
     // notifications
     selectTableNotifications,
     updateTableNotifications,

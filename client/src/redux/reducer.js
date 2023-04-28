@@ -16,9 +16,7 @@ import {
     UPDATE_SELECTED_PEER,
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
-    UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
-    UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_TABLE_SHARING_DATA,
     ADD_TOAST_MESSAGE,
@@ -189,26 +187,6 @@ function tableSharingData(state = 0, action) {
     return state;
 }
 
-function tableComments(state = 0, action) {
-    if (action.type === UPDATE_TABLE_COMMENTS) {
-        const newState = state + 1;
-
-        return newState;
-    }
-
-    return state;
-}
-
-function tableCommentMetadata(state = 0, action) {
-    if (action.type === UPDATE_TABLE_COMMENT_METADATA) {
-        const newState = state + 1;
-
-        return newState;
-    }
-
-    return state;
-}
-
 function tableNotifications(state = 0, action) {
     if (action.type === UPDATE_TABLE_NOTIFICATIONS) {
         const newState = state + 1;
@@ -231,8 +209,6 @@ export default combineReducers({
     toastMessages,
     tableUsers,
     tableSharingData,
-    tableComments,
-    tableCommentMetadata,
     tableNotifications,
     myOrkaUUID,
 });

@@ -94,8 +94,6 @@ export const ThemeOrkaDark = {
     StatusActive: PaletteDark.Primary02,
     StatusActiveText: PaletteDark.Primary,
 
-    CommentRowText: PaletteDark.Whitescale01,
-
     NotificationRowText: PaletteDark.Whitescale01,
 
     DeleteButtonHover: "#FF5151",
@@ -152,8 +150,6 @@ export const ThemeOrkaLight = {
     ActiveRowDisplayText: PaletteLight.Blackscale01,
     StatusActive: PaletteLight.Primary02,
     StatusActiveText: PaletteLight.Primary,
-
-    CommentRowText: PaletteLight.Blackscale01,
 
     NotificationRowText: PaletteLight.Blackscale01,
 

@@ -18,57 +18,6 @@ async function insertMockData(glue) {
 
     await glue.query(
         middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-2", "naive-file-id-1", "FILE", "i want to download but i
-            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
-            "naive-sender", "naive-id-3", "2022-10-02T16:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-3", "naive-file-id-1", "FILE", "hoho", 
-            "naive-sender", "naive-id-3", "2022-10-02T17:48:00.000Z");`)
-    );
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-4", "naive-file-id-1", "FILE", "hoho", 
-            "naive-sender", "naive-id-3", "2022-10-02T12:28:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-5", "naive-file-id-2", "FILE", "hoho", 
-            "naive-sender", "naive-id-2", "2022-10-02T16:48:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-6", "naive-file-id-2", "FILE", "i want to download but i
-            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
-            "naive-sender", "naive-id-2", "2022-10-02T08:21:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comments VALUES (
-            "naive-comment-id-7", "naive-file-id-1", "FILE", "i want to download but i
-            can’tdaklfdjaslkdjfalkdsnfaldlafksldkfjalsdkjfaljdflksa", 
-            "naive-id-1", "naive-id-1", "2022-10-02T08:21:00.000Z");`)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
-        INSERT INTO comment_metadata VALUES (
-            "naive-file-id-2", "naive-comment-id-5"
-        );
-    `)
-    );
-
-    await glue.query(
-        middlewareForDebugQuery(`
         INSERT INTO notifications VALUES (
             "naive-noti-id-1", "COMMENT", "notification came hohoho", "naive-file-id-2",
             "naive-id-2", "2022-10-02T08:21:00.000Z"

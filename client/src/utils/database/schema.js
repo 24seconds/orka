@@ -31,27 +31,6 @@ const TABLE_SHARING_DATA = {
     },
 };
 
-const TABLE_COMMENTS = {
-    name: "comments",
-    fields: {
-        id: "id",
-        data_id: "data_id",
-        // data_type could be either FILE or LINK
-        data_type: "data_type",
-        text: "text",
-        sender_id: "sender_id",
-        receiver_id: "receiver_id",
-        created_at: "created_at",
-    },
-};
-
-const TABLE_COMMENT_METADATA = {
-    name: "comment_metadata",
-    fields: {
-        data_id: "data_id",
-        last_read_comment_id: "last_read_comment_id",
-    },
-};
 
 const TABLE_NOTIFICATIONS = {
     name: "notifications",
@@ -71,19 +50,6 @@ CREATE TABLE IF NOT EXISTS ${TABLE_USERS.name} (
     ${TABLE_USERS.fields.id} TEXT PRIMARY KEY,
     ${TABLE_USERS.fields.name} TEXT NOT NULL,
     ${TABLE_USERS.fields.profile} INTEGER NOT NULL
-);
-CREATE TABLE IF NOT EXISTS ${TABLE_COMMENTS.name} (
-    ${TABLE_COMMENTS.fields.id} TEXT PRIMARY KEY,
-    ${TABLE_COMMENTS.fields.data_id} TEXT NOT NULL,
-    ${TABLE_COMMENTS.fields.data_type} TEXT NOT NULL,
-    ${TABLE_COMMENTS.fields.text} TEXT NOT NULL,
-    ${TABLE_COMMENTS.fields.sender_id} TEXT NOT NULL,
-    ${TABLE_COMMENTS.fields.receiver_id} TEXT NOT NULL,
-    ${TABLE_COMMENTS.fields.created_at} TIMESTAMP NOT NULL
-);
-CREATE TABLE IF NOT EXISTS ${TABLE_COMMENT_METADATA.name} (
-    ${TABLE_COMMENT_METADATA.fields.data_id} TEXT PRIMARY KEY,
-    ${TABLE_COMMENT_METADATA.fields.last_read_comment_id} TEXT NULL
 );
 CREATE TABLE IF NOT EXISTS ${TABLE_NOTIFICATIONS.name} (
     ${TABLE_NOTIFICATIONS.fields.id} TEXT PRIMARY KEY,
@@ -111,7 +77,5 @@ export {
     DDLQueries,
     TABLE_USERS,
     TABLE_SHARING_DATA,
-    TABLE_COMMENTS,
-    TABLE_COMMENT_METADATA,
     TABLE_NOTIFICATIONS,
 };
