@@ -142,7 +142,7 @@ function UploadLinkComponent(props) {
             >
                 <textarea
                     className="desc"
-                    placeholder="Type the URL link here!"
+                    placeholder="Type the Text or URL link here!"
                     value={text}
                     ref={textareaRef}
                     onChange={onChange}
