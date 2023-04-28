@@ -1,11 +1,9 @@
 import React, { Fragment, useMemo } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import DataUsageStatusComponent from "./DataUsageStatusComponent";
-import FileCommentExpandComponent from "./FileCommentExpandComponent";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
-import { hoverOpacity, hoverRow } from "../../SharedStyle";
+import { hoverRow } from "../../SharedStyle";
 import CloseIcon from "../../../assets/CloseIcon";
 import HandsUpButtonComponent from "./HandsUpButtonComponent";
 import {
@@ -20,7 +18,6 @@ import { convertTimestampReadable } from "../../../utils/commonUtil";
 import {
     DATATYPE_FILE,
     DATATYPE_LINK,
-    DATATYPE_TEXT,
     DATA_EXTENSION_GENERAL,
 } from "../../../constants/constant";
 
@@ -162,7 +159,6 @@ function renderAction(
     isSelected,
     isEditMode,
     dataType,
-    commentCount,
     url,
     isMyProfileRow,
     isHandsUpRow,
@@ -171,7 +167,6 @@ function renderAction(
     onClickDonwloadButton,
     onClickURLNavigate,
     onCancelHandsUp,
-    onClickComment
 ) {
     if (isEditMode) {
         return (
@@ -198,9 +193,9 @@ function renderAction(
 
         return (
             <ActionButtonComponent
-                type=""
+                type={dataType}
                 onClick={
-                    dataType === "URL"
+                    dataType === DATATYPE_LINK
                         ? onClickURLNavigate
                         : onClickDonwloadButton
                 }
@@ -222,14 +217,10 @@ function ActivityRowComponent(props) {
         dataExtension,
         displayName,
         isSelected,
-        onClickComment,
         // rowID is data ID
         rowID,
         senderID,
-        // TODO(young): remove this later
-        usageCount,
         size,
-        commentCount,
         isMyProfileRow,
         isEditMode,
         createdAt,
@@ -304,10 +295,6 @@ function ActivityRowComponent(props) {
         }
     }
 
-    function onClickCommentIcon() {
-        onClickComment?.(rowID, senderID);
-    }
-
     return (
         <ActivityRow isSelected={isSelected}>
             {/* TODO(young): refactor this. It should show icon, not text */}
@@ -329,7 +316,6 @@ function ActivityRowComponent(props) {
                     isSelected,
                     isEditMode,
                     dataType,
-                    commentCount,
                     dataURL,
                     isMyProfileRow,
                     isHandsUpRow,
@@ -337,8 +323,7 @@ function ActivityRowComponent(props) {
                     onClickHandsUp,
                     onClickDonwloadButton,
                     onClickURLNavigate,
-                    onCancelHandsUp,
-                    onClickCommentIcon
+                    onCancelHandsUp
                 )}
             </div>
         </ActivityRow>
@@ -349,8 +334,6 @@ ActivityRowComponent.propTypes = {
     dataType: PropTypes.string.isRequired,
     dataExtension: PropTypes.string.isRequired,
     displayName: PropTypes.string,
-    usageCount: PropTypes.number.isRequired,
-    commentCount: PropTypes.number.isRequired,
     isMyProfileRow: PropTypes.bool,
     isHandsUpRow: PropTypes.bool,
 };
@@ -359,8 +342,6 @@ ActivityRowComponent.defaultProps = {
     dataType: "PNG",
     dataExtension: DATA_EXTENSION_GENERAL,
     displayName: "",
-    usageCount: 0,
-    commentCount: 0,
     isMyProfileRow: false,
     isHandsUpRow: false,
 };

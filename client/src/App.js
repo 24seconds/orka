@@ -6,7 +6,6 @@ import "./utils/window";
 import { mobileWidth } from "./constants/styleConstants";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
-import CommentLayoutComponent from "./components/CommentPage/CommentLayoutComponent";
 import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
 import CreatorBadgeComponent from "./components/CreatorBadge/CreatorBadgeComponent";
 import { onSwitchTheme } from "./utils/localApi";
@@ -104,7 +103,6 @@ class App extends Component {
         console.log("selectedRow:", selectedRow);
 
         const shouldOpenPeerActivityLayout = selectedPeer !== null;
-        const shouldOpenCommentLayout = selectedRow != null;
 
         return (
             <ThemeProvider theme={orkaTheme}>
@@ -118,14 +116,12 @@ class App extends Component {
                     <OrkaContainer>
                         <OrkaMainLayout
                             IsPeerActivityLayoutOpen={
-                                shouldOpenPeerActivityLayout ||
-                                shouldOpenCommentLayout
+                                shouldOpenPeerActivityLayout
                             }
                         />
                         {shouldOpenPeerActivityLayout && (
                             <OrkaPeerActivityLayout />
                         )}
-                        {shouldOpenCommentLayout && <CommentLayoutComponent />}
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                         </MobileSticky>

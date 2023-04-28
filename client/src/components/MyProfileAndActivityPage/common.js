@@ -6,7 +6,6 @@ function renderActivityRowComponent(
     data,
     activeRow,
     myOrkaUUID,
-    onClickComment,
     onDeleteRow
 ) {
     if (data?.type === DATATYPE_FILE) {
@@ -20,12 +19,9 @@ function renderActivityRowComponent(
                 dataExtension={data.extension}
                 displayName={data.name}
                 size={data.size}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
-                onClickComment={onClickComment}
                 onDeleteRow={onDeleteRow}
             />
         );
@@ -39,13 +35,10 @@ function renderActivityRowComponent(
                 isSelected={activeRow === data.id}
                 dataType={data.type}
                 displayName={data.text}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
                 dataURL={data.text}
-                onClickComment={onClickComment}
                 onDeleteRow={onDeleteRow}
             />
         );

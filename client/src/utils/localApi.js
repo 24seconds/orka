@@ -505,42 +505,12 @@ async function selectTableSharingDataByID(id) {
     return result?.[0]?.rows?.[0];
 }
 
-async function selectTableSharingDataWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
-            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
-
-    if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(c.id) as comment_count,
-            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
-        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
-    }
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
-    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
-            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+async function selectTableSharingDataWithOrderBy(userID, order) {
+    let query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(c.id) as comment_count,
-            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
     }
@@ -751,8 +721,7 @@ export {
     updateTableSharingData,
     selectTableSharingDataByUserID,
     selectTableSharingDataByID,
-    selectTableSharingDataWithCommentCount,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,

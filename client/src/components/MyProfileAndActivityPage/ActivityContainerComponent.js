@@ -6,9 +6,8 @@ import { IMAGE_URL } from "../../constants/constant";
 import { filterSharingData, getProfilePath } from "../../utils/commonUtil";
 import {
     updateSelectedRowID,
-    updateSender,
     updateSelectedPeerUUID,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     selectTableUsersByID,
 } from "../../utils/localApi";
 import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
@@ -173,7 +172,7 @@ function ActivityContainerComponent(props) {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCountOrderBy(
+            const data = await selectTableSharingDataWithOrderBy(
                 activePeerUUID,
                 sortOrder
             );
@@ -198,16 +197,6 @@ function ActivityContainerComponent(props) {
         activeFilter,
         rowsToBeDeleted
     );
-
-    function onClickComment(rowID, senderID) {
-        if (rowID === selectedRowID) {
-            // dispatch function?
-            updateSelectedRowID(null);
-        } else {
-            updateSelectedRowID(rowID);
-        }
-        updateSender(senderID);
-    }
 
     function onClickFilterTab(tabName) {
         setActiveFilter(tabName);
@@ -253,7 +242,6 @@ function ActivityContainerComponent(props) {
                 <StyledHandsUpSection
                     data={handsUpData}
                     activeRow={selectedRowID}
-                    onClick={onClickComment}
                 />
             )}
             <ActivityFilterAndSortContainer>
@@ -277,7 +265,6 @@ function ActivityContainerComponent(props) {
                         d,
                         selectedRowID,
                         myOrkaUUID,
-                        onClickComment,
                         onDeleteRow
                     )
                 )}

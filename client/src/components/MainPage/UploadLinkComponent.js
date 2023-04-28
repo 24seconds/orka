@@ -90,7 +90,6 @@ const PlaceHolder = styled.div`
     }
 `;
 
-// TODO(young): There are many comment logics between CommentInputComponent.
 function UploadLinkComponent(props) {
     const { className } = props;
 

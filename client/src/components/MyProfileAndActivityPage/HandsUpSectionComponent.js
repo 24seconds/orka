@@ -44,12 +44,14 @@ function HandsUpSectionComponent(props) {
                 <span> Hands Up!</span>
             </HandsUpTitle>
             {data &&
+                // TODO(young): Handle properly
                 onClick &&
                 renderActivityRowComponent(
                     data,
                     activeRow,
                     myOrkaUUID,
-                    onClick
+                    // TODO(young): Handle properly
+                    null,
                 )}
             <SectionDivider />
         </HandsUpSection>

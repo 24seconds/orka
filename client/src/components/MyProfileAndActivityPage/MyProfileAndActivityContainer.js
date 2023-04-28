@@ -5,7 +5,7 @@ import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
@@ -97,8 +97,6 @@ function renderActivityRowComponent(
                 dataExtension={data.extension}
                 displayName={data.name}
                 size={data.size}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
@@ -118,8 +116,6 @@ function renderActivityRowComponent(
                 dataType={data.type}
                 dataExtension={data.extension}
                 displayName={data.text}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
@@ -151,7 +147,7 @@ function MyProfileAndActivityPageContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCountOrderBy(
+            const data = await selectTableSharingDataWithOrderBy(
                 myOrkaUUID,
                 sortOrder
             );
