@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
     STORAGE_COLOR_THEME_KEY,
     THEME_ORKA_DARK,
+    TOAST_HIDE_STRATEGY_SRHINK,
 } from "../constants/constant";
 import { ColorThemes } from "../constants/styleTheme";
 import {
@@ -142,7 +143,15 @@ function selectedSender(state = null, action) {
 
 function toastMessages(state = [], action) {
     if (action.type === ADD_TOAST_MESSAGE) {
-        const newState = [...state, action.payload];
+        const tempState = state.map((s) => {
+            s.hideStrategy = TOAST_HIDE_STRATEGY_SRHINK;
+            return s;
+        });
+
+        const newState = [...tempState, action.payload];
+        newState.forEach((s) => {
+            console.log("newState:", s.id, s.hideStrategy);
+        });
 
         return newState;
     }
