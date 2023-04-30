@@ -20,33 +20,14 @@ import {
     DATATYPE_LINK,
     DATA_EXTENSION_GENERAL,
 } from "../../../constants/constant";
+import DataExtensionHolderComponent from "./DataExtensionHolderComponent";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
 `;
 
-// TODO(young): Refactor this to make it reusable. It is also used in peer component.
-const DataExtensionHolder = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 84px;
-    min-width: 84px;
-    height: 100px;
-    background: ${(props) => props.theme.DataTypeHolderBackground};
-    border-radius: 11px;
-    word-break: break-all;
-    filter: drop-shadow(0px 2.6px 2.6px rgba(0, 0, 0, 0.25));
-
-    font-weight: 600;
-    font-size: 20px;
-    color: ${(props) => props.theme.DataTypeHolderText};
-    line-height: 23px;
-
-    left: ${(props) => props.order};
-    top: ${(props) => props.order};
-    z-index: ${(props) => props.zIndex};
+const StyledDataExtensionHolder = styled(DataExtensionHolderComponent)`
+    margin-left: 32px;
 `;
 
 const ActivityRow = styled.div`
@@ -59,7 +40,7 @@ const ActivityRow = styled.div`
 
     ${(props) => props.isSelected && selectedStyle}
 
-    .orka-data-extension-holder {
+    ${StyledDataExtensionHolder} {
         margin-left: 32px;
     }
 
@@ -84,7 +65,7 @@ const ActivityRow = styled.div`
     ${(props) => !props.isSelected && hoverRow}
 
     &:hover {
-        ${DataExtensionHolder} {
+        ${StyledDataExtensionHolder} {
             background: ${(props) => props.theme.Grayscale01};
         }
 
@@ -166,7 +147,7 @@ function renderAction(
     onClickHandsUp,
     onClickDonwloadButton,
     onClickURLNavigate,
-    onCancelHandsUp,
+    onCancelHandsUp
 ) {
     if (isEditMode) {
         return (
@@ -188,7 +169,7 @@ function renderAction(
         }
 
         if (dataType === DATATYPE_LINK) {
-            return <TextCopyComponent text={url}/>;
+            return <TextCopyComponent text={url} />;
         }
 
         return (
@@ -203,11 +184,7 @@ function renderAction(
         );
     };
 
-    return (
-        <Fragment>
-            {renderIcon()}
-        </Fragment>
-    );
+    return <Fragment>{renderIcon()}</Fragment>;
 }
 
 // TODO(young): refactor this later. dataType is used in several ways.
@@ -298,9 +275,7 @@ function ActivityRowComponent(props) {
     return (
         <ActivityRow isSelected={isSelected}>
             {/* TODO(young): refactor this. It should show icon, not text */}
-            <DataExtensionHolder className="orka-data-extension-holder">
-                {dataExtension}
-            </DataExtensionHolder>
+            <StyledDataExtensionHolder extension={dataExtension} />
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
                     <FileMetaData>

@@ -3,7 +3,11 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import DownloadArrowIcon from "../../../assets/DownloadArrowIcon";
 import { hoverOpacity } from "../../SharedStyle";
-import { DATATYPE_FILE, DATATYPE_LINK, DATATYPE_TEXT } from "../../../constants/constant";
+import {
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+    DATATYPE_TEXT,
+} from "../../../constants/constant";
 
 const ActionButton = styled.div`
     display: flex;
@@ -35,7 +39,8 @@ function ActionButtonComponent(props) {
 }
 
 ActionButtonComponent.propTypes = {
-    type: PropTypes.oneOf([DATATYPE_FILE, DATATYPE_LINK, DATATYPE_TEXT]).isRequired,
+    type: PropTypes.oneOf([DATATYPE_FILE, DATATYPE_LINK, DATATYPE_TEXT])
+        .isRequired,
 };
 
 ActionButtonComponent.defaultProps = {
