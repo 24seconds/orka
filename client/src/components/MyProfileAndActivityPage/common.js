@@ -34,6 +34,7 @@ function renderActivityRowComponent(
                 senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
                 dataType={data.type}
+                dataExtension={data.extension}
                 displayName={data.text}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}

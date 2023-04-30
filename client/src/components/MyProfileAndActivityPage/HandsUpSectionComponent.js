@@ -33,7 +33,7 @@ const HandsUpSection = styled.div`
 `;
 
 function HandsUpSectionComponent(props) {
-    const { className, data, activeRow, onClick } = props;
+    const { className, data, activeRow } = props;
 
     const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
@@ -44,8 +44,6 @@ function HandsUpSectionComponent(props) {
                 <span> Hands Up!</span>
             </HandsUpTitle>
             {data &&
-                // TODO(young): Handle properly
-                onClick &&
                 renderActivityRowComponent(
                     data,
                     activeRow,

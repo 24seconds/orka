@@ -168,17 +168,7 @@ function MyProfileAndActivityPageContainerComponent() {
 
             console.log("useEffect, editMode:", editMode);
         })();
-    }, [editMode, rowsToBeDeleted]);
-
-    function onClick(rowID, senderID) {
-        console.log("onClick called, rowID:", rowID);
-        if (rowID === activeRow) {
-            updateSelectedRowID(null);
-        } else {
-            updateSelectedRowID(rowID);
-        }
-        updateSender(senderID);
-    }
+    }, [editMode, rowsToBeDeleted]);    
 
     function onClickFilterTab(tabName) {
         setActiveFilter(tabName);
@@ -224,7 +214,6 @@ function MyProfileAndActivityPageContainerComponent() {
                     <StyledHandsUpSection
                         data={handsUpData}
                         activeRow={activeRow}
-                        onClick={onClick}
                     />
                 )
             }
@@ -250,7 +239,6 @@ function MyProfileAndActivityPageContainerComponent() {
                     renderActivityRowComponent(
                         d,
                         activeRow,
-                        onClick,
                         myOrkaUUID,
                         editMode,
                         onDeleteRow
