@@ -1,7 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
-import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import {
+    ACTIVITY_ROW_FILTER_ALL,
+    ACTIVITY_ROW_FILTER_FILE,
+    ACTIVITY_ROW_FILTER_LINK,
+    ACTIVITY_ROW_FILTER_TEXT,
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+} from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
@@ -47,7 +54,7 @@ const SortButton = styled.button`
 
 const FilterContainer = styled.div`
     display: inline-flex;
-    column-gap: 10px;
+    column-gap: 14px;
     margin-left: 32px;
 `;
 
@@ -168,10 +175,10 @@ function MyProfileAndActivityPageContainerComponent() {
 
             console.log("useEffect, editMode:", editMode);
         })();
-    }, [editMode, rowsToBeDeleted]);    
+    }, [editMode, rowsToBeDeleted]);
 
-    function onClickFilterTab(tabName) {
-        setActiveFilter(tabName);
+    function onClickFilterTab(filter) {
+        setActiveFilter(filter);
     }
 
     function onClickSort() {
@@ -201,6 +208,16 @@ function MyProfileAndActivityPageContainerComponent() {
     );
     const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
 
+    const tabs = useMemo(
+        () => [
+            { displayName: "ALL", filter: ACTIVITY_ROW_FILTER_ALL },
+            { displayName: "File", filter: ACTIVITY_ROW_FILTER_FILE },
+            { displayName: "URL", filter: ACTIVITY_ROW_FILTER_LINK },
+            { displayName: "Talk", filter: ACTIVITY_ROW_FILTER_TEXT },
+        ],
+        []
+    );
+
     return (
         <MyProfileAndActivityPageContainer>
             <StyledProfileEditNameComponent
@@ -222,11 +239,12 @@ function MyProfileAndActivityPageContainerComponent() {
                     {
                         // duplicate logic in ActivityContainerComponent.
                         // Refactor this later.
-                        ["ALL", "Files", "URLs"].map((n) => (
+                        tabs.map(({ displayName, filter }) => (
                             <FilterTabComponent
-                                key={n}
-                                name={n}
-                                isSelected={n === activeFilter}
+                                key={displayName}
+                                name={displayName}
+                                filter={filter}
+                                isSelected={filter === activeFilter}
                                 onClickFilterTab={onClickFilterTab}
                             />
                         ))

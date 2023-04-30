@@ -2,12 +2,7 @@ import React from "react";
 import { DATATYPE_FILE } from "../../constants/constant";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 
-function renderActivityRowComponent(
-    data,
-    activeRow,
-    myOrkaUUID,
-    onDeleteRow
-) {
+function renderActivityRowComponent(data, activeRow, myOrkaUUID, onDeleteRow) {
     if (data?.type === DATATYPE_FILE) {
         return (
             <ActivityRowComponent

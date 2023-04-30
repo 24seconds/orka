@@ -86,7 +86,7 @@ export const ThemeOrkaDark = {
 
     FilterActive: PaletteDark.White,
     FilterTextActive: PaletteDark.Grayscale03,
-    FilterTextInActive: PaletteDark.White,
+    FilterTextInActive: PaletteDark.Grayscale01,
     FilterBorder: PaletteDark.Grayscale01,
     FilterNewestText: PaletteDark.Grayscale01,
 
@@ -143,7 +143,7 @@ export const ThemeOrkaLight = {
 
     FilterActive: PaletteLight.Blackscale01,
     FilterTextActive: "#ECF0F7",
-    FilterTextInActive: PaletteLight.Blackscale01,
+    FilterTextInActive: PaletteLight.Grayscale01,
     FilterBorder: PaletteLight.Primaryscale01,
     FilterNewestText: PaletteLight.Primaryscale01,
 

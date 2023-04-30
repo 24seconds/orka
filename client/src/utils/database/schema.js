@@ -31,7 +31,6 @@ const TABLE_SHARING_DATA = {
     },
 };
 
-
 const TABLE_NOTIFICATIONS = {
     name: "notifications",
     fields: {
@@ -73,9 +72,4 @@ CREATE TABLE IF NOT EXISTS ${TABLE_SHARING_DATA.name} (
 );
 `;
 
-export {
-    DDLQueries,
-    TABLE_USERS,
-    TABLE_SHARING_DATA,
-    TABLE_NOTIFICATIONS,
-};
+export { DDLQueries, TABLE_USERS, TABLE_SHARING_DATA, TABLE_NOTIFICATIONS };

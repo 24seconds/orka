@@ -1,6 +1,9 @@
 import isURL from "validator/lib/isURL";
 
 import {
+    ACTIVITY_ROW_FILTER_FILE,
+    ACTIVITY_ROW_FILTER_LINK,
+    ACTIVITY_ROW_FILTER_TEXT,
     DATATYPE_FILE,
     DATATYPE_LINK,
     DATATYPE_TEXT,
@@ -43,19 +46,23 @@ function generateFingerPrint() {
     return "localdrop-file-" + stringArr.join("");
 }
 
-function filterSharingData(data, option, rowsToBeDeleted) {
-    console.log("filterSharingData:", data, rowsToBeDeleted);
+function filterSharingData(data, activeFilter, rowsToBeDeleted) {
+    console.log("filterSharingData:", data, activeFilter, rowsToBeDeleted);
     return data.filter((d) => {
         if (d.id in rowsToBeDeleted) {
             return false;
         }
 
-        if (option === "Files") {
+        if (activeFilter === ACTIVITY_ROW_FILTER_FILE) {
             return d.dataType === DATATYPE_FILE;
         }
-        if (option === "URLs") {
+        if (activeFilter === ACTIVITY_ROW_FILTER_LINK) {
             return d.dataType === DATATYPE_LINK;
         }
+        if (activeFilter === ACTIVITY_ROW_FILTER_TEXT) {
+            return d.dataType === DATATYPE_TEXT;
+        }
+
         return true;
     });
 }

@@ -49,7 +49,7 @@ function HandsUpSectionComponent(props) {
                     activeRow,
                     myOrkaUUID,
                     // TODO(young): Handle properly
-                    null,
+                    null
                 )}
             <SectionDivider />
         </HandsUpSection>
