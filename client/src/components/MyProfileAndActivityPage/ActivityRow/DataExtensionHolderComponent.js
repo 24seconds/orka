@@ -44,8 +44,6 @@ const DataExtensionHolder = styled.div`
 function DataExtensionHolderComponent(props) {
     const { className, extension } = props;
 
-    console.log("DataExtensionHolderComponent: ", extension);
-
     return (
         <DataExtensionHolder className={className}>
             {(() => {

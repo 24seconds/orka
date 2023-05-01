@@ -18,6 +18,7 @@ import { convertTimestampReadable } from "../../../utils/commonUtil";
 import {
     DATATYPE_FILE,
     DATATYPE_LINK,
+    DATATYPE_TEXT,
     DATA_EXTENSION_GENERAL,
 } from "../../../constants/constant";
 import DataExtensionHolderComponent from "./DataExtensionHolderComponent";
@@ -45,13 +46,12 @@ const ActivityRow = styled.div`
     }
 
     .orka-metadata-container {
+        display: flex;
+        align-items: center;
+
         flex-grow: 1;
         height: 93px;
         margin-left: 14px;
-    }
-
-    .orka-file-metadata-container {
-        margin-bottom: 10px;
     }
 
     .orka-action-container {
@@ -75,13 +75,13 @@ const ActivityRow = styled.div`
 
 const FileMetaData = styled.div`
     font-weight: 500;
-    font-size: 24px;
-    line-height: 29px;
-    letter-spacing: -0.02em;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: -0.04em;
 
-    .orka-file-name {
+    .orka-data-name {
         width: 220px;
-        margin-bottom: 10px;
+        margin-bottom: 2px;
         color: ${(props) => props.theme.ActiveRowDisplayText};
 
         text-overflow: ellipsis;
@@ -96,6 +96,22 @@ const FileMetaData = styled.div`
         letter-spacing: -0.02em;
         color: ${(props) => props.theme.Grayscale01};
     }
+`;
+
+const TextPreview = styled.div`
+    width: 286px;
+    text-overflow: ellipsis;    
+    overflow: hidden;
+    white-space: nowrap;
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+
+    letter-spacing: -0.04em;
+    color: ${(props) => props.theme.ActiveRowDisplayText};
+
+    margin-bottom: 2px;
 `;
 
 const DeleteButton = styled.div`
@@ -168,7 +184,7 @@ function renderAction(
             return <HandsUpButtonComponent onClick={onClickHandsUp} />;
         }
 
-        if (dataType === DATATYPE_LINK) {
+        if (dataType === DATATYPE_LINK || dataType === DATATYPE_TEXT) {
             return <TextCopyComponent text={url} />;
         }
 
@@ -203,7 +219,7 @@ function ActivityRowComponent(props) {
         createdAt,
         onDeleteRow,
         isHandsUpRow,
-        dataURL,
+        dataText,
     } = props;
 
     const sizeHumanReadable = useMemo(
@@ -238,7 +254,7 @@ function ActivityRowComponent(props) {
     }
 
     function onClickURLNavigate() {
-        window.open(dataURL, "_blank");
+        window.open(dataText, "_blank");
     }
 
     async function onClickHandsUp(event) {
@@ -272,6 +288,15 @@ function ActivityRowComponent(props) {
         }
     }
 
+    const textPreview = useMemo(() => {
+        if (dataType !== DATATYPE_TEXT) {
+            return null;
+        }
+
+        const lines = dataText?.split(/\r?\n|\r|\n/g);
+        return lines[0];
+    }, [dataText, dataType])
+
     return (
         <ActivityRow isSelected={isSelected}>
             {/* TODO(young): refactor this. It should show icon, not text */}
@@ -279,7 +304,13 @@ function ActivityRowComponent(props) {
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
                     <FileMetaData>
-                        <div className="orka-file-name">{displayName}</div>
+                        <div className="orka-data-name">{displayName}</div>
+                        {
+                            dataType === DATATYPE_TEXT &&
+                            <TextPreview>
+                                {textPreview}
+                            </TextPreview>
+                        }
                         <div className="orka-size-and-timestamp">
                             {metadataDesc}
                         </div>
@@ -291,7 +322,7 @@ function ActivityRowComponent(props) {
                     isSelected,
                     isEditMode,
                     dataType,
-                    dataURL,
+                    dataText,
                     isMyProfileRow,
                     isHandsUpRow,
                     onClickDeleteButton,
