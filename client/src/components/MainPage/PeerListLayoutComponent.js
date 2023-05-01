@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
-    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
+    selectTableUsersWithLatestSharingDataTypeIncludingMyself,
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
@@ -68,7 +68,7 @@ function PeerListLayoutComponent() {
 
         (async () => {
             const usersWithLatestFileType =
-                await selectTableUsersWithLatestSharingDataTypeExcludingMyself();
+                await selectTableUsersWithLatestSharingDataTypeIncludingMyself();
             if (usersWithLatestFileType?.length > 0) {
                 setPeers(usersWithLatestFileType);
             }

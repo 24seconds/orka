@@ -317,7 +317,7 @@ async function selectTableUsersMyself() {
     return await selectTableUsersByID(myUUID);
 }
 
-async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
+async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     console.log(
         "selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:",
         getMyUUID()
@@ -335,9 +335,14 @@ async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
     ${TABLE_SHARING_DATA.name} s
   ON
     u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
-  WHERE u.${TABLE_USERS.fields.id} != "${getMyUUID()}"
   GROUP BY
-    u.${TABLE_USERS.fields.id}`;
+    u.${TABLE_USERS.fields.id}
+  ORDER BY
+    CASE u.${TABLE_USERS.fields.id}
+    WHEN '${getMyUUID()}' THEN 1
+    ELSE 2
+    END
+`;
 
     console.log(
         "selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:",
@@ -660,7 +665,7 @@ export {
     selectTableUsers,
     selectTableUsersByID,
     selectTableUsersMyself,
-    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
+    selectTableUsersWithLatestSharingDataTypeIncludingMyself,
     patchTableUsersByID,
     // sharing data
     createTableSharingData,
