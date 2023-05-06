@@ -178,12 +178,12 @@ export class WebSocketManager {
   // TODO: Check Who closed. But I think target peer is closed
   handleCloseErrorCallback(ipAddress: string, targetUUID: string) {
     return (err ? : Error) => {
-      if (err && err.message.includes('CLOSED')) {
+      if (!!err && err.message.includes('CLOSED')) {
         this.deletePeer(ipAddress, targetUUID);
         const leaveMessage = createMessage(MessageType.LEAVE, { peers: [targetUUID] });
         this.notifyEvent(ipAddress, targetUUID, leaveMessage);
       }
-      console.log(`[${targetUUID}]: target peer closed `, err);
+      console.log(`[${targetUUID}, ${ipAddress}]: target peer closed `, err);
     };
   }
 
