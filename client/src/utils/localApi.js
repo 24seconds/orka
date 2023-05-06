@@ -327,7 +327,7 @@ async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     SELECT u.*,
         (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
         THEN "URL" 
-        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latest_data_type,
+        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latestDataExtension,
     MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
   FROM
     ${TABLE_USERS.name} u
@@ -405,7 +405,7 @@ async function createTableSharingData({
                 "${uploader_id}", "${uploaded_at}");`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, NULL, "${text}", "${
+                "${id}", NULL, 0, "${extension}", "${text}", "${
                 type || DATATYPE_TEXT
             }", 0, false, 
                 "${uploader_id}", "${uploaded_at}");`;

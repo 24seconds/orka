@@ -89,9 +89,9 @@ function PeerListLayoutComponent() {
     return (
         <PeerListLayout>
             {peers.map((user) => {
-                const dataTypes = [];
-                if (user.latest_data_type !== null) {
-                    dataTypes.push(user.latest_data_type);
+                const dataExtensions = [];
+                if (user.latestDataExtension !== null) {
+                    dataExtensions.push(user.latestDataExtension);
                 }
 
                 const name = (() => {
@@ -110,7 +110,8 @@ function PeerListLayoutComponent() {
                         profile={user.profile}
                         isSelected={activePeerUUID === user.id}
                         onClick={onClick}
-                        dataTypes={dataTypes}
+                        dataTypes={dataExtensions}
+                        dataExtensions={dataExtensions}
                     />
                 );
             })}

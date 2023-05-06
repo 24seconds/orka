@@ -7,6 +7,11 @@ import {
     notifySharingData,
 } from "../../utils/localApi";
 import { inferDataTypeOfText } from "../../utils/commonUtil";
+import {
+    DATATYPE_LINK,
+    DATA_EXTENSION_LINK,
+    DATA_EXTENSION_TEXT,
+} from "../../constants/constant";
 
 const UploadLink = styled.div`
     display: flex;
@@ -119,7 +124,17 @@ function UploadLinkComponent(props) {
 
         // infer text is LINK or TEXT
         const type = inferDataTypeOfText(text);
-        const sharingData = await createTableSharingData({ text, type });
+        const extension = (() => {
+            if (type === DATATYPE_LINK) {
+                return DATA_EXTENSION_LINK;
+            }
+            return DATA_EXTENSION_TEXT;
+        })();
+        const sharingData = await createTableSharingData({
+            text,
+            type,
+            extension,
+        });
 
         // flush
         setText("");

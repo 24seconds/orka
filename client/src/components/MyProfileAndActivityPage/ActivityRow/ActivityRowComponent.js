@@ -100,7 +100,7 @@ const FileMetaData = styled.div`
 
 const TextPreview = styled.div`
     width: 286px;
-    text-overflow: ellipsis;    
+    text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 
@@ -295,7 +295,7 @@ function ActivityRowComponent(props) {
 
         const lines = dataText?.split(/\r?\n|\r|\n/g);
         return lines[0];
-    }, [dataText, dataType])
+    }, [dataText, dataType]);
 
     return (
         <ActivityRow isSelected={isSelected}>
@@ -305,12 +305,9 @@ function ActivityRowComponent(props) {
                 <div className="orka-file-metadata-container">
                     <FileMetaData>
                         <div className="orka-data-name">{displayName}</div>
-                        {
-                            dataType === DATATYPE_TEXT &&
-                            <TextPreview>
-                                {textPreview}
-                            </TextPreview>
-                        }
+                        {dataType === DATATYPE_TEXT && (
+                            <TextPreview>{textPreview}</TextPreview>
+                        )}
                         <div className="orka-size-and-timestamp">
                             {metadataDesc}
                         </div>

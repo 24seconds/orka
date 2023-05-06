@@ -30,7 +30,7 @@ function TextCopyComponent(props) {
         navigator.clipboard.writeText(text);
         event?.stopPropagation();
 
-        addToast("Copied","copied to clipboard!");
+        addToast("Copied", "copied to clipboard!");
     }
 
     return (
