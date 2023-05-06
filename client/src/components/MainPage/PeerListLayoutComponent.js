@@ -94,11 +94,19 @@ function PeerListLayoutComponent() {
                     dataTypes.push(user.latest_data_type);
                 }
 
+                const name = (() => {
+                    if (user.id === myOrkaUUID) {
+                        return "My";
+                    }
+
+                    return user.name;
+                })();
+
                 return (
                     <PeerComponent
                         key={user.id}
                         uuid={user.id}
-                        name={user.name}
+                        name={name}
                         profile={user.profile}
                         isSelected={activePeerUUID === user.id}
                         onClick={onClick}
