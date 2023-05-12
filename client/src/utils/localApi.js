@@ -19,7 +19,6 @@ import {
     updateSelectedPeer,
     updateSelectedRow,
     updateTableUsers as updateTableUsersCounter,
-    updateTableCommentMetadata as updateTableCommentMetadataCounter,
     updateTableNotifications as updateTableNotificationsCounter,
     updateTableSharingData as updateTableSharingDataCounter,
     updateSenderID,
@@ -38,15 +37,13 @@ import {
 } from "./downloadManager";
 import { run } from "./database/database";
 import {
-    TABLE_COMMENTS,
-    TABLE_COMMENT_METADATA,
     TABLE_NOTIFICATIONS,
     TABLE_SHARING_DATA,
     TABLE_USERS,
 } from "./database/schema";
 import {
     DATATYPE_FILE,
-    DATATYPE_LINK,
+    DATATYPE_TEXT,
     TOAST_HIDE_STRATEGY_FADE_OUT,
 } from "../constants/constant";
 import { v4 as uuidv4 } from "uuid";
@@ -244,10 +241,6 @@ function updateTableSharingData() {
     store.dispatch(updateTableSharingDataCounter());
 }
 
-function updateTableCommentMetadata() {
-    store.dispatch(updateTableCommentMetadataCounter());
-}
-
 function updateTableNotifications() {
     store.dispatch(updateTableNotificationsCounter());
 }
@@ -324,7 +317,7 @@ async function selectTableUsersMyself() {
     return await selectTableUsersByID(myUUID);
 }
 
-async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
+async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     console.log(
         "selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:",
         getMyUUID()
@@ -334,7 +327,7 @@ async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
     SELECT u.*,
         (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
         THEN "URL" 
-        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latest_data_type,
+        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latestDataExtension,
     MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
   FROM
     ${TABLE_USERS.name} u
@@ -342,9 +335,14 @@ async function selectTableUsersWithLatestSharingDataTypeExcludingMyself() {
     ${TABLE_SHARING_DATA.name} s
   ON
     u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
-  WHERE u.${TABLE_USERS.fields.id} != "${getMyUUID()}"
   GROUP BY
-    u.${TABLE_USERS.fields.id}`;
+    u.${TABLE_USERS.fields.id}
+  ORDER BY
+    CASE u.${TABLE_USERS.fields.id}
+    WHEN '${getMyUUID()}' THEN 1
+    ELSE 2
+    END
+`;
 
     console.log(
         "selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:",
@@ -399,7 +397,6 @@ async function createTableSharingData({
     const id = dataID || generateSharingDataUUID();
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
-    console.log(id, uploader_id, uploaded_at);
 
     const query = (() => {
         if (type === DATATYPE_FILE) {
@@ -408,7 +405,9 @@ async function createTableSharingData({
                 "${uploader_id}", "${uploaded_at}");`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, NULL, "${text}", "${DATATYPE_LINK}", 0, false, 
+                "${id}", NULL, 0, "${extension}", "${text}", "${
+                type || DATATYPE_TEXT
+            }", 0, false, 
                 "${uploader_id}", "${uploaded_at}");`;
         }
     })();
@@ -504,42 +503,12 @@ async function selectTableSharingDataByID(id) {
     return result?.[0]?.rows?.[0];
 }
 
-async function selectTableSharingDataWithCommentCount(userID) {
-    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
-            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
-
-    if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(c.id) as comment_count,
-            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
-        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
-        GROUP BY f.${TABLE_SHARING_DATA.fields.id};`;
-    }
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableSharingDataWithCommentCountOrderBy(userID, order) {
-    let query = `SELECT f.*, COUNT(c.id) as comment_count, 
-            f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+async function selectTableSharingDataWithOrderBy(userID, order) {
+    let query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
 
     if (userID && userID !== "") {
-        query = `SELECT f.*, COUNT(c.id) as comment_count,
-            f.type as dataType   FROM ${TABLE_SHARING_DATA.name} f 
-        LEFT JOIN ${TABLE_COMMENTS.name} c on 
-        f.${TABLE_SHARING_DATA.fields.id} = c.${TABLE_COMMENTS.fields.data_id}
+        query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
     }
@@ -614,63 +583,17 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
         return;
     }
 
-    const naiveQueriesForTableSharingData = sharingDataIDs.map(
+    const query = sharingDataIDs.map(
         (id) => `
         DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
     `
     );
-
-    const navieQueriesForTableComments = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_COMMENTS.name} WHERE ${TABLE_COMMENTS.fields.data_id} = "${id}";
-    `
-    );
-
-    const naiveQueriesForTableCommentMetadata = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_COMMENT_METADATA.name} 
-        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${id}";
-    `
-    );
-
-    const query = [
-        ...naiveQueriesForTableSharingData,
-        ...navieQueriesForTableComments,
-        ...naiveQueriesForTableCommentMetadata,
-    ].join("\n");
 
     console.log("deleteTableSharingDataByIDs, query:", query);
 
     const result = await run(query);
     console.log("deleteTableSharingDataByIDs, result:", result);
     // return result?.[0]?.rows;
-}
-
-// TODO(young): Add logic - filter by receiver ID
-async function selectTableCommentsByDataID(dataID, receiverID) {
-    const query = `SELECT * FROM ${TABLE_COMMENTS.name} 
-        WHERE ${TABLE_COMMENTS.fields.data_id} = "${dataID}"
-        AND ${TABLE_COMMENTS.fields.receiver_id} = "${receiverID}"
-        ORDER BY ${TABLE_COMMENTS.fields.created_at} ASC;`;
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
-async function selectTableCommentMetadataByDataID(dataID) {
-    const query = `SELECT * FROM ${TABLE_COMMENT_METADATA.name}
-        WHERE ${TABLE_COMMENT_METADATA.fields.data_id} = "${dataID}";`;
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
 }
 
 async function selectTableNotifications() {
@@ -742,7 +665,7 @@ export {
     selectTableUsers,
     selectTableUsersByID,
     selectTableUsersMyself,
-    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
+    selectTableUsersWithLatestSharingDataTypeIncludingMyself,
     patchTableUsersByID,
     // sharing data
     createTableSharingData,
@@ -750,16 +673,10 @@ export {
     updateTableSharingData,
     selectTableSharingDataByUserID,
     selectTableSharingDataByID,
-    selectTableSharingDataWithCommentCount,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     checkHandsUpTableSharingData,
     patchTableSharingDataByID,
     deleteTableSharingDataByIDs,
-    // comments
-    selectTableCommentsByDataID,
-    // comment metadata
-    selectTableCommentMetadataByDataID,
-    updateTableCommentMetadata,
     // notifications
     selectTableNotifications,
     updateTableNotifications,

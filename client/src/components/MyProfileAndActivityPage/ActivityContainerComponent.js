@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import CloseIcon from "../../assets/CloseIcon";
-import { IMAGE_URL } from "../../constants/constant";
+import {
+    ACTIVITY_ROW_FILTER_ALL,
+    ACTIVITY_ROW_FILTER_FILE,
+    ACTIVITY_ROW_FILTER_LINK,
+    ACTIVITY_ROW_FILTER_TEXT,
+    IMAGE_URL,
+} from "../../constants/constant";
 import { filterSharingData, getProfilePath } from "../../utils/commonUtil";
 import {
     updateSelectedRowID,
-    updateSender,
     updateSelectedPeerUUID,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     selectTableUsersByID,
 } from "../../utils/localApi";
 import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
@@ -94,7 +99,7 @@ const SortButton = styled.button`
 
 const FilterContainer = styled.div`
     display: inline-flex;
-    column-gap: 10px;
+    column-gap: 14px;
     margin-left: 32px;
 `;
 
@@ -148,7 +153,7 @@ function getFileExtension(name) {
 }
 
 function ActivityContainerComponent(props) {
-    const [activeFilter, setActiveFilter] = useState("ALL");
+    const [activeFilter, setActiveFilter] = useState(ACTIVITY_ROW_FILTER_ALL);
     const [data, setData] = useState([]);
     const [sortOrder, setSortOrder] = useState("DESC");
     const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
@@ -173,7 +178,7 @@ function ActivityContainerComponent(props) {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCountOrderBy(
+            const data = await selectTableSharingDataWithOrderBy(
                 activePeerUUID,
                 sortOrder
             );
@@ -199,18 +204,8 @@ function ActivityContainerComponent(props) {
         rowsToBeDeleted
     );
 
-    function onClickComment(rowID, senderID) {
-        if (rowID === selectedRowID) {
-            // dispatch function?
-            updateSelectedRowID(null);
-        } else {
-            updateSelectedRowID(rowID);
-        }
-        updateSender(senderID);
-    }
-
-    function onClickFilterTab(tabName) {
-        setActiveFilter(tabName);
+    function onClickFilterTab(filterName) {
+        setActiveFilter(filterName);
     }
 
     function onClickSort() {
@@ -230,6 +225,16 @@ function ActivityContainerComponent(props) {
 
     const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
     const profilePath = getProfilePath(peerUserProfile);
+
+    const tabs = useMemo(
+        () => [
+            { displayName: "ALL", filter: ACTIVITY_ROW_FILTER_ALL },
+            { displayName: "File", filter: ACTIVITY_ROW_FILTER_FILE },
+            { displayName: "URL", filter: ACTIVITY_ROW_FILTER_LINK },
+            { displayName: "Talk", filter: ACTIVITY_ROW_FILTER_TEXT },
+        ],
+        []
+    );
 
     return (
         <ActivityContainer>
@@ -253,17 +258,17 @@ function ActivityContainerComponent(props) {
                 <StyledHandsUpSection
                     data={handsUpData}
                     activeRow={selectedRowID}
-                    onClick={onClickComment}
                 />
             )}
             <ActivityFilterAndSortContainer>
                 <FilterContainer>
-                    {["ALL", "Files", "URLs"].map((n) => {
+                    {tabs.map(({ displayName, filter }) => {
                         return (
                             <FilterTabComponent
-                                key={n}
-                                name={n}
-                                isSelected={n === activeFilter}
+                                key={filter}
+                                name={displayName}
+                                filter={filter}
+                                isSelected={filter === activeFilter}
                                 onClickFilterTab={onClickFilterTab}
                             />
                         );
@@ -277,7 +282,6 @@ function ActivityContainerComponent(props) {
                         d,
                         selectedRowID,
                         myOrkaUUID,
-                        onClickComment,
                         onDeleteRow
                     )
                 )}

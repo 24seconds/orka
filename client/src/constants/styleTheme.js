@@ -86,15 +86,13 @@ export const ThemeOrkaDark = {
 
     FilterActive: PaletteDark.White,
     FilterTextActive: PaletteDark.Grayscale03,
-    FilterTextInActive: PaletteDark.White,
+    FilterTextInActive: PaletteDark.Grayscale01,
     FilterBorder: PaletteDark.Grayscale01,
     FilterNewestText: PaletteDark.Grayscale01,
 
     ActiveRowDisplayText: PaletteDark.White,
     StatusActive: PaletteDark.Primary02,
     StatusActiveText: PaletteDark.Primary,
-
-    CommentRowText: PaletteDark.Whitescale01,
 
     NotificationRowText: PaletteDark.Whitescale01,
 
@@ -145,15 +143,13 @@ export const ThemeOrkaLight = {
 
     FilterActive: PaletteLight.Blackscale01,
     FilterTextActive: "#ECF0F7",
-    FilterTextInActive: PaletteLight.Blackscale01,
+    FilterTextInActive: PaletteLight.Grayscale01,
     FilterBorder: PaletteLight.Primaryscale01,
     FilterNewestText: PaletteLight.Primaryscale01,
 
     ActiveRowDisplayText: PaletteLight.Blackscale01,
     StatusActive: PaletteLight.Primary02,
     StatusActiveText: PaletteLight.Primary,
-
-    CommentRowText: PaletteLight.Blackscale01,
 
     NotificationRowText: PaletteLight.Blackscale01,
 

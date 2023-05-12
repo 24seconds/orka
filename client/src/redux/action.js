@@ -10,9 +10,7 @@ import {
     UPDATE_SELECTED_ROW,
     UPDATE_TABLE_USERS,
     UPDATE_TABLE_SHARING_DATA,
-    UPDATE_TABLE_COMMENTS,
     UPDATE_SENDER_ID,
-    UPDATE_TABLE_COMMENT_METADATA,
     UPDATE_TABLE_NOTIFICATIONS,
     UPDATE_ORKA_THEME,
     ADD_TOAST_MESSAGE,
@@ -81,16 +79,6 @@ export const updateTableUsers = () => ({
 
 export const updateTableSharingData = () => ({
     type: UPDATE_TABLE_SHARING_DATA,
-    payload: 0,
-});
-
-export const updateTableComments = () => ({
-    type: UPDATE_TABLE_COMMENTS,
-    payload: 0,
-});
-
-export const updateTableCommentMetadata = () => ({
-    type: UPDATE_TABLE_COMMENT_METADATA,
     payload: 0,
 });
 

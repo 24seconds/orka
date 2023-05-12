@@ -8,16 +8,16 @@ const FilterTab = styled.div`
     justify-content: center;
     align-items: center;
 
-    min-width: 90px;
-    height: 40px;
+    padding: 0 20px;
+    height: 38px;
 
-    border: 1px solid ${(props) => props.theme.Grayscale01};
+    border: 2px solid ${(props) => props.theme.Grayscale01};
     border-radius: 27px;
 
-    font-weight: 600;
-    font-size: 22px;
-    line-height: 27px;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: -0.04em;
     color: ${(props) =>
         props.isSelected
             ? props.theme.FilterTextActive
@@ -35,10 +35,10 @@ const FilterTab = styled.div`
 `;
 
 function FilterTabComponent(props) {
-    const { name, isSelected, onClickFilterTab } = props;
+    const { name, filter, isSelected, onClickFilterTab } = props;
 
     function onClick() {
-        onClickFilterTab?.(name);
+        onClickFilterTab?.(filter);
     }
 
     return (

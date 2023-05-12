@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
-import { DATATYPE_FILE, DATATYPE_LINK } from "../../constants/constant";
+import {
+    ACTIVITY_ROW_FILTER_ALL,
+    ACTIVITY_ROW_FILTER_FILE,
+    ACTIVITY_ROW_FILTER_LINK,
+    ACTIVITY_ROW_FILTER_TEXT,
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+} from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
-    selectTableSharingDataWithCommentCountOrderBy,
+    selectTableSharingDataWithOrderBy,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
@@ -47,7 +54,7 @@ const SortButton = styled.button`
 
 const FilterContainer = styled.div`
     display: inline-flex;
-    column-gap: 10px;
+    column-gap: 14px;
     margin-left: 32px;
 `;
 
@@ -93,11 +100,10 @@ function renderActivityRowComponent(
                 rowID={data.id}
                 senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={data.extension}
+                dataType={data.type}
+                dataExtension={data.extension}
                 displayName={data.name}
                 size={data.size}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
@@ -114,14 +120,13 @@ function renderActivityRowComponent(
                 rowID={data.id}
                 senderID={data.uploader_id}
                 isSelected={activeRow === data.id}
-                dataType={"URL"}
+                dataType={data.type}
+                dataExtension={data.extension}
                 displayName={data.text}
-                usageCount={data.status_count}
-                commentCount={data.comment_count}
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
-                dataURL={data.text}
+                dataText={data.text}
                 isEditMode={isEditMode}
                 onClick={onClick}
                 onDeleteRow={onDeleteRow}
@@ -149,7 +154,7 @@ function MyProfileAndActivityPageContainerComponent() {
 
     useEffect(() => {
         (async () => {
-            const data = await selectTableSharingDataWithCommentCountOrderBy(
+            const data = await selectTableSharingDataWithOrderBy(
                 myOrkaUUID,
                 sortOrder
             );
@@ -172,18 +177,8 @@ function MyProfileAndActivityPageContainerComponent() {
         })();
     }, [editMode, rowsToBeDeleted]);
 
-    function onClick(rowID, senderID) {
-        console.log("onClick called, rowID:", rowID);
-        if (rowID === activeRow) {
-            updateSelectedRowID(null);
-        } else {
-            updateSelectedRowID(rowID);
-        }
-        updateSender(senderID);
-    }
-
-    function onClickFilterTab(tabName) {
-        setActiveFilter(tabName);
+    function onClickFilterTab(filter) {
+        setActiveFilter(filter);
     }
 
     function onClickSort() {
@@ -213,6 +208,16 @@ function MyProfileAndActivityPageContainerComponent() {
     );
     const sortText = sortOrder === "ASC" ? "Oldest" : "Newest";
 
+    const tabs = useMemo(
+        () => [
+            { displayName: "ALL", filter: ACTIVITY_ROW_FILTER_ALL },
+            { displayName: "File", filter: ACTIVITY_ROW_FILTER_FILE },
+            { displayName: "URL", filter: ACTIVITY_ROW_FILTER_LINK },
+            { displayName: "Talk", filter: ACTIVITY_ROW_FILTER_TEXT },
+        ],
+        []
+    );
+
     return (
         <MyProfileAndActivityPageContainer>
             <StyledProfileEditNameComponent
@@ -226,7 +231,6 @@ function MyProfileAndActivityPageContainerComponent() {
                     <StyledHandsUpSection
                         data={handsUpData}
                         activeRow={activeRow}
-                        onClick={onClick}
                     />
                 )
             }
@@ -235,11 +239,12 @@ function MyProfileAndActivityPageContainerComponent() {
                     {
                         // duplicate logic in ActivityContainerComponent.
                         // Refactor this later.
-                        ["ALL", "Files", "URLs"].map((n) => (
+                        tabs.map(({ displayName, filter }) => (
                             <FilterTabComponent
-                                key={n}
-                                name={n}
-                                isSelected={n === activeFilter}
+                                key={displayName}
+                                name={displayName}
+                                filter={filter}
+                                isSelected={filter === activeFilter}
                                 onClickFilterTab={onClickFilterTab}
                             />
                         ))
@@ -252,7 +257,6 @@ function MyProfileAndActivityPageContainerComponent() {
                     renderActivityRowComponent(
                         d,
                         activeRow,
-                        onClick,
                         myOrkaUUID,
                         editMode,
                         onDeleteRow

@@ -6,6 +6,12 @@ import {
     createTableSharingData,
     notifySharingData,
 } from "../../utils/localApi";
+import { inferDataTypeOfText } from "../../utils/commonUtil";
+import {
+    DATATYPE_LINK,
+    DATA_EXTENSION_LINK,
+    DATA_EXTENSION_TEXT,
+} from "../../constants/constant";
 
 const UploadLink = styled.div`
     display: flex;
@@ -89,7 +95,6 @@ const PlaceHolder = styled.div`
     }
 `;
 
-// TODO(young): There are many comment logics between CommentInputComponent.
 function UploadLinkComponent(props) {
     const { className } = props;
 
@@ -116,7 +121,20 @@ function UploadLinkComponent(props) {
 
     async function onClick(event) {
         // save to database
-        const sharingData = await createTableSharingData({ text });
+
+        // infer text is LINK or TEXT
+        const type = inferDataTypeOfText(text);
+        const extension = (() => {
+            if (type === DATATYPE_LINK) {
+                return DATA_EXTENSION_LINK;
+            }
+            return DATA_EXTENSION_TEXT;
+        })();
+        const sharingData = await createTableSharingData({
+            text,
+            type,
+            extension,
+        });
 
         // flush
         setText("");
@@ -138,7 +156,7 @@ function UploadLinkComponent(props) {
             >
                 <textarea
                     className="desc"
-                    placeholder="Type the URL link here!"
+                    placeholder="Type the Text or URL link here!"
                     value={text}
                     ref={textareaRef}
                     onChange={onChange}

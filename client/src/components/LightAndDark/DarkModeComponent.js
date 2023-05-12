@@ -5,8 +5,8 @@ import DarkModeIcon from "../../assets/DarkModeIcon";
 const DarkMode = styled.button`
     display: flex;
     align-items: center;
-    column-gap: 22px;
-    width: 170px;
+    column-gap: 12px;
+    width: 171px;
     height: 42px;
 
     padding: 0;
@@ -28,7 +28,7 @@ const DarkMode = styled.button`
     }
 
     > span {
-        width: 95px;
+        width: 107px;
     }
 
     &:hover {

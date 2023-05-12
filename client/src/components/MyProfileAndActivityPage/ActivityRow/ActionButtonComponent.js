@@ -3,6 +3,11 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import DownloadArrowIcon from "../../../assets/DownloadArrowIcon";
 import { hoverOpacity } from "../../SharedStyle";
+import {
+    DATATYPE_FILE,
+    DATATYPE_LINK,
+    DATATYPE_TEXT,
+} from "../../../constants/constant";
 
 const ActionButton = styled.div`
     display: flex;
@@ -16,7 +21,7 @@ const ActionButton = styled.div`
     cursor: pointer;
 
     svg {
-        ${(props) => props.type === "TEXT" && "rotate: 270deg;"}
+        ${(props) => props.type === DATATYPE_TEXT && "rotate: 270deg;"}
     }
 
     ${hoverOpacity}
@@ -34,7 +39,8 @@ function ActionButtonComponent(props) {
 }
 
 ActionButtonComponent.propTypes = {
-    type: PropTypes.oneOf(["FILE", "TEXT"]).isRequired,
+    type: PropTypes.oneOf([DATATYPE_FILE, DATATYPE_LINK, DATATYPE_TEXT])
+        .isRequired,
 };
 
 ActionButtonComponent.defaultProps = {

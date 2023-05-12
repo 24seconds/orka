@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
-    selectTableUsersWithLatestSharingDataTypeExcludingMyself,
+    selectTableUsersWithLatestSharingDataTypeIncludingMyself,
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
@@ -68,7 +68,7 @@ function PeerListLayoutComponent() {
 
         (async () => {
             const usersWithLatestFileType =
-                await selectTableUsersWithLatestSharingDataTypeExcludingMyself();
+                await selectTableUsersWithLatestSharingDataTypeIncludingMyself();
             if (usersWithLatestFileType?.length > 0) {
                 setPeers(usersWithLatestFileType);
             }
@@ -89,20 +89,29 @@ function PeerListLayoutComponent() {
     return (
         <PeerListLayout>
             {peers.map((user) => {
-                const dataTypes = [];
-                if (user.latest_data_type !== null) {
-                    dataTypes.push(user.latest_data_type);
+                const dataExtensions = [];
+                if (user.latestDataExtension !== null) {
+                    dataExtensions.push(user.latestDataExtension);
                 }
+
+                const name = (() => {
+                    if (user.id === myOrkaUUID) {
+                        return "My";
+                    }
+
+                    return user.name;
+                })();
 
                 return (
                     <PeerComponent
                         key={user.id}
                         uuid={user.id}
-                        name={user.name}
+                        name={name}
                         profile={user.profile}
                         isSelected={activePeerUUID === user.id}
                         onClick={onClick}
-                        dataTypes={dataTypes}
+                        dataTypes={dataExtensions}
+                        dataExtensions={dataExtensions}
                     />
                 );
             })}

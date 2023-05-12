@@ -15,19 +15,6 @@ CREATE TABLE IF NOT EXISTS sharing_data (
     uploader_id CHAR(16) NOT NULL,
     uploaded_at TIMESTAMP NOT NULL
 );
-CREATE TABLE IF NOT EXISTS comments (
-    id CHAR(16) PRIMARY KEY,
-    data_id CHAR(16) NOT NULL,
-    data_type VARCHAR(16) NOT NULL,
-    text TEXT NOT NULL,
-    sender_id CHAR(16) NOT NULL,
-    receiver_id CHAR(16) NOT NULL,
-    created_at TIMESTAMP NOT NULL
-);
-CREATE TABLE IF NOT EXISTS comment_metadata (
-    data_id CHAR(16) PRIMARY KEY,
-    last_read_comment_id CHAR(16)
-);
 CREATE TABLE IF NOT EXISTS notifications (
     id CHAR(16) PRIMARY KEY,
     type VARCHAR(50) NOT NULL,

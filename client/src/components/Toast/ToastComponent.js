@@ -85,9 +85,11 @@ const Toast = styled.div`
     @keyframes show-toast {
         from {
             transform: translate(0, 110%);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
         to {
             transform: translate(0, -110%);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
     }
 
@@ -124,6 +126,7 @@ const Toast = styled.div`
 
         return "0.3s";
     }};
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
     animation-name: ${(props) => {
         if (props.animationState === ANIMATION_STATE_SHOW) {

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import TextCopyIcon from "../../../assets/TextCopyIcon";
+import { addToast } from "../../../utils/localApi";
 
 const TextCopy = styled.div`
     display: flex;
@@ -28,6 +29,8 @@ function TextCopyComponent(props) {
     function onClick(event) {
         navigator.clipboard.writeText(text);
         event?.stopPropagation();
+
+        addToast("Copied", "copied to clipboard!");
     }
 
     return (

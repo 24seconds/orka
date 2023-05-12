@@ -5,7 +5,7 @@ import LightModeIcon from "../../assets/LightModeIcon";
 const LightMode = styled.button`
     display: flex;
     align-items: center;
-    column-gap: 20px;
+    column-gap: 12px;
     width: 170px;
     height: 42px;
 

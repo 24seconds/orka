@@ -5,6 +5,10 @@ import PropTypes from "prop-types";
 import PeerTitleComponent from "./PeerTitleComponent";
 import PeerRecentComponent from "./PeerRecentComponent";
 import { updateSelectedRowID } from "../../../utils/localApi";
+import {
+    DATA_EXTENSION_GENERAL,
+    DATA_EXTENSION_IMAGE,
+} from "../../../constants/constant";
 
 const selectedStyle = css`
     /* outline: 2px solid ${(props) => props.theme.PrimaryColor}; */
@@ -32,10 +36,10 @@ const Peer = styled.div`
 `;
 
 function PeerComponent(props) {
-    const { name, profile, orders, dataTypes, isSelected, onClick, uuid } =
+    const { name, profile, orders, dataExtensions, isSelected, onClick, uuid } =
         props;
 
-    const isEmpty = dataTypes?.length === 0;
+    const isEmpty = dataExtensions?.length === 0;
 
     return (
         <Peer
@@ -47,7 +51,10 @@ function PeerComponent(props) {
         >
             <PeerTitleComponent name={name} profile={profile} />
             {!isEmpty && (
-                <PeerRecentComponent orders={orders} dataTypes={dataTypes} />
+                <PeerRecentComponent
+                    orders={orders}
+                    dataExtensions={dataExtensions}
+                />
             )}
         </Peer>
     );
@@ -57,7 +64,7 @@ PeerComponent.propTypes = {
     name: PropTypes.string,
     profile: PropTypes.number,
     orders: PropTypes.array,
-    dataTypes: PropTypes.array,
+    dataExtensions: PropTypes.array,
     isSelected: PropTypes.bool,
     uuid: PropTypes.string,
 };
@@ -66,7 +73,7 @@ PeerComponent.defaultProps = {
     name: "",
     profile: 0,
     orders: ["0", "1"],
-    dataTypes: ["PNG", "TXT"],
+    dataExtensions: [DATA_EXTENSION_IMAGE, DATA_EXTENSION_GENERAL],
     isSelected: false,
     uuid: "",
 };

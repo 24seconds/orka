@@ -1,6 +1,20 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import {
+    DATA_EXTENSION_AUDIO,
+    DATA_EXTENSION_GENERAL,
+    DATA_EXTENSION_IMAGE,
+    DATA_EXTENSION_LINK,
+    DATA_EXTENSION_TEXT,
+    DATA_EXTENSION_VIDEO,
+} from "../../../constants/constant";
+import DataExtensionIconGeneral from "../../../assets/DataExtensionIconGeneral";
+import DataExtensionIconLink from "../../../assets/DataExtensionIconLink";
+import DataExtensionIconText from "../../../assets/DataExtensionIconText";
+import DataExtensionIconVideo from "../../../assets/DataExtensionIconVideo";
+import DataExtensionIconAudio from "../../../assets/DataExtensionIconAudio";
+import DataExtensionIconImage from "../../../assets/DataExtensionIconImage";
 
 const PeerRecent = styled.div`
     position: relative;
@@ -49,7 +63,7 @@ const EmptyData = styled.div`
 `;
 
 function RecentDataComponent(props) {
-    const { order, dataType } = props;
+    const { order, dataExtension } = props;
 
     const memoizedOrderToPixel = useMemo(() => {
         return `${parseInt(order) * 11}px`;
@@ -62,14 +76,23 @@ function RecentDataComponent(props) {
 
     return (
         <RecentData order={memoizedOrderToPixel} zIndex={memoizedZIndex}>
-            {dataType}
+            {(() => {
+                return {
+                    [DATA_EXTENSION_GENERAL]: <DataExtensionIconGeneral />,
+                    [DATA_EXTENSION_LINK]: <DataExtensionIconLink />,
+                    [DATA_EXTENSION_TEXT]: <DataExtensionIconText />,
+                    [DATA_EXTENSION_VIDEO]: <DataExtensionIconVideo />,
+                    [DATA_EXTENSION_AUDIO]: <DataExtensionIconAudio />,
+                    [DATA_EXTENSION_IMAGE]: <DataExtensionIconImage />,
+                }[dataExtension];
+            })()}
         </RecentData>
     );
 }
 
 // TODO(young): Refactor props types. Use array of order and data types.
 function PeerRecentComponent(props) {
-    const { orders, dataTypes } = props;
+    const { orders, dataExtensions } = props;
 
     return (
         <PeerRecent>
@@ -78,7 +101,7 @@ function PeerRecentComponent(props) {
                     <RecentDataComponent
                         key={order}
                         order={order}
-                        dataType={dataTypes[index]}
+                        dataExtension={dataExtensions[index]}
                     />
                 );
             })}
@@ -89,12 +112,12 @@ function PeerRecentComponent(props) {
 
 PeerRecentComponent.propTypes = {
     orders: PropTypes.array,
-    dataTypes: PropTypes.array,
+    dataExtensions: PropTypes.array,
 };
 
 PeerRecentComponent.defaultProps = {
     orders: ["0", "1"],
-    dataTypes: ["PNG", "TXT"],
+    dataExtensions: [DATA_EXTENSION_GENERAL, DATA_EXTENSION_IMAGE],
 };
 
 export default PeerRecentComponent;

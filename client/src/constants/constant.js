@@ -18,8 +18,19 @@ export const Tabs = Object.freeze({
 
 export const DATATYPE_FILE = "FILE";
 export const DATATYPE_LINK = "LINK";
+export const DATATYPE_TEXT = "TEXT";
 
 export const DATA_EXTENSION_GENERAL = "GENERAL";
+export const DATA_EXTENSION_LINK = "LINK";
+export const DATA_EXTENSION_TEXT = "TEXT";
+export const DATA_EXTENSION_VIDEO = "VIDEO";
+export const DATA_EXTENSION_AUDIO = "AUDIO";
+export const DATA_EXTENSION_IMAGE = "IMAGE";
+
+export const ACTIVITY_ROW_FILTER_ALL = "ALL";
+export const ACTIVITY_ROW_FILTER_FILE = "FILE";
+export const ACTIVITY_ROW_FILTER_LINK = "LINK";
+export const ACTIVITY_ROW_FILTER_TEXT = "TEXT";
 
 export const NOTIFICATION_TYPE_STATUS = "STATUS";
 export const NOTIFICATION_TYPE_COMMENT = "COMMENT";
