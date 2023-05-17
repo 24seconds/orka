@@ -73,6 +73,13 @@ function MainLayoutComponent(props) {
     }
 
     function onClickUplaodButton() {
+        if (uploadActivated) {
+            setUploadActivated(!uploadActivated);
+            setSelectedTab(Tabs.Home);
+
+            return;
+        }
+
         setUploadActivated(!uploadActivated);
 
         setSelectedTab(null);
@@ -85,7 +92,7 @@ function MainLayoutComponent(props) {
         <MainLayout className={className}>
             <OrkaTitle>orka</OrkaTitle>
             <MainLayoutContainer>
-                <TabContainer>
+                {/* <TabContainer>
                     {Object.values(Tabs).map((tab) => (
                         <TabComponent
                             key={tab.toString()}
@@ -94,7 +101,7 @@ function MainLayoutComponent(props) {
                             isSelected={selectedTab === tab}
                         />
                     ))}
-                </TabContainer>
+                </TabContainer> */}
                 <StyledUploadButtonComponent
                     onClick={onClickUplaodButton}
                     isActive={uploadActivated}
