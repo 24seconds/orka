@@ -288,13 +288,27 @@ function ActivityRowComponent(props) {
         }
     }
 
+    const dataName = useMemo(() => {
+        if (dataType !== DATATYPE_TEXT) {
+            return displayName;
+        }
+
+        const lines = displayName?.split(/\r?\n|\r|\n/g);
+        return lines?.[0];
+    }, [dataType, displayName]);
+
     const textPreview = useMemo(() => {
         if (dataType !== DATATYPE_TEXT) {
             return null;
         }
 
         const lines = dataText?.split(/\r?\n|\r|\n/g);
-        return lines[0];
+
+        if (lines.length >= 2) {
+            return lines[1];
+        }
+
+        return "No additional text";
     }, [dataText, dataType]);
 
     return (
@@ -304,7 +318,7 @@ function ActivityRowComponent(props) {
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
                     <FileMetaData>
-                        <div className="orka-data-name">{displayName}</div>
+                        <div className="orka-data-name">{dataName}</div>
                         {dataType === DATATYPE_TEXT && (
                             <TextPreview>{textPreview}</TextPreview>
                         )}
