@@ -96,13 +96,14 @@ class App extends Component {
     }
 
     render() {
-        const { orkaTheme, selectedPeer, selectedRow } = this.props;
+        const { orkaTheme, selectedPeer, selectedRow, myOrkaUUID } = this.props;
 
         console.log("colorTheme is ", orkaTheme);
         console.log("selectedPeer:", selectedPeer);
         console.log("selectedRow:", selectedRow);
 
         const shouldOpenPeerActivityLayout = selectedPeer !== null;
+        const mySelected = selectedPeer === myOrkaUUID;
 
         return (
             <ThemeProvider theme={orkaTheme}>
@@ -120,7 +121,7 @@ class App extends Component {
                             }
                         />
                         {shouldOpenPeerActivityLayout && (
-                            <OrkaPeerActivityLayout />
+                            <OrkaPeerActivityLayout mySelected={mySelected} />
                         )}
                         {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
@@ -137,6 +138,7 @@ const mapStateToProps = (state) => ({
     selectedPeer: state.selectedPeer,
     selectedRow: state.selectedRow,
     orkaTheme: state.orkaTheme,
+    myOrkaUUID: state.myUUID,
 });
 
 export default connect(mapStateToProps)(App);

@@ -162,11 +162,6 @@ function toastMessages(state = [], action) {
     return state;
 }
 
-// TODO(young): use `uuidv4()`
-function myOrkaUUID(state = "naive-id-2", action) {
-    return state;
-}
-
 function tableUsers(state = 0, action) {
     if (action.type === UPDATE_TABLE_USERS) {
         const newState = state + 1;
@@ -210,5 +205,4 @@ export default combineReducers({
     tableUsers,
     tableSharingData,
     tableNotifications,
-    myOrkaUUID,
 });
