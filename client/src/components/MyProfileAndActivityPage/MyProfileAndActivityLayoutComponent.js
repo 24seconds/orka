@@ -5,12 +5,12 @@ import MyProfileAndActivityPageContainerComponent from "./MyProfileAndActivityCo
 const MyProfileAndActivityPage = styled.div`
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
-    min-width: 520px;
+    min-width: 606px;
     /* height: 506px; */
     max-height: 746px;
 `;
 
-function MyProfileAndActivityPageComponent() {
+function MyProfileAndActivityPageLayoutComponent() {
     return (
         <MyProfileAndActivityPage>
             <MyProfileAndActivityPageContainerComponent />
@@ -18,4 +18,4 @@ function MyProfileAndActivityPageComponent() {
     );
 }
 
-export default MyProfileAndActivityPageComponent;
+export default MyProfileAndActivityPageLayoutComponent;
