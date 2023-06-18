@@ -78,7 +78,7 @@ INSERT INTO sharing_data VALUES (
         `)
     );
 
-    let a = '';
+    let a = "";
 
     for (const s of sqls) {
         a += `${s}\n`;

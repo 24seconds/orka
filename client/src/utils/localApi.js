@@ -1,5 +1,5 @@
-import { peerConnectionManager } from './connections/peerConnection';
-import LocalDropEvent from './LocalDropEvent';
+import { peerConnectionManager } from "./connections/peerConnection";
+import LocalDropEvent from "./LocalDropEvent";
 import {
     EventDownloadFileData,
     EventConnectData,
@@ -8,10 +8,10 @@ import {
     EventUploadLink,
     EventUpdateUser,
     EventResponseSharingData,
-} from './dataSchema/LocalDropEventData';
-import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
-import websocketManager from './connections/websocket';
-import store from '../redux/store';
+} from "./dataSchema/LocalDropEventData";
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
+import websocketManager from "./connections/websocket";
+import store from "../redux/store";
 import {
     addPeer,
     deletePeer,
@@ -26,27 +26,27 @@ import {
     updateOrkaTheme,
     addToastMessage,
     deleteToastMessage,
-} from '../redux/action';
-import { parseChunkAndHeader } from './peerMessage';
-import { generateUserProfile, generateSharingDataUUID } from './commonUtil';
+} from "../redux/action";
+import { parseChunkAndHeader } from "./peerMessage";
+import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
 import {
     accumulateChunk,
     transferFile,
     isDownloadInProgress,
     handleDataChannelClose,
-} from './downloadManager';
-import { run } from './database/database';
+} from "./downloadManager";
+import { run } from "./database/database";
 import {
     TABLE_NOTIFICATIONS,
     TABLE_SHARING_DATA,
     TABLE_USERS,
-} from './database/schema';
+} from "./database/schema";
 import {
     DATATYPE_FILE,
     DATATYPE_TEXT,
     TOAST_HIDE_STRATEGY_FADE_OUT,
-} from '../constants/constant';
-import { v4 as uuidv4 } from 'uuid';
+} from "../constants/constant";
+import { v4 as uuidv4 } from "uuid";
 
 function onSwitchTheme() {
     store.dispatch(updateOrkaTheme());
@@ -255,10 +255,10 @@ async function createTableUser({ name, profile, userID }) {
         '${name}',
         ${profile}
     );`;
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     updateTableUsers();
 
@@ -273,17 +273,17 @@ async function upsertTableUser({ name, profile, id: userID }) {
     }
 
     const result = await createTableUser({ name, profile, userID });
-    console.log('upserTableUser, result:', result);
+    console.log("upserTableUser, result:", result);
 
     return result;
 }
 
 async function deleteTableUserByID(id) {
     const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = '${id}'`;
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     updateTableUsers();
 
@@ -292,11 +292,11 @@ async function deleteTableUserByID(id) {
 
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
-    console.log('query:', query);
+    console.log("query:", query);
 
     // need to use try catch?
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -304,10 +304,10 @@ async function selectTableUsers() {
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
         WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = '${userID}'`;
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows?.[0];
 }
@@ -319,7 +319,7 @@ async function selectTableUsersMyself() {
 
 async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     console.log(
-        'selectTableUsersWithLatestSharingDataTypeIncludingMyself, uuid:',
+        "selectTableUsersWithLatestSharingDataTypeIncludingMyself, uuid:",
         getMyUUID()
     );
 
@@ -346,12 +346,12 @@ async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
 `;
 
     console.log(
-        'selectTableUsersWithLatestSharingDataTypeIncludingMyself, query:',
+        "selectTableUsersWithLatestSharingDataTypeIncludingMyself, query:",
         query
     );
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -372,13 +372,13 @@ async function patchTableUsersByID({ name, profile }, userID) {
         values.push(`${TABLE_USERS.fields.profile} = ${profile}`);
     }
 
-    query += values.join(', ');
+    query += values.join(", ");
     query += ` WHERE ${TABLE_USERS.fields.id} = '${userID}'`;
 
-    console.log('patchTableUsersByID, query:', query);
+    console.log("patchTableUsersByID, query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     const data = await selectTableUsersByID(userID);
 
@@ -413,10 +413,10 @@ async function createTableSharingData({
         }
     })();
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     const data = await selectTableSharingDataByID(id);
 
@@ -457,7 +457,7 @@ async function upsertTableSharingData({ sharingData }) {
                 `${TABLE_SHARING_DATA.fields.uploaded_at} = '${uploaded_at}'`,
             ];
 
-            query += values.join(', ');
+            query += values.join(", ");
             query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}'`;
 
             return query;
@@ -470,10 +470,10 @@ async function upsertTableSharingData({ sharingData }) {
         }
     })();
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     updateTableSharingData();
 
@@ -484,10 +484,10 @@ async function selectTableSharingDataByUserID(userID) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
         WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}';`;
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -496,10 +496,10 @@ async function selectTableSharingDataByID(id) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
         WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';`;
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows?.[0];
 }
@@ -508,23 +508,23 @@ async function selectTableSharingDataWithOrderBy(userID, order) {
     let query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
 
-    if (userID && userID !== '') {
+    if (userID && userID !== "") {
         query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
     }
 
     if (!!order) {
-        const stmt = order === 'ASC' ? 'ASC' : 'DESC';
+        const stmt = order === "ASC" ? "ASC" : "DESC";
         query += ` ORDER BY ${TABLE_SHARING_DATA.fields.uploaded_at} ${stmt};`;
     } else {
         query += `;`;
     }
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -534,10 +534,10 @@ async function checkHandsUpTableSharingData(userID) {
         WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
         AND ${TABLE_SHARING_DATA.fields.hands_up} = TRUE;`;
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -564,13 +564,13 @@ async function patchTableSharingDataByID(
         );
     }
 
-    query += values.join(', ');
+    query += values.join(", ");
     query += ` WHERE id = '${sharingDataID}'`;
 
-    console.log('patchTableSharingDataByID, query:', query);
+    console.log("patchTableSharingDataByID, query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     const data = await selectTableSharingDataByID(sharingDataID);
 
@@ -590,10 +590,10 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
     `
     );
 
-    console.log('deleteTableSharingDataByIDs, query:', query);
+    console.log("deleteTableSharingDataByIDs, query:", query);
 
     const result = await run(query);
-    console.log('deleteTableSharingDataByIDs, result:', result);
+    console.log("deleteTableSharingDataByIDs, result:", result);
     // return result?.[0]?.rows;
 }
 
@@ -601,10 +601,10 @@ async function selectTableNotifications() {
     const query = `SELECT * FROM ${TABLE_NOTIFICATIONS.name}
         ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
@@ -624,10 +624,10 @@ async function selectTableNotificationsWithUserAndSharingData() {
             n.${TABLE_NOTIFICATIONS.fields.data_id} = d.${TABLE_SHARING_DATA.fields.id}
         ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
 
-    console.log('query:', query);
+    console.log("query:", query);
 
     const result = await run(query);
-    console.log('result:', result);
+    console.log("result:", result);
 
     return result?.[0]?.rows;
 }
