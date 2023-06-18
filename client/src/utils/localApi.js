@@ -1,5 +1,5 @@
-import { peerConnectionManager } from "./connections/peerConnection";
-import LocalDropEvent from "./LocalDropEvent";
+import { peerConnectionManager } from './connections/peerConnection';
+import LocalDropEvent from './LocalDropEvent';
 import {
     EventDownloadFileData,
     EventConnectData,
@@ -8,10 +8,10 @@ import {
     EventUploadLink,
     EventUpdateUser,
     EventResponseSharingData,
-} from "./dataSchema/LocalDropEventData";
-import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
-import websocketManager from "./connections/websocket";
-import store from "../redux/store";
+} from './dataSchema/LocalDropEventData';
+import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from '../schema';
+import websocketManager from './connections/websocket';
+import store from '../redux/store';
 import {
     addPeer,
     deletePeer,
@@ -26,27 +26,27 @@ import {
     updateOrkaTheme,
     addToastMessage,
     deleteToastMessage,
-} from "../redux/action";
-import { parseChunkAndHeader } from "./peerMessage";
-import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
+} from '../redux/action';
+import { parseChunkAndHeader } from './peerMessage';
+import { generateUserProfile, generateSharingDataUUID } from './commonUtil';
 import {
     accumulateChunk,
     transferFile,
     isDownloadInProgress,
     handleDataChannelClose,
-} from "./downloadManager";
-import { run } from "./database/database";
+} from './downloadManager';
+import { run } from './database/database';
 import {
     TABLE_NOTIFICATIONS,
     TABLE_SHARING_DATA,
     TABLE_USERS,
-} from "./database/schema";
+} from './database/schema';
 import {
     DATATYPE_FILE,
     DATATYPE_TEXT,
     TOAST_HIDE_STRATEGY_FADE_OUT,
-} from "../constants/constant";
-import { v4 as uuidv4 } from "uuid";
+} from '../constants/constant';
+import { v4 as uuidv4 } from 'uuid';
 
 function onSwitchTheme() {
     store.dispatch(updateOrkaTheme());
@@ -251,14 +251,14 @@ function updateSender(senderID) {
 
 async function createTableUser({ name, profile, userID }) {
     const query = `INSERT INTO ${TABLE_USERS.name} VALUES (
-        "${userID}",
-        "${name}",
+        '${userID}',
+        '${name}',
         ${profile}
     );`;
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     updateTableUsers();
 
@@ -273,17 +273,17 @@ async function upsertTableUser({ name, profile, id: userID }) {
     }
 
     const result = await createTableUser({ name, profile, userID });
-    console.log("upserTableUser, result:", result);
+    console.log('upserTableUser, result:', result);
 
     return result;
 }
 
 async function deleteTableUserByID(id) {
-    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = "${id}"`;
-    console.log("query:", query);
+    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = '${id}'`;
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     updateTableUsers();
 
@@ -292,22 +292,22 @@ async function deleteTableUserByID(id) {
 
 async function selectTableUsers() {
     const query = `SELECT * FROM ${TABLE_USERS.name}`;
-    console.log("query:", query);
+    console.log('query:', query);
 
     // need to use try catch?
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
 
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
-        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
-    console.log("query:", query);
+        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = '${userID}'`;
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows?.[0];
 }
@@ -319,16 +319,17 @@ async function selectTableUsersMyself() {
 
 async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     console.log(
-        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:",
+        'selectTableUsersWithLatestSharingDataTypeIncludingMyself, uuid:',
         getMyUUID()
     );
 
     const query = `
     SELECT u.*,
-        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
-        THEN "URL" 
+        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = 'LINK' 
+        THEN 'URL' 
         ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latestDataExtension,
-    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
+        ${TABLE_SHARING_DATA.fields.uploaded_at},
+    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at}) as max_uploaded_at
   FROM
     ${TABLE_USERS.name} u
   LEFT JOIN
@@ -341,16 +342,16 @@ async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     CASE u.${TABLE_USERS.fields.id}
     WHEN '${getMyUUID()}' THEN 1
     ELSE 2
-    END
+    END, uploaded_at DESC
 `;
 
     console.log(
-        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:",
+        'selectTableUsersWithLatestSharingDataTypeIncludingMyself, query:',
         query
     );
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
@@ -365,19 +366,19 @@ async function patchTableUsersByID({ name, profile }, userID) {
     const values = [];
 
     if (!(name == null)) {
-        values.push(`${TABLE_USERS.fields.name} = "${name}"`);
+        values.push(`${TABLE_USERS.fields.name} = '${name}'`);
     }
     if (!(profile == null)) {
         values.push(`${TABLE_USERS.fields.profile} = ${profile}`);
     }
 
-    query += values.join(", ");
-    query += ` WHERE ${TABLE_USERS.fields.id} = "${userID}"`;
+    query += values.join(', ');
+    query += ` WHERE ${TABLE_USERS.fields.id} = '${userID}'`;
 
-    console.log("patchTableUsersByID, query:", query);
+    console.log('patchTableUsersByID, query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     const data = await selectTableUsersByID(userID);
 
@@ -401,21 +402,21 @@ async function createTableSharingData({
     const query = (() => {
         if (type === DATATYPE_FILE) {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES(
-                "${id}", "${name}", ${size}, "${extension}", NULL, "${DATATYPE_FILE}", 0, false,
-                "${uploader_id}", "${uploaded_at}");`;
+                '${id}', '${name}', ${size}, '${extension}', NULL, '${DATATYPE_FILE}', 0, false,
+                '${uploader_id}', '${uploaded_at}');`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, "${extension}", "${text}", "${
+                '${id}', NULL, 0, '${extension}', '${text}', '${
                 type || DATATYPE_TEXT
-            }", 0, false, 
-                "${uploader_id}", "${uploaded_at}");`;
+            }', 0, false, 
+                '${uploader_id}', '${uploaded_at}');`;
         }
     })();
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     const data = await selectTableSharingDataByID(id);
 
@@ -444,35 +445,35 @@ async function upsertTableSharingData({ sharingData }) {
             // update
             let query = `UPDATE ${TABLE_SHARING_DATA.name} SET `;
             const values = [
-                `${TABLE_SHARING_DATA.fields.name} = "${name}"`,
+                `${TABLE_SHARING_DATA.fields.name} = '${name}'`,
                 `${TABLE_SHARING_DATA.fields.size} = ${size}`,
-                `${TABLE_SHARING_DATA.fields.extension} = "${extension}"`,
+                `${TABLE_SHARING_DATA.fields.extension} = '${extension}'`,
                 // text and type name should be escaped.
-                `"${TABLE_SHARING_DATA.fields.text}" = "${text}"`,
-                `"${TABLE_SHARING_DATA.fields.type}" = "${type}"`,
+                `'${TABLE_SHARING_DATA.fields.text}' = '${text}'`,
+                `'${TABLE_SHARING_DATA.fields.type}' = '${type}'`,
                 `${TABLE_SHARING_DATA.fields.status_count} = ${status_count}`,
                 `${TABLE_SHARING_DATA.fields.hands_up} = ${hands_up}`,
-                `${TABLE_SHARING_DATA.fields.uploader_id} = "${uploader_id}"`,
-                `${TABLE_SHARING_DATA.fields.uploaded_at} = "${uploaded_at}"`,
+                `${TABLE_SHARING_DATA.fields.uploader_id} = '${uploader_id}'`,
+                `${TABLE_SHARING_DATA.fields.uploaded_at} = '${uploaded_at}'`,
             ];
 
-            query += values.join(", ");
-            query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}"`;
+            query += values.join(', ');
+            query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}'`;
 
             return query;
         } else {
             // insert
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
-                ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
+                '${id}', '${name}', ${size}, '${extension}', '${text}', '${type}',
+                ${status_count}, ${hands_up}, '${uploader_id}', '${uploaded_at}'
             );`;
         }
     })();
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     updateTableSharingData();
 
@@ -481,24 +482,24 @@ async function upsertTableSharingData({ sharingData }) {
 
 async function selectTableSharingDataByUserID(userID) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
-        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}";`;
+        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}';`;
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
 
 async function selectTableSharingDataByID(id) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
-        WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";`;
+        WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';`;
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows?.[0];
 }
@@ -507,23 +508,23 @@ async function selectTableSharingDataWithOrderBy(userID, order) {
     let query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
 
-    if (userID && userID !== "") {
+    if (userID && userID !== '') {
         query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
     }
 
     if (!!order) {
-        const stmt = order === "ASC" ? "ASC" : "DESC";
+        const stmt = order === 'ASC' ? 'ASC' : 'DESC';
         query += ` ORDER BY ${TABLE_SHARING_DATA.fields.uploaded_at} ${stmt};`;
     } else {
         query += `;`;
     }
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
@@ -533,10 +534,10 @@ async function checkHandsUpTableSharingData(userID) {
         WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
         AND ${TABLE_SHARING_DATA.fields.hands_up} = TRUE;`;
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
@@ -563,13 +564,13 @@ async function patchTableSharingDataByID(
         );
     }
 
-    query += values.join(", ");
-    query += ` WHERE id = "${sharingDataID}"`;
+    query += values.join(', ');
+    query += ` WHERE id = '${sharingDataID}'`;
 
-    console.log("patchTableSharingDataByID, query:", query);
+    console.log('patchTableSharingDataByID, query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     const data = await selectTableSharingDataByID(sharingDataID);
 
@@ -585,14 +586,14 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
 
     const query = sharingDataIDs.map(
         (id) => `
-        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
+        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';
     `
     );
 
-    console.log("deleteTableSharingDataByIDs, query:", query);
+    console.log('deleteTableSharingDataByIDs, query:', query);
 
     const result = await run(query);
-    console.log("deleteTableSharingDataByIDs, result:", result);
+    console.log('deleteTableSharingDataByIDs, result:', result);
     // return result?.[0]?.rows;
 }
 
@@ -600,10 +601,10 @@ async function selectTableNotifications() {
     const query = `SELECT * FROM ${TABLE_NOTIFICATIONS.name}
         ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
@@ -623,10 +624,10 @@ async function selectTableNotificationsWithUserAndSharingData() {
             n.${TABLE_NOTIFICATIONS.fields.data_id} = d.${TABLE_SHARING_DATA.fields.id}
         ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
 
-    console.log("query:", query);
+    console.log('query:', query);
 
     const result = await run(query);
-    console.log("result:", result);
+    console.log('result:', result);
 
     return result?.[0]?.rows;
 }
