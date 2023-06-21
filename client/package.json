@@ -12,7 +12,7 @@
         "@testing-library/user-event": "^14.4.2",
         "concurrently": "^7.3.0",
         "env-cmd": "^10.1.0",
-        "gluesql": "^0.14.3",
+        "gluesql": "^0.13.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-dropzone": "^14.2.2",
