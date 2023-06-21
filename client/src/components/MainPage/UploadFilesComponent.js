@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import {
     generateFingerPrint,
     getSubtypeOfMIMEtypes,
+    inferDataExtensionTypeOfFile,
     inferFileExtension,
 } from "../../utils/commonUtil";
 import FingerprintedFile from "../../utils/dataSchema/FingerprintedFile";
@@ -93,9 +94,8 @@ function UploadFilesComponent(props) {
             fingerprintedFiles.map((fingerprintedFile) => {
                 const dataID = fingerprintedFile.fingerprint;
                 const fileName = fingerprintedFile.file.name;
-                const fileType = inferFileExtension(
-                    fingerprintedFile.file.type,
-                    fingerprintedFile.file.name
+                const fileExtension = inferDataExtensionTypeOfFile(
+                    fingerprintedFile.file.type
                 );
                 const sizeInBytes = fingerprintedFile.file.size;
 
@@ -104,7 +104,7 @@ function UploadFilesComponent(props) {
                     type: DATATYPE_FILE,
                     name: fileName,
                     size: sizeInBytes,
-                    extension: fileType,
+                    extension: fileExtension,
                 });
             })
         );
