@@ -324,26 +324,34 @@ async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     );
 
     const query = `
-    SELECT u.*,
-        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = 'LINK' 
-        THEN 'URL' 
-        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latestDataExtension,
-        ${TABLE_SHARING_DATA.fields.uploaded_at},
-    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at}) as max_uploaded_at
-  FROM
-    ${TABLE_USERS.name} u
-  LEFT JOIN
-    ${TABLE_SHARING_DATA.name} s
-  ON
-    u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
-  GROUP BY
-    u.${TABLE_USERS.fields.id}
-  ORDER BY
-    CASE u.${TABLE_USERS.fields.id}
-    WHEN '${getMyUUID()}' THEN 1
-    ELSE 2
-    END, uploaded_at DESC
-`;
+        SELECT 
+            u.*, 
+            s3.sharing_data_extension AS latestDataExtension
+        FROM users u
+        LEFT JOIN
+            (SELECT 
+            s1.${TABLE_SHARING_DATA.fields.id} AS sharing_data_id,
+            s1.${TABLE_SHARING_DATA.fields.uploader_id} AS sharing_data_uploader_id,
+            s1.${TABLE_SHARING_DATA.fields.extension} AS sharing_data_extension,
+            s1.${TABLE_SHARING_DATA.fields.type} AS sharing_data_type,
+            (count(s2.${TABLE_SHARING_DATA.fields.id}) + 1) as sharing_data_row_number
+            FROM ${TABLE_SHARING_DATA.name} s1
+            LEFT JOIN ${TABLE_SHARING_DATA.name} s2
+            ON s1.${TABLE_SHARING_DATA.fields.uploader_id} = s2.${TABLE_SHARING_DATA.fields.uploader_id} 
+            AND s1.${TABLE_SHARING_DATA.fields.uploaded_at} < s2.${TABLE_SHARING_DATA.fields.uploaded_at}
+            group by 
+                (s1.${TABLE_SHARING_DATA.fields.id}), 
+                (s1.${TABLE_SHARING_DATA.fields.uploader_id}), 
+                (s1.${TABLE_SHARING_DATA.fields.extension}), 
+                (s1.${TABLE_SHARING_DATA.fields.type})
+            ) s3
+        ON
+            u.id = s3.sharing_data_uploader_id
+            AND s3.sharing_data_row_number = 1
+        ORDER BY CASE u.${TABLE_USERS.fields.id}
+            WHEN '${getMyUUID()}' THEN 1
+            ELSE 2
+            END`;
 
     console.log(
         "selectTableUsersWithLatestSharingDataTypeIncludingMyself, query:",
