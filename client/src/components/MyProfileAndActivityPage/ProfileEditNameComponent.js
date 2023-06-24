@@ -148,6 +148,7 @@ function ProfileEditNameComponent(props) {
         onClick?.();
 
         if (propEditMode) {
+            onSetEditMode(!propEditMode);
             await onUpdateName();
         }
     }
@@ -192,9 +193,11 @@ function ProfileEditNameComponent(props) {
                     </IconContainer>
                 )}
             </NameEditor>
-            <EditButton className="orka-edit-button" onClick={onChangeMode}>
-                {propEditMode ? "Done" : "Edit"}
-            </EditButton>
+            {propEditMode && (
+                <EditButton className="orka-edit-button" onClick={onChangeMode}>
+                    {propEditMode ? "Done" : "Edit"}
+                </EditButton>
+            )}
         </ProfileEditName>
     );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
     ACTIVITY_ROW_FILTER_ALL,
     ACTIVITY_ROW_FILTER_FILE,
@@ -33,6 +33,12 @@ const StyledHandsUpSection = styled(HandsUpSectionComponent)`
 const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
     height: auto;
     margin: 32px 32px 24px 32px;
+
+    ${(props) =>
+        props.editMode &&
+        css`
+            width: 100%;
+        `}
 `;
 
 const MyProfileAndActivityPageContainer = styled.div`
@@ -254,9 +260,11 @@ function MyProfileAndActivityPageContainerComponent() {
                     editMode={editMode}
                     onSetEditMode={onSetEditMode}
                 />
-                <CloseIconContainer onClick={onClose}>
-                    <CloseIcon />
-                </CloseIconContainer>
+                {!editMode && (
+                    <CloseIconContainer onClick={onClose}>
+                        <CloseIcon />
+                    </CloseIconContainer>
+                )}
             </ActivityTitleContainer>
             {
                 // handsup data

@@ -600,11 +600,8 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
         return;
     }
 
-    const query = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';
-    `
-    );
+    const concat = sharingDataIDs.map((id) => `'${id}'`).join(" ,");
+    const query = `DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} IN (${concat});`;
 
     console.log("deleteTableSharingDataByIDs, query:", query);
 
