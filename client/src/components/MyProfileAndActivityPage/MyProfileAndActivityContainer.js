@@ -21,6 +21,7 @@ import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
+import PageEditComponent from "./PageEditComponent";
 
 const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-top: 8px;
@@ -263,6 +264,7 @@ function MyProfileAndActivityPageContainerComponent() {
                     )
                 )}
             </ActivityRowContainer>
+            <PageEditComponent />
         </MyProfileAndActivityPageContainer>
     );
 }
