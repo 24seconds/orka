@@ -13,6 +13,7 @@ import {
     messageUpdateUser,
     messageRequestSharingData,
     messageResponseSharingData,
+    messageDeleteSharingData,
 } from "../dataSchema/PeerMessageData";
 import { createSignalingMessage } from "../signaling_message";
 import { createPeerMessage } from "../peerMessage";
@@ -405,6 +406,47 @@ function addClientEventTypeEventListener(peerConnectionManager) {
 
                 sendIfReady(
                     CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
+                    dataChannel,
+                    peerMessage
+                );
+            }
+        }
+    );
+
+    peerConnectionManager.addEventListener(
+        CLIENT_EVENT_TYPE.DELETE_SHARING_DATA,
+        async (event) => {
+            const { id } = event;
+            console.log(
+                "CLIENT_EVENT_TYPE.DELETE_SHARING_DATA, id:",
+                id,
+                peerConnectionManager,
+                !!peerConnectionManager.peerConnections
+            );
+
+            if (!doesPeerConnectionsExist(peerConnectionManager)) {
+                return;
+            }
+
+            for (const uuid of Object.keys(
+                peerConnectionManager.peerConnections
+            )) {
+                const { dataChannel } =
+                    peerConnectionManager.peerConnections[uuid];
+                const data = new messageDeleteSharingData({ id });
+
+                const peerMessage = createPeerMessage(
+                    PEER_MESSAGE_TYPE.DELETE_SHARING_DATA,
+                    data
+                );
+
+                console.log(
+                    "CLIENT_EVENT_TYPE.DELETE_SHARING_DATA, message is ",
+                    peerMessage
+                );
+
+                sendIfReady(
+                    CLIENT_EVENT_TYPE.DELETE_SHARING_DATA,
                     dataChannel,
                     peerMessage
                 );

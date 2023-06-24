@@ -8,6 +8,7 @@ import {
     EventUploadLink,
     EventUpdateUser,
     EventResponseSharingData,
+    EventDeleteSharingData,
 } from "./dataSchema/LocalDropEventData";
 import { CLIENT_EVENT_TYPE, PEER_MESSAGE_TYPE } from "../schema";
 import websocketManager from "./connections/websocket";
@@ -56,6 +57,15 @@ async function notifySharingData(data) {
     const event = new LocalDropEvent(
         CLIENT_EVENT_TYPE.UPLOAD_SHARING_DATA,
         new EventUploadLink({ sharingData: data })
+    );
+
+    (await peerConnectionManager).dispatchEvent(event);
+}
+
+async function notifyDeleteSharingData(id) {
+    const event = new LocalDropEvent(
+        CLIENT_EVENT_TYPE.DELETE_SHARING_DATA,
+        new EventDeleteSharingData({ id })
     );
 
     (await peerConnectionManager).dispatchEvent(event);
@@ -649,6 +659,7 @@ export {
     onSwitchTheme,
     notifySharingData,
     notifySharingDataToPeer,
+    notifyDeleteSharingData,
     notifyUser,
     sendErrorToPeer,
     requestDownloadFile,

@@ -18,6 +18,12 @@ class messageUploadSharingData {
     }
 }
 
+class messageDeleteSharingData {
+    constructor({ id }) {
+        this.id = id;
+    }
+}
+
 class messageUpdateUser {
     constructor({ user }) {
         this.user = user;
@@ -41,6 +47,7 @@ export {
     messageRequestSharingData,
     messageResponseSharingData,
     messageUploadSharingData,
+    messageDeleteSharingData,
     messageUpdateUser,
     messageDownloadData,
     messageErrorData,

@@ -17,6 +17,12 @@ class EventUploadLink {
     }
 }
 
+class EventDeleteSharingData {
+    constructor({ id }) {
+        this.id = id;
+    }
+}
+
 class EventUpdateUser {
     constructor({ user }) {
         this.user = user;
@@ -53,6 +59,7 @@ export {
     EventSendUserInfo,
     EventResponseSharingData,
     EventUploadLink,
+    EventDeleteSharingData,
     EventUpdateUser,
     EventDownloadFileData,
     EventConnectData,

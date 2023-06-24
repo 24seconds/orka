@@ -15,6 +15,7 @@ import {
     selectTableSharingDataByID,
     patchTableSharingDataByID,
     notifySharingData,
+    deleteTableSharingDataByIDs,
 } from "../localApi";
 import LocalDropEvent from "../LocalDropEvent";
 
@@ -121,6 +122,13 @@ async function handleDataChannelMessage(event, uuid) {
     if (messageType === PEER_MESSAGE_TYPE.UPLOAD_SHARING_DATA) {
         const { sharingData } = data;
         await upsertTableSharingData({ sharingData });
+
+        return;
+    }
+
+    if (messageType === PEER_MESSAGE_TYPE.DELETE_SHARING_DATA) {
+        const { id } = data;
+        await deleteTableSharingDataByIDs([id]);
 
         return;
     }

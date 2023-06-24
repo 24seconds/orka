@@ -12,6 +12,7 @@ import {
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
+    notifyDeleteSharingData,
     selectTableSharingDataWithOrderBy,
     updateSelectedPeerUUID,
     updateSelectedRowID,
@@ -200,6 +201,11 @@ function MyProfileAndActivityPageContainerComponent() {
 
                 await deleteTableSharingDataByIDs(rowsToDelete);
                 setRowsToBeDeleted({});
+
+                // notify to peer
+                for (const id of rowsToDelete) {
+                    await notifyDeleteSharingData(id);
+                }
             }
 
             console.log("useEffect, editMode:", editMode);
