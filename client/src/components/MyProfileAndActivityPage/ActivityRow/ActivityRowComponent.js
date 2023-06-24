@@ -69,7 +69,7 @@ const ActivityRow = styled.div`
             background: ${(props) => props.theme.Grayscale01};
             svg > path {
                 fill: ${(props) => props.theme.White};
-            }            
+            }
         }
 
         background: ${(props) => props.theme.Grayscale02};
