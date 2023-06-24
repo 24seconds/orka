@@ -27,9 +27,17 @@ const PageEdit = styled.button`
 `;
 
 function PageEditComponent(props) {
-    const { className } = props;
+    const { className, onClick } = props;
 
-    return <PageEdit className={className}>Edit my page</PageEdit>;
+    function onChangeEditMode() {
+        onClick?.();
+    }
+
+    return (
+        <PageEdit className={className} onClick={onChangeEditMode}>
+            Edit my page
+        </PageEdit>
+    );
 }
 
 export default PageEditComponent;

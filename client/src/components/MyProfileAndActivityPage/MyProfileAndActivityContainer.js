@@ -13,15 +13,17 @@ import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
     selectTableSharingDataWithOrderBy,
+    updateSelectedPeerUUID,
     updateSelectedRowID,
     updateSender,
 } from "../../utils/localApi";
-import { hoverOpacity } from "../SharedStyle";
+import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
 import PageEditComponent from "./PageEditComponent";
+import CloseIcon from "../../assets/CloseIcon";
 
 const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-top: 8px;
@@ -36,7 +38,27 @@ const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
 const MyProfileAndActivityPageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 520px;
+`;
+
+const CloseIconContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    // TODO(young): revisit hover effect for close icons later.
+    ${hoverCloseButton}
+`;
+
+const ActivityTitleContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    ${CloseIconContainer} {
+        margin-left: auto;
+        margin-right: 34px;
+    }
 `;
 
 const SortButton = styled.button`
@@ -200,6 +222,11 @@ function MyProfileAndActivityPageContainerComponent() {
         setRowsToBeDeleted(newState);
     }
 
+    function onClose() {
+        updateSelectedPeerUUID(null);
+        updateSelectedRowID(null);
+    }
+
     const handsUpData = data.filter((d) => d.hands_up)?.[0];
     const restData = data.filter((d) => !d.hands_up);
     const filteredData = filterSharingData(
@@ -221,11 +248,16 @@ function MyProfileAndActivityPageContainerComponent() {
 
     return (
         <MyProfileAndActivityPageContainer>
-            <StyledProfileEditNameComponent
-                onClick={onClickEdit}
-                editMode={editMode}
-                onSetEditMode={onSetEditMode}
-            />
+            <ActivityTitleContainer>
+                <StyledProfileEditNameComponent
+                    onClick={onClickEdit}
+                    editMode={editMode}
+                    onSetEditMode={onSetEditMode}
+                />
+                <CloseIconContainer onClick={onClose}>
+                    <CloseIcon />
+                </CloseIconContainer>
+            </ActivityTitleContainer>
             {
                 // handsup data
                 handsUpData && (
@@ -258,13 +290,14 @@ function MyProfileAndActivityPageContainerComponent() {
                     renderActivityRowComponent(
                         d,
                         activeRow,
+                        null,
                         myOrkaUUID,
                         editMode,
                         onDeleteRow
                     )
                 )}
             </ActivityRowContainer>
-            <PageEditComponent />
+            <PageEditComponent onClick={onClickEdit} editMode={editMode} />
         </MyProfileAndActivityPageContainer>
     );
 }
