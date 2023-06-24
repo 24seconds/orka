@@ -251,8 +251,8 @@ function updateSender(senderID) {
 
 async function createTableUser({ name, profile, userID }) {
     const query = `INSERT INTO ${TABLE_USERS.name} VALUES (
-        "${userID}",
-        "${name}",
+        '${userID}',
+        '${name}',
         ${profile}
     );`;
     console.log("query:", query);
@@ -279,7 +279,7 @@ async function upsertTableUser({ name, profile, id: userID }) {
 }
 
 async function deleteTableUserByID(id) {
-    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = "${id}"`;
+    const query = `DELETE FROM ${TABLE_USERS.name} WHERE id = '${id}'`;
     console.log("query:", query);
 
     const result = await run(query);
@@ -303,7 +303,7 @@ async function selectTableUsers() {
 
 async function selectTableUsersByID(userID) {
     const query = `SELECT * FROM ${TABLE_USERS.name}
-        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = "${userID}"`;
+        WHERE ${TABLE_USERS.name}.${TABLE_USERS.fields.id} = '${userID}'`;
     console.log("query:", query);
 
     const result = await run(query);
@@ -319,33 +319,42 @@ async function selectTableUsersMyself() {
 
 async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
     console.log(
-        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, uuid:",
+        "selectTableUsersWithLatestSharingDataTypeIncludingMyself, uuid:",
         getMyUUID()
     );
 
     const query = `
-    SELECT u.*,
-        (CASE WHEN s.${TABLE_SHARING_DATA.fields.type} = "LINK" 
-        THEN "URL" 
-        ELSE s.${TABLE_SHARING_DATA.fields.extension} END) latestDataExtension,
-    MAX(s.${TABLE_SHARING_DATA.fields.uploaded_at})
-  FROM
-    ${TABLE_USERS.name} u
-  LEFT JOIN
-    ${TABLE_SHARING_DATA.name} s
-  ON
-    u.${TABLE_USERS.fields.id} = s.${TABLE_SHARING_DATA.fields.uploader_id}
-  GROUP BY
-    u.${TABLE_USERS.fields.id}
-  ORDER BY
-    CASE u.${TABLE_USERS.fields.id}
-    WHEN '${getMyUUID()}' THEN 1
-    ELSE 2
-    END
-`;
+        SELECT 
+            u.*, 
+            s3.sharing_data_extension AS latestDataExtension
+        FROM users u
+        LEFT JOIN
+            (SELECT 
+            s1.${TABLE_SHARING_DATA.fields.id} AS sharing_data_id,
+            s1.${TABLE_SHARING_DATA.fields.uploader_id} AS sharing_data_uploader_id,
+            s1.${TABLE_SHARING_DATA.fields.extension} AS sharing_data_extension,
+            s1.${TABLE_SHARING_DATA.fields.type} AS sharing_data_type,
+            (count(s2.${TABLE_SHARING_DATA.fields.id}) + 1) as sharing_data_row_number
+            FROM ${TABLE_SHARING_DATA.name} s1
+            LEFT JOIN ${TABLE_SHARING_DATA.name} s2
+            ON s1.${TABLE_SHARING_DATA.fields.uploader_id} = s2.${TABLE_SHARING_DATA.fields.uploader_id} 
+            AND s1.${TABLE_SHARING_DATA.fields.uploaded_at} < s2.${TABLE_SHARING_DATA.fields.uploaded_at}
+            group by 
+                (s1.${TABLE_SHARING_DATA.fields.id}), 
+                (s1.${TABLE_SHARING_DATA.fields.uploader_id}), 
+                (s1.${TABLE_SHARING_DATA.fields.extension}), 
+                (s1.${TABLE_SHARING_DATA.fields.type})
+            ) s3
+        ON
+            u.id = s3.sharing_data_uploader_id
+            AND s3.sharing_data_row_number = 1
+        ORDER BY CASE u.${TABLE_USERS.fields.id}
+            WHEN '${getMyUUID()}' THEN 1
+            ELSE 2
+            END`;
 
     console.log(
-        "selectTableUsersWithLatestSharingDataTypeExcludingMyself, query:",
+        "selectTableUsersWithLatestSharingDataTypeIncludingMyself, query:",
         query
     );
 
@@ -365,14 +374,14 @@ async function patchTableUsersByID({ name, profile }, userID) {
     const values = [];
 
     if (!(name == null)) {
-        values.push(`${TABLE_USERS.fields.name} = "${name}"`);
+        values.push(`${TABLE_USERS.fields.name} = '${name}'`);
     }
     if (!(profile == null)) {
         values.push(`${TABLE_USERS.fields.profile} = ${profile}`);
     }
 
     query += values.join(", ");
-    query += ` WHERE ${TABLE_USERS.fields.id} = "${userID}"`;
+    query += ` WHERE ${TABLE_USERS.fields.id} = '${userID}'`;
 
     console.log("patchTableUsersByID, query:", query);
 
@@ -401,14 +410,14 @@ async function createTableSharingData({
     const query = (() => {
         if (type === DATATYPE_FILE) {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES(
-                "${id}", "${name}", ${size}, "${extension}", NULL, "${DATATYPE_FILE}", 0, false,
-                "${uploader_id}", "${uploaded_at}");`;
+                '${id}', '${name}', ${size}, '${extension}', NULL, '${DATATYPE_FILE}', 0, false,
+                '${uploader_id}', '${uploaded_at}');`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", NULL, 0, "${extension}", "${text}", "${
+                '${id}', NULL, 0, '${extension}', '${text}', '${
                 type || DATATYPE_TEXT
-            }", 0, false, 
-                "${uploader_id}", "${uploaded_at}");`;
+            }', 0, false, 
+                '${uploader_id}', '${uploaded_at}');`;
         }
     })();
 
@@ -444,27 +453,27 @@ async function upsertTableSharingData({ sharingData }) {
             // update
             let query = `UPDATE ${TABLE_SHARING_DATA.name} SET `;
             const values = [
-                `${TABLE_SHARING_DATA.fields.name} = "${name}"`,
+                `${TABLE_SHARING_DATA.fields.name} = '${name}'`,
                 `${TABLE_SHARING_DATA.fields.size} = ${size}`,
-                `${TABLE_SHARING_DATA.fields.extension} = "${extension}"`,
+                `${TABLE_SHARING_DATA.fields.extension} = '${extension}'`,
                 // text and type name should be escaped.
-                `"${TABLE_SHARING_DATA.fields.text}" = "${text}"`,
-                `"${TABLE_SHARING_DATA.fields.type}" = "${type}"`,
+                `'${TABLE_SHARING_DATA.fields.text}' = '${text}'`,
+                `'${TABLE_SHARING_DATA.fields.type}' = '${type}'`,
                 `${TABLE_SHARING_DATA.fields.status_count} = ${status_count}`,
                 `${TABLE_SHARING_DATA.fields.hands_up} = ${hands_up}`,
-                `${TABLE_SHARING_DATA.fields.uploader_id} = "${uploader_id}"`,
-                `${TABLE_SHARING_DATA.fields.uploaded_at} = "${uploaded_at}"`,
+                `${TABLE_SHARING_DATA.fields.uploader_id} = '${uploader_id}'`,
+                `${TABLE_SHARING_DATA.fields.uploaded_at} = '${uploaded_at}'`,
             ];
 
             query += values.join(", ");
-            query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}"`;
+            query += ` WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}'`;
 
             return query;
         } else {
             // insert
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                "${id}", "${name}", ${size}, "${extension}", "${text}", "${type}",
-                ${status_count}, ${hands_up}, "${uploader_id}", "${uploaded_at}"
+                '${id}', '${name}', ${size}, '${extension}', '${text}', '${type}',
+                ${status_count}, ${hands_up}, '${uploader_id}', '${uploaded_at}'
             );`;
         }
     })();
@@ -481,7 +490,7 @@ async function upsertTableSharingData({ sharingData }) {
 
 async function selectTableSharingDataByUserID(userID) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
-        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}";`;
+        WHERE ${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}';`;
 
     console.log("query:", query);
 
@@ -493,7 +502,7 @@ async function selectTableSharingDataByUserID(userID) {
 
 async function selectTableSharingDataByID(id) {
     const query = `SELECT * FROM ${TABLE_SHARING_DATA.name} 
-        WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";`;
+        WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';`;
 
     console.log("query:", query);
 
@@ -509,7 +518,7 @@ async function selectTableSharingDataWithOrderBy(userID, order) {
 
     if (userID && userID !== "") {
         query = `SELECT f.*, f.type as dataType FROM ${TABLE_SHARING_DATA.name} f 
-        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = "${userID}"
+        WHERE f.${TABLE_SHARING_DATA.fields.uploader_id} = '${userID}'
         GROUP BY f.${TABLE_SHARING_DATA.fields.id}`;
     }
 
@@ -564,7 +573,7 @@ async function patchTableSharingDataByID(
     }
 
     query += values.join(", ");
-    query += ` WHERE id = "${sharingDataID}"`;
+    query += ` WHERE id = '${sharingDataID}'`;
 
     console.log("patchTableSharingDataByID, query:", query);
 
@@ -585,7 +594,7 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
 
     const query = sharingDataIDs.map(
         (id) => `
-        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = "${id}";
+        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';
     `
     );
 

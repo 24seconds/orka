@@ -7,7 +7,10 @@ import {
     DATATYPE_FILE,
     DATATYPE_LINK,
     DATATYPE_TEXT,
+    DATA_EXTENSION_AUDIO,
     DATA_EXTENSION_GENERAL,
+    DATA_EXTENSION_IMAGE,
+    DATA_EXTENSION_VIDEO,
     PROFILE_IMAGE_COUNT,
     RANDOM_ADJECTIVE,
     RANDOM_NAMES,
@@ -121,6 +124,35 @@ function inferFileExtension(mimeType, name) {
     return getFileExtenstion(name);
 }
 
+function inferDataExtensionTypeOfFile(mimeType) {
+    const type = getTypeOfMIMEtype(mimeType);
+
+    const dataTypeDic = {
+        image: DATA_EXTENSION_IMAGE,
+        audio: DATA_EXTENSION_AUDIO,
+        video: DATA_EXTENSION_VIDEO,
+    };
+
+    if (!!dataTypeDic[type]) {
+        return dataTypeDic[type];
+    }
+
+    return DATA_EXTENSION_GENERAL;
+}
+
+// ex) input "image/png" -> output "image",
+// input "image/png;param=hoho" -> output "image"
+function getTypeOfMIMEtype(type) {
+    const regex = /(.*){1}\/.*/;
+    const matched = type.match(regex);
+
+    if (matched && matched.length >= 2) {
+        return matched[1];
+    }
+
+    return null;
+}
+
 // ex) input "image/png" -> output "png",
 // input "image/png;param=hoho" -> output "png"
 function getSubtypeOfMIMEtype(type) {
@@ -168,5 +200,6 @@ export {
     generateSharingDataUUID,
     inferFileExtension,
     inferDataTypeOfText,
+    inferDataExtensionTypeOfFile,
     getProfilePath,
 };
