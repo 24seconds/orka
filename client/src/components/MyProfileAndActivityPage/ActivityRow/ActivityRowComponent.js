@@ -67,6 +67,9 @@ const ActivityRow = styled.div`
     &:hover {
         ${StyledDataExtensionHolder} {
             background: ${(props) => props.theme.Grayscale01};
+            svg > path {
+                fill: ${(props) => props.theme.White};
+            }            
         }
 
         background: ${(props) => props.theme.Grayscale02};

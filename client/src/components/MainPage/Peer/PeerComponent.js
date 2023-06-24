@@ -32,6 +32,10 @@ const Peer = styled.div`
     &:hover {
         /* outline: 2px solid ${(props) => props.theme.Grayscale01}; */
         border: 2px solid ${(props) => props.theme.Grayscale01};
+
+        svg > path {
+            fill: ${(props) => props.theme.White};
+        }
     }
 `;
 
