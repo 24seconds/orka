@@ -331,14 +331,22 @@ async function selectTableUsersWithLatestSharingDataTypeIncludingMyself() {
         LEFT JOIN
             (SELECT 
             s1.${TABLE_SHARING_DATA.fields.id} AS sharing_data_id,
-            s1.${TABLE_SHARING_DATA.fields.uploader_id} AS sharing_data_uploader_id,
+            s1.${
+                TABLE_SHARING_DATA.fields.uploader_id
+            } AS sharing_data_uploader_id,
             s1.${TABLE_SHARING_DATA.fields.extension} AS sharing_data_extension,
             s1.${TABLE_SHARING_DATA.fields.type} AS sharing_data_type,
-            (count(s2.${TABLE_SHARING_DATA.fields.id}) + 1) as sharing_data_row_number
+            (count(s2.${
+                TABLE_SHARING_DATA.fields.id
+            }) + 1) as sharing_data_row_number
             FROM ${TABLE_SHARING_DATA.name} s1
             LEFT JOIN ${TABLE_SHARING_DATA.name} s2
-            ON s1.${TABLE_SHARING_DATA.fields.uploader_id} = s2.${TABLE_SHARING_DATA.fields.uploader_id} 
-            AND s1.${TABLE_SHARING_DATA.fields.uploaded_at} < s2.${TABLE_SHARING_DATA.fields.uploaded_at}
+            ON s1.${TABLE_SHARING_DATA.fields.uploader_id} = s2.${
+        TABLE_SHARING_DATA.fields.uploader_id
+    } 
+            AND s1.${TABLE_SHARING_DATA.fields.uploaded_at} < s2.${
+        TABLE_SHARING_DATA.fields.uploaded_at
+    }
             group by 
                 (s1.${TABLE_SHARING_DATA.fields.id}), 
                 (s1.${TABLE_SHARING_DATA.fields.uploader_id}), 
@@ -592,11 +600,8 @@ async function deleteTableSharingDataByIDs(sharingDataIDs) {
         return;
     }
 
-    const query = sharingDataIDs.map(
-        (id) => `
-        DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} = '${id}';
-    `
-    );
+    const concat = sharingDataIDs.map((id) => `'${id}'`).join(" ,");
+    const query = `DELETE FROM ${TABLE_SHARING_DATA.name} WHERE ${TABLE_SHARING_DATA.fields.id} IN (${concat});`;
 
     console.log("deleteTableSharingDataByIDs, query:", query);
 
