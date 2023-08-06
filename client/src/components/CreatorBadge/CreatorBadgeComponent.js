@@ -3,6 +3,7 @@ import styled from "styled-components";
 import BehanceLogo from "../../assets/BehanceLogo";
 import GithubLogo from "../../assets/GithubLogo";
 import { THEME_ORKA_DARK } from "../../constants/constant";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const CreatorBadge = styled.div`
     display: inline-flex;
@@ -34,6 +35,10 @@ const Container = styled.div`
                     ? props.theme.White
                     : props.theme.Black};
         }
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        display: none;
     }
 `;
 

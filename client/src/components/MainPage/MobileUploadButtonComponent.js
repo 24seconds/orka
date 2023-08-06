@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import UploadPlusIcon from "../../assets/UploadPlusIcon";
@@ -19,10 +19,6 @@ const UploadButton = styled.div`
     letter-spacing: -0.02em;
 
     &:hover {
-        .orka-upload-button-title {
-            color: ${(props) => props.theme.PrimaryColor};
-        }
-
         .orka-icon-container {
             path {
                 stroke: ${(props) => props.theme.PrimaryColor};
@@ -60,25 +56,46 @@ const UploadButton = styled.div`
     }
 `;
 
-function UploadButtonComponent(props) {
+const UploadButtonMobile = styled.div`
+    display: none;
+
+    @media (max-width: ${mobileWidth}) {
+        display: block;
+
+        .orka-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            width: 40px;
+            height: 40px;
+
+            path {
+                stroke: ${(props) => props.theme.PrimaryColor};
+            }
+        }
+    }
+`;
+
+function MobileUploadButtonComponent(props) {
     const { className, isActive } = props;
 
     return (
-        <UploadButton
-            className={className || "orka-upload-button"}
+        <UploadButtonMobile
+            className={className}
             onClick={props.onClick}
             isActive={isActive}
         >
-            <div className="orka-upload-button-title">Upload</div>
             <div className="orka-icon-container">
                 <UploadPlusIcon />
             </div>
-        </UploadButton>
+        </UploadButtonMobile>
     );
 }
 
-UploadButtonComponent.propTypes = {
+MobileUploadButtonComponent.propTypes = {
     isActive: PropTypes.bool,
 };
 
-export default UploadButtonComponent;
+export default MobileUploadButtonComponent;

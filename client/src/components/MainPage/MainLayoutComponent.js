@@ -12,6 +12,8 @@ import TabComponent from "./TabComponent";
 import UploadButtonComponent from "./UploadButtonComponent";
 import UploadFilesComponent from "./UploadFilesComponent";
 import UploadLinkComponent from "./UploadLinkComponent";
+import { mobileWidth } from "../../constants/styleConstants";
+import MobileUploadButtonComponent from "./MobileUploadButtonComponent";
 
 const TabContainer = styled.div`
     display: flex;
@@ -42,6 +44,16 @@ const OrkaTitle = styled.div`
     letter-spacing: -0.02em;
 
     margin-bottom: 20px;
+
+    @media (max-width: ${mobileWidth}) {
+        display: flex;
+        align-items: center;
+        font-size: 32px;
+
+        .orka-title-text {
+            flex-grow: 1;
+        }
+    }
 `;
 
 const MainLayout = styled.div``;
@@ -54,6 +66,10 @@ const MainLayoutContainer = styled.div`
         "peers";
     grid-auto-rows: minmax(min-content, max-content);
     height: 746px;
+
+    @media (max-width: ${mobileWidth}) {
+        margin-top: 32px;
+    }
 `;
 
 function MainLayoutComponent(props) {
@@ -90,7 +106,13 @@ function MainLayoutComponent(props) {
 
     return (
         <MainLayout className={className}>
-            <OrkaTitle>orka</OrkaTitle>
+            <OrkaTitle>
+                <div className="orka-title-text">orka</div>
+                <MobileUploadButtonComponent
+                    onClick={onClickUplaodButton}
+                    isActive={uploadActivated}
+                />
+            </OrkaTitle>
             <MainLayoutContainer>
                 {/* <TabContainer>
                     {Object.values(Tabs).map((tab) => (
