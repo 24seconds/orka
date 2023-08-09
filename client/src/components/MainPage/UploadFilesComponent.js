@@ -67,9 +67,7 @@ const Description = styled.div`
     letter-spacing: -0.02em;
 `;
 
-function UploadFilesComponent(props) {
-    const { className } = props;
-
+export function useOnDrop() {
     const onDrop = useCallback(async (acceptedFiles) => {
         // store File object in somehwere; store file related data to db;
         // display upload process - 0.3~0.5sec animation is okay
@@ -130,6 +128,14 @@ function UploadFilesComponent(props) {
             }
         }
     }, []);
+
+    return onDrop;
+}
+
+function UploadFilesComponent(props) {
+    const { className } = props;
+
+    const onDrop = useOnDrop();
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
     });
