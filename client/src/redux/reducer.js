@@ -21,6 +21,7 @@ import {
     UPDATE_TABLE_SHARING_DATA,
     ADD_TOAST_MESSAGE,
     DELETE_TOAST_MESSAGE,
+    TOGGLE_MODAL_STATE,
 } from "./actionType";
 
 function getStorageColorTheme() {
@@ -192,6 +193,14 @@ function tableNotifications(state = 0, action) {
     return state;
 }
 
+function uploadModalOpen(state = false, action) {
+    if (action.type === TOGGLE_MODAL_STATE) {
+        return !state;
+    }
+
+    return state;
+}
+
 export default combineReducers({
     orkaTheme,
     myUUID,
@@ -205,4 +214,5 @@ export default combineReducers({
     tableUsers,
     tableSharingData,
     tableNotifications,
+    uploadModalOpen,
 });

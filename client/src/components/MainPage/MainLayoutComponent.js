@@ -14,6 +14,7 @@ import UploadFilesComponent from "./UploadFilesComponent";
 import UploadLinkComponent from "./UploadLinkComponent";
 import { mobileWidth } from "../../constants/styleConstants";
 import MobileUploadButtonComponent from "./MobileUploadButtonComponent";
+import MobileUploadDataComponent from "./MobileUploadDataComponent";
 
 const TabContainer = styled.div`
     display: flex;
@@ -77,6 +78,7 @@ function MainLayoutComponent(props) {
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
+    const [mobileUploadActivated, setMobileUploadActivated] = useState(false);
 
     function onClick(tab) {
         setSelectedTab(tab);
@@ -104,13 +106,17 @@ function MainLayoutComponent(props) {
         updateSelectedRowID(null);
     }
 
+    function onClickMobileUploadButton() {
+        setMobileUploadActivated(!mobileUploadActivated);
+    }
+
     return (
         <MainLayout className={className}>
             <OrkaTitle>
                 <div className="orka-title-text">orka</div>
                 <MobileUploadButtonComponent
-                    onClick={onClickUplaodButton}
-                    isActive={uploadActivated}
+                    onClick={onClickMobileUploadButton}
+                    isActive={mobileUploadActivated}
                 />
             </OrkaTitle>
             <MainLayoutContainer>
@@ -141,6 +147,11 @@ function MainLayoutComponent(props) {
                         [Tabs.Notification]: <NotificationLayoutComponent />,
                     }[selectedTab]}
             </MainLayoutContainer>
+            {mobileUploadActivated && (
+                <MobileUploadDataComponent
+                    onClick={onClickMobileUploadButton}
+                />
+            )}
         </MainLayout>
     );
 }

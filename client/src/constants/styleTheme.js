@@ -103,6 +103,9 @@ export const ThemeOrkaDark = {
     ToastBackground: PaletteDark.Primary,
     ToastMessageTitleText: PaletteDark.White,
     ToastMessageDescriptionText: PaletteDark.LightGrayscale03p5,
+
+    MobileUploadDataDimLayout: "#000000A1",
+    MobileUplaodDataText: PaletteDark.Whitescale01,
 };
 
 export const ThemeOrkaLight = {
@@ -162,6 +165,9 @@ export const ThemeOrkaLight = {
     ToastBackground: PaletteLight.PrimaryDark,
     ToastMessageTitleText: PaletteLight.White,
     ToastMessageDescriptionText: PaletteLight.Grayscale03p5,
+
+    MobileUploadDataDimLayout: "#000000A1",
+    MobileUplaodDataText: PaletteLight.Whitescale01,
 };
 
 export const ColorThemes = {
