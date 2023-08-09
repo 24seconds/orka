@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import styled, { css } from "styled-components";
 import MobileUploadFileIcon from "../../assets/MobileUploadFileIcon";
 import MobileUploadTextIcon from "../../assets/MobileUploadTextIcon";
 import { useOnDrop } from "./UploadFilesComponent";
 import { useDropzone } from "react-dropzone";
+import UploadLinkComponent from "./UploadLinkComponent";
 
 const MobileUploadData = styled.div`
     display: flex;
@@ -52,7 +53,6 @@ const UploadDataContainer = styled.div`
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 20px 20px 0px 0px;
     width: 100%;
-    // height: 40px;
 
     ${UploadFileContainer} {
         margin-top: 24px;
@@ -64,6 +64,15 @@ const UploadDataContainer = styled.div`
         margin-left: 18px;
         margin-bottom: 24px;
     }
+
+    ${(props) =>
+        props.isUploadTextActive &&
+        css`
+            ${UploadTextContainer} {
+                margin-top: 24px;
+                margin-bottom: 24px;
+            }
+        `}
 `;
 
 const IconContainer = styled.div`
@@ -74,29 +83,37 @@ const IconContainer = styled.div`
 
 function MobileUploadDataComponent(props) {
     const { className, onClick } = props;
+    const [isUploadTextActive, setIsUploadTextActive] = useState(false);
 
     const { getRootProps } = useDropzone({
-        onDrop: useOnDrop(),
+        onDrop: useOnDrop(false),
     });
 
-    console.log("MobileUploadDataComponent");
+    const onClickUploadTextContainer = useCallback(() => {
+        setIsUploadTextActive(true);
+    }, []);
 
     return (
         <MobileUploadData className={className}>
             <div className="dimmed-area" onClick={onClick}></div>
-            <UploadDataContainer>
-                <UploadFileContainer {...getRootProps()}>
-                    <IconContainer>
-                        <MobileUploadFileIcon />
-                    </IconContainer>
-                    <UploadTextDesc>Upload a files</UploadTextDesc>
-                </UploadFileContainer>
-                <UploadTextContainer>
+            <UploadDataContainer isUploadTextActive={isUploadTextActive}>
+                {!isUploadTextActive && (
+                    <UploadFileContainer {...getRootProps()}>
+                        <IconContainer>
+                            <MobileUploadFileIcon />
+                        </IconContainer>
+                        <UploadTextDesc>Upload a files</UploadTextDesc>
+                    </UploadFileContainer>
+                )}
+                <UploadTextContainer onClick={onClickUploadTextContainer}>
                     <IconContainer>
                         <MobileUploadTextIcon />
                     </IconContainer>
                     <UploadTextDesc>Upload a URL or text</UploadTextDesc>
                 </UploadTextContainer>
+                {isUploadTextActive && (
+                    <UploadLinkComponent shouldTriggerToast={false} />
+                )}
             </UploadDataContainer>
         </MobileUploadData>
     );
