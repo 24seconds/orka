@@ -27,6 +27,7 @@ import {
     updateOrkaTheme,
     addToastMessage,
     deleteToastMessage,
+    toggleModalState,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
@@ -229,6 +230,10 @@ function addToast(title, description) {
     };
 
     store.dispatch(addToastMessage(message));
+}
+
+function toggleModal() {
+    store.dispatch(toggleModalState(store.getState().uploadModalOpen));
 }
 
 function deleteToast(id) {
@@ -682,6 +687,7 @@ export {
     updateSelectedPeerUUID,
     updateSelectedRowID,
     updateSender,
+    toggleModal,
     // db interfaces
     // users
     updateTableUsers,

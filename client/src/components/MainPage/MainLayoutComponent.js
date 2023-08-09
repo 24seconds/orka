@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
 import {
+    toggleModal,
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
@@ -15,6 +16,7 @@ import UploadLinkComponent from "./UploadLinkComponent";
 import { mobileWidth } from "../../constants/styleConstants";
 import MobileUploadButtonComponent from "./MobileUploadButtonComponent";
 import MobileUploadDataComponent from "./MobileUploadDataComponent";
+import { useSelector } from "react-redux";
 
 const TabContainer = styled.div`
     display: flex;
@@ -78,7 +80,7 @@ function MainLayoutComponent(props) {
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
-    const [mobileUploadActivated, setMobileUploadActivated] = useState(false);
+    const uploadModalOpenState = useSelector((state) => state.uploadModalOpen);
 
     function onClick(tab) {
         setSelectedTab(tab);
@@ -107,7 +109,7 @@ function MainLayoutComponent(props) {
     }
 
     function onClickMobileUploadButton() {
-        setMobileUploadActivated(!mobileUploadActivated);
+        toggleModal();
     }
 
     return (
@@ -116,7 +118,7 @@ function MainLayoutComponent(props) {
                 <div className="orka-title-text">orka</div>
                 <MobileUploadButtonComponent
                     onClick={onClickMobileUploadButton}
-                    isActive={mobileUploadActivated}
+                    isActive={uploadModalOpenState}
                 />
             </OrkaTitle>
             <MainLayoutContainer>
@@ -147,7 +149,7 @@ function MainLayoutComponent(props) {
                         [Tabs.Notification]: <NotificationLayoutComponent />,
                     }[selectedTab]}
             </MainLayoutContainer>
-            {mobileUploadActivated && (
+            {uploadModalOpenState && (
                 <MobileUploadDataComponent
                     onClick={onClickMobileUploadButton}
                 />

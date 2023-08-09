@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, {
+    css,
+    createGlobalStyle,
+    ThemeProvider,
+} from "styled-components";
 import { connect } from "react-redux";
 import "./utils/localApi";
 import "./utils/window";
@@ -13,6 +17,17 @@ import { onSwitchTheme } from "./utils/localApi";
 const GlobalStyle = createGlobalStyle`  
   html, body {
     background-color: ${(props) => props.theme.Grayscale05};
+  }
+
+  body {
+    overflow: auto;
+
+    // modal open
+    ${(props) =>
+        props.uploadModalOpen &&
+        css`
+            overflow: hidden;
+        `};
   }
 `;
 
@@ -96,7 +111,13 @@ class App extends Component {
     }
 
     render() {
-        const { orkaTheme, selectedPeer, selectedRow, myOrkaUUID } = this.props;
+        const {
+            orkaTheme,
+            selectedPeer,
+            selectedRow,
+            myOrkaUUID,
+            uploadModalOpen,
+        } = this.props;
 
         console.log("colorTheme is ", orkaTheme);
         console.log("selectedPeer:", selectedPeer);
@@ -107,7 +128,7 @@ class App extends Component {
 
         return (
             <ThemeProvider theme={orkaTheme}>
-                <GlobalStyle />
+                <GlobalStyle uploadModalOpen={uploadModalOpen} />
                 <OrkaApp className="App">
                     <OrkaCreatorBadgeComponent />
                     <OrkaLightAndDarkContainerComponent
@@ -139,6 +160,7 @@ const mapStateToProps = (state) => ({
     selectedRow: state.selectedRow,
     orkaTheme: state.orkaTheme,
     myOrkaUUID: state.myUUID,
+    uploadModalOpen: state.uploadModalOpen,
 });
 
 export default connect(mapStateToProps)(App);
