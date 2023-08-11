@@ -117,6 +117,12 @@ const ActivityRowContainer = styled.div`
     ::-webkit-scrollbar {
         display: none;
     }
+
+    @media (max-width: ${mobileWidth}) {
+        overflow-x: hidden;
+        overflow-y: visible;
+        height: auto;
+    }
 `;
 
 // TODO(young): this function is duplicate. Refactor it later.

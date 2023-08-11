@@ -134,7 +134,6 @@ const ActivityRowContainer = styled.div`
 
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
-    // overflow-y: auto;
 
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */

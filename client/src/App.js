@@ -144,7 +144,7 @@ class App extends Component {
         const mySelected = selectedPeer === myOrkaUUID;
 
         const shouldHideForActivityLayout =
-            isPeerActivityLayoutOpen && isMobileWidth;
+            (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
 
         return (
             <ThemeProvider theme={orkaTheme}>
@@ -154,7 +154,7 @@ class App extends Component {
                 />
                 <OrkaApp className="App">
                     {!shouldHideForActivityLayout && (
-                        <OrkaCreatorBadgeComponent/>
+                        <OrkaCreatorBadgeComponent />
                     )}
                     {!shouldHideForActivityLayout && (
                         <OrkaLightAndDarkContainerComponent
