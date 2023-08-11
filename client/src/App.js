@@ -1,18 +1,37 @@
 import React, { Component } from "react";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, {
+    css,
+    createGlobalStyle,
+    ThemeProvider,
+} from "styled-components";
 import { connect } from "react-redux";
 import "./utils/localApi";
 import "./utils/window";
-import { mobileWidth } from "./constants/styleConstants";
+import { mobileWidth, mobileWidthNumber } from "./constants/styleConstants";
 import MainLayoutComponent from "./components/MainPage/MainLayoutComponent";
 import PeerActivityLayout from "./components/MainPage/PeerActivityLayoutComponent";
 import LightAndDarkContainerComponent from "./components/LightAndDark/LightAndDarkContainer";
 import CreatorBadgeComponent from "./components/CreatorBadge/CreatorBadgeComponent";
-import { onSwitchTheme } from "./utils/localApi";
+import {
+    getIsMobileWidthState,
+    onSwitchTheme,
+    updateIsMobileWidthState,
+} from "./utils/localApi";
 
 const GlobalStyle = createGlobalStyle`  
   html, body {
     background-color: ${(props) => props.theme.Grayscale05};
+  }
+
+  body {
+    overflow: auto;
+
+    // modal open
+    ${(props) =>
+        props.uploadModalOpen &&
+        css`
+            overflow: hidden;
+        `};
   }
 `;
 
@@ -36,23 +55,31 @@ const OrkaApp = styled.div`
     display: grid;
     padding: 50px 100px;
 
-    @media (max-width: ${mobileWidth}) {
-        padding: 0;
-    }
-
     grid-template-areas:
         "empty1 empty1 empty1"
         "sidebar1 main sidebar2"
         "empty2 empty2 empty2";
 
     grid-template-columns: 1fr auto 1fr;
+
+    @media (max-width: ${mobileWidth}) {
+        padding: 0;
+        grid-template-areas:
+            "empty1 empty1 empty1"
+            "empty3 main empty3"
+            "empty2 empty2 empty2";
+
+        grid-template-columns: 0px auto 0px;
+    }
 `;
 
 const OrkaMainLayout = styled(MainLayoutComponent)`
     grid-area: ${(props) => (props.IsPeerActivityLayoutOpen ? "home" : "peer")};
 `;
 
-const OrkaPeerActivityLayout = styled(PeerActivityLayout)``;
+const OrkaPeerActivityLayout = styled(PeerActivityLayout)`
+    z-index: 150;
+`;
 
 const OrkaContainer = styled.div`
     display: inline-grid;
@@ -62,6 +89,10 @@ const OrkaContainer = styled.div`
     grid-template-columns: auto auto auto;
     gap: 0 20px;
     align-items: flex-start;
+
+    @media (max-width: ${mobileWidth}) {
+        gap: 0;
+    }
 `;
 
 const Container = styled.div`
@@ -96,31 +127,50 @@ class App extends Component {
     }
 
     render() {
-        const { orkaTheme, selectedPeer, selectedRow, myOrkaUUID } = this.props;
+        const {
+            orkaTheme,
+            selectedPeer,
+            selectedRow,
+            myOrkaUUID,
+            uploadModalOpen,
+            isMobileWidth,
+        } = this.props;
 
         console.log("colorTheme is ", orkaTheme);
         console.log("selectedPeer:", selectedPeer);
         console.log("selectedRow:", selectedRow);
 
-        const shouldOpenPeerActivityLayout = selectedPeer !== null;
+        const isPeerActivityLayoutOpen = selectedPeer !== null;
         const mySelected = selectedPeer === myOrkaUUID;
+
+        const shouldHideForActivityLayout =
+            (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
 
         return (
             <ThemeProvider theme={orkaTheme}>
-                <GlobalStyle />
+                <GlobalStyle
+                    uploadModalOpen={uploadModalOpen}
+                    isPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
+                />
                 <OrkaApp className="App">
-                    <OrkaCreatorBadgeComponent />
-                    <OrkaLightAndDarkContainerComponent
-                        onChangeTheme={this.onChangeTheme}
-                        theme={orkaTheme}
-                    />
-                    <OrkaContainer>
-                        <OrkaMainLayout
-                            IsPeerActivityLayoutOpen={
-                                shouldOpenPeerActivityLayout
-                            }
+                    {!shouldHideForActivityLayout && (
+                        <OrkaCreatorBadgeComponent />
+                    )}
+                    {!shouldHideForActivityLayout && (
+                        <OrkaLightAndDarkContainerComponent
+                            onChangeTheme={this.onChangeTheme}
+                            theme={orkaTheme}
                         />
-                        {shouldOpenPeerActivityLayout && (
+                    )}
+                    <OrkaContainer>
+                        {!shouldHideForActivityLayout && (
+                            <OrkaMainLayout
+                                IsPeerActivityLayoutOpen={
+                                    isPeerActivityLayoutOpen
+                                }
+                            />
+                        )}
+                        {isPeerActivityLayoutOpen && (
                             <OrkaPeerActivityLayout mySelected={mySelected} />
                         )}
                         {/* <Container className="localdrop-app-container">
@@ -139,6 +189,33 @@ const mapStateToProps = (state) => ({
     selectedRow: state.selectedRow,
     orkaTheme: state.orkaTheme,
     myOrkaUUID: state.myUUID,
+    uploadModalOpen: state.uploadModalOpen,
+    isMobileWidth: state.isMobileWidth,
 });
+
+function handleWindowSize() {
+    const currentIsMobileWidth = getIsMobileWidthState();
+
+    if (currentIsMobileWidth && window.innerWidth > mobileWidthNumber) {
+        updateIsMobileWidthState(false);
+    } else if (
+        !currentIsMobileWidth &&
+        window.innerWidth <= mobileWidthNumber
+    ) {
+        updateIsMobileWidthState(true);
+    }
+}
+
+window.addEventListener("load", (event) => {
+    handleWindowSize();
+});
+
+window.addEventListener(
+    "resize",
+    function (event) {
+        handleWindowSize();
+    },
+    true
+);
 
 export default connect(mapStateToProps)(App);

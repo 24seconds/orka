@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "../../constants/constant";
 import {
+    toggleModal,
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
@@ -12,6 +13,10 @@ import TabComponent from "./TabComponent";
 import UploadButtonComponent from "./UploadButtonComponent";
 import UploadFilesComponent from "./UploadFilesComponent";
 import UploadLinkComponent from "./UploadLinkComponent";
+import { mobileWidth } from "../../constants/styleConstants";
+import MobileUploadButtonComponent from "./MobileUploadButtonComponent";
+import MobileUploadDataComponent from "./MobileUploadDataComponent";
+import { useSelector } from "react-redux";
 
 const TabContainer = styled.div`
     display: flex;
@@ -42,6 +47,16 @@ const OrkaTitle = styled.div`
     letter-spacing: -0.02em;
 
     margin-bottom: 20px;
+
+    @media (max-width: ${mobileWidth}) {
+        display: flex;
+        align-items: center;
+        font-size: 32px;
+
+        .orka-title-text {
+            flex-grow: 1;
+        }
+    }
 `;
 
 const MainLayout = styled.div``;
@@ -54,6 +69,11 @@ const MainLayoutContainer = styled.div`
         "peers";
     grid-auto-rows: minmax(min-content, max-content);
     height: 746px;
+
+    @media (max-width: ${mobileWidth}) {
+        margin-top: 32px;
+        height: auto;
+    }
 `;
 
 function MainLayoutComponent(props) {
@@ -61,6 +81,7 @@ function MainLayoutComponent(props) {
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
+    const uploadModalOpenState = useSelector((state) => state.uploadModalOpen);
 
     function onClick(tab) {
         setSelectedTab(tab);
@@ -88,9 +109,19 @@ function MainLayoutComponent(props) {
         updateSelectedRowID(null);
     }
 
+    function onClickMobileUploadButton() {
+        toggleModal();
+    }
+
     return (
-        <MainLayout className={className}>
-            <OrkaTitle>orka</OrkaTitle>
+        <MainLayout className={`${className} orka-title-main-layout`}>
+            <OrkaTitle>
+                <div className="orka-title-text">orka</div>
+                <MobileUploadButtonComponent
+                    onClick={onClickMobileUploadButton}
+                    isActive={uploadModalOpenState}
+                />
+            </OrkaTitle>
             <MainLayoutContainer>
                 {/* <TabContainer>
                     {Object.values(Tabs).map((tab) => (
@@ -119,6 +150,11 @@ function MainLayoutComponent(props) {
                         [Tabs.Notification]: <NotificationLayoutComponent />,
                     }[selectedTab]}
             </MainLayoutContainer>
+            {uploadModalOpenState && (
+                <MobileUploadDataComponent
+                    onClick={onClickMobileUploadButton}
+                />
+            )}
         </MainLayout>
     );
 }

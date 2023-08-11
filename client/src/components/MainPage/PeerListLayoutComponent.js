@@ -9,6 +9,7 @@ import {
 import PeerComponent from "./Peer/PeerComponent";
 import { v4 as uuidv4 } from "uuid";
 import EmpyPeerComponent from "./Peer/EmptyPeerComponent";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const PeerListLayout = styled.div`
     width: 520px;
@@ -26,6 +27,14 @@ const PeerListLayout = styled.div`
 
     ::-webkit-scrollbar {
         display: none;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        justify-items: center;
+
+        width: unset;
     }
 `;
 

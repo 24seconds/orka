@@ -3,6 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import styled from "styled-components";
 import HandsUpIcon from "../../assets/HandsUpIcon";
 import { renderActivityRowComponent } from "./common";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const SectionDivider = styled.div`
     height: 10px;
@@ -23,6 +24,10 @@ const HandsUpTitle = styled.div`
 
     svg {
         margin-right: 12px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        font-size: 20px;
     }
 `;
 

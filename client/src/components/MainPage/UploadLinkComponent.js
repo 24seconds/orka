@@ -12,6 +12,7 @@ import {
     DATA_EXTENSION_LINK,
     DATA_EXTENSION_TEXT,
 } from "../../constants/constant";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const UploadLink = styled.div`
     display: flex;
@@ -21,11 +22,15 @@ const UploadLink = styled.div`
     max-height: 226px;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 30px;
+
+    @media (max-width: ${mobileWidth}) {
+        width: 100%;
+    }
 `;
 
 const PlaceHolder = styled.div`
     display: flex;
-    width: 448px;
+    width: 100%;
     max-height: 226px;
     background: ${(props) => props.theme.Grayscale04};
     border-radius: 18px;
@@ -47,8 +52,8 @@ const PlaceHolder = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 33px;
-        height: 33px;
+        width: 32px;
+        height: 32px;
 
         margin: 16px 13px 0 13px;
         cursor: pointer;
@@ -93,10 +98,24 @@ const PlaceHolder = styled.div`
             color: ${(props) => props.theme.Grayscale01};
         }
     }
+
+    @media (max-width: ${mobileWidth}) {
+        margin: 0 24px;
+
+        textarea {
+            margin: 16px 0 16px 24px;
+            font-size: 16px;
+        }
+
+        .icon-container {
+            margin: 9px 12px 9px 24px;
+            align-self: center;
+        }
+    }
 `;
 
 function UploadLinkComponent(props) {
-    const { className } = props;
+    const { className, shouldTriggerToast = true } = props;
 
     const [text, setText] = useState("");
     const textareaRef = useRef(null);
@@ -143,8 +162,10 @@ function UploadLinkComponent(props) {
             // notify to other peers
             await notifySharingData(sharingData);
 
-            // notify to user with toast message
-            addToast("Success!", "Check out 'my page'!");
+            if (shouldTriggerToast) {
+                // notify to user with toast message
+                addToast("Success!", "Check out 'my page'!");
+            }
         }
     }
 

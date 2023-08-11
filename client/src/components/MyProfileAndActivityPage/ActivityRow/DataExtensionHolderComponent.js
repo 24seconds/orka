@@ -15,6 +15,7 @@ import DataExtensionIconText from "../../../assets/DataExtensionIconText";
 import DataExtensionIconVideo from "../../../assets/DataExtensionIconVideo";
 import DataExtensionIconAudio from "../../../assets/DataExtensionIconAudio";
 import DataExtensionIconImage from "../../../assets/DataExtensionIconImage";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 // TODO(young): Refactor this to make it reusable. It is also used in peer component.
 const DataExtensionHolder = styled.div`
@@ -38,6 +39,12 @@ const DataExtensionHolder = styled.div`
     left: ${(props) => props.order};
     top: ${(props) => props.order};
     z-index: ${(props) => props.zIndex};
+
+    @media (max-width: ${mobileWidth}) {
+        width: 60px;
+        height: 72px;
+        min-width: unset;
+    }
 `;
 
 // TODO(young): logo color theming?

@@ -15,6 +15,8 @@ import {
     UPDATE_ORKA_THEME,
     ADD_TOAST_MESSAGE,
     DELETE_TOAST_MESSAGE,
+    TOGGLE_MODAL_STATE,
+    UPDATE_IS_MOBILE_WIDTH,
 } from "./actionType";
 
 export const updateOrkaTheme = () => ({
@@ -95,4 +97,14 @@ export const addToastMessage = (message) => ({
 export const deleteToastMessage = (id) => ({
     type: DELETE_TOAST_MESSAGE,
     payload: id,
+});
+
+export const toggleModalState = (state) => ({
+    type: TOGGLE_MODAL_STATE,
+    payload: !state,
+});
+
+export const updateIsMobileWidth = (state) => ({
+    type: UPDATE_IS_MOBILE_WIDTH,
+    payload: state,
 });

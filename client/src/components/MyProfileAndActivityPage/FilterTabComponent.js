@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { hoverFilterTab } from "../SharedStyle";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const FilterTab = styled.div`
     display: inline-flex;
@@ -32,6 +33,12 @@ const FilterTab = styled.div`
     ${(props) => props.isSelected && `border-color: transparent;`}
 
     ${(props) => !props.isSelected && hoverFilterTab}
+
+    @media (max-width: ${mobileWidth}) {
+        font-size: 16px;
+        font-weight: 600;
+        padding: 0 12px;
+    }
 `;
 
 function FilterTabComponent(props) {

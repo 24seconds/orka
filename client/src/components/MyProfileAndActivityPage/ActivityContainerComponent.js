@@ -20,6 +20,7 @@ import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
 import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const MiniProfile = styled.div`
     display: inline-block;
@@ -71,6 +72,14 @@ const ProfileName = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    @media (max-width: ${mobileWidth}) {
+        width: 200px;
+        max-width: unset;
+        font-size: 20px;
+
+        text-overflow: ellipsis;
+    }
 `;
 
 const ActivityProfileContainer = styled.div`
@@ -101,6 +110,11 @@ const FilterContainer = styled.div`
     display: inline-flex;
     column-gap: 14px;
     margin-left: 32px;
+
+    @media (max-width: ${mobileWidth}) {
+        margin-left: 28px;
+        column-gap: 12px;
+    }
 `;
 
 const ActivityFilterAndSortContainer = styled.div`
@@ -120,13 +134,18 @@ const ActivityRowContainer = styled.div`
 
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
-    // overflow-y: auto;
 
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 
     ::-webkit-scrollbar {
         display: none;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        overflow-x: hidden;
+        overflow-y: visible;
+        height: auto;
     }
 `;
 
@@ -144,6 +163,16 @@ const ActivityContainer = styled.div`
     ${ActivityTitleContainer} {
         margin-top: 24px;
         margin-bottom: 22px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        width: 100vw;
+        height: auto;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        border-radius: 0px;
+        min-height: 100vh;
     }
 `;
 

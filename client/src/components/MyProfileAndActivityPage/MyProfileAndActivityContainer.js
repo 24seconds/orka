@@ -25,6 +25,7 @@ import HandsUpSectionComponent from "./HandsUpSectionComponent";
 import ProfileEditNameComponent from "./ProfileEditNameComponent";
 import PageEditComponent from "./PageEditComponent";
 import CloseIcon from "../../assets/CloseIcon";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-top: 8px;
@@ -86,6 +87,10 @@ const FilterContainer = styled.div`
     display: inline-flex;
     column-gap: 14px;
     margin-left: 32px;
+
+    @media (max-width: ${mobileWidth}) {
+        margin-left: 28px;
+    }
 `;
 
 // TODO(young): It is very similar to ActivityFilterAndSortContainer. Refactor this later.
@@ -111,6 +116,12 @@ const ActivityRowContainer = styled.div`
 
     ::-webkit-scrollbar {
         display: none;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        overflow-x: hidden;
+        overflow-y: visible;
+        height: auto;
     }
 `;
 

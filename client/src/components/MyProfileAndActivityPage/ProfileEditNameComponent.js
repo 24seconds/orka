@@ -10,6 +10,7 @@ import {
     selectTableUsersByID,
 } from "../../utils/localApi";
 import { getProfilePath } from "../../utils/commonUtil";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const EditButton = styled.div`
     display: flex;
@@ -30,6 +31,10 @@ const EditButton = styled.div`
     &:hover {
         background: ${(props) => props.theme.Grayscale04};
         border-radius: 16px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        font-size: 20px;
     }
 `;
 
@@ -84,6 +89,13 @@ const InputStyle = styled.input`
     ::-ms-input-placeholder {
         ${placeHolderTextStyle}
     }
+
+    @media (max-width: ${mobileWidth}) {
+        text-overflow: ellipsis;
+        font-size: 18px;
+        line-height: normal;
+        letter-spacing: -0.72px;
+    }
 `;
 
 const MiniProfile = styled.div`
@@ -100,6 +112,11 @@ const editorStyle = css`
     height: 46px;
     border-radius: 12px;
     background: ${(props) => props.theme.Grayscale04};
+
+    @media (max-width: ${mobileWidth}) {
+        min-width: unset;
+        width: 200px;
+    }
 `;
 
 const IconContainer = styled.div`

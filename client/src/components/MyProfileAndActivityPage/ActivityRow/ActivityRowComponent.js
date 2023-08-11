@@ -22,6 +22,7 @@ import {
     DATA_EXTENSION_GENERAL,
 } from "../../../constants/constant";
 import DataExtensionHolderComponent from "./DataExtensionHolderComponent";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const selectedStyle = css`
     background: ${(props) => props.theme.Grayscale04};
@@ -74,6 +75,16 @@ const ActivityRow = styled.div`
 
         background: ${(props) => props.theme.Grayscale02};
     }
+
+    @media (max-width: ${mobileWidth}) {
+        ${StyledDataExtensionHolder} {
+            margin-left: 24px;
+        }
+
+        .orka-action-container {
+            margin: 0 24px 0 16px;
+        }
+    }
 `;
 
 const FileMetaData = styled.div`
@@ -99,6 +110,18 @@ const FileMetaData = styled.div`
         letter-spacing: -0.02em;
         color: ${(props) => props.theme.Grayscale01};
     }
+
+    @media (max-width: ${mobileWidth}) {
+        font-size: 18px;
+        line-height: normal;
+        letter-spacing: -0.72px;
+
+        .orka-data-name {
+            display: inline-block;
+            width: 150px;
+            text-overflow: ellipsis;
+        }
+    }
 `;
 
 const TextPreview = styled.div`
@@ -115,6 +138,11 @@ const TextPreview = styled.div`
     color: ${(props) => props.theme.ActiveRowDisplayText};
 
     margin-bottom: 2px;
+
+    @media (max-width: ${mobileWidth}) {
+        width: 120px;
+        text-overflow: ellipsis;
+    }
 `;
 
 const DeleteButton = styled.div`
@@ -316,7 +344,6 @@ function ActivityRowComponent(props) {
 
     return (
         <ActivityRow isSelected={isSelected}>
-            {/* TODO(young): refactor this. It should show icon, not text */}
             <StyledDataExtensionHolder extension={dataExtension} />
             <div className="orka-metadata-container">
                 <div className="orka-file-metadata-container">
