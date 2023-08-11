@@ -22,6 +22,7 @@ import {
     ADD_TOAST_MESSAGE,
     DELETE_TOAST_MESSAGE,
     TOGGLE_MODAL_STATE,
+    UPDATE_IS_MOBILE_WIDTH,
 } from "./actionType";
 
 function getStorageColorTheme() {
@@ -201,6 +202,14 @@ function uploadModalOpen(state = false, action) {
     return state;
 }
 
+function isMobileWidth(state = false, action) {
+    if (action.type === UPDATE_IS_MOBILE_WIDTH) {
+        return action.payload;
+    }
+
+    return state;
+}
+
 export default combineReducers({
     orkaTheme,
     myUUID,
@@ -215,4 +224,5 @@ export default combineReducers({
     tableSharingData,
     tableNotifications,
     uploadModalOpen,
+    isMobileWidth,
 });

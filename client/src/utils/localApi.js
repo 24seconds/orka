@@ -28,6 +28,7 @@ import {
     addToastMessage,
     deleteToastMessage,
     toggleModalState,
+    updateIsMobileWidth,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
@@ -234,6 +235,14 @@ function addToast(title, description) {
 
 function toggleModal() {
     store.dispatch(toggleModalState(store.getState().uploadModalOpen));
+}
+
+function updateIsMobileWidthState(state) {
+    store.dispatch(updateIsMobileWidth(state));
+}
+
+function getIsMobileWidthState() {
+    return store.getState().isMobileWidth;
 }
 
 function deleteToast(id) {
@@ -688,6 +697,8 @@ export {
     updateSelectedRowID,
     updateSender,
     toggleModal,
+    updateIsMobileWidthState,
+    getIsMobileWidthState,
     // db interfaces
     // users
     updateTableUsers,

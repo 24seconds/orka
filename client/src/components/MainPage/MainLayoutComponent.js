@@ -72,6 +72,7 @@ const MainLayoutContainer = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         margin-top: 32px;
+        height: auto;
     }
 `;
 
@@ -113,7 +114,7 @@ function MainLayoutComponent(props) {
     }
 
     return (
-        <MainLayout className={className}>
+        <MainLayout className={`${className} orka-title-main-layout`}>
             <OrkaTitle>
                 <div className="orka-title-text">orka</div>
                 <MobileUploadButtonComponent

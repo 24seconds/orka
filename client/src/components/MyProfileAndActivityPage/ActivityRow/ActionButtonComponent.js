@@ -8,6 +8,7 @@ import {
     DATATYPE_LINK,
     DATATYPE_TEXT,
 } from "../../../constants/constant";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const ActionButton = styled.div`
     display: flex;
@@ -25,6 +26,11 @@ const ActionButton = styled.div`
     }
 
     ${hoverOpacity}
+
+    @media (max-width: ${mobileWidth}) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 // TODO(young): implement onClick function later
