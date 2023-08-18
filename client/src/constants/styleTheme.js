@@ -106,6 +106,7 @@ export const ThemeOrkaDark = {
 
     MobileUploadDataDimLayout: "#000000A1",
     MobileUplaodDataText: PaletteDark.Whitescale01,
+    MobileHandsUpSectionDivider: PaletteDark.Black,
 };
 
 export const ThemeOrkaLight = {
@@ -168,6 +169,7 @@ export const ThemeOrkaLight = {
 
     MobileUploadDataDimLayout: "#000000A1",
     MobileUplaodDataText: PaletteLight.Whitescale01,
+    MobileHandsUpSectionDivider: PaletteLight.White,
 };
 
 export const ColorThemes = {
