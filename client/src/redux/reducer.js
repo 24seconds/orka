@@ -23,6 +23,7 @@ import {
     DELETE_TOAST_MESSAGE,
     TOGGLE_MODAL_STATE,
     UPDATE_IS_MOBILE_WIDTH,
+    INCREASE_PROFILE_EDIT_EVENT_COUNTER,
 } from "./actionType";
 
 function getStorageColorTheme() {
@@ -210,6 +211,14 @@ function isMobileWidth(state = false, action) {
     return state;
 }
 
+function myProfileEditNameEventTrigger(state = 0, action) {
+    if (action.type === INCREASE_PROFILE_EDIT_EVENT_COUNTER) {
+        return state + 1;
+    }
+
+    return state;
+}
+
 export default combineReducers({
     orkaTheme,
     myUUID,
@@ -225,4 +234,5 @@ export default combineReducers({
     tableNotifications,
     uploadModalOpen,
     isMobileWidth,
+    myProfileEditNameEventTrigger,
 });
