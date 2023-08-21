@@ -11,6 +11,8 @@ const MyProfileAndActivityPage = styled.div`
     max-height: 746px;
 
     @media (max-width: ${mobileWidth}) {
+        background: ${(props) => props.theme.Grayscale05};
+
         width: 100vw;
         height: auto;
         position: absolute;

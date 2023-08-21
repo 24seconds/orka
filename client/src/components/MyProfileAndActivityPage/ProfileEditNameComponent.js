@@ -34,7 +34,8 @@ const EditButton = styled.div`
     }
 
     @media (max-width: ${mobileWidth}) {
-        font-size: 20px;
+        display: none;
+        visibility: hidden;
     }
 `;
 
@@ -45,6 +46,10 @@ const ProfileEditName = styled.div`
 
     .orka-mini-profile {
         margin-right: 16px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        height: 65px;
     }
 `;
 
@@ -77,7 +82,7 @@ const InputStyle = styled.input`
     border-radius: 12px;
     border: none;
     outline: none;
-    padding: 0 0 0 17px;
+    padding: 0 0 0 16px;
 
     ${editText}
 
@@ -104,6 +109,13 @@ const MiniProfile = styled.div`
     img {
         width: 52px;
         height: 52px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        img {
+            width: 65px;
+            height: 65px;
+        }
     }
 `;
 
@@ -136,6 +148,18 @@ const NameEditor = styled.div`
     ${editorStyle}
 `;
 
+async function onUpdateNameOutside(myUserName, myOrkaUUID) {
+    const user = await patchTableUsersByID(
+        { name: myUserName.trim() },
+        myOrkaUUID
+    );
+
+    // notify to other peers
+    if (!!user) {
+        await notifyUser(user);
+    }
+}
+
 function ProfileEditNameComponent(props) {
     const { className, editMode: propEditMode, onClick, onSetEditMode } = props;
     const [myUserProfile, setMyUserProfile] = useState(0);
@@ -143,6 +167,12 @@ function ProfileEditNameComponent(props) {
 
     const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
     const inputEl = useRef(null);
+
+    const profileEditNameTrigger = useSelector(
+        (state) => state.myProfileEditNameEventTrigger,
+        shallowEqual
+    );
+    const triggerRef = useRef(profileEditNameTrigger);
 
     useEffect(() => {
         (async () => {
@@ -161,26 +191,26 @@ function ProfileEditNameComponent(props) {
         }
     }
 
-    async function onChangeMode() {
+    async function onChangeMode(myUserName, myOrkaUUID) {
         onClick?.();
 
         if (propEditMode) {
             onSetEditMode(!propEditMode);
-            await onUpdateName();
+            // await onUpdateName();
+            await onUpdateNameOutside(myUserName, myOrkaUUID);
         }
     }
 
-    async function onUpdateName() {
-        const user = await patchTableUsersByID(
-            { name: myUserName.trim() },
-            myOrkaUUID
-        );
+    useEffect(() => {
+        (async () => {
+            if (triggerRef.current === profileEditNameTrigger) {
+                return;
+            }
+            triggerRef.current = profileEditNameTrigger;
 
-        // notify to other peers
-        if (!!user) {
-            await notifyUser(user);
-        }
-    }
+            await onUpdateNameOutside(myUserName, myOrkaUUID);
+        })();
+    }, [profileEditNameTrigger, myOrkaUUID, myUserName]);
 
     function onClear() {
         setMyUserName("");
@@ -191,6 +221,7 @@ function ProfileEditNameComponent(props) {
 
     return (
         <ProfileEditName className={className} shouldShowDone={propEditMode}>
+            {/* TODO(young): mobile title layout needed */}
             <MiniProfile className="orka-mini-profile">
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
             </MiniProfile>
@@ -211,7 +242,10 @@ function ProfileEditNameComponent(props) {
                 )}
             </NameEditor>
             {propEditMode && (
-                <EditButton className="orka-edit-button" onClick={onChangeMode}>
+                <EditButton
+                    className="orka-edit-button"
+                    onClick={() => onChangeMode(myUserName, myOrkaUUID)}
+                >
                     {propEditMode ? "Done" : "Edit"}
                 </EditButton>
             )}

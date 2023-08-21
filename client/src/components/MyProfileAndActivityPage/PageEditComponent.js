@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const PageEdit = styled.button`
     position: relative;
@@ -24,6 +25,11 @@ const PageEdit = styled.button`
     letter-spacing: -0.64px;
 
     cursor: pointer;
+
+    @media (max-width: ${mobileWidth}) {
+        display: none;
+        visibility: hidden;
+    }
 `;
 
 function PageEditComponent(props) {
