@@ -312,6 +312,7 @@ function MyProfileAndActivityPageContainerComponent() {
 
     function onClickMobileDone() {
         fireProfileEditNameEvent();
+        setEditMode(false);
     }
 
     function onSetEditMode(b) {

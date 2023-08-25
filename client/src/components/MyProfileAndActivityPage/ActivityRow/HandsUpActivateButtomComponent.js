@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import HandsUpCheckIcon from "../../../assets/HandsUpCheckIcon";
 import { hoverOpacity } from "../../SharedStyle";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const HandsUpActivateButton = styled.div`
     display: flex;
@@ -19,6 +20,11 @@ const HandsUpActivateButton = styled.div`
     }
 
     ${hoverOpacity}
+
+    @media (max-width: ${mobileWidth}) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 function HandsUpActivateButtonComponent(props) {
