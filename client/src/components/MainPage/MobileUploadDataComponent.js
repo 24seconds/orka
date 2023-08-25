@@ -85,8 +85,9 @@ function MobileUploadDataComponent(props) {
     const { className, onClick } = props;
     const [isUploadTextActive, setIsUploadTextActive] = useState(false);
 
-    const { getRootProps } = useDropzone({
+    const { getRootProps, open } = useDropzone({
         onDrop: useOnDrop(false),
+        noClick: true,
     });
 
     const onClickUploadTextContainer = useCallback(() => {
@@ -98,7 +99,7 @@ function MobileUploadDataComponent(props) {
             <div className="dimmed-area" onClick={onClick}></div>
             <UploadDataContainer isUploadTextActive={isUploadTextActive}>
                 {!isUploadTextActive && (
-                    <UploadFileContainer {...getRootProps()}>
+                    <UploadFileContainer {...getRootProps()} onClick={open}>
                         <IconContainer>
                             <MobileUploadFileIcon />
                         </IconContainer>
