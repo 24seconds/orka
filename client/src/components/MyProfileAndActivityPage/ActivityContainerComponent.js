@@ -21,6 +21,7 @@ import { renderActivityRowComponent } from "./common";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
 import { mobileWidth } from "../../constants/styleConstants";
+import MobileActivityContainerCloseIcon from "../../assets/MobileActivityContainerCloseIcon";
 
 const MiniProfile = styled.div`
     display: inline-block;
@@ -29,6 +30,15 @@ const MiniProfile = styled.div`
     img {
         width: 52px;
         height: 52px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        height: 32px;
+
+        img {
+            width: 32px;
+            height: 32px;
+        }
     }
 `;
 
@@ -44,6 +54,11 @@ const CloseIconContainer = styled.div`
 
     // TODO(young): revisit hover effect for close icons later.
     ${hoverCloseButton}
+
+    @media (max-width: ${mobileWidth}) {
+        display: none;
+        visibility: hidden;
+    }
 `;
 
 const ActivityTitleContainer = styled.div`
@@ -57,6 +72,27 @@ const ActivityTitleContainer = styled.div`
         margin-left: auto;
         margin-right: 34px;
     }
+
+    @media (max-width: ${mobileWidth}) {
+        margin-left: 8px;
+    }
+`;
+
+const IconContainer = styled.div`
+    display: none;
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+
+    @media (max-width: ${mobileWidth}) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: unset;
+
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 const ProfileName = styled.span`
@@ -64,7 +100,7 @@ const ProfileName = styled.span`
 
     font-weight: 500;
     font-size: 24px;
-    line-height: 29px;
+    line-height: normal;
     letter-spacing: -0.02em;
 
     color: ${(props) => props.theme.PlaceholderTextscale01};
@@ -77,6 +113,8 @@ const ProfileName = styled.span`
         width: 200px;
         max-width: unset;
         font-size: 20px;
+        letter-spacing: -0.8px;
+        height: 100%;
 
         text-overflow: ellipsis;
     }
@@ -88,6 +126,10 @@ const ActivityProfileContainer = styled.div`
 
     ${MiniProfile} {
         margin-right: 14px;
+
+        @media (max-width: ${mobileWidth}) {
+            margin-right: 12px;
+        }
     }
 `;
 
@@ -173,6 +215,8 @@ const ActivityContainer = styled.div`
         left: 0px;
         border-radius: 0px;
         min-height: 100vh;
+
+        background: ${(props) => props.theme.Grayscale05};
     }
 `;
 
@@ -268,6 +312,9 @@ function ActivityContainerComponent(props) {
     return (
         <ActivityContainer>
             <ActivityTitleContainer>
+                <IconContainer onClick={onClose}>
+                    <MobileActivityContainerCloseIcon />
+                </IconContainer>
                 <ActivityProfileContainer>
                     <MiniProfile>
                         <img

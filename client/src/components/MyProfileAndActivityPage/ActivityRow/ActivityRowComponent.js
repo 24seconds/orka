@@ -77,23 +77,32 @@ const ActivityRow = styled.div`
     }
 
     @media (max-width: ${mobileWidth}) {
+        height: 92px;
+
         ${StyledDataExtensionHolder} {
             margin-left: 24px;
         }
 
+        .orka-metadata-container {
+            height: 100%;
+        }
+
         .orka-action-container {
             margin: 0 24px 0 16px;
+            width: 40px;
+            height: 40px;
         }
     }
 `;
 
 const FileMetaData = styled.div`
     font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-    letter-spacing: -0.04em;
 
     .orka-data-name {
+        font-size: 20px;
+        line-height: 30px;
+        letter-spacing: -0.04em;
+
         width: 220px;
         margin-bottom: 2px;
         color: ${(props) => props.theme.ActiveRowDisplayText};
@@ -112,14 +121,25 @@ const FileMetaData = styled.div`
     }
 
     @media (max-width: ${mobileWidth}) {
-        font-size: 18px;
-        line-height: normal;
-        letter-spacing: -0.72px;
+        display: flex;
+        flex-direction: column;
 
         .orka-data-name {
             display: inline-block;
             width: 150px;
+
+            font-size: 18px;
+            line-height: normal;
+            letter-spacing: -0.72px;
             text-overflow: ellipsis;
+
+            margin-bottom: 4px;
+        }
+
+        .orka-size-and-timestamp {
+            font-size: 12px;
+            line-height: normal;
+            letter-spacing: -0.48px;
         }
     }
 `;
@@ -132,7 +152,7 @@ const TextPreview = styled.div`
 
     font-weight: 400;
     font-size: 14px;
-    line-height: 22px;
+    line-height: normal;
 
     letter-spacing: -0.04em;
     color: ${(props) => props.theme.ActiveRowDisplayText};
@@ -346,17 +366,15 @@ function ActivityRowComponent(props) {
         <ActivityRow isSelected={isSelected}>
             <StyledDataExtensionHolder extension={dataExtension} />
             <div className="orka-metadata-container">
-                <div className="orka-file-metadata-container">
-                    <FileMetaData>
-                        <div className="orka-data-name">{dataName}</div>
-                        {dataType === DATATYPE_TEXT && (
-                            <TextPreview>{textPreview}</TextPreview>
-                        )}
-                        <div className="orka-size-and-timestamp">
-                            {metadataDesc}
-                        </div>
-                    </FileMetaData>
-                </div>
+                <FileMetaData>
+                    <div className="orka-data-name">{dataName}</div>
+                    {dataType === DATATYPE_TEXT && (
+                        <TextPreview>{textPreview}</TextPreview>
+                    )}
+                    <div className="orka-size-and-timestamp">
+                        {metadataDesc}
+                    </div>
+                </FileMetaData>
             </div>
             <div className="orka-action-container">
                 {renderAction(

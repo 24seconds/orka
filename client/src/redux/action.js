@@ -17,6 +17,7 @@ import {
     DELETE_TOAST_MESSAGE,
     TOGGLE_MODAL_STATE,
     UPDATE_IS_MOBILE_WIDTH,
+    INCREASE_PROFILE_EDIT_EVENT_COUNTER,
 } from "./actionType";
 
 export const updateOrkaTheme = () => ({
@@ -107,4 +108,8 @@ export const toggleModalState = (state) => ({
 export const updateIsMobileWidth = (state) => ({
     type: UPDATE_IS_MOBILE_WIDTH,
     payload: state,
+});
+
+export const triggerProfileEditNameEvent = () => ({
+    type: INCREASE_PROFILE_EDIT_EVENT_COUNTER,
 });

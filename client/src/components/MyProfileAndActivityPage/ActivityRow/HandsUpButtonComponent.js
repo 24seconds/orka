@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import HandsUpCheckIcon from "../../../assets/HandsUpCheckIcon";
 import HandsUpIcon from "../../../assets/HandsUpIcon";
 import { hoverOpacity } from "../../SharedStyle";
 import StyledButton from "./StyledButton";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const HandsUpButton = styled(StyledButton)`
     display: flex;
@@ -17,6 +17,11 @@ const HandsUpButton = styled(StyledButton)`
     cursor: pointer;
 
     ${hoverOpacity}
+
+    @media (max-width: ${mobileWidth}) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 // TODO(young): seems unused. remove it later (2022-08-27)

@@ -7,16 +7,15 @@ import {
     ACTIVITY_ROW_FILTER_LINK,
     ACTIVITY_ROW_FILTER_TEXT,
     DATATYPE_FILE,
-    DATATYPE_LINK,
 } from "../../constants/constant";
 import { filterSharingData } from "../../utils/commonUtil";
 import {
     deleteTableSharingDataByIDs,
+    fireProfileEditNameEvent,
     notifyDeleteSharingData,
     selectTableSharingDataWithOrderBy,
     updateSelectedPeerUUID,
     updateSelectedRowID,
-    updateSender,
 } from "../../utils/localApi";
 import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
@@ -26,6 +25,7 @@ import ProfileEditNameComponent from "./ProfileEditNameComponent";
 import PageEditComponent from "./PageEditComponent";
 import CloseIcon from "../../assets/CloseIcon";
 import { mobileWidth } from "../../constants/styleConstants";
+import MobileActivityContainerCloseIcon from "../../assets/MobileActivityContainerCloseIcon";
 
 const StyledHandsUpSection = styled(HandsUpSectionComponent)`
     margin-top: 8px;
@@ -41,6 +41,10 @@ const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
         css`
             width: 100%;
         `}
+
+    @media (max-width: ${mobileWidth}) {
+        margin: 16px 0 24px 24px;
+    }
 `;
 
 const MyProfileAndActivityPageContainer = styled.div`
@@ -56,6 +60,11 @@ const CloseIconContainer = styled.div`
 
     // TODO(young): revisit hover effect for close icons later.
     ${hoverCloseButton}
+
+    @media (max-width: ${mobileWidth}) {
+        display: none;
+        visibility: hidden;
+    }
 `;
 
 const ActivityTitleContainer = styled.div`
@@ -125,6 +134,72 @@ const ActivityRowContainer = styled.div`
     }
 `;
 
+const IconContainer = styled.div`
+    display: none;
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+
+    @media (max-width: ${mobileWidth}) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: unset;
+
+        width: 40px;
+        height: 40px;
+    }
+`;
+
+const MobileEditDoneButton = styled.button`
+    padding: 0;
+    border: none;
+    cursor: pointer;
+
+
+    color: ${(props) => props.theme.Grayscale01};
+    font-size 16px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.64px;
+
+    background: none;
+`;
+
+const MobileTopUIContainer = styled.div`
+    display: none;
+    visibility: hidden;
+
+    @media (max-width: ${mobileWidth}) {
+        display: flex;
+        align-items: center;
+        visibility: unset;
+
+        width: 100%;
+        height: 50px;
+
+        margin-top: 16px;
+
+        ${IconContainer} {
+            margin-left: 12px;
+        }
+
+        ${MobileEditDoneButton} {
+            margin-right: 24px;
+        }
+
+        .orka-my-profile-my {
+            flex-grow: 1;
+            color: ${(props) => props.theme.MobileMyProfileTitle};
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            letter-spacing: -0.8px;
+        }
+    }
+`;
+
 // TODO(young): this function is duplicate. Refactor it later.
 function renderActivityRowComponent(
     data,
@@ -180,7 +255,7 @@ function MyProfileAndActivityPageContainerComponent() {
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [data, setData] = useState([]);
     const [sortOrder, setSortOrder] = useState("DESC");
-    const [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false); // true -> edit activated, false -> edit not activated
     const [rowsToBeDeleted, setRowsToBeDeleted] = useState({});
 
     const tableSharingData = useSelector(
@@ -231,8 +306,13 @@ function MyProfileAndActivityPageContainerComponent() {
         setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
     }
 
-    function onClickEdit() {
-        setEditMode(!editMode);
+    function onClickMobileEdit() {
+        setEditMode(true);
+    }
+
+    function onClickMobileDone() {
+        fireProfileEditNameEvent();
+        setEditMode(false);
     }
 
     function onSetEditMode(b) {
@@ -271,9 +351,21 @@ function MyProfileAndActivityPageContainerComponent() {
 
     return (
         <MyProfileAndActivityPageContainer>
-            <ActivityTitleContainer>
+            <MobileTopUIContainer>
+                <IconContainer onClick={onClose}>
+                    <MobileActivityContainerCloseIcon />
+                </IconContainer>
+                <div className="orka-my-profile-my">My</div>
+                <MobileEditDoneButton
+                    onClick={editMode ? onClickMobileDone : onClickMobileEdit}
+                    editMode={editMode}
+                >
+                    {editMode ? "Done" : "Edit"}
+                </MobileEditDoneButton>
+            </MobileTopUIContainer>
+            <ActivityTitleContainer className="orka-my-profile-activity-title-container">
                 <StyledProfileEditNameComponent
-                    onClick={onClickEdit}
+                    onClick={onClickMobileEdit}
                     editMode={editMode}
                     onSetEditMode={onSetEditMode}
                 />
@@ -322,7 +414,10 @@ function MyProfileAndActivityPageContainerComponent() {
                     )
                 )}
             </ActivityRowContainer>
-            <PageEditComponent onClick={onClickEdit} editMode={editMode} />
+            <PageEditComponent
+                onClick={onClickMobileEdit}
+                editMode={editMode}
+            />
         </MyProfileAndActivityPageContainer>
     );
 }

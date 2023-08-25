@@ -8,6 +8,10 @@ import { mobileWidth } from "../../constants/styleConstants";
 const SectionDivider = styled.div`
     height: 10px;
     background: ${(props) => props.theme.Grayscale04};
+
+    @media (max-width: ${mobileWidth}) {
+        background: ${(props) => props.theme.MobileHandsUpSectionDivider};
+    }
 `;
 
 const HandsUpTitle = styled.div`
@@ -28,6 +32,14 @@ const HandsUpTitle = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         font-size: 20px;
+        line-height: normal;
+        letter-spacing: -0.8px;
+
+        margin-left: 24px;
+
+        svg {
+            margin-right: 6px;
+        }
     }
 `;
 
