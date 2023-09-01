@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import UploadPlusIcon from "../../assets/UploadPlusIcon";
+import HamburgerIcon from "../../assets/HamburgerIcon";
 import { mobileWidth } from "../../constants/styleConstants";
 
 const UploadButton = styled.div`
@@ -68,34 +69,54 @@ const UploadButtonMobile = styled.div`
             justify-content: center;
             cursor: pointer;
 
-            width: 40px;
-            height: 40px;
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+            }
 
             path {
                 stroke: ${(props) => props.theme.PrimaryColor};
+            }
+
+            .orka-hamburger-container {
+                path {
+                    stroke: ${(props) => props.theme.Grayscale01};
+                }
             }
         }
     }
 `;
 
-function MobileUploadButtonComponent(props) {
-    const { className, isActive } = props;
+function MobileUploadButtonAndSettingsComponent(props) {
+    const { className, isActive, onClickSettings } = props;
+
+    const onClickSetting = () => {
+        console.log("onClickSetting called");
+        onClickSettings?.();
+    };
 
     return (
-        <UploadButtonMobile
-            className={className}
-            onClick={props.onClick}
-            isActive={isActive}
-        >
+        <UploadButtonMobile className={className} isActive={isActive}>
             <div className="orka-icon-container">
-                <UploadPlusIcon />
+                <div onClick={props.onClick}>
+                    <UploadPlusIcon />
+                </div>
+                <div
+                    className="orka-hamburger-container"
+                    onClick={onClickSetting}
+                >
+                    <HamburgerIcon />
+                </div>
             </div>
         </UploadButtonMobile>
     );
 }
 
-MobileUploadButtonComponent.propTypes = {
+MobileUploadButtonAndSettingsComponent.propTypes = {
     isActive: PropTypes.bool,
 };
 
-export default MobileUploadButtonComponent;
+export default MobileUploadButtonAndSettingsComponent;
