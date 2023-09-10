@@ -52,6 +52,7 @@ const OrkaTitle = styled.div`
         display: flex;
         align-items: center;
         font-size: 32px;
+        margin-bottom: 0px;
 
         .orka-title-text {
             flex-grow: 1;
@@ -88,7 +89,7 @@ const MainLayoutContainer = styled.div`
     height: 746px;
 
     @media (max-width: ${mobileWidth}) {
-        margin-top: 32px;
+        margin-top: 18px;
         height: auto;
 
         ${(props) =>

@@ -78,7 +78,9 @@ const OrkaMainLayout = styled(MainLayoutComponent)`
 `;
 
 const OrkaPeerActivityLayout = styled(PeerActivityLayout)`
-    z-index: 150;
+    @media (max-width: ${mobileWidth}) {
+        z-index: 150;
+    }
 `;
 
 const OrkaContainer = styled.div`
@@ -92,6 +94,7 @@ const OrkaContainer = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         gap: 0;
+        grid-template-columns: 24px auto 24px;
 
         ${(props) => props.shouldOpenMobileSettings} && {
             // grid-template-areas: "home";
