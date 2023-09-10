@@ -17,7 +17,6 @@ import {
     onSwitchTheme,
     updateIsMobileWidthState,
 } from "./utils/localApi";
-import MobileSettingsComponent from "./components/Settings/MobileSettingsComponent";
 
 const GlobalStyle = createGlobalStyle`  
   html, body {
@@ -93,6 +92,12 @@ const OrkaContainer = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         gap: 0;
+
+        ${(props) => props.shouldOpenMobileSettings} && {
+            // grid-template-areas: "home";
+            // grid-template-columns: auto;
+            // grid-area: auto;
+        }
     }
 `;
 
@@ -143,6 +148,7 @@ function App(props) {
         (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
 
     const shouldOpenMobileSettings = isMobileWidth && settingsOpen;
+    console.log("shouldOpenMobileSettings:", shouldOpenMobileSettings);
 
     return (
         <ThemeProvider theme={orkaTheme}>
@@ -158,14 +164,18 @@ function App(props) {
                         theme={orkaTheme}
                     />
                 )}
-                <OrkaContainer>
-                    {shouldOpenMobileSettings && <MobileSettingsComponent />}
+                <OrkaContainer
+                    shouldOpenMobileSettings={shouldOpenMobileSettings}
+                >
                     {!shouldHideForActivityLayout && (
                         <OrkaMainLayout
                             IsPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
+                            shouldOpenMobileSettings={shouldOpenMobileSettings}
+                            settingsOpen={settingsOpen}
+                            setSettingsOpen={setSettingsOpen}
                         />
                     )}
-                    {isPeerActivityLayoutOpen && (
+                    {!shouldOpenMobileSettings && isPeerActivityLayoutOpen && (
                         <OrkaPeerActivityLayout mySelected={mySelected} />
                     )}
                     {}

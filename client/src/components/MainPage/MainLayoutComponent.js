@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Tabs } from "../../constants/constant";
 import {
     toggleModal,
@@ -56,10 +56,27 @@ const OrkaTitle = styled.div`
         .orka-title-text {
             flex-grow: 1;
         }
+
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                margin-left: 24px;
+                margin-right: 24px;
+                margin-bottom: 8px;
+            `};
     }
 `;
 
-const MainLayout = styled.div``;
+const MainLayout = styled.div`
+    @media (max-width: ${mobileWidth}) {
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                position: fixed;
+                top: 0px;
+            `};
+    }
+`;
 
 const MainLayoutContainer = styled.div`
     display: inline-grid;
@@ -73,18 +90,22 @@ const MainLayoutContainer = styled.div`
     @media (max-width: ${mobileWidth}) {
         margin-top: 32px;
         height: auto;
+
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                margin-top: 0px;
+            `};
     }
 `;
 
 function renderMainLayoutContent(
     shouldOpenMobileSettings,
     uploadActivated,
-    selectedTab,
+    selectedTab
 ) {
     if (shouldOpenMobileSettings) {
-        return (
-            <MobileSettingsComponent/>
-        );
+        return <MobileSettingsComponent />;
     }
 
     if (uploadActivated) {
@@ -102,8 +123,7 @@ function renderMainLayoutContent(
 }
 
 function MainLayoutComponent(props) {
-    const { className } = props;
-    const [settingsOpen, setSettingsOpen] = useState(false);
+    const { className, settingsOpen, setSettingsOpen } = props;
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
@@ -132,28 +152,36 @@ function MainLayoutComponent(props) {
     }
 
     function onClickSettingIcon() {
-        setSettingsOpen(!settingsOpen);
+        setSettingsOpen?.(!settingsOpen);
     }
 
     return (
-        <MainLayout className={`${className} orka-title-main-layout`}>
-            <OrkaTitle>
+        <MainLayout
+            className={`${className} orka-title-main-layout`}
+            shouldOpenMobileSettings={shouldOpenMobileSettings}
+        >
+            <OrkaTitle shouldOpenMobileSettings={shouldOpenMobileSettings}>
                 <div className="orka-title-text">orka</div>
                 <MobileUploadButtonAndSettingsComponent
                     onClick={onClickMobileUploadButton}
                     onClickSettings={onClickSettingIcon}
                     isActive={uploadModalOpenState}
+                    shouldOpenMobileSettings={shouldOpenMobileSettings}
                 />
             </OrkaTitle>
-            <MainLayoutContainer>
-                <StyledUploadButtonComponent
-                    onClick={onClickUplaodButton}
-                    isActive={uploadActivated}
-                />
+            <MainLayoutContainer
+                shouldOpenMobileSettings={shouldOpenMobileSettings}
+            >
+                {!shouldOpenMobileSettings && (
+                    <StyledUploadButtonComponent
+                        onClick={onClickUplaodButton}
+                        isActive={uploadActivated}
+                    />
+                )}
                 {renderMainLayoutContent(
                     shouldOpenMobileSettings,
                     uploadActivated,
-                    selectedTab,
+                    selectedTab
                 )}
                 {/* {uploadActivated && (
                     <Fragment>

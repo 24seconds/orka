@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import UploadPlusIcon from "../../assets/UploadPlusIcon";
 import HamburgerIcon from "../../assets/HamburgerIcon";
 import { mobileWidth } from "../../constants/styleConstants";
+import CloseIcon from "../../assets/CloseIcon";
 
 const UploadButton = styled.div`
     display: flex;
@@ -87,11 +88,18 @@ const UploadButtonMobile = styled.div`
                 }
             }
         }
+
+        .orka-setting-close {
+            path {
+                stroke: ${(props) => props.theme.Grayscale01};
+            }
+        }
     }
 `;
 
 function MobileUploadButtonAndSettingsComponent(props) {
-    const { className, isActive, onClickSettings } = props;
+    const { className, isActive, onClickSettings, shouldOpenMobileSettings } =
+        props;
 
     const onClickSetting = () => {
         console.log("onClickSetting called");
@@ -101,15 +109,26 @@ function MobileUploadButtonAndSettingsComponent(props) {
     return (
         <UploadButtonMobile className={className} isActive={isActive}>
             <div className="orka-icon-container">
-                <div onClick={props.onClick}>
-                    <UploadPlusIcon />
-                </div>
-                <div
-                    className="orka-hamburger-container"
-                    onClick={onClickSetting}
-                >
-                    <HamburgerIcon />
-                </div>
+                {shouldOpenMobileSettings ? (
+                    <div
+                        className="orka-setting-close"
+                        onClick={onClickSetting}
+                    >
+                        <CloseIcon />
+                    </div>
+                ) : (
+                    <Fragment>
+                        <div onClick={props.onClick}>
+                            <UploadPlusIcon />
+                        </div>
+                        <div
+                            className="orka-hamburger-container"
+                            onClick={onClickSetting}
+                        >
+                            <HamburgerIcon />
+                        </div>
+                    </Fragment>
+                )}
             </div>
         </UploadButtonMobile>
     );
