@@ -84,8 +84,12 @@ const IconContainer = styled.div`
 function MobileUploadDataComponent(props) {
     const { className, onClick } = props;
     const [isUploadTextActive, setIsUploadTextActive] = useState(false);
+    const toastMessage = {
+        title: "Success!",
+        description: "",
+    };
 
-    const onDrop = useOnDrop(true);
+    const onDrop = useOnDrop(true, true, toastMessage);
 
     const { getRootProps, getInputProps, open } = useDropzone({
         onDrop,
@@ -116,7 +120,11 @@ function MobileUploadDataComponent(props) {
                     <UploadTextDesc>Upload a URL or text</UploadTextDesc>
                 </UploadTextContainer>
                 {isUploadTextActive && (
-                    <UploadLinkComponent shouldTriggerToast={false} />
+                    <UploadLinkComponent
+                        shouldTriggerToast={true}
+                        shouldToggleModal={true}
+                        toastMessage={toastMessage}
+                    />
                 )}
             </UploadDataContainer>
         </MobileUploadData>

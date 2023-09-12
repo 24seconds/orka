@@ -2,7 +2,9 @@ import React, { Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import UploadPlusIcon from "../../assets/UploadPlusIcon";
+import HamburgerIcon from "../../assets/HamburgerIcon";
 import { mobileWidth } from "../../constants/styleConstants";
+import CloseIcon from "../../assets/CloseIcon";
 
 const UploadButton = styled.div`
     display: flex;
@@ -68,34 +70,72 @@ const UploadButtonMobile = styled.div`
             justify-content: center;
             cursor: pointer;
 
-            width: 40px;
-            height: 40px;
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+            }
 
             path {
                 stroke: ${(props) => props.theme.PrimaryColor};
+            }
+
+            .orka-hamburger-container {
+                path {
+                    stroke: ${(props) => props.theme.Grayscale01};
+                }
+            }
+        }
+
+        .orka-setting-close {
+            path {
+                stroke: ${(props) => props.theme.Grayscale01};
             }
         }
     }
 `;
 
-function MobileUploadButtonComponent(props) {
-    const { className, isActive } = props;
+function MobileUploadButtonAndSettingsComponent(props) {
+    const { className, isActive, onClickSettings, shouldOpenMobileSettings } =
+        props;
+
+    const onClickSetting = () => {
+        console.log("onClickSetting called");
+        onClickSettings?.();
+    };
 
     return (
-        <UploadButtonMobile
-            className={className}
-            onClick={props.onClick}
-            isActive={isActive}
-        >
+        <UploadButtonMobile className={className} isActive={isActive}>
             <div className="orka-icon-container">
-                <UploadPlusIcon />
+                {shouldOpenMobileSettings ? (
+                    <div
+                        className="orka-setting-close"
+                        onClick={onClickSetting}
+                    >
+                        <CloseIcon />
+                    </div>
+                ) : (
+                    <Fragment>
+                        <div onClick={props.onClick}>
+                            <UploadPlusIcon />
+                        </div>
+                        <div
+                            className="orka-hamburger-container"
+                            onClick={onClickSetting}
+                        >
+                            <HamburgerIcon />
+                        </div>
+                    </Fragment>
+                )}
             </div>
         </UploadButtonMobile>
     );
 }
 
-MobileUploadButtonComponent.propTypes = {
+MobileUploadButtonAndSettingsComponent.propTypes = {
     isActive: PropTypes.bool,
 };
 
-export default MobileUploadButtonComponent;
+export default MobileUploadButtonAndSettingsComponent;

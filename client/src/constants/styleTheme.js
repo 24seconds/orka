@@ -109,6 +109,7 @@ export const ThemeOrkaDark = {
     MobileHandsUpSectionDivider: PaletteDark.Black,
 
     MobileMyProfileTitle: PaletteDark.Whitescale01,
+    MobileSettingTitle: PaletteDark.Whitescale01,
 };
 
 export const ThemeOrkaLight = {
@@ -174,6 +175,7 @@ export const ThemeOrkaLight = {
     MobileHandsUpSectionDivider: PaletteLight.White,
 
     MobileMyProfileTitle: PaletteLight.Blackscale01,
+    MobileSettingTitle: PaletteLight.Blackscale01,
 };
 
 export const ColorThemes = {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import styled, {
     css,
     createGlobalStyle,
@@ -78,7 +78,9 @@ const OrkaMainLayout = styled(MainLayoutComponent)`
 `;
 
 const OrkaPeerActivityLayout = styled(PeerActivityLayout)`
-    z-index: 150;
+    @media (max-width: ${mobileWidth}) {
+        z-index: 150;
+    }
 `;
 
 const OrkaContainer = styled.div`
@@ -92,6 +94,13 @@ const OrkaContainer = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         gap: 0;
+        grid-template-columns: 24px auto 24px;
+
+        ${(props) => props.shouldOpenMobileSettings} && {
+            // grid-template-areas: "home";
+            // grid-template-columns: auto;
+            // grid-area: auto;
+        }
     }
 `;
 
@@ -115,73 +124,72 @@ const MobileSticky = styled.div`
     }
 `;
 
-class App extends Component {
-    constructor(props) {
-        super(props);
+function App(props) {
+    const {
+        orkaTheme,
+        selectedPeer,
+        selectedRow,
+        myOrkaUUID,
+        uploadModalOpen,
+        isMobileWidth,
+    } = props;
 
-        this.onChangeTheme = this.onChangeTheme.bind(this);
-    }
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
-    onChangeTheme() {
+    function onChangeTheme() {
         onSwitchTheme();
     }
 
-    render() {
-        const {
-            orkaTheme,
-            selectedPeer,
-            selectedRow,
-            myOrkaUUID,
-            uploadModalOpen,
-            isMobileWidth,
-        } = this.props;
+    console.log("colorTheme is ", orkaTheme);
+    console.log("selectedPeer:", selectedPeer);
+    console.log("selectedRow:", selectedRow);
 
-        console.log("colorTheme is ", orkaTheme);
-        console.log("selectedPeer:", selectedPeer);
-        console.log("selectedRow:", selectedRow);
+    const isPeerActivityLayoutOpen = selectedPeer !== null;
+    const mySelected = selectedPeer === myOrkaUUID;
 
-        const isPeerActivityLayoutOpen = selectedPeer !== null;
-        const mySelected = selectedPeer === myOrkaUUID;
+    const shouldHideForActivityLayout =
+        (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
 
-        const shouldHideForActivityLayout =
-            (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
+    const shouldOpenMobileSettings = isMobileWidth && settingsOpen;
+    console.log("shouldOpenMobileSettings:", shouldOpenMobileSettings);
 
-        return (
-            <ThemeProvider theme={orkaTheme}>
-                <GlobalStyle
-                    uploadModalOpen={uploadModalOpen}
-                    isPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
-                />
-                <OrkaApp className="App">
+    return (
+        <ThemeProvider theme={orkaTheme}>
+            <GlobalStyle
+                uploadModalOpen={uploadModalOpen}
+                isPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
+            />
+            <OrkaApp className="App">
+                {!shouldHideForActivityLayout && <OrkaCreatorBadgeComponent />}
+                {!shouldHideForActivityLayout && (
+                    <OrkaLightAndDarkContainerComponent
+                        onChangeTheme={onChangeTheme}
+                        theme={orkaTheme}
+                    />
+                )}
+                <OrkaContainer
+                    shouldOpenMobileSettings={shouldOpenMobileSettings}
+                >
                     {!shouldHideForActivityLayout && (
-                        <OrkaCreatorBadgeComponent />
-                    )}
-                    {!shouldHideForActivityLayout && (
-                        <OrkaLightAndDarkContainerComponent
-                            onChangeTheme={this.onChangeTheme}
-                            theme={orkaTheme}
+                        <OrkaMainLayout
+                            IsPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
+                            shouldOpenMobileSettings={shouldOpenMobileSettings}
+                            settingsOpen={settingsOpen}
+                            setSettingsOpen={setSettingsOpen}
                         />
                     )}
-                    <OrkaContainer>
-                        {!shouldHideForActivityLayout && (
-                            <OrkaMainLayout
-                                IsPeerActivityLayoutOpen={
-                                    isPeerActivityLayoutOpen
-                                }
-                            />
-                        )}
-                        {isPeerActivityLayoutOpen && (
-                            <OrkaPeerActivityLayout mySelected={mySelected} />
-                        )}
-                        {/* <Container className="localdrop-app-container">
+                    {!shouldOpenMobileSettings && isPeerActivityLayoutOpen && (
+                        <OrkaPeerActivityLayout mySelected={mySelected} />
+                    )}
+                    {}
+                    {/* <Container className="localdrop-app-container">
                         <MobileSticky>                            
                         </MobileSticky>
                     </Container> */}
-                    </OrkaContainer>
-                </OrkaApp>
-            </ThemeProvider>
-        );
-    }
+                </OrkaContainer>
+            </OrkaApp>
+        </ThemeProvider>
+    );
 }
 
 const mapStateToProps = (state) => ({

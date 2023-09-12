@@ -12,6 +12,7 @@ import {
     addToast,
     createTableSharingData,
     notifySharingData,
+    toggleModal,
 } from "../../utils/localApi";
 import { DATATYPE_FILE } from "../../constants/constant";
 
@@ -65,7 +66,7 @@ const Description = styled.div`
     letter-spacing: -0.02em;
 `;
 
-export function useOnDrop(useToast) {
+export function useOnDrop(useToast, shouldToggleModal, toastMessage) {
     const onDrop = useCallback(
         async (acceptedFiles) => {
             // store File object in somehwere; store file related data to db;
@@ -115,21 +116,39 @@ export function useOnDrop(useToast) {
                     await notifySharingData(sharingData);
                 }
 
-                if (useToast) {
+                if (useToast || true) {
                     if (sharingDataList?.length > 1) {
                         // notify to user with toast message
-                        addToast(
-                            `(${sharingDataList?.length}/${sharingDataList?.length}) Success!`,
-                            "Check out 'my page'!"
-                        );
+                        if (!!toastMessage?.title) {
+                            addToast(
+                                toastMessage?.title,
+                                toastMessage?.description
+                            );
+                        } else {
+                            addToast(
+                                `(${sharingDataList?.length}/${sharingDataList?.length}) Success!`,
+                                "Check out 'my page'!"
+                            );
+                        }
                     } else {
                         // notify to user with toast message
-                        addToast("Success!", "Check out 'my page'!");
+                        if (!!toastMessage?.title) {
+                            addToast(
+                                toastMessage?.title,
+                                toastMessage?.description
+                            );
+                        } else {
+                            addToast("Success!", "Check out 'my page'!");
+                        }
                     }
+                }
+
+                if (shouldToggleModal) {
+                    toggleModal();
                 }
             }
         },
-        [useToast]
+        [useToast, shouldToggleModal, toastMessage]
     );
 
     return onDrop;
@@ -138,7 +157,7 @@ export function useOnDrop(useToast) {
 function UploadFilesComponent(props) {
     const { className } = props;
 
-    const onDrop = useOnDrop(true);
+    const onDrop = useOnDrop(true, false);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
     });

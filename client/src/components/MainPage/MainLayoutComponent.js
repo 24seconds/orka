@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Tabs } from "../../constants/constant";
 import {
     toggleModal,
@@ -7,16 +7,16 @@ import {
     updateSelectedRowID,
 } from "../../utils/localApi";
 import MyProfileAndActivityPageComponent from "../MyProfileAndActivityPage/MyProfileAndActivityLayoutComponent";
-import NotificationLayoutComponent from "../NotificationPage/NotificationLayoutComponent";
 import PeerListLayoutComponent from "./PeerListLayoutComponent";
 import TabComponent from "./TabComponent";
 import UploadButtonComponent from "./UploadButtonComponent";
 import UploadFilesComponent from "./UploadFilesComponent";
 import UploadLinkComponent from "./UploadLinkComponent";
 import { mobileWidth } from "../../constants/styleConstants";
-import MobileUploadButtonComponent from "./MobileUploadButtonComponent";
+import MobileUploadButtonAndSettingsComponent from "./MobileUploadButtonAndSettingsComponent";
 import MobileUploadDataComponent from "./MobileUploadDataComponent";
 import { useSelector } from "react-redux";
+import MobileSettingsComponent from "../Settings/MobileSettingsComponent";
 
 const TabContainer = styled.div`
     display: flex;
@@ -52,14 +52,32 @@ const OrkaTitle = styled.div`
         display: flex;
         align-items: center;
         font-size: 32px;
+        margin-bottom: 0px;
 
         .orka-title-text {
             flex-grow: 1;
         }
+
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                margin-left: 24px;
+                margin-right: 24px;
+                margin-bottom: 8px;
+            `};
     }
 `;
 
-const MainLayout = styled.div``;
+const MainLayout = styled.div`
+    @media (max-width: ${mobileWidth}) {
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                position: fixed;
+                top: 0px;
+            `};
+    }
+`;
 
 const MainLayoutContainer = styled.div`
     display: inline-grid;
@@ -71,27 +89,48 @@ const MainLayoutContainer = styled.div`
     height: 746px;
 
     @media (max-width: ${mobileWidth}) {
-        margin-top: 32px;
+        margin-top: 18px;
         height: auto;
+
+        ${(props) =>
+            props.shouldOpenMobileSettings &&
+            css`
+                margin-top: 0px;
+            `};
     }
 `;
 
+function renderMainLayoutContent(
+    shouldOpenMobileSettings,
+    uploadActivated,
+    selectedTab
+) {
+    if (shouldOpenMobileSettings) {
+        return <MobileSettingsComponent />;
+    }
+
+    if (uploadActivated) {
+        return (
+            <Fragment>
+                <StyledUploadFilesComponent />
+                <StyledUploadLinkComponent />
+            </Fragment>
+        );
+    } else {
+        return {
+            [Tabs.Home]: <PeerListLayoutComponent />,
+        }[selectedTab];
+    }
+}
+
 function MainLayoutComponent(props) {
-    const { className } = props;
+    const { className, settingsOpen, setSettingsOpen } = props;
 
     const [selectedTab, setSelectedTab] = useState(Tabs.Home);
     const [uploadActivated, setUploadActivated] = useState(false);
     const uploadModalOpenState = useSelector((state) => state.uploadModalOpen);
-
-    function onClick(tab) {
-        setSelectedTab(tab);
-
-        // clear peerID and rowID
-        updateSelectedPeerUUID(null);
-        updateSelectedRowID(null);
-
-        setUploadActivated(false);
-    }
+    const isMobileWidth = useSelector((state) => state.isMobileWidth);
+    const shouldOpenMobileSettings = isMobileWidth && settingsOpen;
 
     function onClickUplaodButton() {
         if (uploadActivated) {
@@ -113,31 +152,39 @@ function MainLayoutComponent(props) {
         toggleModal();
     }
 
+    function onClickSettingIcon() {
+        setSettingsOpen?.(!settingsOpen);
+    }
+
     return (
-        <MainLayout className={`${className} orka-title-main-layout`}>
-            <OrkaTitle>
+        <MainLayout
+            className={`${className} orka-title-main-layout`}
+            shouldOpenMobileSettings={shouldOpenMobileSettings}
+        >
+            <OrkaTitle shouldOpenMobileSettings={shouldOpenMobileSettings}>
                 <div className="orka-title-text">orka</div>
-                <MobileUploadButtonComponent
+                <MobileUploadButtonAndSettingsComponent
                     onClick={onClickMobileUploadButton}
+                    onClickSettings={onClickSettingIcon}
                     isActive={uploadModalOpenState}
+                    shouldOpenMobileSettings={shouldOpenMobileSettings}
                 />
             </OrkaTitle>
-            <MainLayoutContainer>
-                {/* <TabContainer>
-                    {Object.values(Tabs).map((tab) => (
-                        <TabComponent
-                            key={tab.toString()}
-                            iconType={tab}
-                            onClick={onClick}
-                            isSelected={selectedTab === tab}
-                        />
-                    ))}
-                </TabContainer> */}
-                <StyledUploadButtonComponent
-                    onClick={onClickUplaodButton}
-                    isActive={uploadActivated}
-                />
-                {uploadActivated && (
+            <MainLayoutContainer
+                shouldOpenMobileSettings={shouldOpenMobileSettings}
+            >
+                {!shouldOpenMobileSettings && (
+                    <StyledUploadButtonComponent
+                        onClick={onClickUplaodButton}
+                        isActive={uploadActivated}
+                    />
+                )}
+                {renderMainLayoutContent(
+                    shouldOpenMobileSettings,
+                    uploadActivated,
+                    selectedTab
+                )}
+                {/* {uploadActivated && (
                     <Fragment>
                         <StyledUploadFilesComponent />
                         <StyledUploadLinkComponent />
@@ -146,9 +193,7 @@ function MainLayoutComponent(props) {
                 {!uploadActivated &&
                     {
                         [Tabs.Home]: <PeerListLayoutComponent />,
-                        [Tabs.Profile]: <MyProfileAndActivityPageComponent />,
-                        [Tabs.Notification]: <NotificationLayoutComponent />,
-                    }[selectedTab]}
+                    }[selectedTab]} */}
             </MainLayoutContainer>
             {uploadModalOpenState && (
                 <MobileUploadDataComponent
