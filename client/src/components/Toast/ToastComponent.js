@@ -6,6 +6,7 @@ import CloseIcon from "../../assets/CloseIcon";
 import { shallowEqual, useSelector } from "react-redux";
 import { deleteToast } from "../../utils/localApi";
 import { TOAST_HIDE_STRATEGY_SRHINK } from "../../constants/constant";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const ANIMATION_STATE_SHOW = "ANIMATION_STATE_SHOW";
 const ANIMATION_STATE_FADE_OUT = "ANIMATION_STATE_FADE_OUT";
@@ -20,6 +21,11 @@ const ToastCheck = styled.div`
     height: 38px;
     border-radius: 50%;
     background-color: ${(props) => props.theme.White};
+
+    @media (max-width: ${mobileWidth}) {
+        width: 32px;
+        height: 32px;
+    }
 `;
 
 const ToastMessage = styled.div`
@@ -35,6 +41,14 @@ const ToastMessage = styled.div`
         letter-spacing: -0.02em;
 
         margin-bottom: 6px;
+
+        @media (max-width: ${mobileWidth}) {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.8px;
+
+            margin-bottom: 0px;
+        }
     }
 
     .orka-toast-desc {
@@ -56,6 +70,11 @@ const ToastCloseContainer = styled.div`
 
     &:hover {
         cursor: pointer;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        width: 32px;
+        height: 32px;
     }
 `;
 
@@ -80,6 +99,47 @@ const Toast = styled.div`
 
     ${ToastCloseContainer} {
         margin-right: 48px;
+    }
+
+    @media (max-width: ${mobileWidth}) {
+        width: 90vw;
+        height: 56px;
+        border-radius: 12px;
+
+        ${ToastCheck} {
+            margin: 0 12px 0 16px;
+        }
+
+        ${ToastCloseContainer} {
+            margin-right: 16px;
+        }
+    }
+
+    @media only screen and (max-width: ${mobileWidth}) {
+        @keyframes hide-toast-shrink-mobile {
+            from {
+                opacity: 1;
+                transform: translate(0, -110%);
+                width: 90vw;
+                height: 56px;
+            }
+            to {
+                opacity: 0;
+                transform: translate(0, -100%);
+                width: 72vw;
+                height: 45px;
+            }
+        }
+
+        animation-name: ${(props) => {
+            if (props.animationState === ANIMATION_STATE_SHOW) {
+                return "show-toast";
+            } else if (props.animationState === ANIMATION_STATE_FADE_OUT) {
+                return "hide-toast";
+            } else if (props.animationState === ANIMATION_STATE_SHRINK) {
+                return "hide-toast-shrink-mobile";
+            }
+        }};
     }
 
     @keyframes show-toast {

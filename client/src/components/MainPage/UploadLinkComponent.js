@@ -5,6 +5,7 @@ import {
     addToast,
     createTableSharingData,
     notifySharingData,
+    toggleModal,
 } from "../../utils/localApi";
 import { inferDataTypeOfText } from "../../utils/commonUtil";
 import {
@@ -115,7 +116,12 @@ const PlaceHolder = styled.div`
 `;
 
 function UploadLinkComponent(props) {
-    const { className, shouldTriggerToast = true } = props;
+    const {
+        className,
+        shouldTriggerToast = true,
+        toastMessage,
+        shouldToggleModal = false,
+    } = props;
 
     const [text, setText] = useState("");
     const textareaRef = useRef(null);
@@ -133,8 +139,10 @@ function UploadLinkComponent(props) {
         if (event?.key === "Enter" && (event?.metaKey || event?.ctrlKey)) {
             await onClick(event);
 
-            textareaRef.current.style.height = textareaDefaultHeight;
-            textareaRef.current.style.height = `${event.target.scrollHeight}px`;
+            if (!!textareaRef?.current?.style) {
+                textareaRef.current.style.height = textareaDefaultHeight;
+                textareaRef.current.style.height = `${event.target.scrollHeight}px`;
+            }
         }
     }
 
@@ -164,7 +172,15 @@ function UploadLinkComponent(props) {
 
             if (shouldTriggerToast) {
                 // notify to user with toast message
-                addToast("Success!", "Check out 'my page'!");
+                if (!!toastMessage?.title) {
+                    addToast(toastMessage?.title, toastMessage?.description);
+                } else {
+                    addToast("Success!", "Check out 'my page'!");
+                }
+            }
+
+            if (shouldToggleModal) {
+                toggleModal();
             }
         }
     }
