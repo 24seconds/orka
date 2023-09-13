@@ -90,6 +90,7 @@ const MainLayoutContainer = styled.div`
 
     @media (max-width: ${mobileWidth}) {
         margin-top: 18px;
+        width: 100%;
         height: auto;
 
         ${(props) =>
