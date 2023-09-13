@@ -26,6 +26,10 @@ const MobileUploadData = styled.div`
     }
 `;
 
+const StyledUploadLinkComponent = styled(UploadLinkComponent)`
+    margin-bottom: 34px;
+`;
+
 const containerCss = css`
     display: flex;
     align-items: center;
@@ -120,7 +124,7 @@ function MobileUploadDataComponent(props) {
                     <UploadTextDesc>Upload a URL or text</UploadTextDesc>
                 </UploadTextContainer>
                 {isUploadTextActive && (
-                    <UploadLinkComponent
+                    <StyledUploadLinkComponent
                         shouldTriggerToast={true}
                         shouldToggleModal={true}
                         toastMessage={toastMessage}
