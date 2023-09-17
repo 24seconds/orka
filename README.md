@@ -23,11 +23,11 @@
 
 link : https://orka.run
 
-<img src="./assets/locldrop_demo.gif" >
+<img src="./assets/orka_desktop_demo.gif" >
 
 
 ### Mobile version
-<img src="./assets/localdrop_mobile.png" width="300">
+<img src="./assets/orka_mobile_demo.gif" width="300">
 
 
 -----------------------
@@ -46,11 +46,11 @@ Previously, it was [`LocalDrop`](https://github.com/24seconds/localdrop) but due
 📚 Each browser has its own name. It's all sea creatures. The browser's own name is `My`. When other peers upload file or text, then peer tab will be updated. Click the peer then peer's shared files or texts are displayed.
 You can download a file or copy a text or url.
 
-**Important!**: To use download feature, Turn off `Update on reload` in chrome devTools - Application - Service Workers section. To avoid memory issue for large file transfer, LocalDrop uses [StreamSaver.js](https://github.com/jimmywarting/StreamSaver.js). It ingeniously solves memory issue using iframe + service worker. Because it utilizes service worker heavily, we need to turn `Update on reload` option off.
+**Important!**: To use download feature, Turn off `Update on reload` in chrome devTools - Application - Service Workers section. To avoid memory issue for large file transfer, Orka uses [StreamSaver.js](https://github.com/jimmywarting/StreamSaver.js). It ingeniously solves memory issue using iframe + service worker. Because it utilizes service worker heavily, we need to turn `Update on reload` option off.
 
 ### Sending data
 
-<img src="./assets/localdrop_pc.png" width="800">
+<img src="./assets/orka_desktop_upload_data.png" width="800">
 
 You can send text or any kind of data.  
 📁📋 To send any kind of data, click the `Upload` button.  
@@ -60,10 +60,9 @@ You can send text or any kind of data.
 
 ### Change color theme
 
-<img src="./assets/localdrop_change_color_theme.gif" >
+<img src="./assets/orka_desktop_theme.gif" >
 
-
-🎨 Okra supports `Light` and `Dark` mode!
+🎨 Okra supports `Light` and `Dark` mode!  
 
 
 ### Self Hosting
