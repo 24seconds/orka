@@ -1,4 +1,4 @@
-# 🕸🔥 Orka!
+# 🐬🐬 Orka!
 [`Orka`](https://orka.run) is peer to peer LAN(Local Area Network) data sharing service. It's a renewal version of [`LocalDrop`](https://github.com/24seconds/localdrop).
 
 ## Orka links
