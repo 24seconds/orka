@@ -10,9 +10,9 @@ import {
     DATA_EXTENSION_IMAGE,
 } from "../../../constants/constant";
 import { PeerStyle } from "../../SharedStyle";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const selectedStyle = css`
-    /* outline: 2px solid ${(props) => props.theme.PrimaryColor}; */
     border: 2px solid ${(props) => props.theme.PrimaryColor};
 `;
 
@@ -22,8 +22,15 @@ const Peer = styled.div`
     background: ${(props) => props.theme.Grayscale03};
     ${(props) => props.isSelected && selectedStyle}
 
+    ${(props) =>
+        props.isMy &&
+        css`
+            @media (max-width: ${mobileWidth}) {
+                border: 2px solid ${(props) => props.theme.Grayscale01};
+            }
+        `};
+
     &:hover {
-        /* outline: 2px solid ${(props) => props.theme.Grayscale01}; */
         border: 2px solid ${(props) => props.theme.Grayscale01};
 
         svg > path {
@@ -33,14 +40,23 @@ const Peer = styled.div`
 `;
 
 function PeerComponent(props) {
-    const { name, profile, orders, dataExtensions, isSelected, onClick, uuid } =
-        props;
+    const {
+        name,
+        isMy,
+        profile,
+        orders,
+        dataExtensions,
+        isSelected,
+        onClick,
+        uuid,
+    } = props;
 
     const isEmpty = dataExtensions?.length === 0;
 
     return (
         <Peer
             isSelected={isSelected}
+            isMy={isMy}
             onClick={() => {
                 onClick(uuid);
                 updateSelectedRowID(null);
