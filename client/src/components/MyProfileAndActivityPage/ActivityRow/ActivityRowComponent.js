@@ -37,8 +37,6 @@ const ActivityRow = styled.div`
     align-items: center;
     width: 100%;
     height: 128px;
-    /* margin: 0 32px; */
-    /* background: red; */
 
     ${(props) => props.isSelected && selectedStyle}
 

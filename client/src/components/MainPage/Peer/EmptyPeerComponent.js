@@ -1,16 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { PeerStyle } from "../../SharedStyle";
 
 const Peer = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 164px;
-    height: 244px;
-
-    border-radius: 30px;
-    box-sizing: border-box;
-    border: 2px solid transparent;
+    ${PeerStyle}
 
     background: ${(props) => props.theme.Grayscale04};
 `;

@@ -30,11 +30,12 @@ const PeerListLayout = styled.div`
     }
 
     @media (max-width: ${mobileWidth}) {
+        display: grid;
+        width: unset;
+
         grid-template-columns: 1fr 1fr;
         align-items: center;
         justify-items: center;
-
-        width: unset;
     }
 `;
 

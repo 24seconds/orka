@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 
@@ -9,6 +9,7 @@ import {
     DATA_EXTENSION_GENERAL,
     DATA_EXTENSION_IMAGE,
 } from "../../../constants/constant";
+import { PeerStyle } from "../../SharedStyle";
 
 const selectedStyle = css`
     /* outline: 2px solid ${(props) => props.theme.PrimaryColor}; */
@@ -16,15 +17,7 @@ const selectedStyle = css`
 `;
 
 const Peer = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 164px;
-    height: 244px;
-
-    border-radius: 30px;
-    cursor: pointer;
-    box-sizing: border-box;
-    border: 2px solid transparent;
+    ${PeerStyle}
 
     background: ${(props) => props.theme.Grayscale03};
     ${(props) => props.isSelected && selectedStyle}
