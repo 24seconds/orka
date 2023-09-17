@@ -1,13 +1,9 @@
 # 🕸🔥 Orka!
+[`Orka`](https://orka.run) is peer to peer LAN(Local Area Network) data sharing service. It's a renewal version of [`LocalDrop`](https://github.com/24seconds/localdrop).
 
-## Dev orka
-https://dev.orka.run/
-
-## NOTE 
-README is not correct. WIP
-Orka is renewal version of Localdrop!
-
-[`Orka`](https://orka.run) is peer to peer LAN(Local Area Network) data sharing service.  
+## Orka links
+- main: https://orka.run/
+- dev version: https://dev.orka.run/
 
 
 ## [Table of Contents](#table-of-Contents)
@@ -25,13 +21,12 @@ Orka is renewal version of Localdrop!
 
 ## Demo
 
-link : https://localdrop.me
+link : https://orka.run
 
 <img src="./assets/locldrop_demo.gif" >
 
 
 ### Mobile version
-(You can scroll horizontally)  
 <img src="./assets/localdrop_mobile.png" width="300">
 
 
@@ -39,13 +34,17 @@ link : https://localdrop.me
 
 ## Motivation
 
-💡 In home and office, sometimes I need to transfer data (text or file) from device1 to device2. It would be easy if sharing app (google drive, dropbox, etc) is installed in both devices. But most of time, it is not. So I decided to make my own sharing service. The reason to make this by myself is because it would be fun and I can customize whatever I want. Plus, I haven't used webRTC and webSocket before, it's good chance to practice those apis! That's why I made `LocalDrop`.
+💡 In home and office, sometimes I need to transfer data (text or file) from device1 to device2. It would be easy if sharing app (google drive, dropbox, etc) is installed in both devices. But most of time, it is not. So I decided to make my own sharing service. The reason to make this by myself is because it would be fun and I can customize whatever I want. Plus, I haven't used webRTC and webSocket before, it's good chance to practice those apis! That's why I made `Orka`.
+
+Previously, it was [`LocalDrop`](https://github.com/24seconds/localdrop) but due to poor design, I renewaled with talented designer - [Check behance](https://www.behance.net/goodman089e31)!
+
 
 -------
 
 ## How to use 
 
-📚 Each browser has its own `UUID`. If other peer joined then, it will be appeared in `PEERS:` tab. 
+📚 Each browser has its own name. It's all sea creatures. The browser's own name is `My`. When other peers upload file or text, then peer tab will be updated. Click the peer then peer's shared files or texts are displayed.
+You can download a file or copy a text or url.
 
 **Important!**: To use download feature, Turn off `Update on reload` in chrome devTools - Application - Service Workers section. To avoid memory issue for large file transfer, LocalDrop uses [StreamSaver.js](https://github.com/jimmywarting/StreamSaver.js). It ingeniously solves memory issue using iframe + service worker. Because it utilizes service worker heavily, we need to turn `Update on reload` option off.
 
@@ -54,17 +53,9 @@ link : https://localdrop.me
 <img src="./assets/localdrop_pc.png" width="800">
 
 You can send text or any kind of data.  
+📁📋 To send any kind of data, click the `Upload` button.  
 
-#### Sending Text
-📋 To send Text, you need to click `other peer` to send and type text. Then click `send` button!
-
-#### Sending File
-📁 To send File, click `red cross` button then select files to transfer.
-**Important!**: After you select files, it does not transfer immediately. It just gives `download link` to other peer. When other peer requests download, then transfer starts.
-
-### Check system message
-
-When there is something to notify to user, system message is created. You can check system message by clicking toggle switch!
+**Important!**: After you upload files, it does not transfer to others immediately. It just gives `download link` to other peer. When other peer requests download, then transfer starts.
 
 
 ### Change color theme
@@ -72,21 +63,7 @@ When there is something to notify to user, system message is created. You can ch
 <img src="./assets/localdrop_change_color_theme.gif" >
 
 
-🎨 Change color theme as you want! Click `Change Color theme` button to change color! Default is `MaterialThemeOcean`. Why? I like this :D
-Currently (13:32 Wed 01 Jul 2020) it support 13 color themes. Here is the list
-- MaterialThemeOceanic
-- MaterialThemePalenight
-- MaterialThemeDarker
-- MaterialThemeDeepOcean
-- ThemeOneLight
-- ThemeMonoKaiPro
-- MaterialThemeLighter
-- SolarizedLight
-- ThemeDracula
-- ThemeArcDark
-- ThemeOneDark
-- ThemeNightOwl
-- ThemeLightOwl
+🎨 Okra supports `Light` and `Dark` mode!
 
 
 ### Self Hosting
@@ -100,7 +77,7 @@ Currently (13:32 Wed 01 Jul 2020) it support 13 color themes. Here is the list
 ```
 // in the repository,
 $ cd client
-$ npm run dev
+$ yarn dev
 ```
 
 #### signal server side
@@ -127,19 +104,20 @@ BROWSER=none
 ### Verify downloaded file
 This is for checking download function works as expected. There is a file for this `verify_file.js`. You can use it as below.
 ```sh
-$ node verify/verify_file.js vercel_build.sh ~/Downloads/vercel_build.sh
+$ node verify/verify_file.js {your-file1} {your-file2}
 ```
 
 -------
 
 ### RoadMap
 
-🚧  Current version is v0.1.0. There are lots of things to do. Here's TODO list
+🚧  Current version is v1.0.0. There are lots of things to do. Here's TODO list
 
 - [ ] Remove chunk header (It causes slow down download speed)
 - [ ] Create dataChannel everytime download request (to support parallel download)
-- [ ] Better UX for mobile view..
+- [ ] Better UX - animation
 - [ ] Notify system message via toast or notification
+  - notification center would be nice?
 - [ ] Display download progress for transfer side
 - [ ] Handle peerConnection recreate
 - [ ] Handle webSocket recreate
@@ -151,7 +129,7 @@ $ node verify/verify_file.js vercel_build.sh ~/Downloads/vercel_build.sh
 
 ### Compatibility
 
-🌐 Because I use chromium, chrome and samsung browser, I tested those and it seems LocalDrop runs smoothly.
+🌐 Because I use chromium, chrome and samsung browser, I tested those and it seems Orka runs smoothly.
 
 ------
 
@@ -162,18 +140,18 @@ $ node verify/verify_file.js vercel_build.sh ~/Downloads/vercel_build.sh
 #### Why Browser Compatibility is limited?
 
 Because I made this to use by myself, I haven't tested on Opera and Firefox.  
-One thing for sure is that Localdrop can not support ios Safari and Safari.
+One thing for sure is that Orka can not support ios Safari and Safari.
 
-#### LocalDrop not works in my environment X(
+#### Okra not works in my environment X(
 
 Sadly, there are several reasons I guess. In my case, I have experienced this situation in StarBucks. I guess if router blocks sending data to local peer, this could be happened. 
 
 
 #### 🚄 About download speed
 
-##### Why LocalDrop sends chunk with header?
+##### Why Okra sends chunk with header?
 
-Currently, LocalDrop sends chunk with `header` to classify where does chunk from. Putting and parsing header has some overhead. If header is removed, then speed would be faster 2 times (I've tested).
+Currently, Okra sends chunk with `header` to classify where does chunk from. Putting and parsing header has some overhead. If header is removed, then speed would be faster 2 times (I've tested).
 
 
 ##### Why do we care about BufferControl?
@@ -190,7 +168,7 @@ So I set buffer limit as half of chromium limitation (8 Mb). Hence, because of b
 - [WebRTC data channel: Optimum message size (#5)](http://viblast.com/blog/2015/2/5/webrtc-data-channel-message-size)
 
 
-### 🐏 Memory Issue about Transfer Large file: Why does LocalDrop use StreamSaver.js? 
+### 🐏 Memory Issue about Transfer Large file: Why does Orka use StreamSaver.js? 
 
 When transferring large file, we need to care about memory in receiver side. If we just accumulate chunks in memory, device would be crashed easily. I've tested and if you have enough swap space, then accumulated chunks are goes into swap area. It's okay for desktop, but not for mobile.  
 
