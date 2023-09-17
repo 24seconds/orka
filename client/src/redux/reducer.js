@@ -24,6 +24,7 @@ import {
     TOGGLE_MODAL_STATE,
     UPDATE_IS_MOBILE_WIDTH,
     INCREASE_PROFILE_EDIT_EVENT_COUNTER,
+    TOGGLE_GUIDE_STATE,
 } from "./actionType";
 
 function getStorageColorTheme() {
@@ -202,6 +203,15 @@ function uploadModalOpen(state = false, action) {
     return state;
 }
 
+function guideOpen(state = false, action) {
+    if (action.type === TOGGLE_GUIDE_STATE) {
+        return !state;
+    }
+
+    return state;
+}
+
+
 function isMobileWidth(state = false, action) {
     if (action.type === UPDATE_IS_MOBILE_WIDTH) {
         return action.payload;
@@ -232,6 +242,7 @@ export default combineReducers({
     tableSharingData,
     tableNotifications,
     uploadModalOpen,
+    guideOpen,
     isMobileWidth,
     myProfileEditNameEventTrigger,
 });

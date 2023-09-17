@@ -25,7 +25,7 @@ function registerDataChannelEventOnOpen(
     uuid
 ) {
     dataChannel.onopen = async (event) => {
-        console.log("dataChanel onopen called", uuid);
+        console.log("dataChannel onopen called", uuid);
 
         handleDataChannelStatusChange(event, uuid);
 
@@ -112,7 +112,7 @@ async function handleDataChannelMessage(event, uuid) {
         return;
     }
 
-    if (messageType === PEER_MESSAGE_TYPE.RESPONE_DATA_LIST) {
+    if (messageType === PEER_MESSAGE_TYPE.RESPONSE_DATA_LIST) {
         const { sharingData } = data;
         await upsertTableSharingData({ sharingData });
 

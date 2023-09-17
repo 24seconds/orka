@@ -120,7 +120,7 @@ function inferFileExtension(mimeType, name) {
         return subType;
     }
 
-    return getFileExtenstion(name);
+    return getFileExtension(name);
 }
 
 function inferDataExtensionTypeOfFile(mimeType) {
@@ -167,7 +167,7 @@ function getSubtypeOfMIMEtype(type) {
 
 // ex) input "orka.har" -> output "har"
 // fallback type is DATA_EXTENSION_GENERAL
-function getFileExtenstion(name) {
+function getFileExtension(name) {
     const arr = name.split(".");
     if (arr.length === 1) {
         return DATA_EXTENSION_GENERAL;

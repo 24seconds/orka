@@ -17,7 +17,7 @@ import {
     updateSelectedPeerUUID,
     updateSelectedRowID,
 } from "../../utils/localApi";
-import { hoverCloseButton, hoverOpacity } from "../SharedStyle";
+import { HideScroll, hoverCloseButton, hoverOpacity } from "../SharedStyle";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 import FilterTabComponent from "./FilterTabComponent";
 import HandsUpSectionComponent from "./HandsUpSectionComponent";
@@ -121,12 +121,7 @@ const ActivityRowContainer = styled.div`
     // TODO(young: it is a common style. Move this to common style for reusability.
     overflow-y: scroll;
 
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-
-    ::-webkit-scrollbar {
-        display: none;
-    }
+    ${HideScroll}
 
     @media (max-width: ${mobileWidth}) {
         overflow-x: hidden;

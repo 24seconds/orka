@@ -135,7 +135,7 @@ function MainLayoutComponent(props) {
     const isMobileWidth = useSelector((state) => state.isMobileWidth);
     const shouldOpenMobileSettings = isMobileWidth && settingsOpen;
 
-    function onClickUplaodButton() {
+    function onClickUploadButton() {
         if (uploadActivated) {
             setUploadActivated(!uploadActivated);
             setSelectedTab(Tabs.Home);
@@ -169,7 +169,9 @@ function MainLayoutComponent(props) {
             shouldOpenMobileSettings={shouldOpenMobileSettings}
         >
             <OrkaTitle shouldOpenMobileSettings={shouldOpenMobileSettings}>
-                <div className="orka-title-text" onClick={onClickGithub}>orka</div>
+                <div className="orka-title-text" onClick={onClickGithub}>
+                    orka
+                </div>
                 <MobileUploadButtonAndSettingsComponent
                     onClick={onClickMobileUploadButton}
                     onClickSettings={onClickSettingIcon}
@@ -182,7 +184,7 @@ function MainLayoutComponent(props) {
             >
                 {!shouldOpenMobileSettings && (
                     <StyledUploadButtonComponent
-                        onClick={onClickUplaodButton}
+                        onClick={onClickUploadButton}
                         isActive={uploadActivated}
                     />
                 )}

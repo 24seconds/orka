@@ -13,7 +13,7 @@ import {
     requestDownloadFile,
 } from "../../../utils/localApi";
 import { shallowEqual, useSelector } from "react-redux";
-import HandsUpActivateButtonComponent from "./HandsUpActivateButtomComponent";
+import HandsUpActivateButtonComponent from "./HandsUpActivateButtonComponent";
 import { convertTimestampReadable } from "../../../utils/commonUtil";
 import {
     DATATYPE_FILE,
@@ -222,7 +222,7 @@ function renderAction(
     isHandsUpRow,
     onClickDeleteButton,
     onClickHandsUp,
-    onClickDonwloadButton,
+    onClickDownloadButton,
     onClickURLNavigate,
     onCancelHandsUp
 ) {
@@ -255,7 +255,7 @@ function renderAction(
                 onClick={
                     dataType === DATATYPE_LINK
                         ? onClickURLNavigate
-                        : onClickDonwloadButton
+                        : onClickDownloadButton
                 }
             />
         );
@@ -308,7 +308,7 @@ function ActivityRowComponent(props) {
         event?.stopPropagation();
     }
 
-    async function onClickDonwloadButton(event) {
+    async function onClickDownloadButton(event) {
         event?.stopPropagation();
         // TODO(young): fingerprint should be renamed to sharingDataID
         await requestDownloadFile(senderID, { fingerprint: rowID });
@@ -396,7 +396,7 @@ function ActivityRowComponent(props) {
                     isHandsUpRow,
                     onClickDeleteButton,
                     onClickHandsUp,
-                    onClickDonwloadButton,
+                    onClickDownloadButton,
                     onClickURLNavigate,
                     onCancelHandsUp
                 )}
