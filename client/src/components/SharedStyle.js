@@ -85,7 +85,8 @@ export const PeerStyle = css`
     border: 2px solid transparent;
 
     @media (max-width: ${mobileWidth}) {
-        width: unset;
+        width: 100%;
         flex-grow: 1;
+        height: 220px;
     }
 `;

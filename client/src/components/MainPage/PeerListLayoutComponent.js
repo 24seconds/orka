@@ -36,8 +36,6 @@ const PeerListLayout = styled.div`
         grid-template-columns: 1fr 1fr;
         align-items: center;
         justify-items: center;
-
-        border: 3px solid red;
     }
 `;
 

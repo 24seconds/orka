@@ -171,7 +171,7 @@ export const ThemeOrkaLight = {
     ToastMessageDescriptionText: PaletteLight.Grayscale03p5,
 
     MobileUploadDataDimLayout: "#000000A1",
-    MobileUplaodDataText: PaletteLight.Whitescale01,
+    MobileUplaodDataText: PaletteLight.Blackscale01,
     MobileHandsUpSectionDivider: PaletteLight.White,
 
     MobileMyProfileTitle: PaletteLight.Blackscale01,

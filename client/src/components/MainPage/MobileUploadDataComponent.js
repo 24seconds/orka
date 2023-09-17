@@ -53,7 +53,6 @@ const UploadTextDesc = styled.div`
 
 const UploadDataContainer = styled.div`
     position: sticky;
-    background: red;
     background: ${(props) => props.theme.Grayscale03};
     border-radius: 20px 20px 0px 0px;
     width: 100%;
@@ -81,8 +80,34 @@ const UploadDataContainer = styled.div`
 
 const IconContainer = styled.div`
     display: flex;
-    justifycontent: center;
-    alignitems: center;
+    justfiy-content: center;
+    align-items: center;
+
+    ${(props) =>
+        props.isFileIconContainer &&
+        css`
+            > svg > path:first {
+                fill: ${(props) => props.theme.Grayscale02};
+            }
+
+            > svg > path:second {
+                fill: ${(props) => props.theme.Grayscale01};
+            }
+        `};
+
+    ${(props) =>
+        props.isTextIconContainer &&
+        css`
+            > svg {
+                circle {
+                    stroke: ${(props) => props.theme.Grayscale02};
+                }
+            }
+
+            > svg > path {
+                fill: ${(props) => props.theme.Grayscale01};
+            }
+        `};
 `;
 
 function MobileUploadDataComponent(props) {
@@ -110,7 +135,7 @@ function MobileUploadDataComponent(props) {
             <UploadDataContainer isUploadTextActive={isUploadTextActive}>
                 {!isUploadTextActive && (
                     <UploadFileContainer {...getRootProps()}>
-                        <IconContainer>
+                        <IconContainer isFileIconContainer={true}>
                             <MobileUploadFileIcon />
                         </IconContainer>
                         <input {...getInputProps()} />
@@ -118,7 +143,7 @@ function MobileUploadDataComponent(props) {
                     </UploadFileContainer>
                 )}
                 <UploadTextContainer onClick={onClickUploadTextContainer}>
-                    <IconContainer>
+                    <IconContainer isTextIconContainer={true}>
                         <MobileUploadTextIcon />
                     </IconContainer>
                     <UploadTextDesc>Upload a URL or text</UploadTextDesc>

@@ -19,7 +19,7 @@ import DataExtensionIconImage from "../../../assets/DataExtensionIconImage";
 const PeerRecent = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
     position: relative;
     width: 100%;
     height: 100%;
@@ -60,20 +60,24 @@ const EmptyData = styled.div`
 
     position: absolute;
 
-    ${(props) => props.hasOrders && css`
-        left: ${(props) => props.order};
-        top: ${(props) => props.order};
-        z-index: ${(props) => props.zIndex};
-    `};
+    ${(props) =>
+        props.hasOrders &&
+        css`
+            left: ${(props) => props.order};
+            top: ${(props) => props.order};
+            z-index: ${(props) => props.zIndex};
+        `};
 `;
 
-const RecentDataContainer = styled.div`    
+const RecentDataContainer = styled.div`
     position: relative;
-    
-    ${props => props.hasOrders && css`
-        width: 99px; // 80px + left values
-        height: 119px; // 100px + bottom values 
-    `};
+
+    ${(props) =>
+        props.hasOrders &&
+        css`
+            width: 99px; // 80px + left values
+            height: 119px; // 100px + bottom values
+        `};
 `;
 
 function RecentDataComponent(props) {
@@ -133,7 +137,8 @@ function PeerRecentComponent(props) {
                         />
                     );
                 })}
-                <EmptyData className="orka-empty-data"
+                <EmptyData
+                    className="orka-empty-data"
                     key={"empty-data"}
                     order={memoizedEmptyDataOrderToPixel}
                     zIndex={memoizedEmptyDataZIndex}
