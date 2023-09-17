@@ -124,7 +124,7 @@ export const ThemeOrkaLight = {
     Gray: PaletteLight.Gray,
     Black: PaletteLight.Black,
 
-    PeerIconHover: PaletteLight.Whitescale01,
+    PeerIconHover: PaletteLight.Blackscale01,
 
     // think about replacement color
     PlaceholderBackgroundscale01: "#31353C",
