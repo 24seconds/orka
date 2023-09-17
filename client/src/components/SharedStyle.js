@@ -72,3 +72,20 @@ export const hoverCloseButton = css`
         transform: scale(1.5);
     }
 `;
+
+export const PeerStyle = css`
+    display: flex;
+    flex-direction: column;
+    width: 164px;
+    height: 244px;
+
+    border-radius: 30px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+
+    @media (max-width: ${mobileWidth}) {
+        width: unset;
+        flex-grow: 1;
+    }
+`;

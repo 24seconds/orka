@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { IMAGE_URL } from "../../../constants/constant";
 import { getProfilePath } from "../../../utils/commonUtil";
 import PeerNameTooltipComponent from "./PeerNameTooltipComponent";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const PeerMiniProfile = styled.div`
     border-radius: 50%;
@@ -31,6 +32,10 @@ const PeerName = styled.div`
     white-space: nowrap;
 
     color: ${(props) => props.theme.Button};
+
+    @media (max-width: ${mobileWidth}) {
+        width: 60px;
+    }
 `;
 
 const PeerTitle = styled.div`
