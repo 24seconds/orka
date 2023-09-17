@@ -35,10 +35,6 @@ export const ACTIVITY_ROW_FILTER_TEXT = "TEXT";
 export const NOTIFICATION_TYPE_STATUS = "STATUS";
 export const NOTIFICATION_TYPE_COMMENT = "COMMENT";
 
-// TODO(young): use later
-export const STORAGE_MY_PROFILE_KEY = "STORAGE_MY_PROFILE_KEY";
-export const STORAGE_MY_USERNAME_KEY = "STORAGE_MY_USERNAME_KEY";
-
 /////////////////////////////////////
 // user related constants
 export const PROFILE_IMAGE_COUNT = 10;

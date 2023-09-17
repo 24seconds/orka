@@ -50,7 +50,6 @@ function generateFingerPrint() {
 }
 
 function filterSharingData(data, activeFilter, rowsToBeDeleted) {
-    console.log("filterSharingData:", data, activeFilter, rowsToBeDeleted);
     return data.filter((d) => {
         if (d.id in rowsToBeDeleted) {
             return false;

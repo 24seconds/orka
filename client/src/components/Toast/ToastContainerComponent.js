@@ -2,6 +2,7 @@ import React from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import styled, { ThemeProvider } from "styled-components";
 import ToastComponent from "./ToastComponent";
+import { mobileWidth } from "../../constants/styleConstants";
 
 const ToastContainer = styled.div`
     display: grid;

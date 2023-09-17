@@ -33,7 +33,6 @@ const ActionButton = styled.div`
     }
 `;
 
-// TODO(young): implement onClick function later
 function ActionButtonComponent(props) {
     const { type, onClick } = props;
 

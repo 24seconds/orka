@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import TextCopyIcon from "../../../assets/TextCopyIcon";
 import { addToast } from "../../../utils/localApi";
+import { mobileWidth } from "../../../constants/styleConstants";
 
 const TextCopy = styled.div`
     display: flex;
@@ -20,6 +21,11 @@ const TextCopy = styled.div`
     &:hover {
         opacity: 0.6;
     }
+
+    @media (max-width: ${mobileWidth}) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 // TODO(young): Notify via any channel the the copy is done successfully
@@ -30,7 +36,7 @@ function TextCopyComponent(props) {
         navigator.clipboard.writeText(text);
         event?.stopPropagation();
 
-        addToast("Copied", "copied to clipboard!");
+        addToast("Copied", "");
     }
 
     return (

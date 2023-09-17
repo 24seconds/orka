@@ -85,13 +85,11 @@ function PeerListLayoutComponent() {
         })();
     }, [tableUsers, tableSharingData, myOrkaUUID]);
 
-    function onClick(uuid) {
+    function onClickPeer(uuid) {
         if (uuid === activePeerUUID) {
-            // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(null);
             updateSelectedRowID(null);
         } else {
-            // TODO(young): This might be a bad practice. Refactor this later.
             updateSelectedPeerUUID(uuid);
         }
     }
@@ -120,7 +118,7 @@ function PeerListLayoutComponent() {
                         isMy={user.id === myOrkaUUID}
                         profile={user.profile}
                         isSelected={activePeerUUID === user.id}
-                        onClick={onClick}
+                        onClick={onClickPeer}
                         dataTypes={dataExtensions}
                         dataExtensions={dataExtensions}
                     />

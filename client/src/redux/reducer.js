@@ -150,15 +150,14 @@ function toastMessages(state = [], action) {
         });
 
         const newState = [...tempState, action.payload];
-        newState.forEach((s) => {
-            console.log("newState:", s.id, s.hideStrategy);
-        });
+        // newState.forEach((s) => {
+        //     console.log("newState:", s.id, s.hideStrategy);
+        // });
 
         return newState;
     }
 
     if (action.type === DELETE_TOAST_MESSAGE) {
-        console.log("reducer, action payload:", action.payload);
         return state.filter((message) => message.id !== action.payload);
     }
 

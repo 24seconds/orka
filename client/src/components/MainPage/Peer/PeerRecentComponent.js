@@ -108,7 +108,6 @@ function RecentDataComponent(props) {
     );
 }
 
-// TODO(young): Refactor props types. Use array of order and data types.
 function PeerRecentComponent(props) {
     const { orders, dataExtensions } = props;
 

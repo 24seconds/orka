@@ -213,7 +213,6 @@ function ToastComponent(props) {
     const { className, messageID, title, description, hideStrategy } = props;
     const [transformStyle, setTransformStyle] = useState("translate(0, -110%)");
     const [animationState, setAnimationState] = useState(ANIMATION_STATE_SHOW);
-    const [reverseReady, setReverseReady] = useState(false);
 
     const ref = useRef(null);
 
@@ -222,7 +221,6 @@ function ToastComponent(props) {
 
         const timeoutID = setTimeout(() => {
             setAnimationState(ANIMATION_STATE_FADE_OUT);
-            setReverseReady(true);
         }, time);
 
         return () => clearTimeout(timeoutID);

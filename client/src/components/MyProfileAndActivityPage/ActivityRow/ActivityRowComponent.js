@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import ActionButtonComponent from "./ActionButtonComponent";
 import TextCopyComponent from "./TextCopyComponent";
 import { hoverRow } from "../../SharedStyle";
-import CloseIcon from "../../../assets/CloseIcon";
+import DeleteIcon from "../../../assets/DeleteIcon";
 import HandsUpButtonComponent from "./HandsUpButtonComponent";
 import {
     checkHandsUpTableSharingData,
@@ -183,6 +183,18 @@ const DeleteButton = styled.div`
             }
         }
     }
+
+    @media (max-width: ${mobileWidth}) {
+        width: 40px;
+        height: 40px;
+        background: ${(props) => props.theme.DeleteButton};
+
+        > svg {
+            > path {
+                stroke: ${(props) => props.theme.Grayscale04};
+            }
+        }
+    }
 `;
 
 function convertByteToHumanReadable(size) {
@@ -218,7 +230,7 @@ function renderAction(
         return (
             <Fragment>
                 <DeleteButton onClick={onClickDeleteButton}>
-                    <CloseIcon />
+                    <DeleteIcon />
                 </DeleteButton>
             </Fragment>
         );

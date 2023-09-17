@@ -266,7 +266,6 @@ function MyProfileAndActivityPageContainerComponent() {
     const activeRow = useSelector((state) => state.selectedRow, shallowEqual);
 
     console.log("myOrkaUUID:", myOrkaUUID);
-    console.log("tableSharingData:", tableSharingData);
 
     useEffect(() => {
         (async () => {
@@ -283,8 +282,6 @@ function MyProfileAndActivityPageContainerComponent() {
             const rowsToDelete = Object.keys(rowsToBeDeleted);
 
             if (!editMode && rowsToDelete.length > 0) {
-                console.log("useEffect, update database:", editMode);
-
                 await deleteTableSharingDataByIDs(rowsToDelete);
                 setRowsToBeDeleted({});
 
@@ -293,8 +290,6 @@ function MyProfileAndActivityPageContainerComponent() {
                     await notifyDeleteSharingData(id);
                 }
             }
-
-            console.log("useEffect, editMode:", editMode);
         })();
     }, [editMode, rowsToBeDeleted]);
 
@@ -330,7 +325,9 @@ function MyProfileAndActivityPageContainerComponent() {
         updateSelectedRowID(null);
     }
 
-    const handsUpData = data.filter((d) => d.hands_up)?.[0];
+    const handsUpData = data.filter(
+        (d) => d.hands_up && !(d.id in rowsToBeDeleted)
+    )?.[0];
     const restData = data.filter((d) => !d.hands_up);
     const filteredData = filterSharingData(
         restData,
@@ -381,6 +378,8 @@ function MyProfileAndActivityPageContainerComponent() {
                     <StyledHandsUpSection
                         data={handsUpData}
                         activeRow={activeRow}
+                        isEditMode={editMode}
+                        onDeleteRow={onDeleteRow}
                     />
                 )
             }
