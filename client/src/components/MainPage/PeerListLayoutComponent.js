@@ -117,6 +117,7 @@ function PeerListLayoutComponent() {
                         key={user.id}
                         uuid={user.id}
                         name={name}
+                        isMy={user.id === myOrkaUUID}
                         profile={user.profile}
                         isSelected={activePeerUUID === user.id}
                         onClick={onClick}
