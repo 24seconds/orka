@@ -8,7 +8,7 @@ import {
 } from "../../utils/localApi";
 import PeerComponent from "./Peer/PeerComponent";
 import { v4 as uuidv4 } from "uuid";
-import EmpyPeerComponent from "./Peer/EmptyPeerComponent";
+import EmptyPeerComponent from "./Peer/EmptyPeerComponent";
 import { mobileWidth } from "../../constants/styleConstants";
 
 const PeerListLayout = styled.div`
@@ -52,7 +52,7 @@ function renderEmptyPeerComponent(number) {
     }
 
     return dummyKeys.map((key) => {
-        return <EmpyPeerComponent key={key} />;
+        return <EmptyPeerComponent key={key} />;
     });
 }
 

@@ -112,11 +112,16 @@ export const ThemeOrkaDark = {
     ToastMessageDescriptionText: PaletteDark.LightGrayscale03p5,
 
     MobileUploadDataDimLayout: "#000000A1",
-    MobileUplaodDataText: PaletteDark.Whitescale01,
+    MobileUploadDataText: PaletteDark.Whitescale01,
     MobileHandsUpSectionDivider: PaletteDark.Black,
 
     MobileMyProfileTitle: PaletteDark.Whitescale01,
     MobileSettingTitle: PaletteDark.Whitescale01,
+
+    GuideDimLayout: "#000000A1",
+    GuideBackground: PaletteDark.Grayscale02,
+    GuideText: PaletteDark.Whitescale01,
+    GuideClose: PaletteDark.Whitescale01,
 };
 
 export const ThemeOrkaLight = {
@@ -183,11 +188,16 @@ export const ThemeOrkaLight = {
     ToastMessageDescriptionText: PaletteLight.Grayscale03p5,
 
     MobileUploadDataDimLayout: "#000000A1",
-    MobileUplaodDataText: PaletteLight.Blackscale01,
+    MobileUploadDataText: PaletteLight.Blackscale01,
     MobileHandsUpSectionDivider: PaletteLight.White,
 
     MobileMyProfileTitle: PaletteLight.Blackscale01,
     MobileSettingTitle: PaletteLight.Blackscale01,
+
+    GuideDimLayout: "#000000A1",
+    GuideBackground: PaletteLight.Grayscale05,
+    GuideText: PaletteLight.Blackscale01,
+    GuideClose: PaletteLight.Blackscale01,
 };
 
 export const ColorThemes = {

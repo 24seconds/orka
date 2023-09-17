@@ -336,11 +336,11 @@ function addClientEventTypeEventListener(peerConnectionManager) {
     );
 
     peerConnectionManager.addEventListener(
-        CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+        CLIENT_EVENT_TYPE.RESPONSE_DATA_LIST,
         async (event) => {
             const { sharingData, uuid: toUUID } = event;
             console.log(
-                "CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, data:",
+                "CLIENT_EVENT_TYPE.RESPONSE_DATA_LIST, data:",
                 sharingData,
                 peerConnectionManager,
                 !!peerConnectionManager.peerConnections
@@ -355,17 +355,17 @@ function addClientEventTypeEventListener(peerConnectionManager) {
             const data = new messageResponseSharingData({ sharingData });
 
             const peerMessage = createPeerMessage(
-                PEER_MESSAGE_TYPE.RESPONE_DATA_LIST,
+                PEER_MESSAGE_TYPE.RESPONSE_DATA_LIST,
                 data
             );
 
             console.log(
-                "CLIENT_EVENT_TYPE.RESPONE_DATA_LIST, message is ",
+                "CLIENT_EVENT_TYPE.RESPONSE_DATA_LIST, message is ",
                 peerMessage
             );
 
             sendIfReady(
-                CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+                CLIENT_EVENT_TYPE.RESPONSE_DATA_LIST,
                 dataChannel,
                 peerMessage
             );

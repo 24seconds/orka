@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import "./utils/database/database";
 import ToastContainerComponent from "./components/Toast/ToastContainerComponent";
+import GuideContainerComponent from "./components/Guide/GuideContainerComponent";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -27,6 +28,17 @@ toastRoot.render(
         </Provider>
     </React.StrictMode>
 );
+
+const guideContainer = document.getElementById("guide-root");
+const guideRoot = createRoot(guideContainer);
+guideRoot.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <GuideContainerComponent />
+        </Provider>
+    </React.StrictMode>
+)
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

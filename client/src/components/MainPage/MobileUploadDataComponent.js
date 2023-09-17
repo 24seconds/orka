@@ -34,7 +34,7 @@ const containerCss = css`
     display: flex;
     align-items: center;
     height: 36px;
-    color: ${(props) => props.theme.MobileUplaodDataText};
+    color: ${(props) => props.theme.MobileUploadDataText};
     font-size: 20px;
     font-weight: 500;
 `;
@@ -80,7 +80,7 @@ const UploadDataContainer = styled.div`
 
 const IconContainer = styled.div`
     display: flex;
-    justfiy-content: center;
+    justify-content: center;
     align-items: center;
 
     ${(props) =>

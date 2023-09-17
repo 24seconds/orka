@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import styled, {
     css,
     createGlobalStyle,
@@ -17,6 +17,7 @@ import {
     onSwitchTheme,
     updateIsMobileWidthState,
 } from "./utils/localApi";
+import GuideInformationComponent from "./components/Guide/GuideInformationComponent";
 
 const GlobalStyle = createGlobalStyle`  
   html, body {
@@ -28,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
 
     // modal open
     ${(props) =>
-        props.uploadModalOpen &&
+        (props.uploadModalOpen || props.guideOpen) &&
         css`
             overflow: hidden;
         `};
@@ -38,9 +39,7 @@ const GlobalStyle = createGlobalStyle`
 const OrkaLightAndDarkContainerComponent = styled(
     LightAndDarkContainerComponent
 )`
-    position: fixed;
-    top: 36px;
-    right: 40px;
+
 `;
 
 const OrkaCreatorBadgeComponent = styled(CreatorBadgeComponent)`
@@ -103,23 +102,17 @@ const OrkaContainer = styled.div`
     }
 `;
 
-const Container = styled.div`
-    border: solid 2px ${(props) => props.theme.Contrast};
-    border-radius: 5px;
-    height: 100%;
+const OrkaHeaderRightContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0 12px;
+
+    position: fixed;
+    top: 36px;
+    right: 40px;
 
     @media (max-width: ${mobileWidth}) {
-        margin: 0;
-        border: none;
-    }
-`;
-
-const MobileSticky = styled.div`
-    background-color: ${(props) => props.theme.SecondBackground};
-
-    @media (max-width: ${mobileWidth}) {
-        position: sticky;
-        top: 0;
+        display: none;
     }
 `;
 
@@ -130,6 +123,7 @@ function App(props) {
         selectedRow,
         myOrkaUUID,
         uploadModalOpen,
+        guideOpen,
         isMobileWidth,
     } = props;
 
@@ -155,15 +149,19 @@ function App(props) {
         <ThemeProvider theme={orkaTheme}>
             <GlobalStyle
                 uploadModalOpen={uploadModalOpen}
+                guideOpen={guideOpen}
                 isPeerActivityLayoutOpen={isPeerActivityLayoutOpen}
             />
             <OrkaApp className="App">
                 {!shouldHideForActivityLayout && <OrkaCreatorBadgeComponent />}
                 {!shouldHideForActivityLayout && (
-                    <OrkaLightAndDarkContainerComponent
-                        onChangeTheme={onChangeTheme}
-                        theme={orkaTheme}
-                    />
+                    <OrkaHeaderRightContainer>
+                        <GuideInformationComponent />
+                        <OrkaLightAndDarkContainerComponent
+                            onChangeTheme={onChangeTheme}
+                            theme={orkaTheme}
+                        />
+                    </OrkaHeaderRightContainer>
                 )}
                 <OrkaContainer
                     shouldOpenMobileSettings={shouldOpenMobileSettings}
@@ -197,6 +195,7 @@ const mapStateToProps = (state) => ({
     myOrkaUUID: state.myUUID,
     uploadModalOpen: state.uploadModalOpen,
     isMobileWidth: state.isMobileWidth,
+    guideOpen: state.guideOpen,
 });
 
 function handleWindowSize() {

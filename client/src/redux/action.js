@@ -18,6 +18,7 @@ import {
     TOGGLE_MODAL_STATE,
     UPDATE_IS_MOBILE_WIDTH,
     INCREASE_PROFILE_EDIT_EVENT_COUNTER,
+    TOGGLE_GUIDE_STATE,
 } from "./actionType";
 
 export const updateOrkaTheme = () => ({
@@ -102,6 +103,11 @@ export const deleteToastMessage = (id) => ({
 
 export const toggleModalState = (state) => ({
     type: TOGGLE_MODAL_STATE,
+    payload: !state,
+});
+
+export const toggleGuideState = (state) => ({
+    type: TOGGLE_GUIDE_STATE,
     payload: !state,
 });
 

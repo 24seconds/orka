@@ -5,6 +5,7 @@ import UploadPlusIcon from "../../assets/UploadPlusIcon";
 import HamburgerIcon from "../../assets/HamburgerIcon";
 import { mobileWidth } from "../../constants/styleConstants";
 import CloseIcon from "../../assets/CloseIcon";
+import GuideInformationComponent from "../Guide/GuideInformationComponent";
 
 const UploadButton = styled.div`
     display: flex;
@@ -118,6 +119,9 @@ function MobileUploadButtonAndSettingsComponent(props) {
                     </div>
                 ) : (
                     <Fragment>
+                        <div>
+                            <GuideInformationComponent/>
+                        </div>
                         <div onClick={props.onClick}>
                             <UploadPlusIcon />
                         </div>

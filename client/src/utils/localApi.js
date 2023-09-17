@@ -30,6 +30,7 @@ import {
     toggleModalState,
     updateIsMobileWidth,
     triggerProfileEditNameEvent,
+    toggleGuideState,
 } from "../redux/action";
 import { parseChunkAndHeader } from "./peerMessage";
 import { generateUserProfile, generateSharingDataUUID } from "./commonUtil";
@@ -76,7 +77,7 @@ async function notifyDeleteSharingData(id) {
 
 async function notifySharingDataToPeer(data, uuid) {
     const event = new LocalDropEvent(
-        CLIENT_EVENT_TYPE.RESPONE_DATA_LIST,
+        CLIENT_EVENT_TYPE.RESPONSE_DATA_LIST,
         new EventResponseSharingData({ sharingData: data, uuid })
     );
 
@@ -236,6 +237,10 @@ function addToast(title, description) {
 
 function toggleModal() {
     store.dispatch(toggleModalState(store.getState().uploadModalOpen));
+}
+
+function toggleGuide() {
+    store.dispatch(toggleGuideState(store.getState().guideOpen));
 }
 
 function updateIsMobileWidthState(state) {
@@ -702,6 +707,7 @@ export {
     updateSelectedRowID,
     updateSender,
     toggleModal,
+    toggleGuide,
     updateIsMobileWidthState,
     getIsMobileWidthState,
     fireProfileEditNameEvent,

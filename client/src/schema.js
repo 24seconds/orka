@@ -84,7 +84,7 @@ export const CLIENT_EVENT_TYPE = {
     // send my user info to peer
     SEND_USER_INFO: "SEND_USER_INFO",
     REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
-    RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
+    RESPONSE_DATA_LIST: "RESPONSE_DATA_LIST",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
     RECONNECT: "RECONNECT",
     SEND_MESSAGE_TO_SIGNALING_SERVER: "SEND_MESSAGE_TO_SIGNALING_SERVER",
@@ -105,7 +105,7 @@ const clientEventDataSchema = {
 export const PEER_MESSAGE_TYPE = {
     USER_INFO: "USER_INFO",
     REQUEST_DATA_LIST: "REQUEST_DATA_LIST",
-    RESPONE_DATA_LIST: "RESPONE_DATA_LIST",
+    RESPONSE_DATA_LIST: "RESPONSE_DATA_LIST",
     UPLOAD_SHARING_DATA: "UPLOAD_SHARING_DATA",
     DELETE_SHARING_DATA: "DELETE_SHARING_DATA",
     UPDATE_USER: "UPDATE_USER",
@@ -128,7 +128,7 @@ const peerMessageDataSchema = {
         fingerprint: "string",
     },
     downloadDataSchema: { fingerprint: "string" },
-    erroDataSchema: { message: "string" },
+    errorDataSchema: { message: "string" },
 };
 
 const meesagePacketDownloadHeaderSchema = {

@@ -90,3 +90,13 @@ export const PeerStyle = css`
         height: 220px;
     }
 `;
+
+export const HideScroll = css`
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+`;
+

@@ -69,7 +69,7 @@ const Description = styled.div`
 export function useOnDrop(useToast, shouldToggleModal, toastMessage) {
     const onDrop = useCallback(
         async (acceptedFiles) => {
-            // store File object in somehwere; store file related data to db;
+            // store File object in somewhere; store file related data to db;
             // display upload process - 0.3~0.5sec animation is okay
             if (acceptedFiles?.length === 0) {
                 return;

@@ -9,18 +9,18 @@ const Peer = styled.div`
     background: ${(props) => props.theme.Grayscale04};
 `;
 
-function EmpyPeerComponent(props) {
+function EmptyPeerComponent(props) {
     const { uuid } = props;
 
     return <Peer></Peer>;
 }
 
-EmpyPeerComponent.propTypes = {
+EmptyPeerComponent.propTypes = {
     uuid: PropTypes.string,
 };
 
-EmpyPeerComponent.defaultProps = {
+EmptyPeerComponent.defaultProps = {
     uuid: "",
 };
 
-export default EmpyPeerComponent;
+export default EmptyPeerComponent;
