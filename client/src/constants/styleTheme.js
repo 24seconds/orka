@@ -60,6 +60,8 @@ export const ThemeOrkaDark = {
     // check which component use this color
     PlaceholderTextscale01: PaletteDark.Whitescale01,
 
+    PeerIconHover: PaletteDark.Whitescale01,
+
     ActivityRowButtonTextscale01: "#E0E3E8",
     ActivityRowButtonTextscale02: "#61656D",
     ActivityRowBackgroundscale02: PaletteDark.Primary,
@@ -121,6 +123,8 @@ export const ThemeOrkaLight = {
     White: PaletteLight.White,
     Gray: PaletteLight.Gray,
     Black: PaletteLight.Black,
+
+    PeerIconHover: PaletteLight.Whitescale01,
 
     // think about replacement color
     PlaceholderBackgroundscale01: "#31353C",

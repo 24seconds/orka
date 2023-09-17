@@ -34,7 +34,7 @@ const Peer = styled.div`
         border: 2px solid ${(props) => props.theme.Grayscale01};
 
         svg > path {
-            fill: ${(props) => props.theme.White};
+            fill: ${(props) => props.theme.PeerIconHover};
         }
     }
 `;
