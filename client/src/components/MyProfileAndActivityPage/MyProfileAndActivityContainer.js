@@ -50,6 +50,7 @@ const StyledProfileEditNameComponent = styled(ProfileEditNameComponent)`
 const MyProfileAndActivityPageContainer = styled.div`
     display: flex;
     flex-direction: column;
+    position: relative;
 `;
 
 const CloseIconContainer = styled.div`

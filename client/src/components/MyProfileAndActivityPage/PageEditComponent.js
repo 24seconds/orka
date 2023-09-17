@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { mobileWidth } from "../../constants/styleConstants";
 
 const PageEdit = styled.button`
-    position: relative;
+    position: absolute;
     left: 32px;
     bottom: 32px;
 
@@ -14,7 +14,7 @@ const PageEdit = styled.button`
     gap: 10px;
 
     border-radius: 12px;
-    background: ${(props) => props.theme.White};
+    background: ${(props) => props.theme.MyPageEditButton};
     border: none;
 
     color: ${(props) => props.theme.Grayscale05};

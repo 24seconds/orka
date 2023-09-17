@@ -67,6 +67,8 @@ export const ThemeOrkaDark = {
     ActivityRowBackgroundscale02: PaletteDark.Primary,
     ActivityRowBackgroundscale03: "#FF5151",
 
+    MyPageEditButton: PaletteDark.Whitescale01,
+
     PrimaryColor: PaletteDark.Primary,
     PrimaryColor02: PaletteDark.Primary02,
 
@@ -133,6 +135,8 @@ export const ThemeOrkaLight = {
     ActivityRowButtonTextscale02: "#61656D",
     ActivityRowBackgroundscale02: "#0066FF",
     ActivityRowBackgroundscale03: "#FF5151",
+
+    MyPageEditButton: PaletteLight.Blackscale01,
 
     PrimaryColor: PaletteLight.Primary,
     PrimaryColor02: PaletteLight.Primary02,
