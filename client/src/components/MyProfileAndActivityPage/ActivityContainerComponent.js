@@ -133,7 +133,6 @@ const ActivityProfileContainer = styled.div`
     }
 `;
 
-// TODO(young): create a new file for this component
 const SortButton = styled.button`
     font-weight: 400;
     font-size: 18px;
@@ -219,11 +218,6 @@ const ActivityContainer = styled.div`
         background: ${(props) => props.theme.Grayscale05};
     }
 `;
-
-// TODO(young): use this later.
-function getFileExtension(name) {
-    return name.slice((Math.max(0, name.lastIndexOf(".")) || Infinity) + 1);
-}
 
 function ActivityContainerComponent(props) {
     const [activeFilter, setActiveFilter] = useState(ACTIVITY_ROW_FILTER_ALL);
@@ -358,6 +352,7 @@ function ActivityContainerComponent(props) {
                         d,
                         selectedRowID,
                         myOrkaUUID,
+                        false,
                         onDeleteRow
                     )
                 )}

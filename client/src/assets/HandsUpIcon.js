@@ -1,6 +1,5 @@
 import React from "react";
 
-// TODO(young): Consider using png.
 function Icon() {
   return (
     <svg

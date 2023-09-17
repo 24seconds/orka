@@ -43,4 +43,9 @@ body {
     /* just for styling to see the limits */
     /* border: 2px dashed red; */
     /* box-sizing: border-box; */
+
+    /* width should be same as mobileWidth */
+    @media (max-width: 620px) {
+        z-index: 200;
+    }
 }

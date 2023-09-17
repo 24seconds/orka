@@ -16,6 +16,7 @@ const PaletteDark = {
     White: "#FFFFFF",
     Whitescale01: "#FEFEFE",
     Black: "#000000",
+    Red: "#FF5151",
 
     // PaletteLight.Grayscale03p5
     LightGrayscale03p5: "#CCD7EC",
@@ -41,6 +42,7 @@ const PaletteLight = {
     Whitescale01: "#FEFEFE",
     Black: "#000000",
     Blackscale01: "#2E3136",
+    Red: "#FA4C4C",
 
     // PaletteDark.Grayscale03
     DarkGrayscale03: "#202326",
@@ -97,6 +99,7 @@ export const ThemeOrkaDark = {
     NotificationRowText: PaletteDark.Whitescale01,
 
     DeleteButtonHover: "#FF5151",
+    DeleteButton: PaletteDark.Red,
 
     UploadInputText: PaletteDark.White,
 
@@ -161,6 +164,7 @@ export const ThemeOrkaLight = {
     NotificationRowText: PaletteLight.Blackscale01,
 
     DeleteButtonHover: "#FF5151",
+    DeleteButton: PaletteLight.Red,
 
     UploadInputText: PaletteLight.Black,
 

@@ -50,7 +50,6 @@ const OrkaCreatorBadgeComponent = styled(CreatorBadgeComponent)`
 `;
 
 const OrkaApp = styled.div`
-    // TODO(young): Remove this height if it is not necessary
     height: calc(100% - 110px);
     display: grid;
     padding: 50px 100px;
@@ -151,7 +150,6 @@ function App(props) {
         (isPeerActivityLayoutOpen || mySelected) && isMobileWidth;
 
     const shouldOpenMobileSettings = isMobileWidth && settingsOpen;
-    console.log("shouldOpenMobileSettings:", shouldOpenMobileSettings);
 
     return (
         <ThemeProvider theme={orkaTheme}>

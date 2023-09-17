@@ -50,7 +50,7 @@ const HandsUpSection = styled.div`
 `;
 
 function HandsUpSectionComponent(props) {
-    const { className, data, activeRow } = props;
+    const { className, data, activeRow, onDeleteRow, isEditMode } = props;
 
     const myOrkaUUID = useSelector((state) => state.myUUID, shallowEqual);
 
@@ -65,8 +65,8 @@ function HandsUpSectionComponent(props) {
                     data,
                     activeRow,
                     myOrkaUUID,
-                    // TODO(young): Handle properly
-                    null
+                    isEditMode,
+                    onDeleteRow
                 )}
             <SectionDivider />
         </HandsUpSection>

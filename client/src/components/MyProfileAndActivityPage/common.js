@@ -2,7 +2,13 @@ import React from "react";
 import { DATATYPE_FILE } from "../../constants/constant";
 import ActivityRowComponent from "./ActivityRow/ActivityRowComponent";
 
-function renderActivityRowComponent(data, activeRow, myOrkaUUID, onDeleteRow) {
+function renderActivityRowComponent(
+    data,
+    activeRow,
+    myOrkaUUID,
+    isEditMode,
+    onDeleteRow
+) {
     if (data?.type === DATATYPE_FILE) {
         return (
             <ActivityRowComponent
@@ -17,6 +23,7 @@ function renderActivityRowComponent(data, activeRow, myOrkaUUID, onDeleteRow) {
                 isMyProfileRow={data.uploader_id === myOrkaUUID}
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
+                isEditMode={isEditMode}
                 onDeleteRow={onDeleteRow}
             />
         );
@@ -35,6 +42,7 @@ function renderActivityRowComponent(data, activeRow, myOrkaUUID, onDeleteRow) {
                 createdAt={new Date(data.uploaded_at)}
                 isHandsUpRow={data.hands_up}
                 dataText={data.text}
+                isEditMode={isEditMode}
                 onDeleteRow={onDeleteRow}
             />
         );

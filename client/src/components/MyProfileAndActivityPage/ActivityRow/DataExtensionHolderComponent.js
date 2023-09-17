@@ -17,7 +17,6 @@ import DataExtensionIconAudio from "../../../assets/DataExtensionIconAudio";
 import DataExtensionIconImage from "../../../assets/DataExtensionIconImage";
 import { mobileWidth } from "../../../constants/styleConstants";
 
-// TODO(young): Refactor this to make it reusable. It is also used in peer component.
 const DataExtensionHolder = styled.div`
     display: flex;
     justify-content: center;
@@ -47,7 +46,6 @@ const DataExtensionHolder = styled.div`
     }
 `;
 
-// TODO(young): logo color theming?
 function DataExtensionHolderComponent(props) {
     const { className, extension } = props;
 

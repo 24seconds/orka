@@ -221,7 +221,6 @@ function ProfileEditNameComponent(props) {
 
     return (
         <ProfileEditName className={className} shouldShowDone={propEditMode}>
-            {/* TODO(young): mobile title layout needed */}
             <MiniProfile className="orka-mini-profile">
                 <img src={`/${IMAGE_URL}/${profilePath}`} alt="my profile" />
             </MiniProfile>

@@ -48,6 +48,8 @@ const OrkaTitle = styled.div`
 
     margin-bottom: 20px;
 
+    cursor: pointer;
+
     @media (max-width: ${mobileWidth}) {
         display: flex;
         align-items: center;
@@ -157,13 +159,17 @@ function MainLayoutComponent(props) {
         setSettingsOpen?.(!settingsOpen);
     }
 
+    function onClickGithub() {
+        window.open("https://github.com/24seconds/orka", "_blank");
+    }
+
     return (
         <MainLayout
             className={`${className} orka-title-main-layout`}
             shouldOpenMobileSettings={shouldOpenMobileSettings}
         >
             <OrkaTitle shouldOpenMobileSettings={shouldOpenMobileSettings}>
-                <div className="orka-title-text">orka</div>
+                <div className="orka-title-text" onClick={onClickGithub}>orka</div>
                 <MobileUploadButtonAndSettingsComponent
                     onClick={onClickMobileUploadButton}
                     onClickSettings={onClickSettingIcon}
