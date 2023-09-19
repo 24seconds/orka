@@ -50,7 +50,7 @@ const Guide = styled.div`
     ${HideScroll}
 
     @media (max-width: ${mobileWidth}) {
-        height: 100%;
+        height: 100vh;
         overflow-y: scroll;
         max-height: unset;
     }
