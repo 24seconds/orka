@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS sharing_data (
     name VARCHAR(50) NULL,
     size INT32 NULL,
     extension VARCHAR(50) NULL,
-    text VARCHAR(1000) NULL,
+    text TEXT NULL,
     type VARCHAR(50) NOT NULL,
     status_count INT16 NOT NULL,
     hands_up BOOLEAN NOT NULL,

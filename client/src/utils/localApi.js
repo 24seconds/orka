@@ -449,6 +449,8 @@ async function createTableSharingData({
     const uploader_id = getMyUUID();
     const uploaded_at = new Date().toISOString();
 
+    const encodedText = encodeText(text);
+
     const query = (() => {
         if (type === DATATYPE_FILE) {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES(
@@ -456,7 +458,7 @@ async function createTableSharingData({
                 '${uploader_id}', '${uploaded_at}');`;
         } else {
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                '${id}', NULL, 0, '${extension}', '${text}', '${
+                '${id}', NULL, 0, '${extension}', '${encodedText}', '${
                 type || DATATYPE_TEXT
             }', 0, false, 
                 '${uploader_id}', '${uploaded_at}');`;
@@ -488,6 +490,8 @@ async function upsertTableSharingData({ sharingData }) {
     const uploader_id = sharingData[TABLE_SHARING_DATA.fields.uploader_id];
     const uploaded_at = sharingData[TABLE_SHARING_DATA.fields.uploaded_at];
 
+    const encodedText = encodeText(text);
+
     const data = await selectTableSharingDataByID(id);
 
     const query = (() => {
@@ -499,7 +503,7 @@ async function upsertTableSharingData({ sharingData }) {
                 `${TABLE_SHARING_DATA.fields.size} = ${size}`,
                 `${TABLE_SHARING_DATA.fields.extension} = '${extension}'`,
                 // text and type name should be escaped.
-                `'${TABLE_SHARING_DATA.fields.text}' = '${text}'`,
+                `'${TABLE_SHARING_DATA.fields.text}' = '${encodedText}'`,
                 `'${TABLE_SHARING_DATA.fields.type}' = '${type}'`,
                 `${TABLE_SHARING_DATA.fields.status_count} = ${status_count}`,
                 `${TABLE_SHARING_DATA.fields.hands_up} = ${hands_up}`,
@@ -514,7 +518,7 @@ async function upsertTableSharingData({ sharingData }) {
         } else {
             // insert
             return `INSERT INTO ${TABLE_SHARING_DATA.name} VALUES (
-                '${id}', '${name}', ${size}, '${extension}', '${text}', '${type}',
+                '${id}', '${name}', ${size}, '${extension}', '${encodedText}', '${type}',
                 ${status_count}, ${hands_up}, '${uploader_id}', '${uploaded_at}'
             );`;
         }
@@ -539,7 +543,7 @@ async function selectTableSharingDataByUserID(userID) {
     const result = await run(query);
     console.log("result:", result);
 
-    return result?.[0]?.rows;
+    return decodeText(result?.[0]?.rows);
 }
 
 async function selectTableSharingDataByID(id) {
@@ -551,7 +555,7 @@ async function selectTableSharingDataByID(id) {
     const result = await run(query);
     console.log("result:", result);
 
-    return result?.[0]?.rows?.[0];
+    return decodeText(result?.[0]?.rows?.[0]);
 }
 
 async function selectTableSharingDataWithOrderBy(userID, order) {
@@ -576,7 +580,29 @@ async function selectTableSharingDataWithOrderBy(userID, order) {
     const result = await run(query);
     console.log("result:", result);
 
-    return result?.[0]?.rows;
+    return decodeText(result?.[0]?.rows);
+}
+
+function encodeText(text) {
+    return btoa(text);
+}
+
+function decodeText(rows) {
+    const replaceRow = (row) => {
+        if (!!(row?.text)) {
+            row.text = atob(row.text);
+            return row;
+        }
+
+        return row;
+    }
+    
+    if (!Array.isArray(rows)) {
+        // consider it as single element
+        return replaceRow(rows);
+    }
+    
+    return rows.map((row) => { return replaceRow(row) });
 }
 
 async function checkHandsUpTableSharingData(userID) {
@@ -589,7 +615,7 @@ async function checkHandsUpTableSharingData(userID) {
     const result = await run(query);
     console.log("result:", result);
 
-    return result?.[0]?.rows;
+    return decodeText(result?.[0]?.rows);
 }
 
 async function patchTableSharingDataByID(
@@ -656,29 +682,6 @@ async function selectTableNotifications() {
     return result?.[0]?.rows;
 }
 
-async function selectTableNotificationsWithUserAndSharingData() {
-    const query = `SELECT 
-        n.*, 
-        u.${TABLE_USERS.fields.id} as user_id, 
-        u.${TABLE_USERS.fields.name} as user_name, 
-        u.${TABLE_USERS.fields.profile} as user_profile,
-        d.${TABLE_SHARING_DATA.fields.id} as sharing_data_id,
-        d.${TABLE_SHARING_DATA.fields.name} as sharing_data_name
-        FROM ${TABLE_NOTIFICATIONS.name} as n
-        LEFT JOIN ${TABLE_USERS.name} as u ON
-            n.${TABLE_NOTIFICATIONS.fields.sender_id} = u.${TABLE_USERS.fields.id}
-        LEFT JOIN ${TABLE_SHARING_DATA.name} as d ON
-            n.${TABLE_NOTIFICATIONS.fields.data_id} = d.${TABLE_SHARING_DATA.fields.id}
-        ORDER BY ${TABLE_NOTIFICATIONS.fields.created_at} DESC;`;
-
-    console.log("query:", query);
-
-    const result = await run(query);
-    console.log("result:", result);
-
-    return result?.[0]?.rows;
-}
-
 export {
     onSwitchTheme,
     notifySharingData,
@@ -734,5 +737,4 @@ export {
     // notifications
     selectTableNotifications,
     updateTableNotifications,
-    selectTableNotificationsWithUserAndSharingData,
 };
