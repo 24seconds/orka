@@ -99,4 +99,3 @@ export const HideScroll = css`
         display: none;
     }
 `;
-

@@ -38,9 +38,7 @@ const GlobalStyle = createGlobalStyle`
 
 const OrkaLightAndDarkContainerComponent = styled(
     LightAndDarkContainerComponent
-)`
-
-`;
+)``;
 
 const OrkaCreatorBadgeComponent = styled(CreatorBadgeComponent)`
     position: fixed;

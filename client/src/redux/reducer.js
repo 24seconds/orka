@@ -211,7 +211,6 @@ function guideOpen(state = false, action) {
     return state;
 }
 
-
 function isMobileWidth(state = false, action) {
     if (action.type === UPDATE_IS_MOBILE_WIDTH) {
         return action.payload;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toggleGuide } from "../../utils/localApi";
 
 const Guide = styled.div`
-    display: flex;    
+    display: flex;
     align-items: center;
 
     color: ${(props) => props.theme.Grayscale01};

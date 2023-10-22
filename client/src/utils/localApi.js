@@ -589,20 +589,22 @@ function encodeText(text) {
 
 function decodeText(rows) {
     const replaceRow = (row) => {
-        if (!!(row?.text)) {
+        if (!!row?.text) {
             row.text = atob(row.text);
             return row;
         }
 
         return row;
-    }
-    
+    };
+
     if (!Array.isArray(rows)) {
         // consider it as single element
         return replaceRow(rows);
     }
-    
-    return rows.map((row) => { return replaceRow(row) });
+
+    return rows.map((row) => {
+        return replaceRow(row);
+    });
 }
 
 async function checkHandsUpTableSharingData(userID) {

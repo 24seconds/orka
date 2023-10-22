@@ -120,7 +120,7 @@ function MobileUploadButtonAndSettingsComponent(props) {
                 ) : (
                     <Fragment>
                         <div>
-                            <GuideInformationComponent/>
+                            <GuideInformationComponent />
                         </div>
                         <div onClick={props.onClick}>
                             <UploadPlusIcon />
